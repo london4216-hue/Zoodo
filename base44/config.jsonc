@@ -1,5 +1,5 @@
 {
-  "name": "Go Zobo",
+  "name": "ZOBOGO",
   "site": {
     "installCommand": "npm install",
     "buildCommand": "npm run build",
