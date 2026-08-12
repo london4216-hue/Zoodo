@@ -6,29 +6,28 @@ import { secrets } from "base44:runtime";
 const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — warm, friendly female
 async function synthesizeSpeech(base44, text) {
   const clean = (text || "").slice(0, 4500);
-  try {
-    const key = secrets.get("ELEVENLABS_API_KEY");
-    if (key) {
-      const customVoice = secrets.get("ELEVENLABS_VOICE_ID");
-      const voiceId = (customVoice && /^[A-Za-z0-9]{16,}$/.test(customVoice)) ? customVoice : ELEVEN_VOICE_ID;
-      const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-        method: "POST",
-        headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },
-        body: JSON.stringify({
-          text: clean,
-          model_id: "eleven_turbo_v2_5",
-          voice_settings: { stability: 0.45, similarity_boost: 0.75, style: 0.45, use_speaker_boost: true },
-        }),
-      });
-      if (resp.ok) {
-        const buf = await resp.arrayBuffer();
-        const file = new File([buf], "edu_speech.mp3", { type: "audio/mpeg" });
-        const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
-        if (up && up.file_url) return up.file_url;
-      }
-    }
-  } catch (e) { /* lady voice only — no fallback voice */ }
-  return "";
+  const key = secrets.get("ELEVENLABS_API_KEY");
+  if (!key) throw new Error("ELEVENLABS_API_KEY secret is not set");
+  const customVoice = secrets.get("ELEVENLABS_VOICE_ID");
+  const voiceId = (customVoice && /^[A-Za-z0-9]{16,}$/.test(customVoice)) ? customVoice : ELEVEN_VOICE_ID;
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: "POST",
+    headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },
+    body: JSON.stringify({
+      text: clean,
+      model_id: "eleven_turbo_v2_5",
+      voice_settings: { stability: 0.45, similarity_boost: 0.75, style: 0.45, use_speaker_boost: true },
+    }),
+  });
+  if (!resp.ok) {
+    const detail = await resp.text().catch(() => "");
+    throw new Error(`ElevenLabs TTS failed (${resp.status}): ${detail.slice(0, 300)}`);
+  }
+  const buf = await resp.arrayBuffer();
+  const file = new File([buf], "edu_speech.mp3", { type: "audio/mpeg" });
+  const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+  if (!up || !up.file_url) throw new Error("UploadFile returned no file_url");
+  return up.file_url;
 }
 
 // The signature EduPath AI teaching voice — warm, musical, sensory-rich.
