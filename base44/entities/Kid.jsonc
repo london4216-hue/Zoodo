@@ -28,6 +28,13 @@
       "type": "string",
       "title": "Avatar Color",
       "default": "#4969E1"
+    },
+    "current_letter": {
+      "type": "string",
+      "title": "Current Target Letter",
+      "description": "The letter the child is currently working on in articulation therapy. Starts at A and advances only once the sound is mastered.",
+      "default": "A",
+      "maxLength": 1
     }
   },
   "required": [

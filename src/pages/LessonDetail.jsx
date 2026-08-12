@@ -173,6 +173,13 @@ export default function LessonDetail() {
             dayLabel={dayCfg.label}
             age={kid?.age || 4}
             lesson={lesson}
+            currentLetter={kid?.current_letter || 'A'}
+            onMastery={async (next) => {
+              try {
+                const updated = await base44.entities.Kid.update(kid.id, { current_letter: next });
+                setKid(updated);
+              } catch (e) { /* ignore */ }
+            }}
             onUpdate={setLesson}
             onComplete={() => setActivityDone(true)}
             onPlay={() => setActivityStarted(true)}

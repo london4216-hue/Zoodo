@@ -49,18 +49,21 @@ const LESSON_PLAN_SCHEMA = {
 
 const SUBJECT_GUIDE = {
   'Numbers': 'Target: counting 1-10. Teach one number at a time with the child. Camera is NOT recommended (no mouth movement to verify). Set letter, sound, word to "".',
-  'Letters': 'Target: ONE uppercase letter and ONE picture word starting with that sound (A->apple, B->ball, C->cat, D->dog, E->egg, F->fish, etc.). Pick a DIFFERENT letter each day. Teach letter NAME -> SOUND (e.g. "AH") -> WORD. Use "say AH like apple" style. Camera IS recommended (we want to see the child produce the sound/word).',
+  'Letters': 'Target: the EXACT uppercase letter provided for today (do NOT pick a different letter). Use ONE picture word that begins with that letter\'s sound. Teach letter NAME -> SOUND (e.g. "AH" for A) -> WORD. Use "say AH like apple" style. Camera IS recommended (we want to see the child produce the sound/word).',
   'Outdoor activity': 'Target: a movement or observation. Teach with sensory language and I-do/we-do/you-do. Camera IS recommended if it involves a visible action (clap, wave, point). Set letter/sound to "" and word to the key object if there is one.',
   'Music': 'Target: a rhythm or sound. Teach with clapping/tapping and I-do/we-do/you-do. Camera IS recommended (clap/tap is visible). Set letter/sound to "" and word to the key object/instrument if there is one.',
   'Exercises': 'Target: a body movement. Teach "watch me -> together -> your turn". Camera IS recommended (movement is visible). Set letter/sound to "" and word to the key object if there is one.',
 };
 
-function buildLessonPrompt(kidName, age, subject, dayLabel) {
+function buildLessonPrompt(kidName, age, subject, dayLabel, currentLetter) {
   const guide = SUBJECT_GUIDE[subject] || `Target: ${subject}. Use I-do/we-do/you-do. Decide if a camera check would help verify the child's production.`;
+  const letterDirective = subject === 'Letters' && currentLetter
+    ? `The target letter for today is "${currentLetter}". Teach ONLY that letter — its name, its phoneme sound, and one picture word starting with that sound. `
+    : '';
   return SPEECH_THERAPIST_PERSONA + '\n\n' +
     `Write a short, high-dosage speech-therapy spoken script (about 60-120 words) for a ${age}-year-old child named ${kidName}. ` +
     `It MUST open by naming the child: "Hi ${kidName}! ..." ` +
-    `Today's theme is "${subject}" (${dayLabel}). ${guide} ` +
+    `Today's theme is "${subject}" (${dayLabel}). ${letterDirective}${guide} ` +
     `Use the full I-do -> we-do -> you-do production hierarchy. Use auditory bombardment (say the target many times). Use specific praise. ` +
     `Keep it tiny-sentence, huge-warmth, sing-song. ` +
     `Return JSON with keys: title (2-5 word fun title), script (exact spoken words only), letter (target uppercase letter or ""), sound (target phoneme like "AH" or ""), word (the picture word or ""), and camera_recommended (true if a camera check would help verify the child's production or movement, false otherwise).`;
@@ -136,8 +139,9 @@ export default async function(req) {
     const dayLabel = String(body.dayLabel || 'today');
     const kidName = String(body.kidName || 'friend');
     const age = Number(body.age) || 4;
+    const currentLetter = (String(body.currentLetter || 'A').toUpperCase().match(/[A-Z]/) || ['A'])[0];
 
-    const prompt = buildLessonPrompt(kidName, age, subject, dayLabel);
+    const prompt = buildLessonPrompt(kidName, age, subject, dayLabel, currentLetter);
 
     const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt,
