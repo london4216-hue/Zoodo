@@ -305,6 +305,7 @@ export default function LessonDetail() {
           kidName={kid?.name || 'the child'}
           subject={dayCfg.subject}
           parentVideos={kid?.parent_videos}
+          cheerText={kid?.cheer_text}
           onClose={() => { setCelebrating(false); navigate('/'); }}
         />
       )}

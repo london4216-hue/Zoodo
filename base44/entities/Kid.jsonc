@@ -24,6 +24,12 @@
       "title": "Developmental Milestone",
       "description": "The child's current developmental focus area"
     },
+    "cheer_text": {
+      "type": "string",
+      "title": "Encouragement Saying",
+      "description": "The cheer the grown-up says (and records) for the child, played back at the end of every lesson. Editable from the dashboard.",
+      "default": "You did it!"
+    },
     "avatar_color": {
       "type": "string",
       "title": "Avatar Color",

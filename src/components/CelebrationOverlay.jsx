@@ -6,7 +6,7 @@ import { Loader2, X, Mic } from 'lucide-react';
 
 // Full-screen celebration that fires when a lesson is marked complete:
 // confetti + a bouncing party character + an encouraging voice cheer.
-export default function CelebrationOverlay({ kidName, subject, parentVideos, onClose }) {
+export default function CelebrationOverlay({ kidName, subject, parentVideos, cheerText, onClose }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const audioRef = useRef(null);
@@ -117,7 +117,7 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, onC
                 Say it out loud with a big smile:
               </p>
               <p className="mt-1 text-lg font-bold text-[#D96969]">
-                “You did it, {kidName}!”
+                “{cheerText || `You did it, ${kidName}!`}”
               </p>
             </div>
             <button

@@ -3,18 +3,23 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import { DAYS, getMondayISO, formatWeekRange } from '@/lib/lessonConfig';
-import { Check, ChevronRight, Heart, TrendingUp } from 'lucide-react';
+import { Check, ChevronRight, Heart, TrendingUp, MessageCircle, Loader2 } from 'lucide-react';
 
 export default function Dashboard() {
   const [kid, setKid] = useState(null);
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cheerText, setCheerText] = useState('');
+  const [savingCheer, setSavingCheer] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         const kids = await base44.entities.Kid.list();
-        if (kids[0]) setKid(kids[0]);
+        if (kids[0]) {
+          setKid(kids[0]);
+          setCheerText(kids[0].cheer_text || '');
+        }
         const all = await base44.entities.Lesson.filter({ kid_id: kids[0]?.id });
         setLessons(all || []);
       } catch (err) {
@@ -135,6 +140,42 @@ export default function Dashboard() {
           <p className="mt-3 text-xs text-black/40">
             Future weeks lean toward these loved topics.
           </p>
+        </div>
+      )}
+
+      {/* Editable encouragement saying — grown-up can change the cheer anytime */}
+      {kid && (
+        <div className="rounded-[28px] bg-white p-5 mb-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <MessageCircle className="h-5 w-5 text-[#D96969]" />
+            <h2 className="font-bold text-black/80">Encouragement saying</h2>
+          </div>
+          <p className="text-xs text-black/40 mb-2">
+            This is what the grown-up says (and records) for the child. It plays back at the end of every lesson.
+          </p>
+          <div className="flex gap-2">
+            <input
+              value={cheerText}
+              onChange={(e) => setCheerText(e.target.value)}
+              placeholder="You did it!"
+              className="flex-1 rounded-2xl border-2 border-black/10 bg-white px-4 py-3 text-base font-semibold text-black focus:border-[#D96969] focus:outline-none transition-colors"
+            />
+            <button
+              onClick={async () => {
+                if (!kid) return;
+                setSavingCheer(true);
+                try {
+                  const updated = await base44.entities.Kid.update(kid.id, { cheer_text: cheerText });
+                  setKid(updated);
+                } catch (e) { /* ignore */ }
+                setSavingCheer(false);
+              }}
+              disabled={savingCheer || !cheerText.trim()}
+              className="rounded-2xl bg-[#D96969] px-5 py-3 font-bold text-white active:scale-95 transition disabled:opacity-60"
+            >
+              {savingCheer ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Save'}
+            </button>
+          </div>
         </div>
       )}
 

@@ -24,6 +24,7 @@ export default function Onboarding() {
   const [introAudio, setIntroAudio] = useState('');
   const [uploading, setUploading] = useState(false);
   const [kidId, setKidId] = useState(null);
+  const [kid, setKid] = useState(null);
   const [countdown, setCountdown] = useState(0);
   const [parentStep, setParentStep] = useState('count'); // count | video
   const [parentCount, setParentCount] = useState(1);
@@ -42,8 +43,10 @@ export default function Onboarding() {
         age: Number(startAge),
         developmental_milestone: String(startAge),
         program_length: programLength,
+        cheer_text: 'You did it!',
       });
       setKidId(kid.id);
+      setKid(kid);
       setStep('parent');
     } catch (err) {
       setError(err?.message || 'Something went wrong. Please try again.');
@@ -200,7 +203,7 @@ export default function Onboarding() {
                   </div>
                 ) : (
                   <ParentVideoPicker
-                    cheer={`You did it, ${name || 'friend'}!`}
+                    cheer={kid?.cheer_text ? `${kid.cheer_text}` : `You did it, ${name || 'friend'}!`}
                     onRecorded={saveParentVideo}
                   />
                 )}
