@@ -1,73 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Play, X, Youtube } from 'lucide-react';
+import { Loader2, Youtube } from 'lucide-react';
 
-// A "watch a supporting video" section for a weekly sensory activity.
-// Lazily finds a kid-friendly YouTube video for the skill on first tap, then
-// embeds it as a playable frame. The found video is persisted on the activity.
+// A "supporting video" section for a weekly sensory activity.
+// Automatically finds a kid-friendly YouTube video for the skill on mount and
+// embeds it. The found video is persisted on the activity.
 export default function ActivityVideo({ activity, age, onVideo }) {
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [video, setVideo] = useState(activity.video || null);
 
-  const ensureVideo = async () => {
-    if (video) return video;
-    setLoading(true);
-    setError('');
-    try {
-      const res = await base44.functions.invoke('generateActivityVideo', {
-        title: activity.title,
-        description: activity.description,
-        age,
-      });
-      if (res?.data?.error) throw new Error(res.data.error);
-      const v = res?.data?.video;
-      if (!v) throw new Error('No video came back');
-      setVideo(v);
-      onVideo?.(activity.id, v);
+  useEffect(() => {
+    if (video) return;
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      setError('');
       try {
-        await base44.entities.SensoryActivity.update(activity.id, { video: v });
-      } catch (e) { /* state already updated; persist failure is non-fatal */ }
-      return v;
-    } catch (e) {
-      setError(e?.message || 'Could not find a video.');
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleOpen = async () => {
-    setOpen(true);
-    await ensureVideo();
-  };
-
-  if (!open) {
-    return (
-      <button
-        onClick={handleOpen}
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#FFE8F3] py-2.5 text-sm font-bold text-[#D96969] active:scale-95 transition"
-      >
-        <Youtube className="h-4 w-4" />
-        Watch a video for this skill
-      </button>
-    );
-  }
+        const res = await base44.functions.invoke('generateActivityVideo', {
+          title: activity.title,
+          description: activity.description,
+          age,
+        });
+        if (res?.data?.error) throw new Error(res.data.error);
+        const v = res?.data?.video;
+        if (!v) throw new Error('No video came back');
+        if (cancelled) return;
+        setVideo(v);
+        onVideo?.(activity.id, v);
+        try {
+          await base44.entities.SensoryActivity.update(activity.id, { video: v });
+        } catch (e) { /* state already updated; persist failure is non-fatal */ }
+      } catch (e) {
+        if (!cancelled) setError(e?.message || 'Could not find a video.');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activity.id]);
 
   return (
     <div className="mt-3 rounded-2xl bg-white p-3 shadow-sm">
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center gap-2 mb-2">
+        <Youtube className="h-4 w-4 text-[#D96969]" />
         <span className="text-xs font-bold uppercase tracking-wide text-black/40">
           Supporting video
         </span>
-        <button
-          onClick={() => setOpen(false)}
-          className="text-black/40 active:scale-95"
-          aria-label="Close video"
-        >
-          <X className="h-4 w-4" />
-        </button>
       </div>
 
       {loading && (
