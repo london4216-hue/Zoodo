@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Loader2, Play, Pause, RotateCcw, Sparkles, Volume2 } from 'lucide-react';
 import LessonSupportVideo from '@/components/LessonSupportVideo';
 import CameraValidator from '@/components/CameraValidator';
+import MicParticipation from '@/components/MicParticipation';
 import { Image } from '@/components/ui/image';
 
 // AI-generated interactive audio activity: a cute character narrates a fun,
@@ -204,15 +205,22 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
             Play again
           </button>
 
-          {/* Camera participation check — only when the lesson plan calls for it
-              (a sound/movement a therapist can verify). */}
-          {showCamera && data.camera_recommended && (
+          {/* Participation check — camera only when the lesson plan calls for it
+              (a sound/movement a therapist can verify); otherwise a simple mic
+              tap so the camera never runs on every lesson. */}
+          {showCamera && data.camera_recommended ? (
             <CameraValidator
               inline
               targetAction={data.sound ? `saying ${data.sound} like ${data.word}` : (data.title || subject)}
               kidName={kidName}
               onSuccess={() => { setShowCamera(false); onComplete?.(); }}
               onClose={() => setShowCamera(false)}
+            />
+          ) : (
+            <MicParticipation
+              kidName={kidName}
+              targetLabel={data.sound ? `Say “${data.sound}”` : (data.title || subject)}
+              onDone={() => onComplete?.()}
             />
           )}
 
