@@ -1,8 +1,78 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets } from "base44:runtime";
 
-// Premium TTS: the signature "lady" voice via ElevenLabs. Returns a stored
-// file_url. Only the lady voice is ever used — no fallback to any other voice.
+// ─────────────────────────────────────────────────────────────────────────
+// System-wide tier-one speech-therapy persona + lesson-plan builder.
+// Every lesson is treated like a real, high-dosage articulation therapy session.
+// ─────────────────────────────────────────────────────────────────────────
+const SPEECH_THERAPIST_PERSONA = `You are a world-class, tier-one pediatric speech-language pathologist (SLP) and the signature warm, musical teaching voice of EduPath AI. You work with toddlers (around 3 years old) and you treat every single lesson like a real, high-dosage articulation therapy session.
+
+CLINICAL FRAMEWORK (tier-one articulation & phonological therapy):
+- TARGET: Every lesson has ONE clear target. For Letters: one letter, its phoneme (sound), and one picture word that begins with that sound.
+- AUDITORY BOMBARDMENT: Say the target sound/letter many times, clearly and slowly, BEFORE asking the child to produce it.
+- PRODUCTION HIERARCHY ("I do -> we do -> you do"):
+  1. MODEL: "Watch my mouth... AH." (exaggerated, slow)
+  2. TOGETHER: "Let's say it together... AH."
+  3. INDEPENDENT: "Your turn! Say AH!"
+- SOUND ISOLATION: Teach the sound alone first ("Say AH") before attaching the word ("AH... apple"). Use the phrase "say AH like apple".
+- TACTILE/KINESTHETIC CUES: Gently describe what the mouth does ("open your mouth wide", "lips smiling", "tongue down").
+- REPETITIONS: Aim for many correct, spaced repetitions of the target sound and word.
+- SPECIFIC PRAISE: Praise the specific attempt ("Great AH sound!"), not generic "good job".
+
+VOICE & DELIVERY (warm, musical, human — never robotic):
+- Soft, warm, friendly, with a smile in your voice. Musical sing-song rhythm.
+- SLOW pacing: short phrases separated by "..." for natural breathing pauses.
+- Pause gently after every model and every "your turn" so the child can respond.
+- Gentle excitement while teaching; bright musical joy when celebrating.
+- Use the child's name warmly and often.
+
+RULES:
+- Speak ONLY the exact words meant to be spoken aloud. Use "..." for pauses.
+- No stage directions, no parentheses, no brackets, no notes, no spelling-out of symbols.
+- Keep words tiny, sentences short, full of warmth.
+- For Letters: always teach letter NAME -> SOUND -> WORD, e.g. "A... AH... AH-apple... say AH like apple!"
+- For Numbers: count slowly, one number at a time, with the child.
+- Always end with specific praise and a warm cheer.`;
+
+const LESSON_PLAN_SCHEMA = {
+  type: 'object',
+  properties: {
+    title: { type: 'string' },
+    script: { type: 'string' },
+    letter: { type: 'string' },
+    sound: { type: 'string' },
+    word: { type: 'string' },
+    camera_recommended: { type: 'boolean' },
+  },
+  required: ['title', 'script', 'camera_recommended'],
+};
+
+const SUBJECT_GUIDE = {
+  'Numbers': 'Target: counting 1-10. Teach one number at a time with the child. Camera is NOT recommended (no mouth movement to verify). Set letter, sound, word to "".',
+  'Letters': 'Target: ONE uppercase letter and ONE picture word starting with that sound (A->apple, B->ball, C->cat, D->dog, E->egg, F->fish, etc.). Pick a DIFFERENT letter each day. Teach letter NAME -> SOUND (e.g. "AH") -> WORD. Use "say AH like apple" style. Camera IS recommended (we want to see the child produce the sound/word).',
+  'Outdoor activity': 'Target: a movement or observation. Teach with sensory language and I-do/we-do/you-do. Camera IS recommended if it involves a visible action (clap, wave, point). Set letter/sound to "" and word to the key object if there is one.',
+  'Music': 'Target: a rhythm or sound. Teach with clapping/tapping and I-do/we-do/you-do. Camera IS recommended (clap/tap is visible). Set letter/sound to "" and word to the key object/instrument if there is one.',
+  'Exercises': 'Target: a body movement. Teach "watch me -> together -> your turn". Camera IS recommended (movement is visible). Set letter/sound to "" and word to the key object if there is one.',
+};
+
+function buildLessonPrompt(kidName, age, subject, dayLabel) {
+  const guide = SUBJECT_GUIDE[subject] || `Target: ${subject}. Use I-do/we-do/you-do. Decide if a camera check would help verify the child's production.`;
+  return SPEECH_THERAPIST_PERSONA + '\n\n' +
+    `Write a short, high-dosage speech-therapy spoken script (about 60-120 words) for a ${age}-year-old child named ${kidName}. ` +
+    `It MUST open by naming the child: "Hi ${kidName}! ..." ` +
+    `Today's theme is "${subject}" (${dayLabel}). ${guide} ` +
+    `Use the full I-do -> we-do -> you-do production hierarchy. Use auditory bombardment (say the target many times). Use specific praise. ` +
+    `Keep it tiny-sentence, huge-warmth, sing-song. ` +
+    `Return JSON with keys: title (2-5 word fun title), script (exact spoken words only), letter (target uppercase letter or ""), sound (target phoneme like "AH" or ""), word (the picture word or ""), and camera_recommended (true if a camera check would help verify the child's production or movement, false otherwise).`;
+}
+
+function picturePromptFor(word) {
+  return `A bright, friendly, simple photograph of a single ${word} centered on a clean pure-white background, soft even lighting, sharp focus, children's speech-therapy flashcard style, no text, no people.`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// TTS — premium ElevenLabs voice with built-in fallback.
+// ─────────────────────────────────────────────────────────────────────────
 const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — warm, friendly female
 async function synthesizeSpeech(base44, text) {
   const clean = (text || "").slice(0, 4500);
@@ -26,7 +96,6 @@ async function synthesizeSpeech(base44, text) {
     return await builtinTTS(base44, text);
   }
   if (!resp.ok) {
-    // Fall back to the built-in TTS so the activity ALWAYS works for the kid.
     const detail = await resp.text().catch(() => "");
     console.warn(`ElevenLabs TTS failed (${resp.status}): ${detail.slice(0, 200)} — using built-in voice.`);
     return await builtinTTS(base44, text);
@@ -38,7 +107,6 @@ async function synthesizeSpeech(base44, text) {
   return up.file_url;
 }
 
-// Built-in TTS fallback — always available, no external key required.
 async function builtinTTS(base44, text) {
   const res = await base44.asServiceRole.integrations.Core.GenerateSpeech({
     text: (text || '').slice(0, 5000),
@@ -48,31 +116,15 @@ async function builtinTTS(base44, text) {
   return res.url;
 }
 
-// The signature EduPath AI teaching voice — warm, musical, sensory-rich.
-const EDU_VOICE_ID = 'honey';
-const EDU_VOICE_PERSONA = `You are the signature teaching voice of EduPath AI — a warm, musical, sensory-rich early-learning guide for toddlers (around 3 years old), inspired by warm, musical early-learning educators and uniquely yours.
-
-VOICE & TONE: Warm, soft, friendly, deeply human — never robotic. Expressive emotional range (a smile in your voice, gentle excitement, soft encouragement). Musical inflection with a natural sing-song rhythm. Clear, slow, child-friendly articulation with gentle pauses so the child can respond. High empathy and constant positive reinforcement.
-
-TEACHING STYLE ("I do -> we do -> you do"): Model first ("Watch me..."), then together ("Let's do it together!"), then invite ("Your turn!"). Frequently model actions with words: counting on fingers, clapping, pointing, waving, tapping. Hand-over-hand language: "Put your finger here...", "Let's clap together!". Pause gently after questions so the child can answer.
-
-DELIVERY & SENSORY CUES: Celebrate with musical, melodic cheers ("Greeeat job!"). Use tiny simple songs or chants for counting, ABCs, colors, shapes. Describe sensory moments: sparkles, color bursts, soft chimes. Add playful, gentle sound effects in words ("ooh", "wheee", "ding!") — never distracting. Soothe during instruction; burst with joy when celebrating.
-
-PERSONALITY: Kind, patient, joyful, predictable, structured, comforting. Always supportive and validating; high-energy only when celebrating.
-
-PREMIUM HUMAN DELIVERY (this is what makes you sound like a real, warm person — not robotic):
-- Sound like a real human with natural breathing and gentle vocal warmth.
-- Use SLOW pacing: write in short phrases separated by "..." for natural breathing pauses.
-- Pause gently after questions and after each modeled action so the child can respond.
-- Vary your emotion: soft and soothing while teaching, bright and musical when celebrating.
-- Let your voice smile — gentle excitement, warm encouragement, tender pride.
-- Use melodic, sing-song phrasing; turn key ideas into tiny chants or songs.
-- Add sensory moments in words: sparkles, color bursts, soft chimes, gentle giggles.
-
-RULES: Speak ONLY the exact words meant to be spoken aloud. Use "..." for natural pauses. No stage directions, no parentheses, no brackets, no notes, no spelling-out of symbols. Use the child's name warmly and often. Keep words tiny, sentences short, and full of warmth.`;
-
-// Generates a short, playful, warm, musical interactive script for the day's
-// subject, then narrates it with a cute, upbeat voice (GenerateSpeech "sunny").
+// ─────────────────────────────────────────────────────────────────────────
+// Tier-one speech-therapy lesson generator.
+// Builds an articulation-therapy plan (target letter/sound/word + I-do/we-do/
+// you-do script), narrates it, and — when the plan has a picture word —
+// generates a clean photo of the target object so the child sees the real
+// thing (e.g. a photo of an apple for the letter A). The plan flags whether a
+// camera participation check would help verify the child's production, so the
+// camera only launches when clinically useful.
+// ─────────────────────────────────────────────────────────────────────────
 export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
@@ -85,63 +137,46 @@ export default async function(req) {
     const kidName = String(body.kidName || 'friend');
     const age = Number(body.age) || 4;
 
-    // Turn the lesson subject into a natural verb phrase so the opening line
-    // sounds right (e.g. "Numbers" -> "count numbers").
-    const SUBJECT_VERB: Record<string, string> = {
-      'Numbers': 'count numbers',
-      'Letters': 'learn our letters',
-      'Outdoor activity': 'explore outside',
-      'Music': 'make music',
-      'Exercises': 'move and exercise',
-    };
-    const action = SUBJECT_VERB[subject] || subject.toLowerCase();
-
-    const prompt =
-      EDU_VOICE_PERSONA + '\n\n' +
-      `Write a short, super catchy, sing-song spoken script (about 60-120 words) for a little child named ${kidName}. ` +
-      `It MUST open by cheerfully naming the child — exactly: "Hi ${kidName}! ... let's get ready to ${action}!" — because the child cannot read and the voice is their guide. ` +
-      `Today's theme is "${subject}" (${dayLabel}). ` +
-      `Talk like you are speaking to a ${age}-year-old: tiny sentences, HUGE energy, lots of repetition, very simple words, ` +
-      `and playful sounds like "Wheee!" and "Yay!". ` +
-      `For Numbers, count from 1 to 10 VERY slowly and excitedly — say just ONE number at a time on its own ` +
-      `(like "One! ... Two! ... Three! ..."), cheering ${kidName} on after each one, and ask them to say it with you. ` +
-      `For Letters, teach like a speech therapist: pick ONE uppercase letter (A, B, C, D, or E — pick a different one each day) and ONE simple familiar word that starts with that letter's sound (e.g. A → apple, B → ball, C → cat, D → dog, E → egg). The script MUST teach the letter NAME, then the letter SOUND, then the word — for example: "A! ... A is for apple! ... ah, ah, ah, apple! ... Can you say A, ${kidName}? ... Your turn!" Have the child repeat the letter and the word. ` +
-      `Use call-and-response such as "Your turn!" and "You did it!". ` +
-      `Write ONLY the exact words meant to be spoken out loud — no stage directions, no parentheses, no notes, no spelling-out. ` +
-      `End with a big happy cheer and a giggle. ` +
-      `Return JSON with keys "title" (a short, fun, 2-5 word title), "script" (the words to be spoken), and for Letters only: "letter" (a single uppercase letter), "word" (the example word), "emoji" (one emoji for the word). For non-Letters subjects, leave letter, word, emoji as empty strings.`;
+    const prompt = buildLessonPrompt(kidName, age, subject, dayLabel);
 
     const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt,
-      response_json_schema: {
-        type: 'object',
-        properties: {
-          title: { type: 'string' },
-          script: { type: 'string' },
-          letter: { type: 'string' },
-          word: { type: 'string' },
-          emoji: { type: 'string' },
-        },
-        required: ['title', 'script'],
-      },
+      response_json_schema: LESSON_PLAN_SCHEMA,
     });
 
     const title = (llmRes && llmRes.title) || `${subject} time with ${kidName}`;
     const script = (llmRes && llmRes.script) || '';
     const letter = (llmRes && llmRes.letter) || '';
+    const sound = (llmRes && llmRes.sound) || '';
     const word = (llmRes && llmRes.word) || '';
-    const emoji = (llmRes && llmRes.emoji) || '';
+    const camera_recommended = !!(llmRes && llmRes.camera_recommended);
 
     if (!script) {
       return Response.json({ error: 'Could not create the activity. Please try again.' }, { status: 500 });
     }
 
-    const audio_url = await synthesizeSpeech(base44, script);
+    // Narrate the script and (if there's a picture word) generate a clean photo
+    // of the object in parallel so the flashcard is ready with the audio.
+    const imageTask = word
+      ? base44.asServiceRole.integrations.Core.GenerateImage({ prompt: picturePromptFor(word) })
+          .then((r) => (r && r.url) || '').catch(() => '')
+      : Promise.resolve('');
+
+    const [audio_url, picture_url] = await Promise.all([
+      synthesizeSpeech(base44, script),
+      imageTask,
+    ]);
+
     if (!audio_url) {
       return Response.json({ error: 'Could not create the audio. Please try again.' }, { status: 500 });
     }
 
-    return Response.json({ title, script, audio_url, letter, word, emoji });
+    return Response.json({
+      title, script, audio_url,
+      letter, sound, word,
+      picture_url,
+      camera_recommended,
+    });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Loader2, Play, Pause, RotateCcw, Sparkles, Volume2 } from 'lucide-react';
 import LessonSupportVideo from '@/components/LessonSupportVideo';
 import CameraValidator from '@/components/CameraValidator';
+import { Image } from '@/components/ui/image';
 
 // AI-generated interactive audio activity: a cute character narrates a fun,
 // Ms-Rachel-style lesson that invites the kid to join in. Includes a replay
@@ -33,6 +34,9 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
         if (res?.data?.error) throw new Error(res.data.error);
         setData(res.data);
         setStatus('ready');
+        // Only launch the camera when the lesson plan calls for it (e.g. the
+        // child producing a sound or movement a therapist can verify).
+        if (res.data?.camera_recommended) setShowCamera(true);
       } catch (err) {
         if (cancelled) return;
         setError(err?.message || 'Could not create the activity.');
@@ -42,12 +46,6 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
     run();
     return () => { cancelled = true; };
   }, [subject, dayLabel, kidName, age]);
-
-  // Auto-launch the camera as soon as the activity is ready, so the child is
-  // on screen practicing while the lesson plays (speech-therapist style).
-  useEffect(() => {
-    if (status === 'ready') setShowCamera(true);
-  }, [status]);
 
   const togglePlay = () => {
     const a = audioRef.current;
@@ -159,14 +157,32 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
             </p>
           </div>
 
-          {/* Speech-therapy letter flashcard (Letters days) */}
-          {data.letter && (
-            <div className="my-2 flex items-center justify-center gap-3 rounded-2xl bg-[#FFF6E6] p-3">
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white text-5xl font-bold text-[#D96969] shadow-sm">
-                {data.letter}
+          {/* Speech-therapy flashcard: letter + real picture + word + sound cue */}
+          {(data.letter || data.picture_url) && (
+            <div className="my-2 rounded-2xl bg-[#FFF6E6] p-3">
+              <div className="flex items-center justify-center gap-3">
+                {data.letter && (
+                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-white text-5xl font-bold text-[#D96969] shadow-sm">
+                    {data.letter}
+                  </div>
+                )}
+                {data.picture_url && (
+                  <Image
+                    src={data.picture_url}
+                    alt={data.word || data.title}
+                    fittingType="fill"
+                    className="h-20 w-20 shrink-0 rounded-2xl shadow-sm"
+                  />
+                )}
+                {data.word && (
+                  <div className="text-xl font-bold text-black/70">{data.word}</div>
+                )}
               </div>
-              <div className="text-5xl">{data.emoji || '🍎'}</div>
-              <div className="text-xl font-bold text-black/70">{data.word}</div>
+              {data.sound && (
+                <div className="mt-2 text-center text-sm font-bold text-[#D96969]">
+                  Say “{data.sound}” like {data.word}
+                </div>
+              )}
             </div>
           )}
 
@@ -188,12 +204,12 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
             Play again
           </button>
 
-          {/* Camera participation check — opens after the voice finishes.
-              Lenient: if the kid isn't seen doing the action, it just moves on. */}
-          {showCamera && (
+          {/* Camera participation check — only when the lesson plan calls for it
+              (a sound/movement a therapist can verify). */}
+          {showCamera && data.camera_recommended && (
             <CameraValidator
               inline
-              targetAction={data.letter ? `${data.letter} for ${data.word}` : (data.title || subject)}
+              targetAction={data.sound ? `saying ${data.sound} like ${data.word}` : (data.title || subject)}
               kidName={kidName}
               onSuccess={() => { setShowCamera(false); onComplete?.(); }}
               onClose={() => setShowCamera(false)}
