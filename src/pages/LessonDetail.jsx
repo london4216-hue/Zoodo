@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import DayGraphic from '@/components/DayGraphic';
@@ -156,9 +156,6 @@ export default function LessonDetail() {
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <Link to="/dashboard" className="text-sm font-semibold text-[#4969E1]">
-          Dashboard
-        </Link>
       </div>
 
       {/* Learning buddy greets the kid by name with today's topic */}
