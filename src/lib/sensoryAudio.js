@@ -195,4 +195,34 @@ export const stopAmbientMusic = () => {
   music.master = null;
 };
 
+// Fun, zany, bouncy jingle — a silly wobbly glissando + a bright triad flourish.
+// Played after Zoodo finishes talking for a playful musical button.
+export const playZanyJingle = () => {
+  const c = getCtx();
+  if (!c) return;
+  const now = c.currentTime;
+  // Wobbly ascending glissando
+  const wobble = c.createOscillator();
+  const wg = c.createGain();
+  wobble.type = 'sawtooth';
+  wobble.frequency.setValueAtTime(300, now);
+  wobble.frequency.exponentialRampToValueAtTime(1200, now + 0.5);
+  wg.gain.setValueAtTime(0.0001, now);
+  wg.gain.exponentialRampToValueAtTime(0.12, now + 0.03);
+  wg.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+  const wfilter = c.createBiquadFilter();
+  wfilter.type = 'lowpass';
+  wfilter.frequency.value = 1800;
+  wobble.connect(wfilter);
+  wfilter.connect(wg);
+  wg.connect(c.destination);
+  wobble.start(now);
+  wobble.stop(now + 0.6);
+  // Bright triad flourish right after
+  tone(523.25, 0.5, 0.18, 'triangle', 0.16);
+  tone(659.25, 0.5, 0.18, 'triangle', 0.16);
+  tone(783.99, 0.5, 0.26, 'triangle', 0.18);
+  tone(1046.5, 0.66, 0.3, 'triangle', 0.2);
+};
+
 export const isMusicPlaying = () => music.playing;

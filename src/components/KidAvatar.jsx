@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { playZanyJingle } from '@/lib/sensoryAudio';
 
 // Zoodo — the funny, silly creature "learning buddy" that greets the kid by name
 // and speaks the greeting aloud using the browser's built-in speech synthesis.
@@ -45,7 +46,7 @@ export default function KidAvatar({ greeting, audioUrl, size = 150, autoSpeak = 
           src={audioUrl}
           onPlay={() => setSpeaking(true)}
           onPause={() => setSpeaking(false)}
-          onEnded={() => setSpeaking(false)}
+          onEnded={() => { setSpeaking(false); playZanyJingle(); }}
           className="hidden"
         />
       )}
