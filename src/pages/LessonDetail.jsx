@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
-import DayGraphic from '@/components/DayGraphic';
 import KidAvatar from '@/components/KidAvatar';
 import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
@@ -14,7 +13,7 @@ import SensoryButton from '@/components/SensoryButton';
 import MusicToggle from '@/components/MusicToggle';
 import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { DAY_MAP } from '@/lib/lessonConfig';
-import { ArrowLeft, Loader2, Pencil, Play } from 'lucide-react';
+import { ArrowLeft, Loader2, Pencil } from 'lucide-react';
 
 export default function LessonDetail() {
   const { kidId, weekStart, day } = useParams();
@@ -165,38 +164,6 @@ export default function LessonDetail() {
       {/* Learning buddy greets the kid by name with today's topic */}
       <div className="flex justify-center pb-2">
         <KidAvatar greeting={greeting} audioUrl={greetingAudio} size={120} />
-      </div>
-
-      {/* Day banner */}
-      <div
-        className="rounded-[28px] px-5 py-5 mb-4"
-        style={{ backgroundColor: dayCfg.bg }}
-      >
-        <div className="flex items-center gap-4">
-          <DayGraphic type={dayCfg.graphic} />
-          <div className="flex-1">
-            <div className="text-sm font-semibold text-black/70">{realDayLabel}</div>
-            <div
-              className="text-3xl font-bold leading-tight"
-              style={{
-                color: dayCfg.titleColor,
-                WebkitTextStroke: `1.5px ${dayCfg.titleStroke}`,
-              }}
-            >
-              {dayCfg.subject}
-            </div>
-          </div>
-          <button
-            onClick={() => {
-              setStep('activity');
-              activityRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }}
-            className="flex items-center gap-1.5 rounded-2xl bg-white/80 px-4 py-2.5 text-sm font-bold text-black/70 shadow-sm active:scale-95 transition hover:bg-white"
-          >
-            <Play className="h-4 w-4" />
-            Launch activity
-          </button>
-        </div>
       </div>
 
       {/* Activity stepper — one activity at a time */}
