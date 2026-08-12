@@ -14,10 +14,44 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
   const [videoIdx, setVideoIdx] = useState(0);
   const [videosDone, setVideosDone] = useState(false);
   const videos = Array.isArray(parentVideos) ? parentVideos.filter(Boolean) : [];
+  const colors = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#FFD9E6', '#7B4FE0'];
+
+  // Fire confetti outward from around the video + a little firework pop sound.
+  const fireworksAroundVideo = () => {
+    const el = videoRef.current;
+    let cx = 0.5, cy = 0.5;
+    if (el) {
+      const r = el.getBoundingClientRect();
+      cx = (r.left + r.width / 2) / window.innerWidth;
+      cy = (r.top + r.height / 2) / window.innerHeight;
+    }
+    confetti({ particleCount: 80, spread: 100, startVelocity: 35, origin: { x: cx, y: cy }, colors });
+    setTimeout(() => confetti({ particleCount: 50, angle: 60, spread: 70, origin: { x: Math.max(0.05, cx - 0.12), y: cy }, colors }), 120);
+    setTimeout(() => confetti({ particleCount: 50, angle: 120, spread: 70, origin: { x: Math.min(0.95, cx + 0.12), y: cy }, colors }), 240);
+    playPop();
+  };
+
+  // Tiny WebAudio "firework pop" — no asset file needed.
+  const playPop = () => {
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx();
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'triangle';
+      o.frequency.setValueAtTime(880, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.25);
+      g.gain.setValueAtTime(0.25, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(); o.stop(ctx.currentTime + 0.3);
+      o.onended = () => ctx.close();
+    } catch (e) { /* ignore */ }
+  };
 
   useEffect(() => {
     let cancelled = false;
-    const colors = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#FFD9E6', '#7B4FE0'];
     const burst = () => {
       confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 }, colors });
       setTimeout(() => confetti({ particleCount: 60, angle: 60, spread: 60, origin: { x: 0, y: 0.7 }, colors }), 180);
@@ -133,6 +167,7 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
                     playsInline
                     controls={videosDone}
                     className="h-full w-full object-cover"
+                    onPlay={fireworksAroundVideo}
                     onEnded={() => {
                       if (videoIdx < videos.length - 1) {
                         setVideoIdx((i) => i + 1);
