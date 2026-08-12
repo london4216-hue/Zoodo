@@ -6,9 +6,11 @@ import { BookOpen, Loader2, Volume2, Square, RotateCw } from 'lucide-react';
 // learning buddy using the browser's built-in speech synthesis.
 export default function StoryActivity({ kidName, subject, age, onSaved }) {
   const [story, setStory] = useState('');
+  const [audioUrl, setAudioUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [error, setError] = useState('');
+  const audioRef = useRef(null);
 
   const generate = async () => {
     setLoading(true);
@@ -22,6 +24,7 @@ export default function StoryActivity({ kidName, subject, age, onSaved }) {
       const text = res?.data?.story || '';
       if (!text) throw new Error('No story came back');
       setStory(text);
+      setAudioUrl(res?.data?.audio_url || '');
       onSaved?.(text);
     } catch (err) {
       setError(err?.message || 'Could not generate story');
@@ -30,30 +33,21 @@ export default function StoryActivity({ kidName, subject, age, onSaved }) {
     }
   };
 
-  const stopSpeech = () => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
+  const stopAudio = () => {
+    const el = audioRef.current;
+    if (el) { el.pause(); el.currentTime = 0; }
     setSpeaking(false);
   };
 
   const readAloud = () => {
-    if (speaking) {
-      stopSpeech();
-      return;
-    }
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-    stopSpeech();
-    const u = new SpeechSynthesisUtterance(story);
-    u.rate = 0.95;
-    u.pitch = 1.25;
-    u.onstart = () => setSpeaking(true);
-    u.onend = () => setSpeaking(false);
-    u.onerror = () => setSpeaking(false);
-    window.speechSynthesis.speak(u);
+    const el = audioRef.current;
+    if (!el || !audioUrl) return;
+    if (speaking) { stopAudio(); return; }
+    el.currentTime = 0;
+    el.play().then(() => setSpeaking(true)).catch(() => setSpeaking(false));
   };
 
-  useEffect(() => () => stopSpeech(), []);
+  useEffect(() => () => stopAudio(), []);
 
   if (loading) {
     return (
@@ -109,6 +103,13 @@ export default function StoryActivity({ kidName, subject, age, onSaved }) {
         <h3 className="font-bold text-black/70">A {subject} story for {kidName}</h3>
       </div>
       <p className="text-[15px] leading-relaxed text-black/70 whitespace-pre-line">{story}</p>
+      <audio
+        ref={audioRef}
+        src={audioUrl}
+        onEnded={() => setSpeaking(false)}
+        onPause={() => setSpeaking(false)}
+        className="hidden"
+      />
       <div className="flex gap-2 mt-4">
         <button
           type="button"
