@@ -288,4 +288,82 @@ export const playZanyJingle = () => {
   wobble.stop(now + 1.35);
 };
 
+// A big, silly giggle-and-laugh — a cascade of pitchy "ha ha ha" syllables that
+// gets higher and wobblier, then collapses into a goofy belly-laugh. Played
+// right after Zoodo finishes a voiceover.
+export const playSillyGiggle = () => {
+  const c = getCtx();
+  if (!c) return;
+  const now = c.currentTime;
+
+  // One "ha" syllable: a short vocal-ish "ah" with a quick pitch wobble + vibrato.
+  const ha = (t, baseFreq, gain = 0.3) => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    const vib = c.createOscillator();
+    const vibGain = c.createGain();
+    o.type = 'sawtooth';
+    o.frequency.setValueAtTime(baseFreq, c.currentTime + t);
+    o.frequency.exponentialRampToValueAtTime(baseFreq * 0.7, c.currentTime + t + 0.12);
+    // vibrato for a silly wobbly voice
+    vib.type = 'sine';
+    vib.frequency.value = 18;
+    vibGain.gain.value = baseFreq * 0.06;
+    vib.connect(vibGain);
+    vibGain.connect(o.frequency);
+    const f = c.createBiquadFilter();
+    f.type = 'bandpass';
+    f.frequency.value = baseFreq * 2.2;
+    f.Q.value = 1.2;
+    o.connect(f);
+    f.connect(g);
+    g.connect(c.destination);
+    const start = c.currentTime + t;
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(gain, start + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + 0.16);
+    o.start(start);
+    o.stop(start + 0.18);
+    vib.start(start);
+    vib.stop(start + 0.18);
+  };
+
+  // Rising cascade of "ha ha ha ha ha" — each one higher and sillier
+  const syllables = 7;
+  const step = 0.1;
+  for (let i = 0; i < syllables; i++) {
+    const freq = 320 * Math.pow(1.09, i);
+    ha(i * step, freq, 0.3 - i * 0.01);
+  }
+
+  // Goofy belly-laugh wobble tail — a big descending warble
+  const tailStart = syllables * step + 0.05;
+  const wobble = c.createOscillator();
+  const wg = c.createGain();
+  const vib = c.createOscillator();
+  const vibGain = c.createGain();
+  wobble.type = 'sawtooth';
+  wobble.frequency.setValueAtTime(520, c.currentTime + tailStart);
+  wobble.frequency.exponentialRampToValueAtTime(180, c.currentTime + tailStart + 0.7);
+  vib.type = 'sine';
+  vib.frequency.value = 22;
+  vibGain.gain.value = 40;
+  vib.connect(vibGain);
+  vibGain.connect(wobble.frequency);
+  const wf = c.createBiquadFilter();
+  wf.type = 'bandpass';
+  wf.frequency.value = 900;
+  wf.Q.value = 1.5;
+  wobble.connect(wf);
+  wf.connect(wg);
+  wg.connect(c.destination);
+  wg.gain.setValueAtTime(0.0001, c.currentTime + tailStart);
+  wg.gain.exponentialRampToValueAtTime(0.34, c.currentTime + tailStart + 0.05);
+  wg.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + tailStart + 0.75);
+  wobble.start(c.currentTime + tailStart);
+  wobble.stop(c.currentTime + tailStart + 0.8);
+  vib.start(c.currentTime + tailStart);
+  vib.stop(c.currentTime + tailStart + 0.8);
+};
+
 export const isMusicPlaying = () => music.playing;
