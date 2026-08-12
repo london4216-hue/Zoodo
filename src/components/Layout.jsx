@@ -14,7 +14,7 @@ export default function Layout({ children }) {
       </main>
       <nav className="fixed bottom-0 inset-x-0 z-20 border-t border-black/5 bg-white/90 backdrop-blur">
         <div className="mx-auto max-w-2xl flex items-center justify-around px-6 py-2">
-          <NavItem to="/" label="This Week" icon={Home} active={isActive('/') && !isActive('/dashboard') && !isActive('/activities')} />
+          <NavItem to="/" label="Home" icon={Home} active={isActive('/') && !isActive('/dashboard') && !isActive('/activities')} />
           <NavItem to="/activities" label="Activities" icon={Sparkles} active={isActive('/activities')} />
           <NavItem to="/dashboard" label="Dashboard" icon={LayoutDashboard} active={isActive('/dashboard')} />
         </div>
