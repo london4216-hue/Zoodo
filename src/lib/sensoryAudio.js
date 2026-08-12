@@ -195,34 +195,97 @@ export const stopAmbientMusic = () => {
   music.master = null;
 };
 
-// Fun, zany, bouncy jingle — a silly wobbly glissando + a bright triad flourish.
-// Played after Zoodo finishes talking for a playful musical button.
+// Fun, zany, LOUD, dancey jingle — a punchy bass-beat + a bouncy synth melody
+// that makes you want to wiggle. Played after Zoodo finishes talking.
 export const playZanyJingle = () => {
   const c = getCtx();
   if (!c) return;
   const now = c.currentTime;
-  // Wobbly ascending glissando
+
+  // Punchy dance "kick" beat — four-on-the-floor
+  const kick = (t) => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(140, c.currentTime + t);
+    o.frequency.exponentialRampToValueAtTime(50, c.currentTime + t + 0.12);
+    g.gain.setValueAtTime(0.0001, c.currentTime + t);
+    g.gain.exponentialRampToValueAtTime(0.5, c.currentTime + t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + t + 0.22);
+    o.connect(g);
+    g.connect(c.destination);
+    o.start(c.currentTime + t);
+    o.stop(c.currentTime + t + 0.25);
+  };
+  // Hi-hat tick
+  const hat = (t) => {
+    const bufferSize = 1024;
+    const buffer = c.createBuffer(1, bufferSize, c.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 3);
+    const noise = c.createBufferSource();
+    noise.buffer = buffer;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.18, c.currentTime + t);
+    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + t + 0.05);
+    const f = c.createBiquadFilter();
+    f.type = 'highpass';
+    f.frequency.value = 7000;
+    noise.connect(f);
+    f.connect(g);
+    g.connect(c.destination);
+    noise.start(c.currentTime + t);
+    noise.stop(c.currentTime + t + 0.06);
+  };
+
+  const beat = 0.16;
+  for (let i = 0; i < 8; i++) {
+    kick(i * beat);
+    hat(i * beat + beat / 2);
+  }
+
+  // Bouncy synth melody — bright, jumping, dancey
+  const melody = [
+    [523.25, 0], [659.25, 0.08], [783.99, 0.16], [1046.5, 0.24],
+    [783.99, 0.32], [1046.5, 0.4], [1318.5, 0.48], [1046.5, 0.56],
+    [880.0, 0.64], [1046.5, 0.72], [1318.5, 0.8], [1567.98, 0.88],
+  ];
+  melody.forEach(([f, t]) => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = 'square';
+    o.frequency.value = f;
+    const start = now + t;
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(0.28, start + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + 0.14);
+    const flt = c.createBiquadFilter();
+    flt.type = 'lowpass';
+    flt.frequency.value = 2600;
+    o.connect(flt);
+    flt.connect(g);
+    g.connect(c.destination);
+    o.start(start);
+    o.stop(start + 0.16);
+  });
+
+  // Wobbly zany glissando on top for the silly factor
   const wobble = c.createOscillator();
   const wg = c.createGain();
   wobble.type = 'sawtooth';
-  wobble.frequency.setValueAtTime(300, now);
-  wobble.frequency.exponentialRampToValueAtTime(1200, now + 0.5);
+  wobble.frequency.setValueAtTime(400, now);
+  wobble.frequency.exponentialRampToValueAtTime(1600, now + 1.2);
   wg.gain.setValueAtTime(0.0001, now);
-  wg.gain.exponentialRampToValueAtTime(0.12, now + 0.03);
-  wg.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+  wg.gain.exponentialRampToValueAtTime(0.16, now + 0.05);
+  wg.gain.exponentialRampToValueAtTime(0.0001, now + 1.3);
   const wfilter = c.createBiquadFilter();
   wfilter.type = 'lowpass';
-  wfilter.frequency.value = 1800;
+  wfilter.frequency.value = 2200;
   wobble.connect(wfilter);
   wfilter.connect(wg);
   wg.connect(c.destination);
   wobble.start(now);
-  wobble.stop(now + 0.6);
-  // Bright triad flourish right after
-  tone(523.25, 0.5, 0.18, 'triangle', 0.16);
-  tone(659.25, 0.5, 0.18, 'triangle', 0.16);
-  tone(783.99, 0.5, 0.26, 'triangle', 0.18);
-  tone(1046.5, 0.66, 0.3, 'triangle', 0.2);
+  wobble.stop(now + 1.35);
 };
 
 export const isMusicPlaying = () => music.playing;
