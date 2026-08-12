@@ -6,6 +6,9 @@ import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import ActivityPlayMode from '@/components/ActivityPlayMode';
 import ActivityVideo from '@/components/ActivityVideo';
+import SensoryBackground from '@/components/SensoryBackground';
+import SensoryButton from '@/components/SensoryButton';
+import MusicToggle from '@/components/MusicToggle';
 import { getMondayISO, addWeeksISO, formatWeekRange } from '@/lib/lessonConfig';
 import { ChevronLeft, ChevronRight, Loader2, Play, SkipForward, Check } from 'lucide-react';
 
@@ -127,6 +130,9 @@ export default function WeeklyActivities() {
 
   return (
     <Layout>
+      <SensoryBackground />
+      <MusicToggle />
+      <div className="relative z-10">
       <div className="flex items-center justify-between mb-4 px-1">
         <button
           onClick={() => setWeekStart(addWeeksISO(weekStart, -1))}
@@ -187,13 +193,14 @@ export default function WeeklyActivities() {
                   </div>
                 </div>
                 <div className="mt-3 flex gap-2">
-                  <button
+                  <SensoryButton
                     onClick={() => play(a)}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#4969E1] py-2.5 text-sm font-bold text-white active:scale-95"
+                    glow="#4969E1"
+                    className="flex flex-1 items-center justify-center gap-1.5 bg-[#4969E1] py-2.5 text-sm text-white"
                   >
                     <Play className="h-4 w-4" />
                     {a.status === 'in_progress' ? 'Resume' : 'Play'}
-                  </button>
+                  </SensoryButton>
                   <button
                     onClick={() => skip(a)}
                     className="flex items-center gap-1 rounded-2xl border-2 border-black/10 px-3 py-2.5 text-sm font-bold text-black/50 active:scale-95"
@@ -201,13 +208,14 @@ export default function WeeklyActivities() {
                   >
                     <SkipForward className="h-4 w-4" />
                   </button>
-                  <button
+                  <SensoryButton
                     onClick={() => complete(a)}
-                    className="flex items-center gap-1 rounded-2xl bg-green-500 px-3 py-2.5 text-sm font-bold text-white active:scale-95"
+                    glow="#4FAE5A"
+                    className="flex items-center gap-1 bg-green-500 px-3 py-2.5 text-sm text-white"
                     aria-label="Mark complete"
                   >
                     <Check className="h-4 w-4" strokeWidth={3} />
-                  </button>
+                  </SensoryButton>
                 </div>
 
                 <ActivityVideo activity={a} age={kid?.age || 3} onVideo={onVideo} />
@@ -216,6 +224,8 @@ export default function WeeklyActivities() {
           })}
         </div>
       )}
+
+      </div>
 
       {playing && (
         <ActivityPlayMode

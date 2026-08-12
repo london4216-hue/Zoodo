@@ -55,3 +55,92 @@ export const vibrate = (pattern) => {
     try { navigator.vibrate(pattern); } catch (e) { /* ignore */ }
   }
 };
+
+// Soft pop for tap feedback on sensory buttons.
+export const playPop = () => {
+  const c = getCtx();
+  if (!c) return;
+  const now = c.currentTime;
+  const o = c.createOscillator();
+  const g = c.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(660, now);
+  o.frequency.exponentialRampToValueAtTime(990, now + 0.08);
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(0.16, now + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+  o.connect(g);
+  g.connect(c.destination);
+  o.start(now);
+  o.stop(now + 0.2);
+};
+
+// Gentle ambient music: a soft pad + a slow pentatonic melody loop. Toggleable.
+let music = { playing: false, timer: null, master: null, padOscs: [] };
+
+export const startAmbientMusic = () => {
+  if (music.playing) return;
+  const c = getCtx();
+  if (!c) return;
+  music.playing = true;
+  const master = c.createGain();
+  master.gain.value = 0;
+  master.connect(c.destination);
+  master.gain.setTargetAtTime(0.1, c.currentTime, 1.2);
+  music.master = master;
+
+  // Soft pad chord (C major-ish).
+  const padFreqs = [130.81, 196.0, 261.63];
+  const padGain = c.createGain();
+  padGain.gain.value = 0.5;
+  padGain.connect(master);
+  music.padOscs = padFreqs.map((f) => {
+    const o = c.createOscillator();
+    o.type = 'sine';
+    o.frequency.value = f;
+    o.connect(padGain);
+    o.start();
+    return o;
+  });
+
+  // Slow pentatonic melody (C5 D5 E5 G5 A5).
+  const scale = [523.25, 587.33, 659.25, 783.99, 880.0];
+  const playNote = () => {
+    if (!music.playing) return;
+    const now = c.currentTime;
+    const f = scale[Math.floor(Math.random() * scale.length)];
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = 'triangle';
+    o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.linearRampToValueAtTime(0.22, now + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+    o.connect(g);
+    g.connect(master);
+    o.start(now);
+    o.stop(now + 1.5);
+  };
+  music.timer = setInterval(playNote, 1500);
+  playNote();
+};
+
+export const stopAmbientMusic = () => {
+  if (!music.playing) return;
+  const c = getCtx();
+  music.playing = false;
+  if (music.timer) { clearInterval(music.timer); music.timer = null; }
+  if (c && music.master) {
+    music.master.gain.setTargetAtTime(0, c.currentTime, 0.5);
+  }
+  const padOscs = music.padOscs;
+  const master = music.master;
+  setTimeout(() => {
+    padOscs.forEach((o) => { try { o.stop(); } catch (e) {} });
+    try { master && master.disconnect(); } catch (e) {}
+  }, 1200);
+  music.padOscs = [];
+  music.master = null;
+};
+
+export const isMusicPlaying = () => music.playing;

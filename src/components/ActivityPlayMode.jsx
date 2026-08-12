@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { X, RotateCw, Check, Volume2 } from 'lucide-react';
 import { playSparkle, playSuccess, playComplete, vibrate } from '@/lib/sensoryAudio';
 import SparkleBurst from '@/components/SparkleBurst';
+import SensoryButton from '@/components/SensoryButton';
 
 const GESTURE = {
   clap: { emoji: '👏' },
@@ -183,19 +184,21 @@ export default function ActivityPlayMode({ activity, kidName, onComplete, onClos
 
       <div className="p-5">
         {succeeded ? (
-          <button
+          <SensoryButton
             onClick={handleComplete}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#4FAE5A] py-4 text-lg font-bold text-white active:scale-95"
+            glow="#4FAE5A"
+            className="flex w-full items-center justify-center gap-2 bg-[#4FAE5A] py-4 text-lg text-white"
           >
             <Check className="h-5 w-5" strokeWidth={3} /> Mark complete
-          </button>
+          </SensoryButton>
         ) : (
-          <button
+          <SensoryButton
             onClick={replayVoice}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-white/80 py-4 text-lg font-bold text-black/70 active:scale-95"
+            glow="#FF9EC4"
+            className="flex w-full items-center justify-center gap-2 bg-white/80 py-4 text-lg text-black/70"
           >
             <Volume2 className="h-5 w-5" /> Play voice again
-          </button>
+          </SensoryButton>
         )}
       </div>
     </div>

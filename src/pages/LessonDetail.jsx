@@ -8,6 +8,9 @@ import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
 import AiLessonActivity from '@/components/AiLessonActivity';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
+import SensoryBackground from '@/components/SensoryBackground';
+import SensoryButton from '@/components/SensoryButton';
+import MusicToggle from '@/components/MusicToggle';
 import { DAY_MAP } from '@/lib/lessonConfig';
 import { ArrowLeft, Check, Loader2, Pencil, SkipForward } from 'lucide-react';
 
@@ -136,6 +139,9 @@ export default function LessonDetail() {
 
   return (
     <Layout>
+      <SensoryBackground />
+      <MusicToggle />
+      <div className="relative z-10">
       <div className="flex items-center justify-between mb-2">
         <button
           onClick={() => navigate('/')}
@@ -212,13 +218,14 @@ export default function LessonDetail() {
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <button
+            <SensoryButton
               onClick={markComplete}
-              className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-green-500 px-4 py-3 font-bold text-white active:scale-95 transition"
+              glow="#4FAE5A"
+              className="flex flex-1 items-center justify-center gap-2 bg-green-500 px-4 py-3 text-white"
             >
               <Check className="h-5 w-5" strokeWidth={3} />
               Mark complete
-            </button>
+            </SensoryButton>
             <button
               onClick={skip}
               className="flex items-center gap-2 rounded-2xl border-2 border-black/10 px-4 py-3 font-bold text-black/60 active:scale-95 transition"
@@ -254,13 +261,14 @@ export default function LessonDetail() {
             onComplete={() => setActivityDone(true)}
           />
           {activityDone && (
-            <button
+            <SensoryButton
               onClick={() => setStep('drawing')}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#4FAE5A] py-4 text-lg font-bold text-white active:scale-[0.98] transition"
+              glow="#4FAE5A"
+              className="flex w-full items-center justify-center gap-2 bg-[#4FAE5A] py-4 text-lg text-white"
             >
               <Pencil className="h-5 w-5" />
               Next: Draw it!
-            </button>
+            </SensoryButton>
           )}
         </div>
       )}
@@ -281,12 +289,13 @@ export default function LessonDetail() {
             >
               Back
             </button>
-            <button
+            <SensoryButton
               onClick={() => setStep('story')}
-              className="flex-[2] rounded-2xl bg-[#7B4FE0] py-3 font-bold text-white active:scale-95 transition"
+              glow="#7B4FE0"
+              className="flex-[2] bg-[#7B4FE0] py-3 text-white"
             >
               Next: Story time
-            </button>
+            </SensoryButton>
           </div>
         </div>
       )}
@@ -307,6 +316,8 @@ export default function LessonDetail() {
           </button>
         </div>
       )}
+
+      </div>
 
       {celebrating && (
         <CelebrationOverlay
