@@ -6,6 +6,7 @@ import { playSparkle, playSuccess, playComplete, vibrate } from '@/lib/sensoryAu
 import SparkleBurst from '@/components/SparkleBurst';
 import SensoryButton from '@/components/SensoryButton';
 import MusicToggle from '@/components/MusicToggle';
+import RestartDemoButton from '@/components/RestartDemoButton';
 import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { base44 } from '@/api/base44Client';
 
@@ -152,6 +153,9 @@ export default function ActivityPlayMode({ activity, kidName, onComplete, onClos
   return (
     <div className={`fixed inset-0 z-50 flex flex-col bg-gradient-to-b ${BG[activity.icon] || BG.sparkles}`}>
       <MusicToggle />
+      <div className="relative z-10 flex justify-end px-4 pt-3">
+        <RestartDemoButton />
+      </div>
       <div className="flex items-center justify-between p-4">
         <button
           onClick={onClose}

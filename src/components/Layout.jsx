@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, LayoutDashboard, Sparkles } from 'lucide-react';
+import RestartDemoButton from '@/components/RestartDemoButton';
 
 // Bottom navigation shared across the app screens.
 export default function Layout({ children }) {
@@ -10,6 +11,9 @@ export default function Layout({ children }) {
   return (
     <div className="min-h-screen bg-[#FFFDF8] flex flex-col">
       <main className="flex-1 w-full max-w-2xl mx-auto px-4 pb-24 pt-6">
+        <div className="flex justify-end pb-1">
+          <RestartDemoButton />
+        </div>
         {children}
       </main>
       <nav className="fixed bottom-0 inset-x-0 z-20 border-t border-black/5 bg-white/90 backdrop-blur">

@@ -8,6 +8,7 @@ import SparkleBurst from '@/components/SparkleBurst';
 import SensoryBackground from '@/components/SensoryBackground';
 import SensoryButton from '@/components/SensoryButton';
 import MusicToggle from '@/components/MusicToggle';
+import RestartDemoButton from '@/components/RestartDemoButton';
 import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { playPop, playBubblePop, playSparkle, playSuccess, vibrate } from '@/lib/sensoryAudio';
 import { base44 } from '@/api/base44Client';
@@ -228,6 +229,11 @@ export default function BubblePop() {
     <div className="fixed inset-0 z-50 flex flex-col overflow-hidden bg-gradient-to-b from-[#E6F4FF] to-[#FFE8F3]">
       <SensoryBackground />
       <MusicToggle />
+
+      {/* Restart demo */}
+      <div className="relative z-10 flex justify-end px-4 pt-3">
+        <RestartDemoButton />
+      </div>
 
       {/* Header + live counter */}
       <div className="relative z-10 flex items-center justify-between p-4">
