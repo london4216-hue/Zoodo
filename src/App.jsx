@@ -11,6 +11,7 @@ import Onboarding from '@/pages/Onboarding';
 import Home from '@/pages/Home';
 import LessonDetail from '@/pages/LessonDetail';
 import Dashboard from '@/pages/Dashboard';
+import WeeklyActivities from '@/pages/WeeklyActivities';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -43,6 +44,7 @@ const AuthenticatedApp = () => {
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route path="/" element={<Home />} />
         <Route path="/lesson/:kidId/:weekStart/:day" element={<LessonDetail />} />
+        <Route path="/activities" element={<WeeklyActivities />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
