@@ -6,7 +6,7 @@ import DayCard from '@/components/DayCard';
 import KidAvatar from '@/components/KidAvatar';
 import { DAYS, DAY_MAP, getMondayISO, addWeeksISO, formatWeekRange } from '@/lib/lessonConfig';
 import { isGenerating, markGenerating, clearGenerating } from '@/lib/weekGenState';
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2, RotateCcw } from 'lucide-react';
 
 const hasVideos = (lesson) =>
   lesson?.ai_content && lesson.ai_content.some((v) => v.video_id);
@@ -116,6 +116,17 @@ export default function Home() {
     }
   };
 
+  const refreshDemo = async () => {
+    if (!window.confirm('Reset the demo? This clears all kids and lessons so you can start fresh.')) return;
+    try {
+      await base44.entities.Lesson.deleteMany({});
+      await base44.entities.Kid.deleteMany({});
+      navigate('/onboarding');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#FFFDF8] flex items-center justify-center">
@@ -129,6 +140,17 @@ export default function Home() {
 
   return (
     <Layout>
+      {/* Refresh demo (prototype helper) */}
+      <div className="flex justify-end pb-1">
+        <button
+          onClick={refreshDemo}
+          className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-black/40 shadow-sm hover:text-[#D96969] active:scale-95 transition"
+        >
+          <RotateCcw className="h-3.5 w-3.5" />
+          Refresh demo
+        </button>
+      </div>
+
       {/* Learning buddy greeting */}
       <div className="flex justify-center pt-2 pb-4">
         <KidAvatar greeting={greeting} size={150} />
