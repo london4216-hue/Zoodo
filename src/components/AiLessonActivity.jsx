@@ -82,14 +82,14 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
   };
 
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-sm">
-      <div className="flex items-center gap-2 mb-3">
+    <div className="rounded-2xl bg-white p-3 shadow-sm">
+      <div className="flex items-center gap-2 mb-2">
         <Sparkles className="h-5 w-5 text-[#D96969]" />
-        <h2 className="text-lg font-bold text-black/80">Today's activity for {kidName}</h2>
+        <h2 className="text-base font-bold text-black/80">Today's activity for {kidName}</h2>
       </div>
 
       {status === 'generating' && (
-        <div className="flex flex-col items-center py-10">
+        <div className="flex flex-col items-center py-6">
           <Loader2 className="h-7 w-7 animate-spin text-[#D96969] mb-2" />
           <p className="text-black/50 font-medium">Making something fun for {kidName}…</p>
         </div>
@@ -119,11 +119,11 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
           />
 
           {/* Cute bouncing character */}
-          <div className="flex flex-col items-center py-3">
+          <div className="flex flex-col items-center py-1">
             <motion.div
               animate={playing ? { y: [0, -10, 0], rotate: [0, -4, 4, 0] } : { y: 0, rotate: 0 }}
               transition={playing ? { duration: 0.7, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.3 }}
-              className="relative h-28 w-28"
+              className="relative h-20 w-20"
             >
               <svg viewBox="0 0 120 120" className="h-full w-full">
                 <defs>
@@ -157,7 +157,7 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
           {/* Play / pause button */}
           <button
             onClick={togglePlay}
-            className="mt-1 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#4969E1] py-4 text-lg font-bold text-white active:scale-[0.98] transition hover:bg-[#3b54c9]"
+            className="mt-1 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#4969E1] py-3 text-lg font-bold text-white active:scale-[0.98] transition hover:bg-[#3b54c9]"
           >
             {playing ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
             {playing ? 'Pause' : 'Play'}

@@ -151,41 +151,40 @@ export default function LessonDetail() {
     <Layout>
       <SensoryBackground />
       <MusicToggle />
-      <div className="relative z-10">
-      <div className="flex items-center justify-between mb-2">
+      <div className="relative z-10 flex flex-col h-[calc(100vh-9.5rem)]">
+      {/* Compact top bar: back + subject banner */}
+      <div className="flex items-center gap-2 mb-2">
         <button
           onClick={() => navigate('/')}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-sm text-black/60 hover:text-black active:scale-95 transition"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white shadow-sm text-black/60 hover:text-black active:scale-95 transition"
           aria-label="Back"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-      </div>
-
-      {/* Today's subject banner */}
-      <div
-        className="rounded-[24px] px-4 py-3 mb-4 flex items-center gap-3"
-        style={{ backgroundColor: dayCfg.bg }}
-      >
-        <DayGraphic type={dayCfg.graphic} />
         <div
-          className="text-2xl font-bold leading-tight"
-          style={{
-            color: dayCfg.titleColor,
-            WebkitTextStroke: `1px ${dayCfg.titleStroke}`,
-          }}
+          className="flex flex-1 items-center gap-2 rounded-2xl px-3 py-2"
+          style={{ backgroundColor: dayCfg.bg }}
         >
-          Learning {dayCfg.subject}
+          <DayGraphic type={dayCfg.graphic} />
+          <div
+            className="text-xl font-bold leading-tight"
+            style={{
+              color: dayCfg.titleColor,
+              WebkitTextStroke: `1px ${dayCfg.titleStroke}`,
+            }}
+          >
+            Learning {dayCfg.subject}
+          </div>
         </div>
       </div>
 
-      {/* Learning buddy greets the kid by name with today's topic */}
-      <div className="flex justify-center pb-2">
-        <KidAvatar greeting={greeting} audioUrl={greetingAudio} size={120} />
+      {/* Learning buddy greets the kid by name */}
+      <div className="flex justify-center pb-1">
+        <KidAvatar greeting={greeting} audioUrl={greetingAudio} size={84} />
       </div>
 
       {/* Activity stepper — one activity at a time */}
-      <div className="mb-4 flex items-center justify-center gap-2">
+      <div className="mb-2 flex items-center justify-center gap-2">
         {['activity', 'drawing', 'lunch', 'story'].map((s) => (
           <div
             key={s}
@@ -196,8 +195,9 @@ export default function LessonDetail() {
         ))}
       </div>
 
+      <div className="flex-1 min-h-0 overflow-y-auto">
       {step === 'activity' && (
-        <div ref={activityRef} className="mb-4 space-y-3 scroll-mt-4">
+        <div ref={activityRef} className="space-y-3 scroll-mt-4">
           <AiLessonActivity
             kidName={kid?.name || 'the child'}
             subject={dayCfg.subject}
@@ -285,6 +285,7 @@ export default function LessonDetail() {
           </button>
         </div>
       )}
+      </div>
 
       </div>
 
