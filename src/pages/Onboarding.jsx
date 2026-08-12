@@ -171,12 +171,6 @@ export default function Onboarding() {
             )}
           </div>
 
-          <button
-            onClick={() => setStep('camera')}
-            className="mt-4 text-sm font-bold text-black/40 underline"
-          >
-            Skip for now
-          </button>
         </div>
       </div>
     );
