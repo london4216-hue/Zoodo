@@ -57,6 +57,7 @@ export default function BubblePop() {
   const [checking, setChecking] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [areaH, setAreaH] = useState(600);
+  const [countFlash, setCountFlash] = useState(null);
   const areaRef = useRef(null);
   const videoRef = useRef(null);
   const audioRef = useRef(null);
@@ -213,7 +214,14 @@ export default function BubblePop() {
           case 'sparkle': sparkleBurst(); break;
           case 'silly': spawnSilly(); break;
           case 'popBig': popBig(); break;
-          case 'count': popN(Math.max(1, Math.min(5, data.count || 1))); break;
+          case 'count': {
+            const n = Math.max(1, Math.min(10, data.count || 1));
+            setCountFlash(n);
+            speak(`${n}!`);
+            popN(n);
+            setTimeout(() => setCountFlash(null), 1400);
+            break;
+          }
           default: break;
         }
       }
@@ -264,6 +272,27 @@ export default function BubblePop() {
             <SparkleBurst />
           </div>
         ))}
+
+        {/* Big animated count when the kid holds up fingers */}
+        <AnimatePresence>
+          {countFlash !== null && (
+            <motion.div
+              key={countFlash}
+              className="pointer-events-none absolute inset-0 flex items-center justify-center"
+              initial={{ scale: 0.2, opacity: 0, rotate: -25 }}
+              animate={{ scale: [0.2, 1.3, 1], opacity: 1, rotate: [ -25, 8, 0 ] }}
+              exit={{ scale: 1.6, opacity: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+            >
+              <div
+                className="flex h-40 w-40 items-center justify-center rounded-full text-7xl font-extrabold text-white shadow-2xl"
+                style={{ background: 'radial-gradient(circle at 32% 28%, #fff, #7B4FE0 75%)', boxShadow: '0 0 40px #7B4FE088' }}
+              >
+                {countFlash}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Camera + gesture panel */}
