@@ -1,8 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 
 // Finds one real, kid-friendly YouTube video that supports a weekly sensory
-// activity's skill, using web search. Returns { video } so the client can
-// persist it on the SensoryActivity record.
+// activity's skill, using web search. Validates each candidate via YouTube's
+// oEmbed endpoint and retries until a real, playable video is found.
 export default async function(req: Request): Promise<Response> {
   try {
     const base44 = createClientFromRequest(req);
@@ -17,7 +17,7 @@ export default async function(req: Request): Promise<Response> {
       return Response.json({ error: 'title is required' }, { status: 400 });
     }
 
-    const prompt = `You are a warm, expert early-childhood educator helping a ${age}-year-old child.
+    const buildPrompt = (avoidIds: string[]) => `You are a warm, expert early-childhood educator helping a ${age}-year-old child.
 The activity is: "${title}" — ${description || 'a sensory learning activity'}.
 
 Search the web for 1 real, high-quality, kid-friendly YouTube video that supports this skill for a ${age}-year-old (e.g. from channels like Ms Rachel, Super Simple Songs, Cocomelon, or similar toddler-friendly educators). Return:
@@ -28,42 +28,63 @@ Search the web for 1 real, high-quality, kid-friendly YouTube video that support
 
 Rules:
 - Only return a real video you actually found on the web. Do not make up video IDs.
-- Keep language simple, warm, and encouraging.
+- The video MUST be publicly available and embeddable (not private, not removed, not age-restricted).
+${avoidIds.length ? `- Do not return any of these ids, they were invalid: ${avoidIds.join(', ')}\n` : ''}- Keep language simple, warm, and encouraging.
 - Return only the JSON.`;
 
-    const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
-      prompt,
-      add_context_from_internet: true,
-      model: 'gemini_3_flash',
-      response_json_schema: {
-        type: 'object',
-        properties: {
-          video_id: { type: 'string' },
-          title: { type: 'string' },
-          channel: { type: 'string' },
-          why: { type: 'string' },
+    // Validate a YouTube video id is real + embeddable via the public oEmbed endpoint.
+    const isValid = async (vid: string): Promise<boolean> => {
+      try {
+        const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vid}&format=json`;
+        const res = await fetch(url, { method: 'GET' });
+        return res.ok;
+      } catch {
+        return false;
+      }
+    };
+
+    const MAX_ATTEMPTS = 4;
+    const triedIds: string[] = [];
+    let chosen: any = null;
+
+    for (let attempt = 0; attempt < MAX_ATTEMPTS && !chosen; attempt++) {
+      const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
+        prompt: buildPrompt(triedIds),
+        add_context_from_internet: true,
+        model: 'gemini_3_flash',
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            video_id: { type: 'string' },
+            title: { type: 'string' },
+            channel: { type: 'string' },
+            why: { type: 'string' },
+          },
+          required: ['video_id', 'title', 'channel', 'why'],
         },
-        required: ['video_id', 'title', 'channel', 'why'],
-      },
-    });
+      });
 
-    const video = (result as any) || null;
-    if (!video || !video.video_id) {
-      return Response.json({ error: 'Could not find a video. Please try again.' }, { status: 500 });
+      const v = (result as any) || null;
+      const vid = v && v.video_id ? String(v.video_id).trim() : '';
+      if (vid && /^[A-Za-z0-9_-]{11}$/.test(vid)) {
+        triedIds.push(vid);
+        if (await isValid(vid)) {
+          chosen = v;
+        }
+      }
     }
 
-    const vid = String(video.video_id).trim();
-    // Validate it looks like a real 11-character YouTube video ID.
-    if (!/^[A-Za-z0-9_-]{11}$/.test(vid)) {
-      return Response.json({ error: 'Could not find a valid video. Please try again.' }, { status: 500 });
+    if (!chosen) {
+      return Response.json({ error: 'Could not find a playable video. Please try again.' }, { status: 500 });
     }
 
+    const vid = String(chosen.video_id).trim();
     return Response.json({
       video: {
         video_id: vid,
-        title: video.title || '',
-        channel: video.channel || '',
-        why: video.why || '',
+        title: chosen.title || '',
+        channel: chosen.channel || '',
+        why: chosen.why || '',
       },
     });
   } catch (error) {
