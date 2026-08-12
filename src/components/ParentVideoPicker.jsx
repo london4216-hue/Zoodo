@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { RefreshCw, Check, Video, Square } from 'lucide-react';
+import { RefreshCw, Check, Video, Square, Camera, Loader2 } from 'lucide-react';
 
 // Records a cheer video straight from the device's front camera — no gallery
-// or old-file selection. Preview -> keep. Calls onRecorded(File).
+// or old-file selection. 3-2-1 countdown -> record -> preview -> keep.
+// Calls onRecorded(File).
 export default function ParentVideoPicker({ cheer, onRecorded }) {
   const [stream, setStream] = useState(null);
+  const [camStatus, setCamStatus] = useState('asking'); // asking | ready | denied
   const [recording, setRecording] = useState(false);
   const [videoUrl, setVideoUrl] = useState('');
   const [file, setFile] = useState(null);
@@ -16,27 +18,44 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
   const chunksRef = useRef([]);
   const timerRef = useRef(null);
 
+  const attachStream = (s) => {
+    if (liveRef.current && s) {
+      liveRef.current.srcObject = s;
+      liveRef.current.play().catch(() => {});
+    }
+  };
+
   // Start the front camera as soon as the component mounts.
-  useEffect(() => {
-    let active = true;
-    (async () => {
+  const startCamera = async () => {
+    setCamStatus('asking');
+    try {
+      const s = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user' },
+        audio: true,
+      });
+      setStream(s);
+      setCamStatus('ready');
+      // Defer to next frame so the <video> element is mounted before we attach.
+      requestAnimationFrame(() => attachStream(s));
+    } catch (e) {
+      // Try video-only as a fallback (mic may be blocked).
       try {
         const s = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'user' },
-          audio: true,
+          audio: false,
         });
-        if (!active) {
-          s.getTracks().forEach((t) => t.stop());
-          return;
-        }
         setStream(s);
-        if (liveRef.current) liveRef.current.srcObject = s;
-      } catch (e) {
-        /* camera unavailable — record button simply stays inert */
+        setCamStatus('ready');
+        requestAnimationFrame(() => attachStream(s));
+      } catch (e2) {
+        setCamStatus('denied');
       }
-    })();
+    }
+  };
+
+  useEffect(() => {
+    startCamera();
     return () => {
-      active = false;
       if (timerRef.current) clearInterval(timerRef.current);
       setStream((prev) => {
         prev?.getTracks().forEach((t) => t.stop());
@@ -45,14 +64,15 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
     };
   }, []);
 
+  // Re-attach the live stream whenever the preview element re-mounts (e.g. after Redo).
   useEffect(() => {
     if (stream && liveRef.current && !videoUrl) {
-      liveRef.current.srcObject = stream;
+      attachStream(stream);
     }
   }, [stream, videoUrl]);
 
   const startCountdown = () => {
-    if (!stream || recording || videoUrl) return;
+    if (camStatus !== 'ready' || !stream || recording || videoUrl) return;
     setCountdown(3);
     let n = 3;
     const tick = () => {
@@ -71,13 +91,23 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
   const startRecording = () => {
     if (!stream) return;
     chunksRef.current = [];
-    const rec = new MediaRecorder(stream, { mimeType: 'video/webm' });
+    // Pick the first supported mime type; fall back to default if none match.
+    const candidates = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm', 'video/mp4'];
+    const mimeType = candidates.find((t) => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || '';
+    let rec;
+    try {
+      rec = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+    } catch (e) {
+      rec = new MediaRecorder(stream);
+    }
     rec.ondataavailable = (e) => {
       if (e.data.size > 0) chunksRef.current.push(e.data);
     };
     rec.onstop = () => {
-      const blob = new Blob(chunksRef.current, { type: 'video/webm' });
-      const f = new File([blob], 'cheer.webm', { type: 'video/webm' });
+      const type = rec.mimeType || 'video/webm';
+      const blob = new Blob(chunksRef.current, { type });
+      const ext = type.includes('mp4') ? 'mp4' : 'webm';
+      const f = new File([blob], `cheer.${ext}`, { type });
       setFile(f);
       setVideoUrl(URL.createObjectURL(blob));
     };
@@ -98,7 +128,7 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
     setVideoUrl('');
     setFile(null);
     setSeconds(0);
-    if (stream && liveRef.current) liveRef.current.srcObject = stream;
+    requestAnimationFrame(() => attachStream(stream));
   };
 
   return (
@@ -108,7 +138,31 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
           <video src={videoUrl} controls autoPlay loop playsInline className="h-full w-full object-cover" />
         ) : (
           <>
-            <video ref={liveRef} autoPlay playsInline muted className="h-full w-full object-cover -scale-x-100" />
+            <video
+              ref={liveRef}
+              autoPlay
+              playsInline
+              muted
+              className="h-full w-full object-cover -scale-x-100"
+            />
+            {camStatus === 'asking' && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40 text-white">
+                <Loader2 className="h-7 w-7 animate-spin" />
+                <span className="text-sm font-semibold">Starting camera…</span>
+              </div>
+            )}
+            {camStatus === 'denied' && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/60 p-4 text-center text-white">
+                <Camera className="h-7 w-7" />
+                <span className="text-sm font-semibold">Camera is off.</span>
+                <button
+                  onClick={startCamera}
+                  className="mt-1 rounded-xl bg-white px-4 py-2 text-sm font-bold text-black active:scale-95"
+                >
+                  Try again
+                </button>
+              </div>
+            )}
             {recording && (
               <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs font-bold text-white">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-[#D96969]" /> REC {seconds}s
@@ -139,9 +193,16 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
         ) : (
           <button
             onClick={startCountdown}
-            className="mt-4 w-full rounded-2xl bg-[#D96969] py-4 text-lg font-bold text-white active:scale-95 transition hover:bg-[#c95a5a]"
+            disabled={camStatus !== 'ready'}
+            className="mt-4 w-full rounded-2xl bg-[#D96969] py-4 text-lg font-bold text-white active:scale-95 transition hover:bg-[#c95a5a] disabled:opacity-60"
           >
-            <Video className="mr-1 inline h-5 w-5" /> Record your cheer
+            {camStatus === 'asking' ? (
+              <span className="flex items-center justify-center gap-2"><Loader2 className="h-5 w-5 animate-spin" /> Starting camera…</span>
+            ) : camStatus === 'denied' ? (
+              'Camera off — tap Try again'
+            ) : (
+              <><Video className="mr-1 inline h-5 w-5" /> Record your cheer</>
+            )}
           </button>
         )
       ) : (
