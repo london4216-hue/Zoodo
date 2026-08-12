@@ -68,6 +68,17 @@ export default function LessonDetail() {
     }
   };
 
+  // Auto-generate real YouTube videos when a day is opened and there are
+  // no valid (video_id-bearing) picks yet — including old-format content.
+  useEffect(() => {
+    if (loading || !dayCfg || error) return;
+    const valid = videos && videos.some((v) => v.video_id);
+    if (!valid && !generating) {
+      generate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, videos, generating, error]);
+
   const toggleComplete = async () => {
     if (!lesson) return;
     const newCompleted = !lesson.completed;
