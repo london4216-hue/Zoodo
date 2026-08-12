@@ -12,6 +12,7 @@ import Home from '@/pages/Home';
 import LessonDetail from '@/pages/LessonDetail';
 import Dashboard from '@/pages/Dashboard';
 import WeeklyActivities from '@/pages/WeeklyActivities';
+import BubblePop from '@/pages/BubblePop';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -45,6 +46,7 @@ const AuthenticatedApp = () => {
         <Route path="/" element={<Home />} />
         <Route path="/lesson/:kidId/:weekStart/:day" element={<LessonDetail />} />
         <Route path="/activities" element={<WeeklyActivities />} />
+        <Route path="/bubble-pop" element={<BubblePop />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />

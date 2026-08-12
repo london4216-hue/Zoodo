@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { base44 } from '@/api/base44Client';
@@ -163,6 +163,18 @@ export default function WeeklyActivities() {
           <ChevronRight className="h-5 w-5" />
         </button>
       </div>
+
+      <Link
+        to="/bubble-pop"
+        className="mb-4 flex items-center gap-3 rounded-3xl bg-gradient-to-r from-[#FFE8F3] to-[#EDE6FF] p-4 shadow-[0_0_20px_rgba(255,180,200,0.4)] active:scale-[0.99] transition"
+      >
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl">🫧</div>
+        <div className="flex-1 text-left">
+          <h3 className="font-bold text-black/80">Pop the Bubbles!</h3>
+          <p className="text-sm text-black/50">Tap or use camera moves to pop bubbles</p>
+        </div>
+        <span className="text-sm font-bold text-[#7B4FE0]">Play →</span>
+      </Link>
 
       {preparing ? (
         <div className="flex flex-col items-center py-16">
