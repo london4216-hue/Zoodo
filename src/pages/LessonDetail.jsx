@@ -63,6 +63,10 @@ export default function LessonDetail() {
     setActivityStarted(false);
   }, [kidId, weekStart, day]);
 
+  // Real current weekday — Zoodo always greets with the actual today, not the
+  // lesson's scheduled day.
+  const realDayLabel = new Date().toLocaleDateString('en', { weekday: 'long' });
+
   // Fetch a goofy, silly greeting spoken in the warm honey voice (replaces the
   // old robotic browser speech synthesis).
   useEffect(() => {
@@ -73,13 +77,13 @@ export default function LessonDetail() {
         const res = await base44.functions.invoke('generateGreeting', {
           kidName: kid.name,
           subject: dayCfg.subject,
-          dayLabel: dayCfg.label,
+          dayLabel: realDayLabel,
         });
         if (!cancelled && res?.data?.audio_url) setGreetingAudio(res.data.audio_url);
       } catch (e) { /* ignore — KidAvatar falls back to the browser voice */ }
     })();
     return () => { cancelled = true; };
-  }, [kid?.name, dayCfg.subject, dayCfg.label]);
+  }, [kid?.name, dayCfg.subject, realDayLabel]);
 
   const markComplete = async () => {
     if (!lesson) return;
@@ -141,7 +145,7 @@ export default function LessonDetail() {
     );
   }
 
-  const greeting = `Hi ${kid?.name}! Today is ${dayCfg.label} — ${dayCfg.subject}! Let's learn together!`;
+  const greeting = `Hi ${kid?.name}! Today is ${realDayLabel} — ${dayCfg.subject}! Let's learn together!`;
 
   return (
     <Layout>
