@@ -229,7 +229,7 @@ export default function LessonDetail() {
               Complete
             </button>
           </div>
-        ) : activityStarted ? (
+        ) : (
           <div className="flex items-center gap-2">
             <SensoryButton
               onClick={markComplete}
@@ -247,10 +247,6 @@ export default function LessonDetail() {
               Skip
             </button>
           </div>
-        ) : (
-          <p className="text-center text-sm font-semibold text-black/40 py-2">
-            Play the activity to unlock “Mark complete”
-          </p>
         )}
       </div>
 
