@@ -13,6 +13,17 @@
       "description": "The child's age \u2014 drives content difficulty",
       "default": 4
     },
+    "program_length": {
+      "type": "number",
+      "title": "Program Length (weeks)",
+      "description": "How many weeks the learning program runs",
+      "default": 8
+    },
+    "developmental_milestone": {
+      "type": "string",
+      "title": "Developmental Milestone",
+      "description": "The child's current developmental focus area"
+    },
     "avatar_color": {
       "type": "string",
       "title": "Avatar Color",

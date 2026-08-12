@@ -2,18 +2,34 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Camera, Check, Loader2 } from 'lucide-react';
+import { Sparkles, Camera, Check, Loader2, ArrowRight } from 'lucide-react';
+import KidAvatar from '@/components/KidAvatar';
 
 const AGES = [2, 3, 4, 5, 6, 7, 8];
+const PROGRAM_LENGTHS = [4, 8, 12, 16];
+const MILESTONES = [
+  'First words',
+  'Walking',
+  'Combining words',
+  'Following simple instructions',
+  'Counting to 10',
+  'Recognizing colors',
+  'Recognizing shapes',
+  'Potty training',
+];
 
-// First screen: the caregiver enters the child's name + age before the plan appears.
+// First-run intake: a cute Zoodo intro, then a short questionnaire (name, age,
+// program length, developmental milestone), then camera permission — all before
+// the home page launches. Activities are generated based on the child's age.
 export default function Onboarding() {
   const navigate = useNavigate();
+  const [step, setStep] = useState('intro'); // intro | form | camera
   const [name, setName] = useState('');
   const [age, setAge] = useState(4);
+  const [programLength, setProgramLength] = useState(8);
+  const [milestone, setMilestone] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [step, setStep] = useState('form');
   const [camStream, setCamStream] = useState(null);
   const [camStatus, setCamStatus] = useState('asking');
   const videoRef = useRef(null);
@@ -22,13 +38,22 @@ export default function Onboarding() {
     e.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) {
-      setError('Please enter the child\'s name');
+      setError("Please enter the child's name");
+      return;
+    }
+    if (!milestone) {
+      setError('Please pick a developmental milestone');
       return;
     }
     setSaving(true);
     setError('');
     try {
-      await base44.entities.Kid.create({ name: trimmed, age: Number(age) });
+      await base44.entities.Kid.create({
+        name: trimmed,
+        age: Number(age),
+        program_length: Number(programLength),
+        developmental_milestone: milestone,
+      });
       setStep('camera');
     } catch (err) {
       setError(err?.message || 'Something went wrong. Please try again.');
@@ -63,6 +88,30 @@ export default function Onboarding() {
   }, [camStream]);
 
   const finish = () => navigate('/');
+
+  if (step === 'intro') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#FFFDF8] to-[#FDE9F0] flex flex-col items-center justify-center px-6 py-10 text-center">
+        <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/70 shadow-sm">
+          <Sparkles className="h-6 w-6 text-[#D96969]" />
+        </div>
+        <KidAvatar greeting="Hi! I'm Zoodo! Let's learn and play together!" size={180} />
+        <h1 className="mt-6 text-4xl font-bold" style={{ color: '#7B4FE0' }}>
+          Meet Zoodo!
+        </h1>
+        <p className="mt-3 max-w-sm text-black/60 font-medium">
+          I'm your silly, giggly learning buddy! I'll make a fun plan just for your
+          little one — full of music, movement, and bubbles!
+        </p>
+        <Button
+          onClick={() => setStep('form')}
+          className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-[#7B4FE0] px-8 py-6 text-lg font-bold text-white hover:bg-[#6a3fd0]"
+        >
+          Let's go! <ArrowRight className="h-5 w-5" />
+        </Button>
+      </div>
+    );
+  }
 
   if (step === 'camera') {
     return (
@@ -113,10 +162,10 @@ export default function Onboarding() {
           className="text-4xl font-bold leading-tight"
           style={{ color: '#D96969' }}
         >
-          Weekly<br />Lesson Plan
+          Let's set up<br />the week
         </h1>
         <p className="mt-3 text-black/60 font-medium">
-          Let's set up a playful learning week. Who are we learning with today?
+          A few quick questions so Zoodo can tailor the fun to your child.
         </p>
 
         <form onSubmit={submit} className="mt-8 space-y-5 text-left">
@@ -135,7 +184,7 @@ export default function Onboarding() {
 
           <div>
             <label className="block text-sm font-semibold text-black/70 mb-2">
-              Child's age <span className="text-black/40 font-normal">— this sets the level</span>
+              Child's age <span className="text-black/40 font-normal">— sets the level</span>
             </label>
             <div className="flex flex-wrap gap-2">
               {AGES.map((a) => (
@@ -150,6 +199,50 @@ export default function Onboarding() {
                   }`}
                 >
                   {a}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-black/70 mb-2">
+              Program length <span className="text-black/40 font-normal">— weeks</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {PROGRAM_LENGTHS.map((w) => (
+                <button
+                  key={w}
+                  type="button"
+                  onClick={() => setProgramLength(w)}
+                  className={`h-12 min-w-[3.5rem] rounded-2xl px-3 text-lg font-bold transition active:scale-95 ${
+                    programLength === w
+                      ? 'bg-[#7B4FE0] text-white border-2 border-[#7B4FE0] shadow'
+                      : 'bg-white text-black/70 border-2 border-black/10 hover:border-[#7B4FE0]/50'
+                  }`}
+                >
+                  {w}w
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-black/70 mb-2">
+              Developmental milestone <span className="text-black/40 font-normal">— current focus</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {MILESTONES.map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => setMilestone(m)}
+                  className={`rounded-2xl px-3 py-2.5 text-sm font-bold transition active:scale-95 ${
+                    milestone === m
+                      ? 'bg-[#4FAE5A] text-white border-2 border-[#4FAE5A] shadow'
+                      : 'bg-white text-black/70 border-2 border-black/10 hover:border-[#4FAE5A]/50'
+                  }`}
+                >
+                  {m}
                 </button>
               ))}
             </div>
