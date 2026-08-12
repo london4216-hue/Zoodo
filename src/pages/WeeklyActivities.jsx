@@ -147,7 +147,10 @@ export default function WeeklyActivities() {
           <div className="text-xs font-semibold uppercase tracking-wide text-black/40">
             Weekly Activities
           </div>
-          <div className="text-sm font-bold text-black/70">{formatWeekRange(weekStart)}</div>
+          <div className="text-sm font-bold text-black/80">
+            {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+          </div>
+          <div className="text-xs font-semibold text-black/45">{formatWeekRange(weekStart)}</div>
           {isPast && (
             <span className="text-[10px] font-bold text-black/30">Archived week</span>
           )}
