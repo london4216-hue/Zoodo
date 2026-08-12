@@ -111,8 +111,20 @@ export const playPop = () => {
   o.stop(now + 0.2);
 };
 
-// Gentle ambient music: a soft pad + a slow pentatonic melody loop. Toggleable.
-let music = { playing: false, timer: null, master: null, padOscs: [] };
+// Gentle ambient music: a soft pad + a slow melody loop. Each time it starts,
+// a different "song" (chord, scale, tempo, tone color) is picked so the music
+// feels fresh every time.
+const SONGS = [
+  { name: 'C major', pad: [130.81, 196.0, 261.63], scale: [523.25, 587.33, 659.25, 783.99, 880.0], wave: 'triangle', tempo: 1500, noteDur: 1.4, gain: 0.22 },
+  { name: 'A minor', pad: [110.0, 164.81, 220.0], scale: [440.0, 523.25, 587.33, 659.25, 783.99], wave: 'sine', tempo: 1700, noteDur: 1.6, gain: 0.2 },
+  { name: 'G major', pad: [98.0, 146.83, 196.0], scale: [392.0, 440.0, 493.88, 587.33, 659.25], wave: 'triangle', tempo: 1300, noteDur: 1.2, gain: 0.18 },
+  { name: 'F major', pad: [87.31, 130.81, 174.61], scale: [349.23, 392.0, 440.0, 523.25, 587.33], wave: 'sine', tempo: 1850, noteDur: 1.7, gain: 0.2 },
+  { name: 'D dorian', pad: [73.42, 110.0, 146.83], scale: [293.66, 329.63, 392.0, 440.0, 493.88], wave: 'triangle', tempo: 1600, noteDur: 1.5, gain: 0.19 },
+  { name: 'E lydian', pad: [82.41, 123.47, 164.81], scale: [329.63, 369.99, 440.0, 493.88, 554.37], wave: 'sine', tempo: 1450, noteDur: 1.3, gain: 0.21 },
+  { name: 'Pentatonic G', pad: [98.0, 130.81, 196.0], scale: [392.0, 440.0, 523.25, 587.33, 659.25], wave: 'triangle', tempo: 1550, noteDur: 1.45, gain: 0.2 },
+];
+
+let music = { playing: false, timer: null, master: null, padOscs: [], lastSongIdx: -1 };
 
 export const startAmbientMusic = () => {
   if (music.playing) return;
@@ -125,12 +137,17 @@ export const startAmbientMusic = () => {
   master.gain.setTargetAtTime(0.1, c.currentTime, 1.2);
   music.master = master;
 
-  // Soft pad chord (C major-ish).
-  const padFreqs = [130.81, 196.0, 261.63];
+  // Pick a different song than last time.
+  let idx = Math.floor(Math.random() * SONGS.length);
+  if (SONGS.length > 1 && idx === music.lastSongIdx) idx = (idx + 1) % SONGS.length;
+  music.lastSongIdx = idx;
+  const song = SONGS[idx];
+
+  // Soft pad chord.
   const padGain = c.createGain();
   padGain.gain.value = 0.5;
   padGain.connect(master);
-  music.padOscs = padFreqs.map((f) => {
+  music.padOscs = song.pad.map((f) => {
     const o = c.createOscillator();
     o.type = 'sine';
     o.frequency.value = f;
@@ -139,25 +156,24 @@ export const startAmbientMusic = () => {
     return o;
   });
 
-  // Slow pentatonic melody (C5 D5 E5 G5 A5).
-  const scale = [523.25, 587.33, 659.25, 783.99, 880.0];
+  // Slow melody over the song's scale.
   const playNote = () => {
     if (!music.playing) return;
     const now = c.currentTime;
-    const f = scale[Math.floor(Math.random() * scale.length)];
+    const f = song.scale[Math.floor(Math.random() * song.scale.length)];
     const o = c.createOscillator();
     const g = c.createGain();
-    o.type = 'triangle';
+    o.type = song.wave;
     o.frequency.value = f;
     g.gain.setValueAtTime(0.0001, now);
-    g.gain.linearRampToValueAtTime(0.22, now + 0.05);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+    g.gain.linearRampToValueAtTime(song.gain, now + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + song.noteDur);
     o.connect(g);
     g.connect(master);
     o.start(now);
-    o.stop(now + 1.5);
+    o.stop(now + song.noteDur + 0.1);
   };
-  music.timer = setInterval(playNote, 1500);
+  music.timer = setInterval(playNote, song.tempo);
   playNote();
 };
 
