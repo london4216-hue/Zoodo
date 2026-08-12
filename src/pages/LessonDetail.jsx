@@ -14,7 +14,7 @@ import SensoryButton from '@/components/SensoryButton';
 import MusicToggle from '@/components/MusicToggle';
 import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { DAY_MAP } from '@/lib/lessonConfig';
-import { ArrowLeft, Check, Loader2, Pencil, SkipForward, Play } from 'lucide-react';
+import { ArrowLeft, Loader2, Pencil, Play } from 'lucide-react';
 
 export default function LessonDetail() {
   const { kidId, weekStart, day } = useParams();
@@ -300,61 +300,6 @@ export default function LessonDetail() {
           </button>
         </div>
       )}
-
-      {/* Status + caregiver actions: complete / skip / uncomplete (kept at the bottom) */}
-      <div className="mt-5 mb-4 rounded-2xl bg-white p-3 shadow-sm">
-        {lesson?.completed ? (
-          <div className="flex items-center gap-2">
-            <span className="flex flex-1 items-center gap-2 rounded-2xl bg-green-100 px-4 py-3 font-bold text-green-700">
-              <Check className="h-5 w-5" strokeWidth={3} />
-              Lesson complete
-            </span>
-            <button
-              onClick={uncomplete}
-              className="rounded-2xl border-2 border-black/10 px-4 py-3 text-sm font-bold text-black/60 active:scale-95 transition"
-            >
-              Uncomplete
-            </button>
-          </div>
-        ) : lesson?.skipped ? (
-          <div className="flex items-center gap-2">
-            <span className="flex flex-1 items-center gap-2 rounded-2xl bg-amber-100 px-4 py-3 font-bold text-amber-700">
-              <SkipForward className="h-5 w-5" strokeWidth={3} />
-              Skipped
-            </span>
-            <button
-              onClick={uncomplete}
-              className="rounded-2xl border-2 border-black/10 px-4 py-3 text-sm font-bold text-black/60 active:scale-95 transition"
-            >
-              Undo
-            </button>
-            <button
-              onClick={markComplete}
-              className="rounded-2xl bg-green-500 px-4 py-3 text-sm font-bold text-white active:scale-95 transition"
-            >
-              Complete
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <SensoryButton
-              onClick={markComplete}
-              glow="#4FAE5A"
-              className="flex flex-1 items-center justify-center gap-2 bg-green-500 px-4 py-3 text-white"
-            >
-              <Check className="h-5 w-5" strokeWidth={3} />
-              Mark complete
-            </SensoryButton>
-            <button
-              onClick={skip}
-              className="flex items-center gap-2 rounded-2xl border-2 border-black/10 px-4 py-3 font-bold text-black/60 active:scale-95 transition"
-            >
-              <SkipForward className="h-5 w-5" strokeWidth={2.5} />
-              Skip
-            </button>
-          </div>
-        )}
-      </div>
 
       </div>
 
