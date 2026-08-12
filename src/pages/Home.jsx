@@ -7,12 +7,15 @@ import KidAvatar from '@/components/KidAvatar';
 import { DAYS, DAY_MAP, getMondayISO, addWeeksISO, formatWeekRange } from '@/lib/lessonConfig';
 import { isGenerating, markGenerating, clearGenerating } from '@/lib/weekGenState';
 import { ChevronLeft, ChevronRight, Loader2, RotateCcw } from 'lucide-react';
+import MusicToggle from '@/components/MusicToggle';
+import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 
 const hasVideos = (lesson) =>
   lesson?.ai_content && lesson.ai_content.some((v) => v.video_id);
 
 export default function Home() {
   const navigate = useNavigate();
+  useAutoAmbientMusic();
   const [kid, setKid] = useState(null);
   const [loading, setLoading] = useState(true);
   const [weekStart, setWeekStart] = useState(getMondayISO());
@@ -140,6 +143,7 @@ export default function Home() {
 
   return (
     <Layout>
+      <MusicToggle />
       {/* Refresh demo (prototype helper) */}
       <div className="flex justify-end pb-1">
         <button

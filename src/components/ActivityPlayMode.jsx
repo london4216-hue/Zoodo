@@ -5,6 +5,8 @@ import { X, RotateCw, Check, Volume2, Camera, Loader2 } from 'lucide-react';
 import { playSparkle, playSuccess, playComplete, vibrate } from '@/lib/sensoryAudio';
 import SparkleBurst from '@/components/SparkleBurst';
 import SensoryButton from '@/components/SensoryButton';
+import MusicToggle from '@/components/MusicToggle';
+import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { base44 } from '@/api/base44Client';
 
 const GESTURE = {
@@ -31,6 +33,7 @@ const CONFETTI_COLORS = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#7B4FE0'];
 // the child actually did the prompted movement (e.g. "wiggle in the air"). After
 // STARS_TO_SUCCESS validated reps, the activity is complete.
 export default function ActivityPlayMode({ activity, kidName, onComplete, onClose }) {
+  useAutoAmbientMusic();
   const [promptIdx, setPromptIdx] = useState(0);
   const [stars, setStars] = useState(0);
   const [bursts, setBursts] = useState([]);
@@ -148,6 +151,7 @@ export default function ActivityPlayMode({ activity, kidName, onComplete, onClos
 
   return (
     <div className={`fixed inset-0 z-50 flex flex-col bg-gradient-to-b ${BG[activity.icon] || BG.sparkles}`}>
+      <MusicToggle />
       <div className="flex items-center justify-between p-4">
         <button
           onClick={onClose}
