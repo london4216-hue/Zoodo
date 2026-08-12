@@ -11,7 +11,7 @@ import SensoryButton from '@/components/SensoryButton';
 import MusicToggle from '@/components/MusicToggle';
 import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { getMondayISO, addWeeksISO, formatWeekRange } from '@/lib/lessonConfig';
-import { ChevronLeft, ChevronRight, Loader2, Play, SkipForward, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2, Play, SkipForward, Check, ArrowLeft } from 'lucide-react';
 
 const ICON_EMOJI = {
   sparkles: '✨', music: '🎵', hand: '👋', count: '🔢', color: '🎨', shape: '🔷',
@@ -135,6 +135,12 @@ export default function WeeklyActivities() {
       <SensoryBackground />
       <MusicToggle />
       <div className="relative z-10">
+      <button
+        onClick={() => navigate('/')}
+        className="mb-3 flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-bold text-black/60 shadow-sm active:scale-95"
+      >
+        <ArrowLeft className="h-4 w-4" /> Home
+      </button>
       <div className="flex items-center justify-between mb-4 px-1">
         <button
           onClick={() => setWeekStart(addWeeksISO(weekStart, -1))}
