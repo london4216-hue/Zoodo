@@ -6,6 +6,7 @@ import DayGraphic from '@/components/DayGraphic';
 import KidAvatar from '@/components/KidAvatar';
 import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
+import AiLessonActivity from '@/components/AiLessonActivity';
 import { DAY_MAP } from '@/lib/lessonConfig';
 import { ArrowLeft, Check, Loader2, Pencil, SkipForward } from 'lucide-react';
 
@@ -199,8 +200,20 @@ export default function LessonDetail() {
         )}
       </div>
 
-      {/* Activities */}
-      <div className="mt-6 space-y-4">
+      {/* AI interactive audio activity (cute voice) */}
+      <div className="mb-4">
+        <AiLessonActivity
+          kidName={kid?.name || 'the child'}
+          subject={dayCfg.subject}
+          dayLabel={dayCfg.label}
+          age={kid?.age || 4}
+          lesson={lesson}
+          onUpdate={setLesson}
+        />
+      </div>
+
+      {/* More activities */}
+      <div className="space-y-4">
         <div className="rounded-2xl bg-white p-4 shadow-sm">
           <div className="flex items-center gap-2 mb-3">
             <Pencil className="h-5 w-5 text-[#4FAE5A]" />

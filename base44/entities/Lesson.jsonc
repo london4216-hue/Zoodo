@@ -44,6 +44,12 @@
       "format": "date-time",
       "title": "Completed Date"
     },
+    "repeat_next_week": {
+      "type": "boolean",
+      "title": "Repeat Next Week",
+      "description": "Caregiver asked to repeat this activity again next week",
+      "default": false
+    },
     "ai_content": {
       "type": "array",
       "title": "AI YouTube Recommendations",
