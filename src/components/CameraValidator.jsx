@@ -49,6 +49,26 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
     if (praiseRef.current && praiseUrl) praiseRef.current.play().catch(() => {});
   }, [praiseUrl]);
 
+  // Auto-run the check shortly after the camera is ready — no need to tap.
+  useEffect(() => {
+    if (!stream) return;
+    const t = setTimeout(() => { check(); }, 1200);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stream]);
+
+  // If the system can't confirm the kid is participating, don't block — just
+  // move on after 2 seconds so the lesson keeps flowing.
+  useEffect(() => {
+    if (status !== 'fail') return;
+    const t = setTimeout(() => {
+      onSuccess?.();
+      onClose?.();
+    }, 2000);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
+
   const check = async () => {
     if (!stream) {
       setError(`We need camera permission to check on ${kidName}.`);

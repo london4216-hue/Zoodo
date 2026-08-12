@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { Loader2, Play, Pause, RotateCcw, Sparkles, Volume2 } from 'lucide-react';
 import LessonSupportVideo from '@/components/LessonSupportVideo';
+import CameraValidator from '@/components/CameraValidator';
 
 // AI-generated interactive audio activity: a cute character narrates a fun,
 // Ms-Rachel-style lesson that invites the kid to join in. Includes a replay
@@ -13,6 +14,7 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
   const [error, setError] = useState('');
   const [playing, setPlaying] = useState(false);
   const [showRepeat, setShowRepeat] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
   const [savedRepeat, setSavedRepeat] = useState(
     typeof lesson?.repeat_next_week === 'boolean' ? lesson.repeat_next_week : null
   );
@@ -65,6 +67,7 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
   const onEnded = () => {
     setPlaying(false);
     setShowRepeat(true);
+    setShowCamera(true);
     onComplete?.();
   };
 
@@ -175,6 +178,17 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
             description={`${dayLabel} lesson: ${data.title}. ${data.script || ''}`}
             age={age}
           />
+
+          {/* Camera participation check — opens after the voice finishes.
+              Lenient: if the kid isn't seen doing the action, it just moves on. */}
+          {showCamera && (
+            <CameraValidator
+              targetAction={data.title || subject}
+              kidName={kidName}
+              onSuccess={() => { setShowCamera(false); onComplete?.(); }}
+              onClose={() => setShowCamera(false)}
+            />
+          )}
 
           {/* Caregiver prompt after playback */}
           {showRepeat && (
