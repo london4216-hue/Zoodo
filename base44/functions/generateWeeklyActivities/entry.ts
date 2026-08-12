@@ -78,8 +78,9 @@ export default async function(req) {
     }
 
     const prompt = EDU_VOICE_PERSONA + '\n\n' +
-      `Create 3 unique, super-fun, sensory-rich learning activities for a ${age}-year-old named ${kidName} for the week of ${weekStart}. ` +
-      `Across the 3 activities, cover a mix of: counting with fingers, color matching, shape sorting, sing-along moments, and gesture participation (clapping, waving, pointing). ` +
+      `Create 3 unique, developmentally-appropriate, sensory-rich learning activities for a ${age}-year-old named ${kidName} for the week of ${weekStart}. ` +
+      `Each activity must target ONE foundational developmental domain, choosing a DIFFERENT domain per activity from: (a) fine motor / visual-motor, (b) gross motor / bilateral coordination, (c) receptive & expressive language, (d) early numeracy (one-to-one correspondence, sorting, patterns), (e) self-regulation / body awareness. ` +
+      `Keep every action age-appropriate and achievable for a ${age}-year-old, with clear modeling. Across the 3 activities, include a mix of: counting with fingers, color matching, shape sorting, sing-along moments, and gesture participation (clapping, waving, pointing). ` +
       `For each activity return: a fun 2-4 word title, a one-sentence description, an icon (one of: sparkles, music, hand, count, color, shape), a main gesture (one of: clap, wave, point, count), 3-4 short movement prompts (action lines like "Show me your hands!" or "Tap the glowing button!" or "Reach up high!"), and a voice script (60-100 words) narrating the activity with modeling, call-and-response, sensory cues, and a musical celebration at the end. ` +
       `Return JSON { activities: [ {title, description, icon, gesture, movement_prompts, script}, ...exactly 3 items ] }.`;
 

@@ -47,12 +47,14 @@ const LESSON_PLAN_SCHEMA = {
   required: ['title', 'script', 'camera_recommended'],
 };
 
+// Evidence-based targets per subject. The camera is never used for speech
+// lessons (hardcoded off below), so these guides focus purely on pedagogy.
 const SUBJECT_GUIDE = {
-  'Numbers': 'Target: counting 1-10. Teach one number at a time with the child. Camera is NOT recommended (no mouth movement to verify). Set letter, sound, word to "".',
-  'Letters': 'Target: the EXACT uppercase letter provided for today (do NOT pick a different letter). Use ONE picture word that begins with that letter\'s sound. Teach letter NAME -> SOUND (e.g. "AH" for A) -> WORD. Use "say AH like apple" style. Camera IS recommended (we want to see the child produce the sound/word).',
-  'Outdoor activity': 'Target: a movement or observation. Teach with sensory language and I-do/we-do/you-do. Camera IS recommended if it involves a visible action (clap, wave, point). Set letter/sound to "" and word to the key object if there is one.',
-  'Music': 'Target: a rhythm or sound. Teach with clapping/tapping and I-do/we-do/you-do. Camera IS recommended (clap/tap is visible). Set letter/sound to "" and word to the key object/instrument if there is one.',
-  'Exercises': 'Target: a body movement. Teach "watch me -> together -> your turn". Camera IS recommended (movement is visible). Set letter/sound to "" and word to the key object if there is one.',
+  'Numbers': 'Target: early numeracy using the counting principles (Gelman & Gallistel). For a young child focus on a SMALL set (start 1-3, build to 5). Teach in this order: (1) ROTE COUNTING — say the number sequence aloud; (2) ONE-TO-ONE CORRESPONDENCE — touch or tap one object for each number said ("touch... one... touch... two"); (3) CARDINALITY — after counting, emphasize the last number tells how many ("so there are THREE!"). Count slowly with the child using I-do/we-do/you-do, using fingers or visible objects. Set letter, sound, word to "".',
+  'Letters': 'Target: the EXACT uppercase letter provided for today (do NOT pick a different letter). Pick ONE concrete, high-frequency picture word that begins with that letter\'s sound and where the sound is clear and isolated (A->apple, B->ball, C->cat, D->dog — avoid long or ambiguous words). Teach in order: letter NAME -> phoneme SOUND (e.g. "AH" for A) -> WORD. Use auditory bombardment (say the sound many times), then "say AH like apple" sound-isolation, then I-do/we-do/you-do production. Set word to the picture word.',
+  'Outdoor activity': 'Target: sensory exploration and spatial/action vocabulary. Use rich sensory language (look, listen, feel) and spatial words (up/down/over/under/around). Teach one observable action with I-do/we-do/you-do (e.g. "stretch up high", "tip-toe"). Set letter/sound to "" and word to the key object if there is one.',
+  'Music': 'Target: steady beat and rhythm. Teach call-and-response clapping/tapping to a steady beat. Use I-do/we-do/you-do ("watch me clap... together... your turn!"). Emphasize keeping a steady beat and copying a simple rhythm pattern. Set letter/sound to "" and word to the key object/instrument if there is one.',
+  'Exercises': 'Target: a body-awareness movement (gross motor, bilateral coordination, or crossing midline). Teach "watch me -> together -> your turn" with clear, slow modeling, one movement at a time. Use body-part vocabulary (arms, legs, tummy). Set letter/sound to "" and word to the key object if there is one.',
 };
 
 function buildLessonPrompt(kidName, age, subject, dayLabel, currentLetter) {
