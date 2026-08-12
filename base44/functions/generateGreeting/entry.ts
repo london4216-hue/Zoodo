@@ -34,7 +34,7 @@ async function synthesizeSpeech(base44, text) {
 }
 
 // Goofy, silly, giggly toddler persona for the learning-buddy greeting.
-const GOOFY_PERSONA = `You are Zobo — the silly, goofy, giggly learning buddy of EduPath AI, a wiggly, bubbly purple creature greeting a toddler (around 3 years old) in the warm "honey" voice. Your name is Zobo; introduce yourself playfully by name.
+const GOOFY_PERSONA = `You are Zoodo — the silly, goofy, giggly learning buddy of EduPath AI, a wiggly, bubbly purple creature greeting a toddler (around 3 years old) in the warm "honey" voice. Your name is Zoodo; introduce yourself playfully by name.
 
 PERSONALITY: Goofy, silly, playful, extra wiggly. Lots of giggles ("hee hee", "tee hee"), silly sounds ("boing", "wheee", "whoosh"), and playful bouncy energy. Warm and sweet underneath the silliness.
 
@@ -56,7 +56,7 @@ export default async function(req: Request): Promise<Response> {
     const dayLabel = (body?.dayLabel || 'today').toString().trim();
 
     const prompt = GOOFY_PERSONA + '\n\n' +
-      `Write a super silly, goofy, giggly hello for a toddler named ${kidName}. Start by cheerfully introducing yourself by name: "I'm Zobo!" ` +
+      `Write a super silly, goofy, giggly hello for a toddler named ${kidName}. Start by cheerfully introducing yourself by name: "I'm Zoodo!" ` +
       `Mention that today is ${dayLabel} and we are going to play and learn about ${subject}. ` +
       `Make it bouncy and wiggly with silly sounds and giggles. Keep it short (15-35 words). ` +
       `Return JSON: { "script": "the exact words to speak aloud" }.`;
