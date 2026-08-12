@@ -27,6 +27,7 @@ export default function LessonDetail() {
   const [greetingAudio, setGreetingAudio] = useState('');
   const [step, setStep] = useState('activity'); // activity | drawing | story
   const [activityDone, setActivityDone] = useState(false);
+  const [activityStarted, setActivityStarted] = useState(false);
   useAutoAmbientMusic();
 
   useEffect(() => {
@@ -57,6 +58,7 @@ export default function LessonDetail() {
   useEffect(() => {
     setStep('activity');
     setActivityDone(false);
+    setActivityStarted(false);
   }, [kidId, weekStart, day]);
 
   // Fetch a goofy, silly greeting spoken in the warm honey voice (replaces the
@@ -218,7 +220,7 @@ export default function LessonDetail() {
               Complete
             </button>
           </div>
-        ) : (
+        ) : activityStarted ? (
           <div className="flex items-center gap-2">
             <SensoryButton
               onClick={markComplete}
@@ -236,6 +238,10 @@ export default function LessonDetail() {
               Skip
             </button>
           </div>
+        ) : (
+          <p className="text-center text-sm font-semibold text-black/40 py-2">
+            Play the activity to unlock “Mark complete”
+          </p>
         )}
       </div>
 
@@ -261,6 +267,7 @@ export default function LessonDetail() {
             lesson={lesson}
             onUpdate={setLesson}
             onComplete={() => setActivityDone(true)}
+            onPlay={() => setActivityStarted(true)}
           />
           {activityDone && (
             <SensoryButton

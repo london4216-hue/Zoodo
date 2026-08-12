@@ -6,7 +6,7 @@ import { Loader2, Play, Pause, RotateCcw, Sparkles, Volume2 } from 'lucide-react
 // AI-generated interactive audio activity: a cute character narrates a fun,
 // Ms-Rachel-style lesson that invites the kid to join in. Includes a replay
 // button and a caregiver "repeat next week?" prompt at the end.
-export default function AiLessonActivity({ kidName, subject, dayLabel, age, lesson, onUpdate, onComplete }) {
+export default function AiLessonActivity({ kidName, subject, dayLabel, age, lesson, onUpdate, onComplete, onPlay }) {
   const [status, setStatus] = useState('generating'); // generating | ready | error
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
@@ -110,7 +110,7 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
             ref={audioRef}
             src={data.audio_url}
             onEnded={onEnded}
-            onPlay={() => setPlaying(true)}
+            onPlay={() => { setPlaying(true); onPlay?.(); }}
             onPause={() => setPlaying(false)}
           />
 
