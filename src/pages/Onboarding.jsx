@@ -6,7 +6,6 @@ import { Sparkles, Camera, Check, Loader2, ArrowRight, Heart } from 'lucide-reac
 import KidAvatar from '@/components/KidAvatar';
 import ParentVideoPicker from '@/components/ParentVideoPicker';
 
-const AGES = [2, 3, 4, 5, 6, 7, 8];
 const MILESTONES = [
   { value: 'pre_verbal', label: 'Just starting to talk' },
   { value: 'single_words', label: 'Using single words' },
@@ -22,7 +21,6 @@ export default function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState('intro'); // intro | form | camera
   const [name, setName] = useState('');
-  const [age, setAge] = useState(4);
   const [milestone, setMilestone] = useState('two_word');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -41,17 +39,11 @@ export default function Onboarding() {
 
   const submit = async (e) => {
     e.preventDefault();
-    const trimmed = name.trim();
-    if (!trimmed) {
-      setError("Please enter the child's name");
-      return;
-    }
     setSaving(true);
     setError('');
     try {
       const kid = await base44.entities.Kid.create({
-        name: trimmed,
-        age: Number(age),
+        name: 'friend',
         developmental_milestone: milestone,
       });
       setKidId(kid.id);
@@ -301,19 +293,6 @@ export default function Onboarding() {
         </p>
 
         <form onSubmit={submit} className="mt-8 space-y-5 text-left">
-          <div>
-            <label className="block text-sm font-semibold text-black/70 mb-1.5">
-              Child's name
-            </label>
-            <input
-              autoFocus
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Avi"
-              className="w-full rounded-2xl border-2 border-black/10 bg-white px-4 py-3 text-lg font-semibold text-black placeholder:text-black/30 focus:border-[#4969E1] focus:outline-none transition-colors"
-            />
-          </div>
-
           <div>
             <label className="block text-sm font-semibold text-black/70 mb-2">
               Current developmental stage <span className="text-black/40 font-normal">— sets the level</span>
