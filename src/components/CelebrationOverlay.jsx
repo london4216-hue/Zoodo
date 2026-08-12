@@ -114,8 +114,8 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
           </div>
         ) : (
           <>
-            <h2 className="text-3xl font-bold text-[#D96969] leading-tight">
-              {data?.message || 'You did it!'}
+            <h2 className="text-4xl font-bold text-[#D96969] leading-tight uppercase tracking-wide">
+              {cheerText || `You did it, ${kidName}!`}
             </h2>
             <p className="mt-1 font-semibold text-black/60">
               Great job with {subject}, {kidName}!
