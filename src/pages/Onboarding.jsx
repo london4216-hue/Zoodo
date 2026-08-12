@@ -190,8 +190,8 @@ export default function Onboarding() {
                 Grown-up {currentParent + 1} of {parentCount}
               </h1>
               <p className="mt-2 text-black/60 font-medium">
-                Upload a real video of you saying the cheer. At the end of every
-                lesson it'll play back so {name || 'your child'} hears it from you!
+                Get ready to say it on the count of 3! At the end of every lesson
+                this plays back so {name || 'your child'} hears it from you.
               </p>
               <div className="mt-5">
                 {uploading ? (
@@ -200,7 +200,7 @@ export default function Onboarding() {
                   </div>
                 ) : (
                   <ParentVideoPicker
-                    cheer={`Yes! You did it, ${name || 'friend'}!`}
+                    cheer={`You did it, ${name || 'friend'}!`}
                     onRecorded={saveParentVideo}
                   />
                 )}

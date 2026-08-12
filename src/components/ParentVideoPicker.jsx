@@ -124,7 +124,7 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
       </div>
 
       <p className="mt-3 rounded-2xl bg-white/70 p-3 text-left">
-        <span className="text-xs font-bold uppercase tracking-wide text-black/40">This plays at the end of every lesson:</span>
+        <span className="text-xs font-bold uppercase tracking-wide text-black/40">On the count of 3, say it with a big smile:</span>
         <span className="mt-1 block text-lg font-bold text-[#D96969]">“{cheer}”</span>
       </p>
 
