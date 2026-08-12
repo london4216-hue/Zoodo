@@ -169,10 +169,10 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
             Play again
           </button>
 
-          {/* Optional recommended YouTube video */}
+          {/* Optional recommended YouTube video — tied to today's lesson plan */}
           <LessonSupportVideo
-            title={data.title}
-            description={data.script}
+            title={`${subject} for ${age}-year-olds`}
+            description={`${dayLabel} lesson: ${data.title}. ${data.script || ''}`}
             age={age}
           />
 

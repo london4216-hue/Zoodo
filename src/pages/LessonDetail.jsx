@@ -193,7 +193,7 @@ export default function LessonDetail() {
             className="flex items-center gap-1.5 rounded-2xl bg-white/80 px-4 py-2.5 text-sm font-bold text-black/70 shadow-sm active:scale-95 transition hover:bg-white"
           >
             <Play className="h-4 w-4" />
-            Start
+            Launch activity
           </button>
         </div>
       </div>

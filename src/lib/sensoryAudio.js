@@ -111,20 +111,19 @@ export const playPop = () => {
   o.stop(now + 0.2);
 };
 
-// Gentle ambient music: a soft pad + a slow melody loop. Each time it starts,
-// a different "song" (chord, scale, tempo, tone color) is picked so the music
-// feels fresh every time.
-const SONGS = [
-  { name: 'C major', pad: [130.81, 196.0, 261.63], scale: [523.25, 587.33, 659.25, 783.99, 880.0], wave: 'triangle', tempo: 1500, noteDur: 1.4, gain: 0.22 },
-  { name: 'A minor', pad: [110.0, 164.81, 220.0], scale: [440.0, 523.25, 587.33, 659.25, 783.99], wave: 'sine', tempo: 1700, noteDur: 1.6, gain: 0.2 },
-  { name: 'G major', pad: [98.0, 146.83, 196.0], scale: [392.0, 440.0, 493.88, 587.33, 659.25], wave: 'triangle', tempo: 1300, noteDur: 1.2, gain: 0.18 },
-  { name: 'F major', pad: [87.31, 130.81, 174.61], scale: [349.23, 392.0, 440.0, 523.25, 587.33], wave: 'sine', tempo: 1850, noteDur: 1.7, gain: 0.2 },
-  { name: 'D dorian', pad: [73.42, 110.0, 146.83], scale: [293.66, 329.63, 392.0, 440.0, 493.88], wave: 'triangle', tempo: 1600, noteDur: 1.5, gain: 0.19 },
-  { name: 'E lydian', pad: [82.41, 123.47, 164.81], scale: [329.63, 369.99, 440.0, 493.88, 554.37], wave: 'sine', tempo: 1450, noteDur: 1.3, gain: 0.21 },
-  { name: 'Pentatonic G', pad: [98.0, 130.81, 196.0], scale: [392.0, 440.0, 523.25, 587.33, 659.25], wave: 'triangle', tempo: 1550, noteDur: 1.45, gain: 0.2 },
+// Fun, motivating ambient groove — a bouncy dance beat (kick + hi-hat + snare),
+// a walking bass line, and a catchy melody. Each session picks a different
+// groove (key, tempo, vibe) so it always feels fresh and energizing.
+const GROOVES = [
+  { name: 'C major pop', root: 130.81, scale: [261.63, 293.66, 329.63, 392.0, 440.0, 523.25], bass: [130.81, 196.0, 174.61, 196.0], bpm: 116, wave: 'square' },
+  { name: 'G major bouncy', root: 98.0, scale: [392.0, 440.0, 493.88, 587.33, 659.25, 783.99], bass: [98.0, 146.83, 130.81, 146.83], bpm: 124, wave: 'square' },
+  { name: 'F major happy', root: 87.31, scale: [349.23, 392.0, 440.0, 523.25, 587.33, 698.46], bass: [87.31, 130.81, 110.0, 130.81], bpm: 120, wave: 'triangle' },
+  { name: 'D dorian funky', root: 73.42, scale: [293.66, 329.63, 392.0, 440.0, 493.88, 587.33], bass: [73.42, 110.0, 98.0, 110.0], bpm: 128, wave: 'sawtooth' },
+  { name: 'A minor groovy', root: 110.0, scale: [440.0, 523.25, 587.33, 659.25, 783.99, 880.0], bass: [110.0, 164.81, 146.83, 164.81], bpm: 122, wave: 'square' },
+  { name: 'Pentatonic bright', root: 98.0, scale: [392.0, 440.0, 523.25, 587.33, 659.25, 783.99], bass: [98.0, 130.81, 110.0, 130.81], bpm: 126, wave: 'triangle' },
 ];
 
-let music = { playing: false, timer: null, master: null, padOscs: [], lastSongIdx: -1 };
+let music = { playing: false, timer: null, master: null, nodes: [], lastSongIdx: -1 };
 
 export const startAmbientMusic = () => {
   if (music.playing) return;
@@ -134,47 +133,116 @@ export const startAmbientMusic = () => {
   const master = c.createGain();
   master.gain.value = 0;
   master.connect(c.destination);
-  master.gain.setTargetAtTime(0.1, c.currentTime, 1.2);
+  master.gain.setTargetAtTime(0.16, c.currentTime, 0.8);
   music.master = master;
 
-  // Pick a different song than last time.
-  let idx = Math.floor(Math.random() * SONGS.length);
-  if (SONGS.length > 1 && idx === music.lastSongIdx) idx = (idx + 1) % SONGS.length;
+  let idx = Math.floor(Math.random() * GROOVES.length);
+  if (GROOVES.length > 1 && idx === music.lastSongIdx) idx = (idx + 1) % GROOVES.length;
   music.lastSongIdx = idx;
-  const song = SONGS[idx];
+  const groove = GROOVES[idx];
+  const beat = 60 / groove.bpm; // seconds per beat
+  const step16 = beat / 4;      // sixteenth-note spacing
 
-  // Soft pad chord.
-  const padGain = c.createGain();
-  padGain.gain.value = 0.5;
-  padGain.connect(master);
-  music.padOscs = song.pad.map((f) => {
-    const o = c.createOscillator();
-    o.type = 'sine';
-    o.frequency.value = f;
-    o.connect(padGain);
-    o.start();
-    return o;
-  });
-
-  // Slow melody over the song's scale.
-  const playNote = () => {
-    if (!music.playing) return;
-    const now = c.currentTime;
-    const f = song.scale[Math.floor(Math.random() * song.scale.length)];
+  // --- Drum helpers ---
+  const kick = (t) => {
     const o = c.createOscillator();
     const g = c.createGain();
-    o.type = song.wave;
-    o.frequency.value = f;
-    g.gain.setValueAtTime(0.0001, now);
-    g.gain.linearRampToValueAtTime(song.gain, now + 0.05);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + song.noteDur);
-    o.connect(g);
-    g.connect(master);
-    o.start(now);
-    o.stop(now + song.noteDur + 0.1);
+    o.type = 'sine';
+    o.frequency.setValueAtTime(150, c.currentTime + t);
+    o.frequency.exponentialRampToValueAtTime(50, c.currentTime + t + 0.12);
+    g.gain.setValueAtTime(0.0001, c.currentTime + t);
+    g.gain.exponentialRampToValueAtTime(0.5, c.currentTime + t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + t + 0.2);
+    o.connect(g); g.connect(master);
+    o.start(c.currentTime + t); o.stop(c.currentTime + t + 0.22);
   };
-  music.timer = setInterval(playNote, song.tempo);
-  playNote();
+  const hat = (t, open = false) => {
+    const len = 1024;
+    const buf = c.createBuffer(1, len, c.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, open ? 2 : 3);
+    const n = c.createBufferSource(); n.buffer = buf;
+    const g = c.createGain();
+    g.gain.setValueAtTime(open ? 0.1 : 0.14, c.currentTime + t);
+    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + t + (open ? 0.12 : 0.04));
+    const f = c.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 7000;
+    n.connect(f); f.connect(g); g.connect(master);
+    n.start(c.currentTime + t); n.stop(c.currentTime + t + 0.14);
+  };
+  const snare = (t) => {
+    const len = 2048;
+    const buf = c.createBuffer(1, len, c.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+    const n = c.createBufferSource(); n.buffer = buf;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.22, c.currentTime + t);
+    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + t + 0.14);
+    const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1800; f.Q.value = 0.8;
+    n.connect(f); f.connect(g); g.connect(master);
+    n.start(c.currentTime + t); n.stop(c.currentTime + t + 0.16);
+  };
+
+  // --- Bass + melody helpers ---
+  const bassNote = (t, freq, dur) => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = 'sawtooth';
+    o.frequency.value = freq;
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 600; f.Q.value = 4;
+    o.connect(f); f.connect(g); g.connect(master);
+    const start = c.currentTime + t;
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(0.26, start + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    o.start(start); o.stop(start + dur + 0.05);
+  };
+  const melodyNote = (t, freq, dur) => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = groove.wave;
+    o.frequency.value = freq;
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 3000;
+    o.connect(f); f.connect(g); g.connect(master);
+    const start = c.currentTime + t;
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(0.18, start + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    o.start(start); o.stop(start + dur + 0.05);
+  };
+
+  // --- One-bar loop scheduler (16 sixteenth-steps) ---
+  // Kick on 1 and 3 (steps 0, 8), snare on 2 and 4 (steps 4, 12),
+  // hats on every step, bass on the root pattern, melody dances around the scale.
+  const playBar = (bar) => {
+    if (!music.playing) return;
+    const offset = bar * beat * 4;
+    for (let s = 0; s < 16; s++) {
+      const t = offset + s * step16;
+      if (s % 4 === 0) kick(t);
+      if (s === 4 || s === 12) snare(t);
+      hat(t, s % 4 === 2);
+    }
+    // Walking bass — one note per beat, cycling the bass pattern
+    for (let b = 0; b < 4; b++) {
+      bassNote(offset + b * beat, groove.bass[b % groove.bass.length], beat * 0.8);
+    }
+    // Catchy melody — a bouncy motif that changes every other bar
+    const motif = bar % 2 === 0
+      ? [0, 2, 4, 2, 3, 4, 5, 4]
+      : [5, 4, 2, 4, 3, 2, 0, 2];
+    motif.forEach((deg, i) => {
+      const f = groove.scale[deg % groove.scale.length] * (deg >= groove.scale.length ? 2 : 1);
+      melodyNote(offset + i * (beat / 2), f, beat * 0.45);
+    });
+  };
+
+  let bar = 0;
+  playBar(bar);
+  music.timer = setInterval(() => {
+    bar += 1;
+    playBar(bar);
+  }, beat * 4 * 1000);
 };
 
 export const stopAmbientMusic = () => {
@@ -183,15 +251,13 @@ export const stopAmbientMusic = () => {
   music.playing = false;
   if (music.timer) { clearInterval(music.timer); music.timer = null; }
   if (c && music.master) {
-    music.master.gain.setTargetAtTime(0, c.currentTime, 0.5);
+    music.master.gain.setTargetAtTime(0, c.currentTime, 0.4);
   }
-  const padOscs = music.padOscs;
   const master = music.master;
   setTimeout(() => {
-    padOscs.forEach((o) => { try { o.stop(); } catch (e) {} });
     try { master && master.disconnect(); } catch (e) {}
-  }, 1200);
-  music.padOscs = [];
+  }, 800);
+  music.nodes = [];
   music.master = null;
 };
 
