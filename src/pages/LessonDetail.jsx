@@ -7,6 +7,7 @@ import KidAvatar from '@/components/KidAvatar';
 import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
 import AiLessonActivity from '@/components/AiLessonActivity';
+import LunchActivity from '@/components/LunchActivity';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
 import SensoryBackground from '@/components/SensoryBackground';
 import SensoryButton from '@/components/SensoryButton';
@@ -247,7 +248,7 @@ export default function LessonDetail() {
 
       {/* Activity stepper — one activity at a time */}
       <div className="mb-4 flex items-center justify-center gap-2">
-        {['activity', 'drawing', 'story'].map((s) => (
+        {['activity', 'drawing', 'lunch', 'story'].map((s) => (
           <div
             key={s}
             className={`h-2 rounded-full transition-all ${
@@ -299,6 +300,27 @@ export default function LessonDetail() {
               Back
             </button>
             <SensoryButton
+              onClick={() => setStep('lunch')}
+              glow="#F2A03D"
+              className="flex-[2] bg-[#F2A03D] py-3 text-white"
+            >
+              Next: Lunch time
+            </SensoryButton>
+          </div>
+        </div>
+      )}
+
+      {step === 'lunch' && (
+        <div className="space-y-3">
+          <LunchActivity kidName={kid?.name} />
+          <div className="flex gap-2">
+            <button
+              onClick={() => setStep('drawing')}
+              className="flex-1 rounded-2xl border-2 border-black/10 bg-white py-3 font-bold text-black/60 active:scale-95 transition"
+            >
+              Back
+            </button>
+            <SensoryButton
               onClick={() => setStep('story')}
               glow="#7B4FE0"
               className="flex-[2] bg-[#7B4FE0] py-3 text-white"
@@ -318,7 +340,7 @@ export default function LessonDetail() {
             onSaved={saveStory}
           />
           <button
-            onClick={() => setStep('drawing')}
+            onClick={() => setStep('lunch')}
             className="w-full rounded-2xl border-2 border-black/10 bg-white py-3 font-bold text-black/60 active:scale-95 transition"
           >
             Back
