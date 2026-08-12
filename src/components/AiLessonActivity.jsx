@@ -172,13 +172,6 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
             Play again
           </button>
 
-          {/* Optional recommended YouTube video — tied to today's lesson plan */}
-          <LessonSupportVideo
-            title={`${subject} for ${age}-year-olds`}
-            description={`${dayLabel} lesson: ${data.title}. ${data.script || ''}`}
-            age={age}
-          />
-
           {/* Camera participation check — opens after the voice finishes.
               Lenient: if the kid isn't seen doing the action, it just moves on. */}
           {showCamera && (
@@ -221,6 +214,13 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
           )}
         </>
       )}
+
+      {/* Recommended video — fetched in parallel so it's ready fast */}
+      <LessonSupportVideo
+        title={`${subject} for ${age}-year-olds`}
+        description={`${subject} activity for ${age}-year-olds`}
+        age={age}
+      />
     </div>
   );
 }

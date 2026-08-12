@@ -51,31 +51,32 @@ ${avoidIds.length ? `- Do not return any of these ids, they were invalid: ${avoi
     let chosen: any = null;
     let lastCandidate: any = null;
 
-    for (let attempt = 0; attempt < 2 && !chosen; attempt++) {
-      const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
-        prompt: buildPrompt(triedIds),
-        add_context_from_internet: true,
-        model: 'gemini_3_flash',
-        response_json_schema: {
-          type: 'object',
-          properties: {
-            video_id: { type: 'string' },
-            title: { type: 'string' },
-            channel: { type: 'string' },
-            why: { type: 'string' },
-          },
-          required: ['video_id', 'title', 'channel', 'why'],
+    // Single fast attempt: one web-search LLM call, validate via oEmbed, and
+    // fall back to the curated video if the candidate isn't usable. Keeps the
+    // recommended video populating as fast as possible.
+    const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
+      prompt: buildPrompt(triedIds),
+      add_context_from_internet: true,
+      model: 'gemini_3_flash',
+      response_json_schema: {
+        type: 'object',
+        properties: {
+          video_id: { type: 'string' },
+          title: { type: 'string' },
+          channel: { type: 'string' },
+          why: { type: 'string' },
         },
-      });
+        required: ['video_id', 'title', 'channel', 'why'],
+      },
+    });
 
-      const v = (result as any) || null;
-      const vid = v && v.video_id ? String(v.video_id).trim() : '';
-      if (vid && /^[A-Za-z0-9_-]{11}$/.test(vid)) {
-        triedIds.push(vid);
-        lastCandidate = v;
-        if (await isValid(vid)) {
-          chosen = v;
-        }
+    const v = (result as any) || null;
+    const candidateVid = v && v.video_id ? String(v.video_id).trim() : '';
+    if (candidateVid && /^[A-Za-z0-9_-]{11}$/.test(candidateVid)) {
+      triedIds.push(candidateVid);
+      lastCandidate = v;
+      if (await isValid(candidateVid)) {
+        chosen = v;
       }
     }
 
