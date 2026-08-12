@@ -22,6 +22,7 @@ export default function Onboarding() {
   const [step, setStep] = useState('intro'); // intro | form | camera
   const [name, setName] = useState('');
   const [milestone, setMilestone] = useState('two_word');
+  const [programLength, setProgramLength] = useState(8);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [camStream, setCamStream] = useState(null);
@@ -45,6 +46,7 @@ export default function Onboarding() {
       const kid = await base44.entities.Kid.create({
         name: 'friend',
         developmental_milestone: milestone,
+        program_length: programLength,
       });
       setKidId(kid.id);
       setStep('parent');
@@ -310,6 +312,28 @@ export default function Onboarding() {
                   }`}
                 >
                   {m.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-black/70 mb-2">
+              Weeks in this plan <span className="text-black/40 font-normal">— how long it runs</span>
+            </label>
+            <div className="grid grid-cols-4 gap-2">
+              {[4, 6, 8, 10].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setProgramLength(n)}
+                  className={`rounded-2xl border-2 py-4 text-center text-lg font-bold transition active:scale-95 ${
+                    programLength === n
+                      ? 'bg-[#7B4FE0] text-white border-[#7B4FE0] shadow'
+                      : 'bg-white text-black/70 border-black/10 hover:border-[#7B4FE0]/50'
+                  }`}
+                >
+                  {n}
                 </button>
               ))}
             </div>
