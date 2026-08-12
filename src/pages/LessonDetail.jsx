@@ -7,6 +7,7 @@ import StoryActivity from '@/components/StoryActivity';
 import AiLessonActivity from '@/components/AiLessonActivity';
 import InteractivePhonicsActivity from '@/components/InteractivePhonicsActivity';
 import LunchActivity from '@/components/LunchActivity';
+import StretchGuide from '@/components/StretchGuide';
 import DayGraphic from '@/components/DayGraphic';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
 import SensoryBackground from '@/components/SensoryBackground';
@@ -168,6 +169,9 @@ export default function LessonDetail() {
       <div className="flex-1 min-h-0 overflow-y-auto">
       {step === 'activity' && (
         <div ref={activityRef} className="space-y-3 scroll-mt-4">
+          {(dayCfg.graphic === 'outdoor' || dayCfg.graphic === 'exercise') && (
+            <StretchGuide kidName={kid?.name} />
+          )}
           {dayCfg.subject === 'Letters' ? (
             <InteractivePhonicsActivity
               kidName={kid?.name || 'the child'}
