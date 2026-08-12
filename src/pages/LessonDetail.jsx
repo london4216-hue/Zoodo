@@ -175,7 +175,7 @@ export default function LessonDetail() {
         <div className="flex items-center gap-4">
           <DayGraphic type={dayCfg.graphic} />
           <div className="flex-1">
-            <div className="text-sm font-semibold text-black/70">{dayCfg.label}</div>
+            <div className="text-sm font-semibold text-black/70">{realDayLabel}</div>
             <div
               className="text-3xl font-bold leading-tight"
               style={{
