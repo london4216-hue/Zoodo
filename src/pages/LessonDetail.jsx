@@ -6,6 +6,7 @@ import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
 import AiLessonActivity from '@/components/AiLessonActivity';
 import InteractivePhonicsActivity from '@/components/InteractivePhonicsActivity';
+import ZoodoGuide from '@/components/ZoodoGuide';
 import LunchActivity from '@/components/LunchActivity';
 import DayGraphic from '@/components/DayGraphic';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
@@ -166,6 +167,12 @@ export default function LessonDetail() {
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto">
+      <ZoodoGuide
+        step={step}
+        kidName={kid?.name}
+        activityStarted={activityStarted}
+        activityDone={activityDone}
+      />
       {step === 'activity' && (
         <div ref={activityRef} className="space-y-3 scroll-mt-4">
           {dayCfg.subject === 'Letters' ? (
