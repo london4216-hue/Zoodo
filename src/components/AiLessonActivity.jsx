@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { Loader2, Play, Pause, RotateCcw, Sparkles, Volume2 } from 'lucide-react';
 import LessonSupportVideo from '@/components/LessonSupportVideo';
-import CameraValidator from '@/components/CameraValidator';
 import MicParticipation from '@/components/MicParticipation';
 import { Image } from '@/components/ui/image';
 
@@ -16,7 +15,6 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
   const [error, setError] = useState('');
   const [playing, setPlaying] = useState(false);
   const [showRepeat, setShowRepeat] = useState(false);
-  const [showCamera, setShowCamera] = useState(false);
   const [savedRepeat, setSavedRepeat] = useState(
     typeof lesson?.repeat_next_week === 'boolean' ? lesson.repeat_next_week : null
   );
@@ -35,9 +33,6 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
         if (res?.data?.error) throw new Error(res.data.error);
         setData(res.data);
         setStatus('ready');
-        // Only launch the camera when the lesson plan calls for it (e.g. the
-        // child producing a sound or movement a therapist can verify).
-        if (res.data?.camera_recommended) setShowCamera(true);
       } catch (err) {
         if (cancelled) return;
         setError(err?.message || 'Could not create the activity.');
@@ -215,24 +210,14 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
             Play again
           </button>
 
-          {/* Participation check — camera only when the lesson plan calls for it
-              (a sound/movement a therapist can verify); otherwise a simple mic
-              tap so the camera never runs on every lesson. */}
-          {showCamera && data.camera_recommended ? (
-            <CameraValidator
-              inline
-              targetAction={data.sound ? `saying ${data.sound} like ${data.word}` : (data.title || subject)}
-              kidName={kidName}
-              onSuccess={() => { setShowCamera(false); handleMastery(); onComplete?.(); }}
-              onClose={() => setShowCamera(false)}
-            />
-          ) : (
-            <MicParticipation
-              kidName={kidName}
-              targetLabel={data.sound ? `Say “${data.sound}”` : (data.title || subject)}
-              onDone={() => { handleMastery(); onComplete?.(); }}
-            />
-          )}
+          {/* Participation check — a simple mic tap. A webcam can't reliably
+              verify a toddler's mouth articulation, so the camera is never used
+              for speech lessons; the caregiver/kid tap the mic to confirm. */}
+          <MicParticipation
+            kidName={kidName}
+            targetLabel={data.sound ? `Say “${data.sound}”` : (data.title || subject)}
+            onDone={() => { handleMastery(); onComplete?.(); }}
+          />
 
           {/* Caregiver prompt after playback */}
           {showRepeat && (

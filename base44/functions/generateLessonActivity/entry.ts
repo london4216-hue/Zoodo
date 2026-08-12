@@ -153,7 +153,10 @@ export default async function(req) {
     const letter = (llmRes && llmRes.letter) || '';
     const sound = (llmRes && llmRes.sound) || '';
     const word = (llmRes && llmRes.word) || '';
-    const camera_recommended = !!(llmRes && llmRes.camera_recommended);
+    // A webcam cannot reliably verify a toddler's articulation, so the camera
+    // is never used for speech lessons. (Gross-movement activities elsewhere
+    // in the app still use the camera, where it does make sense.)
+    const camera_recommended = false;
 
     if (!script) {
       return Response.json({ error: 'Could not create the activity. Please try again.' }, { status: 500 });
