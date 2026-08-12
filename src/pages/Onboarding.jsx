@@ -7,7 +7,13 @@ import KidAvatar from '@/components/KidAvatar';
 import ParentVideoPicker from '@/components/ParentVideoPicker';
 
 const AGES = [2, 3, 4, 5, 6, 7, 8];
-const PROGRAM_LENGTHS = [4, 8, 12, 16];
+const MILESTONES = [
+  { value: 'pre_verbal', label: 'Just starting to talk' },
+  { value: 'single_words', label: 'Using single words' },
+  { value: 'two_word', label: 'Combining 2 words' },
+  { value: 'short_sentences', label: 'Short sentences' },
+  { value: 'sentences', label: 'Talking in sentences' },
+];
 
 // First-run intake: a cute Zoodo intro, then a short questionnaire (name, age,
 // program length, developmental milestone), then camera permission — all before
@@ -17,7 +23,7 @@ export default function Onboarding() {
   const [step, setStep] = useState('intro'); // intro | form | camera
   const [name, setName] = useState('');
   const [age, setAge] = useState(4);
-  const [programLength, setProgramLength] = useState(8);
+  const [milestone, setMilestone] = useState('two_word');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [camStream, setCamStream] = useState(null);
@@ -46,7 +52,7 @@ export default function Onboarding() {
       const kid = await base44.entities.Kid.create({
         name: trimmed,
         age: Number(age),
-        program_length: Number(programLength),
+        developmental_milestone: milestone,
       });
       setKidId(kid.id);
       setStep('parent');
@@ -260,7 +266,7 @@ export default function Onboarding() {
           >
             {camStatus === 'asking' ? (
               <span className="flex items-center justify-center gap-2"><Loader2 className="h-5 w-5 animate-spin" /> Asking for permission…</span>
-            ) : `Start the ${programLength}-week plan`}
+            ) : 'Start the plan'}
           </Button>
           <button
             onClick={finish}
@@ -332,21 +338,21 @@ export default function Onboarding() {
 
           <div>
             <label className="block text-sm font-semibold text-black/70 mb-2">
-              Program length <span className="text-black/40 font-normal">— weeks</span>
+              Current developmental stage <span className="text-black/40 font-normal">— tailors the content</span>
             </label>
-            <div className="flex flex-wrap gap-2">
-              {PROGRAM_LENGTHS.map((w) => (
+            <div className="flex flex-col gap-2">
+              {MILESTONES.map((m) => (
                 <button
-                  key={w}
+                  key={m.value}
                   type="button"
-                  onClick={() => setProgramLength(w)}
-                  className={`h-12 min-w-[3.5rem] rounded-2xl px-3 text-lg font-bold transition active:scale-95 ${
-                    programLength === w
-                      ? 'bg-[#7B4FE0] text-white border-2 border-[#7B4FE0] shadow'
-                      : 'bg-white text-black/70 border-2 border-black/10 hover:border-[#7B4FE0]/50'
+                  onClick={() => setMilestone(m.value)}
+                  className={`rounded-2xl border-2 px-4 py-3 text-left text-base font-semibold transition active:scale-[0.98] ${
+                    milestone === m.value
+                      ? 'bg-[#7B4FE0] text-white border-[#7B4FE0] shadow'
+                      : 'bg-white text-black/70 border-black/10 hover:border-[#7B4FE0]/50'
                   }`}
                 >
-                  {w}w
+                  {m.label}
                 </button>
               ))}
             </div>
@@ -361,7 +367,7 @@ export default function Onboarding() {
             disabled={saving}
             className="w-full rounded-2xl bg-[#4969E1] py-6 text-lg font-bold text-white hover:bg-[#3b54c9] disabled:opacity-60"
           >
-            {saving ? 'Setting up…' : 'Start the week'}
+            {saving ? 'Setting up…' : 'Continue'}
           </Button>
         </form>
       </div>
