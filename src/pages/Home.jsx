@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import DayCard from '@/components/DayCard';
+import KidAvatar from '@/components/KidAvatar';
 import { DAYS, DAY_MAP, getMondayISO, addWeeksISO, formatWeekRange } from '@/lib/lessonConfig';
 import { isGenerating, markGenerating, clearGenerating } from '@/lib/weekGenState';
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
@@ -18,7 +19,6 @@ export default function Home() {
   const [lessonsByDay, setLessonsByDay] = useState({});
   const [preparing, setPreparing] = useState(false);
 
-  // Load the caregiver's kid (first one). If none, go to onboarding.
   useEffect(() => {
     (async () => {
       try {
@@ -36,8 +36,6 @@ export default function Home() {
     })();
   }, [navigate]);
 
-  // Load (or auto-create) the 5 lessons for the selected week, then kick off
-  // a single background AI call to prepare all 5 days' videos at once.
   useEffect(() => {
     if (!kid) return;
     let cancelled = false;
@@ -79,13 +77,10 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kid, weekStart]);
 
-  // One web-search call for the whole week; writes ai_content onto each lesson
-  // so opening a day is instant. Updates persist even if the user navigates away.
   const preGenerate = async (kidObj, monday, existing, cancelled) => {
     markGenerating(monday);
     setPreparing(true);
     try {
-      // Personalize from the kid's loved subjects across all weeks.
       let lovedSubjects = [];
       try {
         const all = await base44.entities.Lesson.filter({ kid_id: kidObj.id });
@@ -98,6 +93,7 @@ export default function Home() {
 
       const res = await base44.functions.invoke('generateWeekContent', {
         kidName: kidObj.name,
+        age: kidObj.age,
         lovedSubjects,
       });
       const content = res?.data || {};
@@ -129,23 +125,14 @@ export default function Home() {
   }
 
   const todayKey = DAY_MAP[new Date().toLocaleDateString('en', { weekday: 'long' }).toLowerCase()]?.key;
+  const greeting = `Hi ${kid?.name}! Let's get ready to learn! This week: Numbers, Letters, Outdoor fun, Music, and Exercises!`;
 
   return (
     <Layout>
-      {/* Header */}
-      <header className="text-center mb-5">
-        <h1
-          className="text-4xl font-bold leading-tight"
-          style={{ color: '#D96969' }}
-        >
-          WEEKLY Lesson Plan
-        </h1>
-        <div className="mt-2 flex items-center justify-center gap-4 text-lg">
-          <span className="text-black font-semibold">
-            Name: <span style={{ color: '#4969E1' }} className="font-bold">{kid?.name}</span>
-          </span>
-        </div>
-      </header>
+      {/* Learning buddy greeting */}
+      <div className="flex justify-center pt-2 pb-4">
+        <KidAvatar greeting={greeting} size={150} />
+      </div>
 
       {/* Week switcher */}
       <div className="flex items-center justify-between mb-4 px-1">
@@ -194,7 +181,7 @@ export default function Home() {
       </div>
 
       <p className="mt-6 text-center text-sm text-black/40 font-medium">
-        Tap a day to open its lesson and watch the AI video picks.
+        Tap a day to open its lesson, watch the video, draw, and hear a story!
       </p>
     </Layout>
   );

@@ -10,25 +10,25 @@ export default async function(req: Request): Promise<Response> {
     const subject = (body?.subject || '').toString().trim();
     const day = (body?.day || '').toString().trim();
     const kidName = (body?.kidName || 'the child').toString().trim();
+    const age = Number(body?.age) || 4;
 
     if (!subject || !day) {
       return Response.json({ error: 'subject and day are required' }, { status: 400 });
     }
 
-    const prompt = `You are a warm, expert early-childhood educator building a lesson plan for a young child named ${kidName}.
+    const prompt = `You are a warm, expert early-childhood educator building a lesson plan for a ${age}-year-old child named ${kidName}.
 
 Today is ${day} and the theme is "${subject}".
 
-Search the web for 3 real, high-quality YouTube videos that fit this theme for young children. For each one, return:
+Search the web for 1 real, high-quality YouTube video that fits this theme for a ${age}-year-old. Return:
 - title: the real video title as it appears on YouTube
 - video_id: the actual YouTube video ID (the 11-character id from the watch URL, e.g. "dQw4w9WgXcQ") — only use a real id you found, never invent one
 - channel: the channel name that published it
-- description: 1-2 sentences describing what the video teaches and why it's great for young kids
+- description: 1-2 sentences describing what the video teaches and why it's great for a ${age}-year-old
 - why: one short sentence on how it connects to the "${subject}" theme
 
 Rules:
-- The three videos must be genuinely different from each other (different angle/format — e.g. one song-based, one story-based, one hands-on activity).
-- Only return real videos you actually found on the web. Do not make up video IDs.
+- Only return a real video you actually found on the web. Do not make up video IDs.
 - Keep language simple, warm, and encouraging.
 - Return only the JSON.`;
 

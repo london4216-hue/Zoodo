@@ -20,8 +20,8 @@ const videoItem = {
   required: ['title', 'video_id', 'channel', 'description', 'why'],
 };
 
-// Generates all 5 days' YouTube picks in a SINGLE web-search call, so the
-// whole week is ready by the time the caregiver taps a day.
+// Generates all 5 days' YouTube picks (1 per day) in a SINGLE web-search call,
+// age-appropriate, so the whole week is ready by the time a day is tapped.
 export default async function(req: Request): Promise<Response> {
   try {
     const base44 = createClientFromRequest(req);
@@ -30,6 +30,7 @@ export default async function(req: Request): Promise<Response> {
 
     const body = await req.json();
     const kidName = (body?.kidName || 'the child').toString().trim();
+    const age = Number(body?.age) || 4;
     const lovedSubjects = Array.isArray(body?.lovedSubjects)
       ? body.lovedSubjects.filter(Boolean)
       : [];
@@ -40,19 +41,19 @@ export default async function(req: Request): Promise<Response> {
 
     const lines = DAY_THEMES.map((d) => `- ${d.day}: ${d.subject}`).join('\n');
 
-    const prompt = `You are a warm, expert early-childhood educator building a weekly lesson plan for a young child named ${kidName}.${personalization}
+    const prompt = `You are a warm, expert early-childhood educator building a weekly lesson plan for a ${age}-year-old child named ${kidName}.${personalization}
 
-For each of the 5 weekdays below, search the web for 3 real, high-quality YouTube videos that fit that day's theme for young children.
+For each of the 5 weekdays below, search the web for 1 real, high-quality YouTube video that fits that day's theme for a ${age}-year-old.
 ${lines}
 
 For each video return:
 - title: the real video title as it appears on YouTube
 - video_id: the real 11-character YouTube video ID (only use a real id you found; never invent one)
 - channel: the channel name that published it
-- description: 1-2 sentences on what it teaches and why it's great for young kids
+- description: 1-2 sentences on what it teaches and why it's great for a ${age}-year-old
 - why: one short sentence connecting it to the day's theme
 
-The 3 videos per day must be genuinely different from each other (e.g. one song-based, one story-based, one hands-on activity). Only return real videos you actually found on the web; never invent video IDs. Return only JSON keyed by day name.`;
+Only return real videos you actually found on the web; never invent video IDs. Return only JSON keyed by day name, where each day is an array containing exactly one video.`;
 
     const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt,

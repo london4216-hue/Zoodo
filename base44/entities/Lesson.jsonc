@@ -70,6 +70,17 @@
       "items": {
         "type": "string"
       }
+    },
+    "drawing_url": {
+      "type": "string",
+      "title": "Drawing URL",
+      "description": "URL of the kid's saved drawing for this lesson",
+      "format": "uri"
+    },
+    "story": {
+      "type": "string",
+      "title": "Story",
+      "description": "AI-generated personalized story for this lesson"
     }
   },
   "required": [

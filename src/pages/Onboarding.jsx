@@ -4,10 +4,13 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Sparkles } from 'lucide-react';
 
-// First screen: the caregiver enters the child's name before the weekly plan appears.
+const AGES = [2, 3, 4, 5, 6, 7, 8];
+
+// First screen: the caregiver enters the child's name + age before the plan appears.
 export default function Onboarding() {
   const navigate = useNavigate();
   const [name, setName] = useState('');
+  const [age, setAge] = useState(4);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -21,7 +24,7 @@ export default function Onboarding() {
     setSaving(true);
     setError('');
     try {
-      await base44.entities.Kid.create({ name: trimmed });
+      await base44.entities.Kid.create({ name: trimmed, age: Number(age) });
       navigate('/');
     } catch (err) {
       setError(err?.message || 'Something went wrong. Please try again.');
@@ -43,10 +46,10 @@ export default function Onboarding() {
           Weekly<br />Lesson Plan
         </h1>
         <p className="mt-3 text-black/60 font-medium">
-          Let's set up a playful learning week. What's the child's name?
+          Let's set up a playful learning week. Who are we learning with today?
         </p>
 
-        <form onSubmit={submit} className="mt-8 space-y-4 text-left">
+        <form onSubmit={submit} className="mt-8 space-y-5 text-left">
           <div>
             <label className="block text-sm font-semibold text-black/70 mb-1.5">
               Child's name
@@ -58,6 +61,28 @@ export default function Onboarding() {
               placeholder="e.g. Avi"
               className="w-full rounded-2xl border-2 border-black/10 bg-white px-4 py-3 text-lg font-semibold text-black placeholder:text-black/30 focus:border-[#4969E1] focus:outline-none transition-colors"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-black/70 mb-2">
+              Child's age <span className="text-black/40 font-normal">— this sets the level</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {AGES.map((a) => (
+                <button
+                  key={a}
+                  type="button"
+                  onClick={() => setAge(a)}
+                  className={`h-12 w-12 rounded-2xl text-lg font-bold transition active:scale-95 ${
+                    age === a
+                      ? 'bg-[#4969E1] text-white border-2 border-[#4969E1] shadow'
+                      : 'bg-white text-black/70 border-2 border-black/10 hover:border-[#4969E1]/50'
+                  }`}
+                >
+                  {a}
+                </button>
+              ))}
+            </div>
           </div>
 
           {error && (

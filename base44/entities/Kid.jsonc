@@ -7,6 +7,12 @@
       "title": "Kid's Name",
       "description": "The child's first name"
     },
+    "age": {
+      "type": "number",
+      "title": "Kid's Age",
+      "description": "The child's age \u2014 drives content difficulty",
+      "default": 4
+    },
     "avatar_color": {
       "type": "string",
       "title": "Avatar Color",
@@ -14,7 +20,8 @@
     }
   },
   "required": [
-    "name"
+    "name",
+    "age"
   ],
   "rls": {
     "read": {
