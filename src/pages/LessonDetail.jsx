@@ -7,6 +7,7 @@ import KidAvatar from '@/components/KidAvatar';
 import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
 import AiLessonActivity from '@/components/AiLessonActivity';
+import CelebrationOverlay from '@/components/CelebrationOverlay';
 import { DAY_MAP } from '@/lib/lessonConfig';
 import { ArrowLeft, Check, Loader2, Pencil, SkipForward } from 'lucide-react';
 
@@ -18,6 +19,7 @@ export default function LessonDetail() {
   const [kid, setKid] = useState(null);
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [celebrating, setCelebrating] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -51,6 +53,7 @@ export default function LessonDetail() {
       completed_date: new Date().toISOString(),
     });
     setLesson(updated);
+    setCelebrating(true);
   };
 
   const skip = async () => {
@@ -229,6 +232,14 @@ export default function LessonDetail() {
           onSaved={saveStory}
         />
       </div>
+
+      {celebrating && (
+        <CelebrationOverlay
+          kidName={kid?.name || 'the child'}
+          subject={dayCfg.subject}
+          onClose={() => setCelebrating(false)}
+        />
+      )}
     </Layout>
   );
 }
