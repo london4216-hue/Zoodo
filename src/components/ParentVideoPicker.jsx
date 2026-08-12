@@ -11,6 +11,7 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
   const [error, setError] = useState('');
   const [seconds, setSeconds] = useState(0);
   const [countdown, setCountdown] = useState(0);
+  const [consented, setConsented] = useState(false);
 
   const liveRef = useRef(null);
   const recorderRef = useRef(null);
@@ -53,7 +54,7 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
   }, [stream, videoUrl]);
 
   const startCountdown = () => {
-    if (!stream || recording || videoUrl) return;
+    if (!stream || recording || videoUrl || !consented) return;
     setCountdown(3);
     let n = 3;
     const tick = () => {
@@ -135,6 +136,18 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
             <span className="mt-1 block text-lg font-bold text-[#D96969]">“{cheer}”</span>
           </p>
 
+          <label className="mt-3 flex items-start gap-2 rounded-2xl bg-white/70 p-3 text-left text-sm font-medium text-black/70">
+            <input
+              type="checkbox"
+              checked={consented}
+              onChange={(e) => setConsented(e.target.checked)}
+              className="mt-0.5 h-5 w-5 shrink-0 accent-[#D96969]"
+            />
+            <span>
+              I consent to record this cheer video and let Zoodo store and play it back to {cheer ? 'my child' : 'the child'} at the end of each lesson.
+            </span>
+          </label>
+
           {!videoUrl ? (
             recording ? (
               <button
@@ -146,7 +159,8 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
             ) : (
               <button
                 onClick={startCountdown}
-                className="mt-4 w-full rounded-2xl bg-[#D96969] py-4 text-lg font-bold text-white active:scale-95 transition hover:bg-[#c95a5a]"
+                disabled={!consented}
+                className="mt-4 w-full rounded-2xl bg-[#D96969] py-4 text-lg font-bold text-white active:scale-95 transition hover:bg-[#c95a5a] disabled:opacity-50 disabled:grayscale"
               >
                 <Video className="mr-1 inline h-5 w-5" /> Record your cheer
               </button>
