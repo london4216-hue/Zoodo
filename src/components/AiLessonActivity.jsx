@@ -43,6 +43,12 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
     return () => { cancelled = true; };
   }, [subject, dayLabel, kidName, age]);
 
+  // Auto-launch the camera as soon as the activity is ready, so the child is
+  // on screen practicing while the lesson plays (speech-therapist style).
+  useEffect(() => {
+    if (status === 'ready') setShowCamera(true);
+  }, [status]);
+
   const togglePlay = () => {
     const a = audioRef.current;
     if (!a) return;
@@ -67,7 +73,6 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
   const onEnded = () => {
     setPlaying(false);
     setShowRepeat(true);
-    setShowCamera(true);
     onComplete?.();
   };
 
@@ -154,6 +159,17 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
             </p>
           </div>
 
+          {/* Speech-therapy letter flashcard (Letters days) */}
+          {data.letter && (
+            <div className="my-2 flex items-center justify-center gap-3 rounded-2xl bg-[#FFF6E6] p-3">
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white text-5xl font-bold text-[#D96969] shadow-sm">
+                {data.letter}
+              </div>
+              <div className="text-5xl">{data.emoji || '🍎'}</div>
+              <div className="text-xl font-bold text-black/70">{data.word}</div>
+            </div>
+          )}
+
           {/* Play / pause button */}
           <button
             onClick={togglePlay}
@@ -176,7 +192,8 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
               Lenient: if the kid isn't seen doing the action, it just moves on. */}
           {showCamera && (
             <CameraValidator
-              targetAction={data.title || subject}
+              inline
+              targetAction={data.letter ? `${data.letter} for ${data.word}` : (data.title || subject)}
               kidName={kidName}
               onSuccess={() => { setShowCamera(false); onComplete?.(); }}
               onClose={() => setShowCamera(false)}

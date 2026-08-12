@@ -105,10 +105,11 @@ export default async function(req) {
       `and playful sounds like "Wheee!" and "Yay!". ` +
       `For Numbers, count from 1 to 10 VERY slowly and excitedly — say just ONE number at a time on its own ` +
       `(like "One! ... Two! ... Three! ..."), cheering ${kidName} on after each one, and ask them to say it with you. ` +
+      `For Letters, teach like a speech therapist: pick ONE uppercase letter (A, B, C, D, or E — pick a different one each day) and ONE simple familiar word that starts with that letter's sound (e.g. A → apple, B → ball, C → cat, D → dog, E → egg). The script MUST teach the letter NAME, then the letter SOUND, then the word — for example: "A! ... A is for apple! ... ah, ah, ah, apple! ... Can you say A, ${kidName}? ... Your turn!" Have the child repeat the letter and the word. ` +
       `Use call-and-response such as "Your turn!" and "You did it!". ` +
       `Write ONLY the exact words meant to be spoken out loud — no stage directions, no parentheses, no notes, no spelling-out. ` +
       `End with a big happy cheer and a giggle. ` +
-      `Return JSON with keys "title" (a short, fun, 2-5 word title) and "script" (the words to be spoken).`;
+      `Return JSON with keys "title" (a short, fun, 2-5 word title), "script" (the words to be spoken), and for Letters only: "letter" (a single uppercase letter), "word" (the example word), "emoji" (one emoji for the word). For non-Letters subjects, leave letter, word, emoji as empty strings.`;
 
     const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt,
@@ -117,6 +118,9 @@ export default async function(req) {
         properties: {
           title: { type: 'string' },
           script: { type: 'string' },
+          letter: { type: 'string' },
+          word: { type: 'string' },
+          emoji: { type: 'string' },
         },
         required: ['title', 'script'],
       },
@@ -124,6 +128,9 @@ export default async function(req) {
 
     const title = (llmRes && llmRes.title) || `${subject} time with ${kidName}`;
     const script = (llmRes && llmRes.script) || '';
+    const letter = (llmRes && llmRes.letter) || '';
+    const word = (llmRes && llmRes.word) || '';
+    const emoji = (llmRes && llmRes.emoji) || '';
 
     if (!script) {
       return Response.json({ error: 'Could not create the activity. Please try again.' }, { status: 500 });
@@ -134,7 +141,7 @@ export default async function(req) {
       return Response.json({ error: 'Could not create the audio. Please try again.' }, { status: 500 });
     }
 
-    return Response.json({ title, script, audio_url });
+    return Response.json({ title, script, audio_url, letter, word, emoji });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

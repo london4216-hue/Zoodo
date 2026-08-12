@@ -12,7 +12,7 @@ const CONFETTI_COLORS = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#7B4FE0'];
 // shows a live preview, and on tap captures a frame and asks a vision model
 // whether the child is doing the target action. On success: confetti, a warm
 // voice praise (via generateCelebration), and onSuccess(). Always closeable.
-export default function CameraValidator({ targetAction, kidName, onSuccess, onClose }) {
+export default function CameraValidator({ targetAction, kidName, onSuccess, onClose, inline }) {
   const videoRef = useRef(null);
   const [stream, setStream] = useState(null);
   const [status, setStatus] = useState('idle'); // idle | checking | success | fail
@@ -52,7 +52,7 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
   // Auto-run the check shortly after the camera is ready — no need to tap.
   useEffect(() => {
     if (!stream) return;
-    const t = setTimeout(() => { check(); }, 1200);
+    const t = setTimeout(() => { check(); }, inline ? 5000 : 1200);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stream]);
@@ -61,6 +61,7 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
   // move on after 2 seconds so the lesson keeps flowing.
   useEffect(() => {
     if (status !== 'fail') return;
+    if (inline) return; // let the child practice and retry manually
     const t = setTimeout(() => {
       onSuccess?.();
       onClose?.();
@@ -112,16 +113,18 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/40 p-5 backdrop-blur-sm">
-      <div className="relative w-full max-w-sm rounded-3xl bg-white p-5 shadow-2xl">
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close"
-          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-black/60 active:scale-95"
-        >
-          <X className="h-5 w-5" />
-        </button>
+    <div className={inline ? "mt-3" : "fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/40 p-5 backdrop-blur-sm"}>
+      <div className={inline ? "relative w-full rounded-3xl bg-white p-4 shadow-sm" : "relative w-full max-w-sm rounded-3xl bg-white p-5 shadow-2xl"}>
+        {!inline && (
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-black/60 active:scale-95"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
 
         <h3 className="text-center text-lg font-bold text-black/80">Let's check on {kidName}!</h3>
         <p className="mt-1 text-center text-sm font-semibold text-black/50">
