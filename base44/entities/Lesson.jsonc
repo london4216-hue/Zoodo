@@ -48,10 +48,13 @@
           "title": {
             "type": "string"
           },
-          "description": {
+          "video_id": {
             "type": "string"
           },
-          "search_query": {
+          "channel": {
+            "type": "string"
+          },
+          "description": {
             "type": "string"
           },
           "why": {

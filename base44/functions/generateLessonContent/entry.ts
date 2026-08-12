@@ -15,20 +15,28 @@ export default async function(req: Request): Promise<Response> {
       return Response.json({ error: 'subject and day are required' }, { status: 400 });
     }
 
-    const prompt = `You are a warm, expert early-childhood educator designing a playful learning moment for a young child named ${kidName}.
+    const prompt = `You are a warm, expert early-childhood educator building a lesson plan for a young child named ${kidName}.
 
 Today is ${day} and the theme is "${subject}".
 
-Suggest 3 unique, high-quality YouTube-style educational videos a caregiver could play for the child on this theme. For each one provide:
-- title: a catchy, kid-friendly video title (max 60 chars)
+Search the web for 3 real, high-quality YouTube videos that fit this theme for young children. For each one, return:
+- title: the real video title as it appears on YouTube
+- video_id: the actual YouTube video ID (the 11-character id from the watch URL, e.g. "dQw4w9WgXcQ") — only use a real id you found, never invent one
+- channel: the channel name that published it
 - description: 1-2 sentences describing what the video teaches and why it's great for young kids
-- search_query: the exact search phrase a caregiver would type into YouTube to find a real video like this
 - why: one short sentence on how it connects to the "${subject}" theme
 
-Make the three videos genuinely different from each other (different angle/format — e.g. one song-based, one story-based, one hands-on activity). Keep language simple, warm, and encouraging. Return only the JSON.`;
+Rules:
+- The three videos must be genuinely different from each other (different angle/format — e.g. one song-based, one story-based, one hands-on activity).
+- Only return real videos you actually found on the web. Do not make up video IDs.
+- Keep language simple, warm, and encouraging.
+- Return only the JSON.`;
 
+    // Web search is required to find real YouTube videos; only gemini_3_flash / gemini_3_1_pro support it.
     const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt,
+      add_context_from_internet: true,
+      model: 'gemini_3_flash',
       response_json_schema: {
         type: 'object',
         properties: {
@@ -38,16 +46,17 @@ Make the three videos genuinely different from each other (different angle/forma
               type: 'object',
               properties: {
                 title: { type: 'string' },
+                video_id: { type: 'string' },
+                channel: { type: 'string' },
                 description: { type: 'string' },
-                search_query: { type: 'string' },
-                why: { type: 'string' }
+                why: { type: 'string' },
               },
-              required: ['title', 'description', 'search_query', 'why']
-            }
-          }
+              required: ['title', 'video_id', 'channel', 'description', 'why'],
+            },
+          },
         },
-        required: ['videos']
-      }
+        required: ['videos'],
+      },
     });
 
     const videos = (result && (result as any).videos) ? (result as any).videos : (result as any);
