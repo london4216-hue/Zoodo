@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
@@ -14,7 +14,7 @@ import SensoryButton from '@/components/SensoryButton';
 import MusicToggle from '@/components/MusicToggle';
 import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { DAY_MAP } from '@/lib/lessonConfig';
-import { ArrowLeft, Check, Loader2, Pencil, SkipForward } from 'lucide-react';
+import { ArrowLeft, Check, Loader2, Pencil, SkipForward, Play } from 'lucide-react';
 
 export default function LessonDetail() {
   const { kidId, weekStart, day } = useParams();
@@ -29,6 +29,7 @@ export default function LessonDetail() {
   const [step, setStep] = useState('activity'); // activity | drawing | story
   const [activityDone, setActivityDone] = useState(false);
   const [activityStarted, setActivityStarted] = useState(false);
+  const activityRef = useRef(null);
   useAutoAmbientMusic();
 
   useEffect(() => {
@@ -172,7 +173,7 @@ export default function LessonDetail() {
       >
         <div className="flex items-center gap-4">
           <DayGraphic type={dayCfg.graphic} />
-          <div>
+          <div className="flex-1">
             <div className="text-sm font-semibold text-black/70">{dayCfg.label}</div>
             <div
               className="text-3xl font-bold leading-tight"
@@ -184,6 +185,16 @@ export default function LessonDetail() {
               {dayCfg.subject}
             </div>
           </div>
+          <button
+            onClick={() => {
+              setStep('activity');
+              activityRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+            className="flex items-center gap-1.5 rounded-2xl bg-white/80 px-4 py-2.5 text-sm font-bold text-black/70 shadow-sm active:scale-95 transition hover:bg-white"
+          >
+            <Play className="h-4 w-4" />
+            Start
+          </button>
         </div>
       </div>
 
@@ -259,7 +270,7 @@ export default function LessonDetail() {
       </div>
 
       {step === 'activity' && (
-        <div className="mb-4 space-y-3">
+        <div ref={activityRef} className="mb-4 space-y-3 scroll-mt-4">
           <AiLessonActivity
             kidName={kid?.name || 'the child'}
             subject={dayCfg.subject}

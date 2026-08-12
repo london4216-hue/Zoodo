@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { Loader2, Play, Pause, RotateCcw, Sparkles, Volume2 } from 'lucide-react';
+import LessonSupportVideo from '@/components/LessonSupportVideo';
 
 // AI-generated interactive audio activity: a cute character narrates a fun,
 // Ms-Rachel-style lesson that invites the kid to join in. Includes a replay
@@ -167,6 +168,13 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
             <RotateCcw className="h-5 w-5" />
             Play again
           </button>
+
+          {/* Optional recommended YouTube video */}
+          <LessonSupportVideo
+            title={data.title}
+            description={data.script}
+            age={age}
+          />
 
           {/* Caregiver prompt after playback */}
           {showRepeat && (
