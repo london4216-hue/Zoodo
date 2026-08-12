@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
-import KidAvatar from '@/components/KidAvatar';
 import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
 import AiLessonActivity from '@/components/AiLessonActivity';
@@ -25,7 +24,6 @@ export default function LessonDetail() {
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [celebrating, setCelebrating] = useState(false);
-  const [greetingAudio, setGreetingAudio] = useState('');
   const [step, setStep] = useState('activity'); // activity | drawing | story
   const [activityDone, setActivityDone] = useState(false);
   const [activityStarted, setActivityStarted] = useState(false);
@@ -62,28 +60,6 @@ export default function LessonDetail() {
     setActivityDone(false);
     setActivityStarted(false);
   }, [kidId, weekStart, day]);
-
-  // Real current weekday — Zoodo always greets with the actual today, not the
-  // lesson's scheduled day.
-  const realDayLabel = new Date().toLocaleDateString('en', { weekday: 'long' });
-
-  // Fetch a goofy, silly greeting spoken in the warm honey voice (replaces the
-  // old robotic browser speech synthesis).
-  useEffect(() => {
-    if (!kid?.name) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await base44.functions.invoke('generateGreeting', {
-          kidName: kid.name,
-          subject: dayCfg.subject,
-          dayLabel: realDayLabel,
-        });
-        if (!cancelled && res?.data?.audio_url) setGreetingAudio(res.data.audio_url);
-      } catch (e) { /* ignore — KidAvatar falls back to the browser voice */ }
-    })();
-    return () => { cancelled = true; };
-  }, [kid?.name, dayCfg.subject, realDayLabel]);
 
   const markComplete = async () => {
     if (!lesson) return;
@@ -145,15 +121,13 @@ export default function LessonDetail() {
     );
   }
 
-  const greeting = `Hi ${kid?.name}! Today is ${realDayLabel} — ${dayCfg.subject}! Let's learn together!`;
-
   return (
     <Layout>
       <SensoryBackground />
       <MusicToggle />
       <div className="relative z-10 flex flex-col h-[calc(100vh-9.5rem)]">
       {/* Compact top bar: back + subject banner */}
-      <div className="flex items-center gap-2 mb-2">
+      <div className="flex items-center gap-2 mb-1">
         <button
           onClick={() => navigate('/')}
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white shadow-sm text-black/60 hover:text-black active:scale-95 transition"
@@ -178,13 +152,8 @@ export default function LessonDetail() {
         </div>
       </div>
 
-      {/* Learning buddy greets the kid by name */}
-      <div className="flex justify-center pb-1">
-        <KidAvatar greeting={greeting} audioUrl={greetingAudio} size={84} />
-      </div>
-
       {/* Activity stepper — one activity at a time */}
-      <div className="mb-2 flex items-center justify-center gap-2">
+      <div className="mb-1 flex items-center justify-center gap-2">
         {['activity', 'drawing', 'lunch', 'story'].map((s) => (
           <div
             key={s}
