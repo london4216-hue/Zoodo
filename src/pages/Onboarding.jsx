@@ -260,7 +260,7 @@ export default function Onboarding() {
           >
             {camStatus === 'asking' ? (
               <span className="flex items-center justify-center gap-2"><Loader2 className="h-5 w-5 animate-spin" /> Asking for permission…</span>
-            ) : 'Ready to record'}
+            ) : `Start the ${programLength}-week plan`}
           </Button>
           <button
             onClick={finish}
