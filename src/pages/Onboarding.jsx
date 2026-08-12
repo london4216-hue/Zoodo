@@ -7,11 +7,11 @@ import KidAvatar from '@/components/KidAvatar';
 import ParentVideoPicker from '@/components/ParentVideoPicker';
 
 const MILESTONES = [
-  { value: 'pre_verbal', label: 'Just starting to talk' },
-  { value: 'single_words', label: 'Using single words' },
-  { value: 'two_word', label: 'Combining 2 words' },
-  { value: 'short_sentences', label: 'Short sentences' },
-  { value: 'sentences', label: 'Talking in sentences' },
+  { value: 'pre_verbal', label: 'Level 1' },
+  { value: 'single_words', label: 'Level 2' },
+  { value: 'two_word', label: 'Level 3' },
+  { value: 'short_sentences', label: 'Level 4' },
+  { value: 'sentences', label: 'Level 5' },
 ];
 
 // First-run intake: a cute Zoodo intro, then a short questionnaire (name, age,
@@ -297,7 +297,7 @@ export default function Onboarding() {
         <form onSubmit={submit} className="mt-8 space-y-5 text-left">
           <div>
             <label className="block text-sm font-semibold text-black/70 mb-2">
-              Current developmental stage <span className="text-black/40 font-normal">— sets the level</span>
+              Where should we start? <span className="text-black/40 font-normal">— pick a level</span>
             </label>
             <div className="flex flex-col gap-2">
               {MILESTONES.map((m) => (
