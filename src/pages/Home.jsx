@@ -101,13 +101,19 @@ export default function Home() {
       });
       const content = res?.data || {};
 
+      const updates = [];
       for (const d of DAYS) {
         const vids = content[d.key];
         if (vids && Array.isArray(vids) && existing[d.key]) {
-          const updated = await base44.entities.Lesson.update(existing[d.key].id, {
-            ai_content: vids,
-          });
-          existing[d.key] = updated;
+          updates.push({ id: existing[d.key].id, ai_content: vids });
+        }
+      }
+      if (updates.length) {
+        const updated = await base44.entities.Lesson.bulkUpdate(updates);
+        const byId = {};
+        (updated || []).forEach((l) => { byId[l.id] = l; });
+        for (const d of DAYS) {
+          if (existing[d.key] && byId[existing[d.key].id]) existing[d.key] = byId[existing[d.key].id];
         }
       }
       if (!cancelled) setLessonsByDay({ ...existing });
