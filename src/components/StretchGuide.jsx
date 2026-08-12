@@ -6,11 +6,16 @@ import { Check, Hand } from 'lucide-react';
 // A full-width animated stretch guide. For each stretch, the buddy DEMONSTRATES
 // the move 4 times ("Watch me! 1, 2, 3, 4"), then invites the kid to try
 // ("Your turn!"). The kid taps "I did it!" to move to the next stretch.
+// OT-aligned sequence (Ayres SI + praxis): each move names a body part
+// (proprioceptive/body-schema input) and gives a clear, modelable action.
+// Includes crossing midline (bilateral coordination) and a vestibular
+// head-down pose. Order is calm → big → calm for arousal regulation.
 const STRETCHES = [
-  { label: 'Reach up high!', cue: 'Stretch your arms to the sky', pose: 'up' },
-  { label: 'Touch your toes', cue: 'Bend down and reach for your feet', pose: 'down' },
-  { label: 'Side to side', cue: 'Lean side to side like a tree', pose: 'side' },
-  { label: 'Big star', cue: 'Stretch out wide like a star', pose: 'star' },
+  { label: 'Reach up high!', cue: 'Lift both arms to the sky — feel the stretch in your arms', pose: 'up', body: 'arms' },
+  { label: 'Touch your toes', cue: 'Bend your head down and reach for your feet', pose: 'down', body: 'head & legs' },
+  { label: 'Cross the middle', cue: 'Reach one hand across to the other side', pose: 'cross', body: 'arms crossing midline' },
+  { label: 'Big star', cue: 'Stretch your arms and legs out wide', pose: 'star', body: 'arms & legs' },
+  { label: 'Big hug squeeze', cue: 'Wrap both arms around yourself and squeeze', pose: 'hug', body: 'deep pressure hug' },
 ];
 
 const REPS = 4;
@@ -174,7 +179,7 @@ export default function StretchGuide({ kidName }) {
       {phase === 'demo' && (
         <div className="mt-2 flex items-center justify-center gap-1.5 text-xs font-bold text-black/40">
           <Hand className="h-3.5 w-3.5" />
-          Copy the buddy…
+          Copy the buddy… breathe in and out
         </div>
       )}
     </div>
@@ -185,10 +190,11 @@ export default function StretchGuide({ kidName }) {
 function StretchCharacter({ pose, animate }) {
   // Arm angles (deg from vertical) + body offset per pose.
   const POSES = {
-    up:   { lArm: 175, rArm: 185, bodyY: 0,  headY: 0,  legSpread: 0 },
-    down: { lArm: 250, rArm: 70,  bodyY: 20, headY: 16, legSpread: 0 },
-    side: { lArm: 135, rArm: 225, bodyY: 0,  headY: 0,  legSpread: 0 },
-    star: { lArm: 215, rArm: 145, bodyY: -2, headY: 0,  legSpread: 14 },
+    up:    { lArm: 175, rArm: 185, bodyY: 0,  headY: 0,  legSpread: 0 },
+    down:  { lArm: 250, rArm: 70,  bodyY: 20, headY: 16, legSpread: 0 },
+    cross: { lArm: 295, rArm: 65,  bodyY: 6,  headY: 0,  legSpread: 0 },
+    star:  { lArm: 215, rArm: 145, bodyY: -2, headY: 0,  legSpread: 14 },
+    hug:   { lArm: 255, rArm: 75,  bodyY: 4,  headY: 0,  legSpread: 0 },
   };
   const p = POSES[pose] || POSES.up;
 
