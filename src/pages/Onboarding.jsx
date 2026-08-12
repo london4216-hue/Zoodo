@@ -294,7 +294,7 @@ export default function Onboarding() {
           className="text-4xl font-bold leading-tight"
           style={{ color: '#D96969' }}
         >
-          Let's set up<br />the week
+          Let's set up<br />your child's program
         </h1>
         <p className="mt-3 text-black/60 font-medium">
           A few quick questions so Zoodo can tailor the fun to your child.
