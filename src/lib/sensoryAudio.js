@@ -56,6 +56,42 @@ export const vibrate = (pattern) => {
   }
 };
 
+// Fun, bubbly "POP!" for popping a bubble — pitchy slide + a short noise click.
+export const playBubblePop = () => {
+  const c = getCtx();
+  if (!c) return;
+  const now = c.currentTime;
+  const o = c.createOscillator();
+  const g = c.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(900, now);
+  o.frequency.exponentialRampToValueAtTime(170, now + 0.12);
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(0.3, now + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+  o.connect(g);
+  g.connect(c.destination);
+  o.start(now);
+  o.stop(now + 0.18);
+  const bufferSize = 2048;
+  const buffer = c.createBuffer(1, bufferSize, c.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
+  const noise = c.createBufferSource();
+  noise.buffer = buffer;
+  const ng = c.createGain();
+  ng.gain.setValueAtTime(0.2, now);
+  ng.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+  const filter = c.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = 1200;
+  noise.connect(filter);
+  filter.connect(ng);
+  ng.connect(c.destination);
+  noise.start(now);
+  noise.stop(now + 0.1);
+};
+
 // Soft pop for tap feedback on sensory buttons.
 export const playPop = () => {
   const c = getCtx();

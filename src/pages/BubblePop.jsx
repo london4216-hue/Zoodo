@@ -9,7 +9,7 @@ import SensoryBackground from '@/components/SensoryBackground';
 import SensoryButton from '@/components/SensoryButton';
 import MusicToggle from '@/components/MusicToggle';
 import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
-import { playPop, playSparkle, playSuccess, vibrate } from '@/lib/sensoryAudio';
+import { playPop, playBubblePop, playSparkle, playSuccess, vibrate } from '@/lib/sensoryAudio';
 import { base44 } from '@/api/base44Client';
 
 const MAX_BUBBLES = 9;
@@ -147,7 +147,7 @@ export default function BubblePop() {
   // Tap/click a bubble directly.
   const popBubble = (id) => {
     setBubbles((b) => b.filter((x) => x.id !== id));
-    playPop(); vibrate(18);
+    playBubblePop(); vibrate(18);
     setPopped((p) => {
       const nn = p + 1;
       setBest((bb) => Math.max(bb, nn));
