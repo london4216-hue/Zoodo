@@ -20,6 +20,9 @@ export default function LessonDetail() {
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [celebrating, setCelebrating] = useState(false);
+  const [greetingAudio, setGreetingAudio] = useState('');
+  const [step, setStep] = useState('activity'); // activity | drawing | story
+  const [activityDone, setActivityDone] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,6 +47,30 @@ export default function LessonDetail() {
     })();
     return () => { cancelled = true; };
   }, [kidId, weekStart, day]);
+
+  // Reset the one-at-a-time stepper whenever the day changes.
+  useEffect(() => {
+    setStep('activity');
+    setActivityDone(false);
+  }, [kidId, weekStart, day]);
+
+  // Fetch a goofy, silly greeting spoken in the warm honey voice (replaces the
+  // old robotic browser speech synthesis).
+  useEffect(() => {
+    if (!kid?.name) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await base44.functions.invoke('generateGreeting', {
+          kidName: kid.name,
+          subject: dayCfg.subject,
+          dayLabel: dayCfg.label,
+        });
+        if (!cancelled && res?.data?.audio_url) setGreetingAudio(res.data.audio_url);
+      } catch (e) { /* ignore — KidAvatar falls back to the browser voice */ }
+    })();
+    return () => { cancelled = true; };
+  }, [kid?.name, dayCfg.subject, dayCfg.label]);
 
   const markComplete = async () => {
     if (!lesson) return;
@@ -124,7 +151,7 @@ export default function LessonDetail() {
 
       {/* Learning buddy greets the kid by name with today's topic */}
       <div className="flex justify-center pb-2">
-        <KidAvatar greeting={greeting} size={120} />
+        <KidAvatar greeting={greeting} audioUrl={greetingAudio} size={120} />
       </div>
 
       {/* Day banner */}
@@ -203,35 +230,83 @@ export default function LessonDetail() {
         )}
       </div>
 
-      {/* AI interactive audio activity (cute voice) */}
-      <div className="mb-4">
-        <AiLessonActivity
-          kidName={kid?.name || 'the child'}
-          subject={dayCfg.subject}
-          dayLabel={dayCfg.label}
-          age={kid?.age || 4}
-          lesson={lesson}
-          onUpdate={setLesson}
-        />
+      {/* Activity stepper — one activity at a time */}
+      <div className="mb-4 flex items-center justify-center gap-2">
+        {['activity', 'drawing', 'story'].map((s) => (
+          <div
+            key={s}
+            className={`h-2 rounded-full transition-all ${
+              step === s ? 'w-8 bg-[#D96969]' : 'w-2 bg-black/15'
+            }`}
+          />
+        ))}
       </div>
 
-      {/* More activities */}
-      <div className="space-y-4">
-        <div className="rounded-2xl bg-white p-4 shadow-sm">
-          <div className="flex items-center gap-2 mb-3">
-            <Pencil className="h-5 w-5 text-[#4FAE5A]" />
-            <h2 className="text-lg font-bold text-black/80">Draw it!</h2>
-          </div>
-          <DrawingCanvas onSave={saveDrawing} savedUrl={lesson?.drawing_url} />
+      {step === 'activity' && (
+        <div className="mb-4 space-y-3">
+          <AiLessonActivity
+            kidName={kid?.name || 'the child'}
+            subject={dayCfg.subject}
+            dayLabel={dayCfg.label}
+            age={kid?.age || 4}
+            lesson={lesson}
+            onUpdate={setLesson}
+            onComplete={() => setActivityDone(true)}
+          />
+          {activityDone && (
+            <button
+              onClick={() => setStep('drawing')}
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#4FAE5A] py-4 text-lg font-bold text-white active:scale-[0.98] transition"
+            >
+              <Pencil className="h-5 w-5" />
+              Next: Draw it!
+            </button>
+          )}
         </div>
+      )}
 
-        <StoryActivity
-          kidName={kid?.name || 'the child'}
-          subject={dayCfg.subject}
-          age={kid?.age || 4}
-          onSaved={saveStory}
-        />
-      </div>
+      {step === 'drawing' && (
+        <div className="space-y-3">
+          <div className="rounded-2xl bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-2 mb-3">
+              <Pencil className="h-5 w-5 text-[#4FAE5A]" />
+              <h2 className="text-lg font-bold text-black/80">Draw it!</h2>
+            </div>
+            <DrawingCanvas onSave={saveDrawing} savedUrl={lesson?.drawing_url} />
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setStep('activity')}
+              className="flex-1 rounded-2xl border-2 border-black/10 bg-white py-3 font-bold text-black/60 active:scale-95 transition"
+            >
+              Back
+            </button>
+            <button
+              onClick={() => setStep('story')}
+              className="flex-[2] rounded-2xl bg-[#7B4FE0] py-3 font-bold text-white active:scale-95 transition"
+            >
+              Next: Story time
+            </button>
+          </div>
+        </div>
+      )}
+
+      {step === 'story' && (
+        <div className="space-y-3">
+          <StoryActivity
+            kidName={kid?.name || 'the child'}
+            subject={dayCfg.subject}
+            age={kid?.age || 4}
+            onSaved={saveStory}
+          />
+          <button
+            onClick={() => setStep('drawing')}
+            className="w-full rounded-2xl border-2 border-black/10 bg-white py-3 font-bold text-black/60 active:scale-95 transition"
+          >
+            Back
+          </button>
+        </div>
+      )}
 
       {celebrating && (
         <CelebrationOverlay

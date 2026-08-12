@@ -4,15 +4,23 @@ import { Volume2 } from 'lucide-react';
 
 // A funny, silly creature "learning buddy" that greets the kid by name and
 // speaks the greeting aloud using the browser's built-in speech synthesis.
-export default function KidAvatar({ greeting, size = 150, autoSpeak = true, showBubble = true }) {
+export default function KidAvatar({ greeting, audioUrl, size = 150, autoSpeak = true, showBubble = true }) {
   const [speaking, setSpeaking] = useState(false);
   const spokenRef = useRef(false);
+  const audioRef = useRef(null);
 
-  const speak = (text) => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  const speak = () => {
+    if (audioUrl && audioRef.current) {
+      try {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().then(() => setSpeaking(true)).catch(() => setSpeaking(false));
+        return;
+      } catch (e) { /* fall through to browser voice */ }
+    }
+    if (typeof window === 'undefined' || !('speechSynthesis' in window) || !greeting) return;
     try {
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
+      const u = new SpeechSynthesisUtterance(greeting);
       u.rate = 1;
       u.pitch = 1.35;
       u.volume = 1;
@@ -26,23 +34,36 @@ export default function KidAvatar({ greeting, size = 150, autoSpeak = true, show
   };
 
   useEffect(() => {
-    if (autoSpeak && greeting && !spokenRef.current) {
+    if (autoSpeak && (audioUrl || greeting) && !spokenRef.current) {
       spokenRef.current = true;
-      const t = setTimeout(() => speak(greeting), 500);
+      const t = setTimeout(() => speak(), 500);
       return () => clearTimeout(t);
     }
-  }, [autoSpeak, greeting]);
+  }, [autoSpeak, audioUrl, greeting]);
 
   useEffect(() => {
     return () => {
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
       }
+      if (audioRef.current) {
+        try { audioRef.current.pause(); } catch (e) { /* ignore */ }
+      }
     };
   }, []);
 
   return (
     <div className="flex flex-col items-center">
+      {audioUrl && (
+        <audio
+          ref={audioRef}
+          src={audioUrl}
+          onPlay={() => setSpeaking(true)}
+          onPause={() => setSpeaking(false)}
+          onEnded={() => setSpeaking(false)}
+          className="hidden"
+        />
+      )}
       {showBubble && greeting && (
         <motion.div
           initial={{ opacity: 0, y: 8, scale: 0.9 }}
@@ -63,7 +84,7 @@ export default function KidAvatar({ greeting, size = 150, autoSpeak = true, show
       >
         <motion.button
           type="button"
-          onClick={() => speak(greeting)}
+          onClick={() => speak()}
           className="relative block w-full h-full"
           animate={{ y: [0, -8, 0] }}
           transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
@@ -154,7 +175,7 @@ export default function KidAvatar({ greeting, size = 150, autoSpeak = true, show
       {showBubble && (
         <button
           type="button"
-          onClick={() => speak(greeting)}
+          onClick={() => speak()}
           className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#7B4FE0] shadow-sm active:scale-95 transition"
         >
           <Volume2 className="h-3.5 w-3.5" />
