@@ -57,9 +57,20 @@ export default async function(req: Request): Promise<Response> {
     const subject = (body?.subject || 'learning').toString().trim();
     const dayLabel = (body?.dayLabel || 'today').toString().trim();
 
+    // Turn the lesson subject into a natural verb phrase so the greeting
+    // sounds right (e.g. "Numbers" -> "count numbers", not "get ready to Numbers").
+    const SUBJECT_VERB: Record<string, string> = {
+      'Numbers': 'count numbers',
+      'Letters': 'learn our letters',
+      'Outdoor activity': 'explore outside',
+      'Music': 'make music',
+      'Exercises': 'move and exercise',
+    };
+    const action = SUBJECT_VERB[subject] || subject.toLowerCase();
+
     const prompt = GOOFY_PERSONA + '\n\n' +
       `Write a fun, light, joyful hello for a toddler named ${kidName}. ` +
-      `It MUST start with exactly: "Hi ${kidName}... let's get ready to ${subject}!" (for example: "Hi Avie... let's get ready to count!"). ` +
+      `It MUST start with exactly: "Hi ${kidName}... let's get ready to ${action}!" (for example: "Hi Avie... let's get ready to count numbers!"). ` +
       `Then add one short cheerful line mentioning today is ${dayLabel} and inviting them to play and learn together. ` +
       `Keep it bouncy, warm, and joyful. Keep it short (15-35 words). ` +
       `Return JSON: { "script": "the exact words to speak aloud" }.`;
