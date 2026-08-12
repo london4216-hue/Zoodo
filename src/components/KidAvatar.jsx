@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Volume2 } from 'lucide-react';
 
 // Zoodo — the funny, silly creature "learning buddy" that greets the kid by name
 // and speaks the greeting aloud using the browser's built-in speech synthesis.
@@ -158,16 +157,6 @@ export default function KidAvatar({ greeting, audioUrl, size = 150, autoSpeak = 
         </motion.button>
       </motion.div>
 
-      {showBubble && (
-        <button
-          type="button"
-          onClick={() => speak()}
-          className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#7B4FE0] shadow-sm active:scale-95 transition"
-        >
-          <Volume2 className="h-3.5 w-3.5" />
-          Say it again
-        </button>
-      )}
     </div>
   );
 }
