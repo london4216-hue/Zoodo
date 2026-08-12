@@ -316,29 +316,7 @@ export default function Onboarding() {
 
           <div>
             <label className="block text-sm font-semibold text-black/70 mb-2">
-              Child's age <span className="text-black/40 font-normal">— sets the level</span>
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {AGES.map((a) => (
-                <button
-                  key={a}
-                  type="button"
-                  onClick={() => setAge(a)}
-                  className={`h-12 w-12 rounded-2xl text-lg font-bold transition active:scale-95 ${
-                    age === a
-                      ? 'bg-[#4969E1] text-white border-2 border-[#4969E1] shadow'
-                      : 'bg-white text-black/70 border-2 border-black/10 hover:border-[#4969E1]/50'
-                  }`}
-                >
-                  {a}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-black/70 mb-2">
-              Current developmental stage <span className="text-black/40 font-normal">— tailors the content</span>
+              Current developmental stage <span className="text-black/40 font-normal">— sets the level</span>
             </label>
             <div className="flex flex-col gap-2">
               {MILESTONES.map((m) => (
