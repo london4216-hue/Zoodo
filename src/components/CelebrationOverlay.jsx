@@ -6,10 +6,12 @@ import { Loader2, X, Mic } from 'lucide-react';
 
 // Full-screen celebration that fires when a lesson is marked complete:
 // confetti + a bouncing party character + an encouraging voice cheer.
-export default function CelebrationOverlay({ kidName, subject, parentVideo, onClose }) {
+export default function CelebrationOverlay({ kidName, subject, parentVideos, onClose }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const audioRef = useRef(null);
+  const [videoIdx, setVideoIdx] = useState(0);
+  const videos = Array.isArray(parentVideos) ? parentVideos.filter(Boolean) : [];
 
   useEffect(() => {
     let cancelled = false;
@@ -101,12 +103,13 @@ export default function CelebrationOverlay({ kidName, subject, parentVideo, onCl
                 <Mic className="h-4 w-4 text-[#D96969]" />
                 <p className="text-xs font-bold uppercase tracking-wide text-black/40">For the grown-up</p>
               </div>
-              {parentVideo && (
+              {videos.length > 0 && (
                 <video
-                  src={parentVideo}
+                  key={videoIdx}
+                  src={videos[videoIdx]}
                   autoPlay
-                  loop
                   playsInline
+                  onEnded={() => setVideoIdx((i) => (i + 1) % videos.length)}
                   className="mx-auto mb-2 h-28 w-28 rounded-2xl border-4 border-[#D96969] bg-black object-cover shadow-lg"
                 />
               )}

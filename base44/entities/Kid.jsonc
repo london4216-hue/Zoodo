@@ -36,11 +36,14 @@
       "default": "A",
       "maxLength": 1
     },
-    "parent_video_url": {
-      "type": "string",
-      "title": "Parent Cheer Video",
-      "description": "A short recording of the parent saying the child's cheer (e.g. 'Yes! You did it, [name]!'), played at the end of each lesson.",
-      "format": "uri"
+    "parent_videos": {
+      "type": "array",
+      "title": "Parent Cheer Videos",
+      "description": "A cheer video from each parent (one or two), played at the end of every lesson so the child hears it from every grown-up.",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
     }
   },
   "required": [

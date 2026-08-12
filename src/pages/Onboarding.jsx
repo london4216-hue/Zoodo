@@ -26,6 +26,10 @@ export default function Onboarding() {
   const [uploading, setUploading] = useState(false);
   const [kidId, setKidId] = useState(null);
   const [countdown, setCountdown] = useState(0);
+  const [parentStep, setParentStep] = useState('count'); // count | video
+  const [parentCount, setParentCount] = useState(1);
+  const [parentVideos, setParentVideos] = useState([]);
+  const [currentParent, setCurrentParent] = useState(0);
   const videoRef = useRef(null);
 
   const submit = async (e) => {
@@ -93,14 +97,24 @@ export default function Onboarding() {
   }, [step]);
 
   const saveParentVideo = async (file) => {
-    if (!file || !kidId) { setStep('camera'); return; }
+    if (!file) return;
     setUploading(true);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      await base44.entities.Kid.update(kidId, { parent_video_url: file_url });
-    } catch (e) { /* non-fatal — celebration still works without it */ }
-    setUploading(false);
-    setStep('camera');
+      const next = [...parentVideos, file_url];
+      setParentVideos(next);
+      const done = next.length >= parentCount;
+      if (done && kidId) {
+        await base44.entities.Kid.update(kidId, { parent_videos: next });
+        setUploading(false);
+        setStep('camera');
+      } else {
+        setUploading(false);
+        setCurrentParent(currentParent + 1);
+      }
+    } catch (e) {
+      setUploading(false);
+    }
   };
 
   const startCountdown = () => {
@@ -152,25 +166,51 @@ export default function Onboarding() {
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#FAD7D7]">
             <Heart className="h-8 w-8 text-[#D96969]" />
           </div>
-          <h1 className="text-3xl font-bold" style={{ color: '#D96969' }}>Add a cheer video</h1>
-          <p className="mt-2 text-black/60 font-medium">
-            Upload a real video of you saying the cheer. At the end of every
-            lesson it'll play back so {name || 'your child'} hears it from you!
-          </p>
-
-          <div className="mt-5">
-            {uploading ? (
-              <div className="flex flex-col items-center gap-2 py-10 text-black/50 font-semibold">
-                <Loader2 className="h-7 w-7 animate-spin text-[#D96969]" /> Saving your cheer…
+          {parentStep === 'count' ? (
+            <>
+              <h1 className="text-3xl font-bold" style={{ color: '#D96969' }}>How many grown-ups?</h1>
+              <p className="mt-2 text-black/60 font-medium">
+                Each grown-up will add their own cheer video. {name || 'Your child'} will hear it from every one of you at the end of each lesson!
+              </p>
+              <div className="mt-6 flex gap-3">
+                {[1, 2].map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => { setParentCount(n); setParentVideos([]); setCurrentParent(0); setParentStep('video'); }}
+                    className={`flex-1 rounded-2xl border-2 py-8 text-2xl font-bold transition active:scale-95 ${
+                      parentCount === n
+                        ? 'border-[#D96969] bg-[#D96969] text-white shadow'
+                        : 'border-black/10 bg-white text-black/70 hover:border-[#D96969]/50'
+                    }`}
+                  >
+                    {n} {n === 1 ? 'grown-up' : 'grown-ups'}
+                  </button>
+                ))}
               </div>
-            ) : (
-              <ParentVideoPicker
-                cheer={`Yes! You did it, ${name || 'friend'}!`}
-                onRecorded={saveParentVideo}
-              />
-            )}
-          </div>
-
+            </>
+          ) : (
+            <>
+              <h1 className="text-3xl font-bold" style={{ color: '#D96969' }}>
+                Grown-up {currentParent + 1} of {parentCount}
+              </h1>
+              <p className="mt-2 text-black/60 font-medium">
+                Upload a real video of you saying the cheer. At the end of every
+                lesson it'll play back so {name || 'your child'} hears it from you!
+              </p>
+              <div className="mt-5">
+                {uploading ? (
+                  <div className="flex flex-col items-center gap-2 py-10 text-black/50 font-semibold">
+                    <Loader2 className="h-7 w-7 animate-spin text-[#D96969]" /> Saving cheer {currentParent + 1}…
+                  </div>
+                ) : (
+                  <ParentVideoPicker
+                    cheer={`Yes! You did it, ${name || 'friend'}!`}
+                    onRecorded={saveParentVideo}
+                  />
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
     );
