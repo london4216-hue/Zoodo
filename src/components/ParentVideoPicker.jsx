@@ -10,6 +10,7 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
   const [file, setFile] = useState(null);
   const [error, setError] = useState('');
   const [seconds, setSeconds] = useState(0);
+  const [countdown, setCountdown] = useState(0);
 
   const liveRef = useRef(null);
   const recorderRef = useRef(null);
@@ -50,6 +51,23 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
       liveRef.current.srcObject = stream;
     }
   }, [stream, videoUrl]);
+
+  const startCountdown = () => {
+    if (!stream || recording || videoUrl) return;
+    setCountdown(3);
+    let n = 3;
+    const tick = () => {
+      n -= 1;
+      if (n <= 0) {
+        setCountdown(0);
+        startRecording();
+      } else {
+        setCountdown(n);
+        setTimeout(tick, 1000);
+      }
+    };
+    setTimeout(tick, 1000);
+  };
 
   const startRecording = () => {
     if (!stream) return;
@@ -103,6 +121,11 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
                     <span className="h-2 w-2 animate-pulse rounded-full bg-[#D96969]" /> REC {seconds}s
                   </div>
                 )}
+                {countdown > 0 && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                    <span className="text-7xl font-bold text-white drop-shadow-lg">{countdown}</span>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -122,7 +145,7 @@ export default function ParentVideoPicker({ cheer, onRecorded }) {
               </button>
             ) : (
               <button
-                onClick={startRecording}
+                onClick={startCountdown}
                 className="mt-4 w-full rounded-2xl bg-[#D96969] py-4 text-lg font-bold text-white active:scale-95 transition hover:bg-[#c95a5a]"
               >
                 <Video className="mr-1 inline h-5 w-5" /> Record your cheer
