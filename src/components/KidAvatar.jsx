@@ -10,26 +10,12 @@ export default function KidAvatar({ greeting, audioUrl, size = 150, autoSpeak = 
   const audioRef = useRef(null);
 
   const speak = () => {
+    // Only the lady voice is ever used — no browser speech synthesis fallback.
     if (audioUrl && audioRef.current) {
       try {
         audioRef.current.currentTime = 0;
         audioRef.current.play().then(() => setSpeaking(true)).catch(() => setSpeaking(false));
-        return;
-      } catch (e) { /* fall through to browser voice */ }
-    }
-    if (typeof window === 'undefined' || !('speechSynthesis' in window) || !greeting) return;
-    try {
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(greeting);
-      u.rate = 1;
-      u.pitch = 1.35;
-      u.volume = 1;
-      u.onstart = () => setSpeaking(true);
-      u.onend = () => setSpeaking(false);
-      u.onerror = () => setSpeaking(false);
-      window.speechSynthesis.speak(u);
-    } catch (e) {
-      /* ignore speech errors */
+      } catch (e) { /* ignore */ }
     }
   };
 

@@ -32,6 +32,7 @@ export default function Onboarding() {
   const [error, setError] = useState('');
   const [camStream, setCamStream] = useState(null);
   const [camStatus, setCamStatus] = useState('asking');
+  const [introAudio, setIntroAudio] = useState('');
   const videoRef = useRef(null);
 
   const submit = async (e) => {
@@ -87,6 +88,21 @@ export default function Onboarding() {
     }
   }, [camStream]);
 
+  // Fetch the lady-voice intro line so Zoodo speaks in the same voice as the app.
+  useEffect(() => {
+    if (step !== 'intro') return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await base44.functions.invoke('generateSpeech', {
+          text: "Hi! I'm Zoodo! Let's learn and play together!",
+        });
+        if (!cancelled && res?.data?.audio_url) setIntroAudio(res.data.audio_url);
+      } catch (e) { /* ignore — Zoodo stays silent rather than use another voice */ }
+    })();
+    return () => { cancelled = true; };
+  }, [step]);
+
   const finish = () => navigate('/');
 
   if (step === 'intro') {
@@ -95,7 +111,7 @@ export default function Onboarding() {
         <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/70 shadow-sm">
           <Sparkles className="h-6 w-6 text-[#D96969]" />
         </div>
-        <KidAvatar greeting="Hi! I'm Zoodo! Let's learn and play together!" size={180} />
+        <KidAvatar greeting="Hi! I'm Zoodo! Let's learn and play together!" audioUrl={introAudio} size={180} />
         <h1 className="mt-6 text-4xl font-bold" style={{ color: '#7B4FE0' }}>
           Meet Zoodo!
         </h1>

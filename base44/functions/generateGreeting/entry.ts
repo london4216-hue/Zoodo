@@ -1,9 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets } from "base44:runtime";
 
-// Premium TTS: ElevenLabs (warm, expressive, human-like) with a safe fallback to
-// the built-in "honey" voice. Returns a stored file_url. Activates only when
-// ELEVENLABS_API_KEY is set; otherwise the built-in voice is used seamlessly.
+// Premium TTS: the signature "lady" voice via ElevenLabs. Returns a stored
+// file_url. Only the lady voice is ever used — no fallback to any other voice.
 const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — warm, friendly female
 async function synthesizeSpeech(base44, text) {
   const clean = (text || "").slice(0, 4500);
@@ -28,9 +27,8 @@ async function synthesizeSpeech(base44, text) {
         if (up && up.file_url) return up.file_url;
       }
     }
-  } catch (e) { /* fall through to built-in voice */ }
-  const fb = await base44.asServiceRole.integrations.Core.GenerateSpeech({ text: clean, voice: "honey" });
-  return (fb && fb.url) || "";
+  } catch (e) { /* lady voice only — no fallback voice */ }
+  return "";
 }
 
 // Goofy, silly, giggly toddler persona for the learning-buddy greeting.
