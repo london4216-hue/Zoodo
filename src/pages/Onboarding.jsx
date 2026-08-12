@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Camera, Check, Loader2, ArrowRight, Heart } from 'lucide-react';
 import KidAvatar from '@/components/KidAvatar';
-import ParentVideoRecorder from '@/components/ParentVideoRecorder';
+import ParentVideoPicker from '@/components/ParentVideoPicker';
 
 const AGES = [2, 3, 4, 5, 6, 7, 8];
 const PROGRAM_LENGTHS = [4, 8, 12, 16];
@@ -152,10 +152,10 @@ export default function Onboarding() {
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#FAD7D7]">
             <Heart className="h-8 w-8 text-[#D96969]" />
           </div>
-          <h1 className="text-3xl font-bold" style={{ color: '#D96969' }}>Record a cheer</h1>
+          <h1 className="text-3xl font-bold" style={{ color: '#D96969' }}>Add a cheer video</h1>
           <p className="mt-2 text-black/60 font-medium">
-            Record a short video of you saying the cheer. At the end of every
-            lesson it'll play so {name || 'your child'} hears it from you!
+            Upload a real video of you saying the cheer. At the end of every
+            lesson it'll play back so {name || 'your child'} hears it from you!
           </p>
 
           <div className="mt-5">
@@ -164,7 +164,7 @@ export default function Onboarding() {
                 <Loader2 className="h-7 w-7 animate-spin text-[#D96969]" /> Saving your cheer…
               </div>
             ) : (
-              <ParentVideoRecorder
+              <ParentVideoPicker
                 cheer={`Yes! You did it, ${name || 'friend'}!`}
                 onRecorded={saveParentVideo}
               />
