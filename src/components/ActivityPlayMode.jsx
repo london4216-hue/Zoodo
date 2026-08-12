@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { X, RotateCw, Check, Volume2 } from 'lucide-react';
+import { X, RotateCw, Check, Volume2, Camera } from 'lucide-react';
 import { playSparkle, playSuccess, playComplete, vibrate } from '@/lib/sensoryAudio';
 import SparkleBurst from '@/components/SparkleBurst';
 import SensoryButton from '@/components/SensoryButton';
+import CameraValidator from '@/components/CameraValidator';
 
 const GESTURE = {
   clap: { emoji: '👏' },
@@ -33,6 +34,7 @@ export default function ActivityPlayMode({ activity, kidName, onComplete, onClos
   const [taps, setTaps] = useState(0);
   const [bursts, setBursts] = useState([]);
   const [succeeded, setSucceeded] = useState(false);
+  const [checking, setChecking] = useState(false);
   const audioRef = useRef(null);
 
   const g = GESTURE[activity.gesture] || GESTURE.clap;
@@ -192,15 +194,36 @@ export default function ActivityPlayMode({ activity, kidName, onComplete, onClos
             <Check className="h-5 w-5" strokeWidth={3} /> Mark complete
           </SensoryButton>
         ) : (
-          <SensoryButton
-            onClick={replayVoice}
-            glow="#FF9EC4"
-            className="flex w-full items-center justify-center gap-2 bg-white/80 py-4 text-lg text-black/70"
-          >
-            <Volume2 className="h-5 w-5" /> Play voice again
-          </SensoryButton>
+          <div className="space-y-2">
+            <SensoryButton
+              onClick={() => setChecking(true)}
+              glow="#4969E1"
+              className="flex w-full items-center justify-center gap-2 bg-[#4969E1] py-4 text-lg text-white"
+            >
+              <Camera className="h-5 w-5" /> Check on me!
+            </SensoryButton>
+            <SensoryButton
+              onClick={replayVoice}
+              glow="#FF9EC4"
+              className="flex w-full items-center justify-center gap-2 bg-white/80 py-4 text-lg text-black/70"
+            >
+              <Volume2 className="h-5 w-5" /> Play voice again
+            </SensoryButton>
+          </div>
         )}
       </div>
+
+      {checking && (
+        <CameraValidator
+          targetAction={prompts[promptIdx]}
+          kidName={kidName}
+          onSuccess={() => {
+            setSucceeded(true);
+            setChecking(false);
+          }}
+          onClose={() => setChecking(false)}
+        />
+      )}
     </div>
   );
 }

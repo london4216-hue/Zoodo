@@ -11,6 +11,7 @@ import CelebrationOverlay from '@/components/CelebrationOverlay';
 import SensoryBackground from '@/components/SensoryBackground';
 import SensoryButton from '@/components/SensoryButton';
 import MusicToggle from '@/components/MusicToggle';
+import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { DAY_MAP } from '@/lib/lessonConfig';
 import { ArrowLeft, Check, Loader2, Pencil, SkipForward } from 'lucide-react';
 
@@ -26,6 +27,7 @@ export default function LessonDetail() {
   const [greetingAudio, setGreetingAudio] = useState('');
   const [step, setStep] = useState('activity'); // activity | drawing | story
   const [activityDone, setActivityDone] = useState(false);
+  useAutoAmbientMusic();
 
   useEffect(() => {
     let cancelled = false;
