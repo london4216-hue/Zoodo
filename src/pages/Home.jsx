@@ -5,7 +5,7 @@ import Layout from '@/components/Layout';
 import DayCard from '@/components/DayCard';
 import { DAYS, DAY_MAP, getMondayISO, addWeeksISO, formatWeekRange } from '@/lib/lessonConfig';
 import { isGenerating, markGenerating, clearGenerating } from '@/lib/weekGenState';
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MusicToggle from '@/components/MusicToggle';
 import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 
@@ -159,13 +159,6 @@ export default function Home() {
           <ChevronRight className="h-5 w-5" />
         </button>
       </div>
-
-      {preparing && (
-        <div className="mb-3 flex items-center justify-center gap-2 rounded-2xl bg-[#FEF5B0] px-4 py-2.5 text-sm font-semibold text-black/70">
-          <Loader2 className="h-4 w-4 animate-spin text-[#D96969]" />
-          Preparing this week's videos…
-        </div>
-      )}
 
       {/* Day cards */}
       <div className="space-y-3">
