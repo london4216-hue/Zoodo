@@ -30,6 +30,7 @@ export default function Onboarding() {
   const [parentCount, setParentCount] = useState(1);
   const [parentVideos, setParentVideos] = useState([]);
   const [currentParent, setCurrentParent] = useState(0);
+  const [camConsent, setCamConsent] = useState(false);
   const videoRef = useRef(null);
 
   const submit = async (e) => {
@@ -241,15 +242,32 @@ export default function Onboarding() {
               </span>
             )}
           </div>
+          <label className="mt-5 flex items-start gap-2 rounded-2xl bg-white/70 p-3 text-left text-sm font-medium text-black/70">
+            <input
+              type="checkbox"
+              checked={camConsent}
+              onChange={(e) => setCamConsent(e.target.checked)}
+              className="mt-0.5 h-5 w-5 shrink-0 accent-[#7B4FE0]"
+            />
+            <span>
+              I consent to Zoodo using the camera to cheer my child on during activities.
+            </span>
+          </label>
           <Button
             onClick={startCountdown}
-            disabled={camStatus === 'asking' || countdown > 0}
-            className="mt-6 w-full rounded-2xl bg-[#7B4FE0] py-6 text-lg font-bold text-white hover:bg-[#6a3fd0] disabled:opacity-60"
+            disabled={camStatus === 'asking' || countdown > 0 || !camConsent}
+            className="mt-4 w-full rounded-2xl bg-[#7B4FE0] py-6 text-lg font-bold text-white hover:bg-[#6a3fd0] disabled:opacity-60"
           >
             {camStatus === 'asking' ? (
               <span className="flex items-center justify-center gap-2"><Loader2 className="h-5 w-5 animate-spin" /> Asking for permission…</span>
             ) : 'Ready to record'}
           </Button>
+          <button
+            onClick={finish}
+            className="mt-3 w-full text-sm font-semibold text-black/40 underline underline-offset-2 hover:text-black/60"
+          >
+            Skip for now — we can do this later
+          </button>
           {countdown > 0 && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
               <span className="text-8xl font-bold text-white animate-ping-slow">{countdown}</span>
