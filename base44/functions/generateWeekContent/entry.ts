@@ -3,7 +3,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 const DAY_THEMES = [
   { day: 'monday', subject: 'Numbers' },
   { day: 'tuesday', subject: 'Letters' },
-  { day: 'wednesday', subject: 'Outdoor activity' },
+  { day: 'wednesday', subject: 'Stretch time' },
   { day: 'thursday', subject: 'Music' },
   { day: 'friday', subject: 'Exercises' },
 ];

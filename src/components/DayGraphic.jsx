@@ -20,12 +20,12 @@ export default function DayGraphic({ type }) {
       </div>
     );
   }
-  if (type === 'outdoor') {
+  if (type === 'stretch') {
     return (
       <div className="flex items-center gap-1">
-        <span className="text-4xl">🏊</span>
-        <span className="text-3xl">🟡</span>
-        <span className="text-3xl">🛟</span>
+        <span className="text-4xl">🤸</span>
+        <span className="text-3xl">🧘</span>
+        <span className="text-3xl">🙆</span>
       </div>
     );
   }

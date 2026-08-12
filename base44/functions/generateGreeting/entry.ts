@@ -62,7 +62,7 @@ export default async function(req: Request): Promise<Response> {
     const SUBJECT_VERB: Record<string, string> = {
       'Numbers': 'count numbers',
       'Letters': 'learn our letters',
-      'Outdoor activity': 'explore outside',
+      'Stretch time': 'stretch and move',
       'Music': 'make music',
       'Exercises': 'move and exercise',
     };

@@ -23,11 +23,11 @@ export const DAYS = [
   {
     key: 'wednesday',
     label: 'Wednesday',
-    subject: 'Outdoor activity',
+    subject: 'Stretch time',
     bg: '#E0F5D5',
     titleColor: '#E0A800',
     titleStroke: '#3a3a3a',
-    graphic: 'outdoor',
+    graphic: 'stretch',
   },
   {
     key: 'thursday',

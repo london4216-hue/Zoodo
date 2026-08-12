@@ -169,7 +169,7 @@ export default function LessonDetail() {
       <div className="flex-1 min-h-0 overflow-y-auto">
       {step === 'activity' && (
         <div ref={activityRef} className="space-y-3 scroll-mt-4">
-          {(dayCfg.graphic === 'outdoor' || dayCfg.graphic === 'exercise') && (
+          {(dayCfg.graphic === 'stretch' || dayCfg.graphic === 'exercise') && (
             <StretchGuide kidName={kid?.name} />
           )}
           {dayCfg.subject === 'Letters' ? (
