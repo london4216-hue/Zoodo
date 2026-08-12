@@ -58,17 +58,23 @@ export default function BubblePop() {
   const [areaH, setAreaH] = useState(600);
   const areaRef = useRef(null);
   const videoRef = useRef(null);
+  const audioRef = useRef(null);
   const idRef = useRef(1);
   const bubblesRef = useRef([]);
   bubblesRef.current = bubbles;
 
-  const speak = useCallback((text) => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window) || !text) return;
+  // Speak any line aloud in the lady voice (ElevenLabs) via a backend function,
+  // so every spoken line matches the rest of the app.
+  const speak = useCallback(async (text) => {
+    if (!text) return;
     try {
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.rate = 1.05; u.pitch = 1.4; u.volume = 1;
-      window.speechSynthesis.speak(u);
+      const res = await base44.functions.invoke('generateSpeech', { text });
+      const url = res?.data?.audio_url;
+      if (!url) return;
+      if (audioRef.current) { try { audioRef.current.pause(); } catch (e) { /* ignore */ } }
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      await audio.play().catch(() => {});
     } catch (e) { /* ignore */ }
   }, []);
 
