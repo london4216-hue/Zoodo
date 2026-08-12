@@ -15,7 +15,7 @@ import SensoryButton from '@/components/SensoryButton';
 import MusicToggle from '@/components/MusicToggle';
 import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { DAY_MAP } from '@/lib/lessonConfig';
-import { ArrowLeft, Loader2, Pencil } from 'lucide-react';
+import { ArrowLeft, Loader2, Pencil, Sparkles } from 'lucide-react';
 
 export default function LessonDetail() {
   const { kidId, weekStart, day } = useParams();
@@ -278,12 +278,22 @@ export default function LessonDetail() {
             age={kid?.age || 4}
             onSaved={saveStory}
           />
-          <button
-            onClick={() => setStep('lunch')}
-            className="w-full rounded-2xl border-2 border-black/10 bg-white py-3 font-bold text-black/60 active:scale-95 transition"
-          >
-            Back
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setStep('lunch')}
+              className="flex-1 rounded-2xl border-2 border-black/10 bg-white py-3 font-bold text-black/60 active:scale-95 transition"
+            >
+              Back
+            </button>
+            <SensoryButton
+              onClick={markComplete}
+              glow="#4FAE5A"
+              className="flex-[2] bg-[#4FAE5A] py-3 text-white"
+            >
+              <Sparkles className="h-5 w-5" />
+              We finished!
+            </SensoryButton>
+          </div>
         </div>
       )}
       </div>
@@ -294,7 +304,7 @@ export default function LessonDetail() {
         <CelebrationOverlay
           kidName={kid?.name || 'the child'}
           subject={dayCfg.subject}
-          onClose={() => setCelebrating(false)}
+          onClose={() => { setCelebrating(false); navigate('/'); }}
         />
       )}
     </Layout>
