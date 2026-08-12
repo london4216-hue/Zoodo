@@ -10,7 +10,9 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const audioRef = useRef(null);
+  const videoRef = useRef(null);
   const [videoIdx, setVideoIdx] = useState(0);
+  const [videosDone, setVideosDone] = useState(false);
   const videos = Array.isArray(parentVideos) ? parentVideos.filter(Boolean) : [];
 
   useEffect(() => {
@@ -22,6 +24,22 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
       setTimeout(() => confetti({ particleCount: 60, angle: 120, spread: 60, origin: { x: 1, y: 0.7 }, colors }), 360);
     };
     burst();
+
+    // Play the parent cheer video(s) with sound right away — the lesson
+    // "We finished!" tap counts as the user gesture autoplay needs.
+    if (videos.length > 0) {
+      setVideoIdx(0);
+      setVideosDone(false);
+      requestAnimationFrame(() => {
+        videoRef.current?.play().catch(() => {
+          // If autoplay-with-sound is blocked, fall back to muted so it still plays.
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            videoRef.current.play().catch(() => {});
+          }
+        });
+      });
+    }
 
     (async () => {
       try {
@@ -38,6 +56,12 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
     })();
     return () => { cancelled = true; };
   }, [kidName, subject]);
+
+  // When we advance to the next parent's clip, make sure it actually plays.
+  useEffect(() => {
+    if (videoIdx === 0) return;
+    requestAnimationFrame(() => videoRef.current?.play().catch(() => {}));
+  }, [videoIdx]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-6">
@@ -97,22 +121,59 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
               Great job with {subject}, {kidName}!
             </p>
             <audio ref={audioRef} src={data?.audio_url} />
+            {/* Parent cheer video(s) — each grown-up's clip plays in order, with sound */}
+            {videos.length > 0 && (
+              <div className="mt-4">
+                <div className="relative mx-auto aspect-video w-full max-w-xs overflow-hidden rounded-3xl border-4 border-[#D96969] bg-black shadow-lg">
+                  <video
+                    ref={videoRef}
+                    key={videoIdx}
+                    src={videos[videoIdx]}
+                    autoPlay
+                    playsInline
+                    controls={videosDone}
+                    className="h-full w-full object-cover"
+                    onEnded={() => {
+                      if (videoIdx < videos.length - 1) {
+                        setVideoIdx((i) => i + 1);
+                      } else {
+                        setVideosDone(true);
+                      }
+                    }}
+                  />
+                  {videos.length > 1 && (
+                    <div className="absolute bottom-2 left-2 flex gap-1">
+                      {videos.map((_, i) => (
+                        <span
+                          key={i}
+                          className={`h-1.5 rounded-full transition-all ${
+                            i === videoIdx ? 'w-5 bg-white' : 'w-1.5 bg-white/50'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {videosDone && (
+                  <button
+                    onClick={() => {
+                      setVideoIdx(0);
+                      setVideosDone(false);
+                      requestAnimationFrame(() => videoRef.current?.play().catch(() => {}));
+                    }}
+                    className="mt-2 text-sm font-semibold text-[#D96969] underline underline-offset-2"
+                  >
+                    Replay cheers
+                  </button>
+                )}
+              </div>
+            )}
             {/* Parent affirmation prompt — say it out loud so the praise feels real */}
-            <div className="mt-4 rounded-2xl bg-white/70 p-3">
+            <div className="mt-3 rounded-2xl bg-white/70 p-3">
               <div className="flex items-center gap-1.5">
                 <Mic className="h-4 w-4 text-[#D96969]" />
                 <p className="text-xs font-bold uppercase tracking-wide text-black/40">For the grown-up</p>
               </div>
-              {videos.length > 0 && (
-                <video
-                  key={videoIdx}
-                  src={videos[videoIdx]}
-                  autoPlay
-                  playsInline
-                  onEnded={() => setVideoIdx((i) => (i + 1) % videos.length)}
-                  className="mx-auto mb-2 h-28 w-28 rounded-2xl border-4 border-[#D96969] bg-black object-cover shadow-lg"
-                />
-              )}
               <p className="mt-1 text-sm font-semibold text-black/70">
                 Say it out loud with a big smile:
               </p>
