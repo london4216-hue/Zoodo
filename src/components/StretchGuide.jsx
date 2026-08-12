@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { playPop, playSuccess } from '@/lib/sensoryAudio';
-import { Check, Hand } from 'lucide-react';
+import { Check, Hand, Mic } from 'lucide-react';
 
 // A full-width animated stretch guide. For each stretch, the buddy DEMONSTRATES
 // the move 4 times ("Watch me! 1, 2, 3, 4"), then invites the kid to try
@@ -119,7 +119,10 @@ export default function StretchGuide({ kidName }) {
               </motion.div>
               <p className="mt-3 text-2xl font-bold text-[#4FAE5A]">Great stretching!</p>
               <div className="mt-3 rounded-2xl bg-white/70 px-4 py-2">
-                <p className="text-xs font-bold uppercase tracking-wide text-black/40">For the grown-up</p>
+                <div className="flex items-center gap-1.5 justify-center">
+                  <Mic className="h-4 w-4 text-[#4FAE5A]" />
+                  <p className="text-xs font-bold uppercase tracking-wide text-black/40">For the grown-up</p>
+                </div>
                 <p className="mt-1 text-lg font-bold text-[#4FAE5A]">
                   Say it out loud: “You did it, {kidName || 'friend'}!”
                 </p>
