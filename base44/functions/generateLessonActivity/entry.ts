@@ -7,27 +7,45 @@ const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — warm, friendly f
 async function synthesizeSpeech(base44, text) {
   const clean = (text || "").slice(0, 4500);
   const key = secrets.get("ELEVENLABS_API_KEY");
-  if (!key) throw new Error("ELEVENLABS_API_KEY secret is not set");
+  if (!key) return await builtinTTS(base44, text);
   const customVoice = secrets.get("ELEVENLABS_VOICE_ID");
   const voiceId = (customVoice && /^[A-Za-z0-9]{16,}$/.test(customVoice)) ? customVoice : ELEVEN_VOICE_ID;
-  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-    method: "POST",
-    headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },
-    body: JSON.stringify({
-      text: clean,
-      model_id: "eleven_turbo_v2_5",
-      voice_settings: { stability: 0.45, similarity_boost: 0.75, style: 0.45, use_speaker_boost: true },
-    }),
-  });
+  let resp;
+  try {
+    resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+      method: "POST",
+      headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },
+      body: JSON.stringify({
+        text: clean,
+        model_id: "eleven_turbo_v2_5",
+        voice_settings: { stability: 0.45, similarity_boost: 0.75, style: 0.45, use_speaker_boost: true },
+      }),
+    });
+  } catch (e) {
+    console.warn('ElevenLabs fetch error — using built-in voice.', e?.message);
+    return await builtinTTS(base44, text);
+  }
   if (!resp.ok) {
+    // Fall back to the built-in TTS so the activity ALWAYS works for the kid.
     const detail = await resp.text().catch(() => "");
-    throw new Error(`ElevenLabs TTS failed (${resp.status}): ${detail.slice(0, 300)}`);
+    console.warn(`ElevenLabs TTS failed (${resp.status}): ${detail.slice(0, 200)} — using built-in voice.`);
+    return await builtinTTS(base44, text);
   }
   const buf = await resp.arrayBuffer();
   const file = new File([buf], "edu_speech.mp3", { type: "audio/mpeg" });
   const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
   if (!up || !up.file_url) throw new Error("UploadFile returned no file_url");
   return up.file_url;
+}
+
+// Built-in TTS fallback — always available, no external key required.
+async function builtinTTS(base44, text) {
+  const res = await base44.asServiceRole.integrations.Core.GenerateSpeech({
+    text: (text || '').slice(0, 5000),
+    voice: 'honey',
+  });
+  if (!res || !res.url) throw new Error('Built-in TTS returned no audio url');
+  return res.url;
 }
 
 // The signature EduPath AI teaching voice — warm, musical, sensory-rich.

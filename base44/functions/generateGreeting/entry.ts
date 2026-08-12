@@ -27,8 +27,12 @@ async function synthesizeSpeech(base44, text) {
         if (up && up.file_url) return up.file_url;
       }
     }
-  } catch (e) { /* lady voice only — no fallback voice */ }
-  return "";
+  } catch (e) { /* fall through to built-in voice */ }
+  // Built-in TTS fallback so the greeting ALWAYS has audio for the kid.
+  const res = await base44.asServiceRole.integrations.Core.GenerateSpeech({
+    text: clean, voice: 'honey',
+  });
+  return (res && res.url) ? res.url : "";
 }
 
 // Fun, light, joyful persona for the learning-buddy greeting.
