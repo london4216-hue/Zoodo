@@ -1,10 +1,14 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import DayCard from '@/components/DayCard';
 import { DAYS, DAY_MAP, getMondayISO, addWeeksISO, formatWeekRange } from '@/lib/lessonConfig';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { isGenerating, markGenerating, clearGenerating } from '@/lib/weekGenState';
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+
+const hasVideos = (lesson) =>
+  lesson?.ai_content && lesson.ai_content.some((v) => v.video_id);
 
 export default function Home() {
   const navigate = useNavigate();
@@ -12,6 +16,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [weekStart, setWeekStart] = useState(getMondayISO());
   const [lessonsByDay, setLessonsByDay] = useState({});
+  const [preparing, setPreparing] = useState(false);
 
   // Load the caregiver's kid (first one). If none, go to onboarding.
   useEffect(() => {
@@ -31,39 +36,89 @@ export default function Home() {
     })();
   }, [navigate]);
 
-  // Load (or auto-create) the 5 lessons for the selected week.
-  const loadWeek = useCallback(async (kidId, monday) => {
-    try {
-      let lessons = await base44.entities.Lesson.filter({
-        kid_id: kidId,
-        week_start: monday,
-      });
-      const existing = {};
-      lessons.forEach((l) => { existing[l.day] = l; });
-
-      // Create any missing day lessons for the week.
-      const missing = DAYS.filter((d) => !existing[d.key]);
-      if (missing.length > 0) {
-        const created = await base44.entities.Lesson.bulkCreate(
-          missing.map((d) => ({
-            kid_id: kidId,
-            week_start: monday,
-            day: d.key,
-            subject: d.subject,
-            completed: false,
-          }))
-        );
-        created.forEach((l) => { existing[l.day] = l; });
-      }
-      setLessonsByDay(existing);
-    } catch (err) {
-      console.error(err);
-    }
-  }, []);
-
+  // Load (or auto-create) the 5 lessons for the selected week, then kick off
+  // a single background AI call to prepare all 5 days' videos at once.
   useEffect(() => {
-    if (kid) loadWeek(kid.id, weekStart);
-  }, [kid, weekStart, loadWeek]);
+    if (!kid) return;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        let lessons = await base44.entities.Lesson.filter({
+          kid_id: kid.id,
+          week_start: weekStart,
+        });
+        const existing = {};
+        lessons.forEach((l) => { existing[l.day] = l; });
+
+        const missing = DAYS.filter((d) => !existing[d.key]);
+        if (missing.length > 0) {
+          const created = await base44.entities.Lesson.bulkCreate(
+            missing.map((d) => ({
+              kid_id: kid.id,
+              week_start: weekStart,
+              day: d.key,
+              subject: d.subject,
+              completed: false,
+            }))
+          );
+          created.forEach((l) => { existing[l.day] = l; });
+        }
+        if (!cancelled) setLessonsByDay(existing);
+
+        const needsGen = DAYS.some((d) => !hasVideos(existing[d.key]));
+        if (needsGen && !isGenerating(weekStart)) {
+          preGenerate(kid, weekStart, existing, cancelled);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [kid, weekStart]);
+
+  // One web-search call for the whole week; writes ai_content onto each lesson
+  // so opening a day is instant. Updates persist even if the user navigates away.
+  const preGenerate = async (kidObj, monday, existing, cancelled) => {
+    markGenerating(monday);
+    setPreparing(true);
+    try {
+      // Personalize from the kid's loved subjects across all weeks.
+      let lovedSubjects = [];
+      try {
+        const all = await base44.entities.Lesson.filter({ kid_id: kidObj.id });
+        const subjectSet = new Set();
+        all.forEach((l) => {
+          if (l.loved && l.loved.length && l.subject) subjectSet.add(l.subject);
+        });
+        lovedSubjects = Array.from(subjectSet);
+      } catch (e) { /* ignore */ }
+
+      const res = await base44.functions.invoke('generateWeekContent', {
+        kidName: kidObj.name,
+        lovedSubjects,
+      });
+      const content = res?.data || {};
+
+      for (const d of DAYS) {
+        const vids = content[d.key];
+        if (vids && Array.isArray(vids) && existing[d.key]) {
+          const updated = await base44.entities.Lesson.update(existing[d.key].id, {
+            ai_content: vids,
+          });
+          existing[d.key] = updated;
+        }
+      }
+      if (!cancelled) setLessonsByDay({ ...existing });
+    } catch (err) {
+      console.error('week pre-gen failed', err);
+    } finally {
+      clearGenerating(monday);
+      if (!cancelled) setPreparing(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -114,6 +169,13 @@ export default function Home() {
         </button>
       </div>
 
+      {preparing && (
+        <div className="mb-3 flex items-center justify-center gap-2 rounded-2xl bg-[#FEF5B0] px-4 py-2.5 text-sm font-semibold text-black/70">
+          <Loader2 className="h-4 w-4 animate-spin text-[#D96969]" />
+          Preparing this week's videos…
+        </div>
+      )}
+
       {/* Day cards */}
       <div className="space-y-3">
         {DAYS.map((day) => (
@@ -132,7 +194,7 @@ export default function Home() {
       </div>
 
       <p className="mt-6 text-center text-sm text-black/40 font-medium">
-        Tap a day to open its lesson and get AI video picks.
+        Tap a day to open its lesson and watch the AI video picks.
       </p>
     </Layout>
   );

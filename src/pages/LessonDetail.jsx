@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import DayGraphic from '@/components/DayGraphic';
 import { DAY_MAP } from '@/lib/lessonConfig';
-import { ArrowLeft, Check, ExternalLink, Loader2, Sparkles } from 'lucide-react';
+import { isGenerating } from '@/lib/weekGenState';
+import { ArrowLeft, Check, ExternalLink, Heart, Loader2, Sparkles } from 'lucide-react';
+
+const hasVideos = (lesson) =>
+  lesson?.ai_content && lesson.ai_content.some((v) => v.video_id);
 
 export default function LessonDetail() {
   const { kidId, weekStart, day } = useParams();
@@ -15,33 +19,74 @@ export default function LessonDetail() {
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [polling, setPolling] = useState(false);
   const [videos, setVideos] = useState(null);
   const [error, setError] = useState('');
+  const pollRef = useRef(null);
 
   // Load kid + lesson
   useEffect(() => {
+    let cancelled = false;
     (async () => {
       try {
         const kids = await base44.entities.Kid.filter({ id: kidId });
-        if (kids[0]) setKid(kids[0]);
+        if (!cancelled && kids[0]) setKid(kids[0]);
         const lessons = await base44.entities.Lesson.filter({
           kid_id: kidId,
           week_start: weekStart,
           day,
         });
+        if (cancelled) return;
         if (lessons[0]) {
           setLesson(lessons[0]);
-          if (lessons[0].ai_content) setVideos(lessons[0].ai_content);
+          if (hasVideos(lessons[0])) setVideos(lessons[0].ai_content);
         }
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     })();
+    return () => { cancelled = true; if (pollRef.current) clearInterval(pollRef.current); };
   }, [kidId, weekStart, day]);
 
-  // Generate the 3 AI video picks (only if not already saved)
+  // Ensure the day has real video content: wait for the week's background
+  // generation if it's running, otherwise generate this single day on demand.
+  useEffect(() => {
+    if (loading || !dayCfg || !lesson) return;
+    if (hasVideos(lesson)) {
+      setVideos(lesson.ai_content);
+      return;
+    }
+    if (isGenerating(weekStart)) {
+      // Wait for Home's background week generation to fill this lesson in.
+      setPolling(true);
+      const start = Date.now();
+      pollRef.current = setInterval(async () => {
+        if (Date.now() - start > 70000) {
+          if (pollRef.current) clearInterval(pollRef.current);
+          setPolling(false);
+          return;
+        }
+        try {
+          const lessons = await base44.entities.Lesson.filter({
+            kid_id: kidId, week_start: weekStart, day,
+          });
+          if (lessons[0] && hasVideos(lessons[0])) {
+            setLesson(lessons[0]);
+            setVideos(lessons[0].ai_content);
+            setPolling(false);
+            if (pollRef.current) clearInterval(pollRef.current);
+          }
+        } catch (e) { /* keep polling */ }
+      }, 2000);
+      return () => { if (pollRef.current) clearInterval(pollRef.current); };
+    }
+    // No background gen running — generate this day on demand.
+    generate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, lesson?.id, weekStart]);
+
   const generate = async () => {
     if (generating) return;
     setGenerating(true);
@@ -53,9 +98,7 @@ export default function LessonDetail() {
         kidName: kid?.name || 'the child',
       });
       const vids = res?.data?.videos;
-      if (!vids || !Array.isArray(vids)) {
-        throw new Error('No videos returned');
-      }
+      if (!vids || !Array.isArray(vids)) throw new Error('No videos returned');
       setVideos(vids);
       if (lesson) {
         const updated = await base44.entities.Lesson.update(lesson.id, { ai_content: vids });
@@ -68,23 +111,23 @@ export default function LessonDetail() {
     }
   };
 
-  // Auto-generate real YouTube videos when a day is opened and there are
-  // no valid (video_id-bearing) picks yet — including old-format content.
-  useEffect(() => {
-    if (loading || !dayCfg || error) return;
-    const valid = videos && videos.some((v) => v.video_id);
-    if (!valid && !generating) {
-      generate();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, videos, generating, error]);
-
   const toggleComplete = async () => {
     if (!lesson) return;
     const newCompleted = !lesson.completed;
     const updated = await base44.entities.Lesson.update(lesson.id, {
       completed: newCompleted,
       completed_date: newCompleted ? new Date().toISOString() : null,
+    });
+    setLesson(updated);
+  };
+
+  const toggleLove = async (videoId) => {
+    if (!lesson || !videoId) return;
+    const loved = new Set(lesson.loved || []);
+    if (loved.has(videoId)) loved.delete(videoId);
+    else loved.add(videoId);
+    const updated = await base44.entities.Lesson.update(lesson.id, {
+      loved: Array.from(loved),
     });
     setLesson(updated);
   };
@@ -106,6 +149,8 @@ export default function LessonDetail() {
       </Layout>
     );
   }
+
+  const showSpinner = generating || polling;
 
   return (
     <Layout>
@@ -169,82 +214,92 @@ export default function LessonDetail() {
         <h2 className="text-lg font-bold text-black/80">AI video picks for {kid?.name}</h2>
       </div>
 
-      {!videos && !generating && (
-        <div className="rounded-2xl border-2 border-dashed border-black/10 bg-white/60 p-6 text-center">
-          <p className="text-black/50 font-medium mb-4">
-            Get 3 unique, kid-friendly YouTube picks for today's "{dayCfg.subject}" lesson.
+      {showSpinner && (
+        <div className="rounded-2xl bg-white p-6 text-center">
+          <Loader2 className="h-6 w-6 animate-spin text-[#D96969] mx-auto mb-2" />
+          <p className="text-black/50 font-medium">
+            {polling ? 'Preparing videos for the week…' : 'Picking 3 great videos…'}
           </p>
+        </div>
+      )}
+
+      {error && !showSpinner && (
+        <div className="rounded-2xl border-2 border-dashed border-black/10 bg-white/60 p-6 text-center">
+          <p className="text-sm font-semibold text-red-500 mb-4">{error}</p>
           <button
             onClick={generate}
             className="inline-flex items-center gap-2 rounded-2xl bg-[#4969E1] px-5 py-3 font-bold text-white hover:bg-[#3b54c9] active:scale-95 transition"
           >
             <Sparkles className="h-4 w-4" />
-            Generate video picks
+            Try again
           </button>
         </div>
       )}
 
-      {generating && (
-        <div className="rounded-2xl bg-white p-6 text-center">
-          <Loader2 className="h-6 w-6 animate-spin text-[#D96969] mx-auto mb-2" />
-          <p className="text-black/50 font-medium">Picking 3 great videos…</p>
-        </div>
-      )}
-
-      {error && (
-        <p className="text-sm font-semibold text-red-500 mb-3">{error}</p>
-      )}
-
       {videos && videos.length > 0 && (
         <div className="space-y-4">
-          {videos.map((v, i) => (
-            <div key={i} className="rounded-2xl bg-white p-4 shadow-sm">
-              <div className="flex items-start gap-3 mb-3">
-                <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
-                  style={{ backgroundColor: ['#F2C200', '#7B4FE0', '#4FAE5A'][i % 3] }}
-                >
-                  {i + 1}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-bold text-black/80 leading-snug">{v.title}</h3>
-                  {v.channel && (
-                    <span className="text-xs font-semibold text-black/40">{v.channel}</span>
+          {videos.map((v, i) => {
+            const loved = lesson?.loved?.includes(v.video_id);
+            return (
+              <div key={i} className="rounded-2xl bg-white p-4 shadow-sm">
+                <div className="flex items-start gap-3 mb-3">
+                  <span
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
+                    style={{ backgroundColor: ['#F2C200', '#7B4FE0', '#4FAE5A'][i % 3] }}
+                  >
+                    {i + 1}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-bold text-black/80 leading-snug">{v.title}</h3>
+                    {v.channel && (
+                      <span className="text-xs font-semibold text-black/40">{v.channel}</span>
+                    )}
+                  </div>
+                  {v.video_id && (
+                    <button
+                      onClick={() => toggleLove(v.video_id)}
+                      aria-label={loved ? 'Unlove' : 'Love this video'}
+                      className={`shrink-0 flex h-9 w-9 items-center justify-center rounded-full transition active:scale-90 ${
+                        loved ? 'bg-pink-100 text-pink-500' : 'bg-black/5 text-black/30 hover:text-pink-400'
+                      }`}
+                    >
+                      <Heart className="h-5 w-5" fill={loved ? 'currentColor' : 'none'} strokeWidth={2.5} />
+                    </button>
                   )}
                 </div>
+
+                {v.video_id ? (
+                  <div className="overflow-hidden rounded-xl bg-black aspect-video">
+                    <iframe
+                      className="h-full w-full"
+                      src={`https://www.youtube.com/embed/${v.video_id}`}
+                      title={v.title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : (
+                  <a
+                    href={`https://www.youtube.com/results?search_query=${encodeURIComponent(v.title || v.search_query || '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#E0F5FF] px-3 py-2 text-sm font-bold text-[#2B6FE0] hover:bg-[#c9ecff] active:scale-95 transition"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    Find on YouTube
+                  </a>
+                )}
+
+                <p className="mt-3 text-sm text-black/60">{v.description}</p>
+                {v.why && (
+                  <p className="mt-1.5 text-xs font-semibold text-[#D96969]">
+                    Why: {v.why}
+                  </p>
+                )}
               </div>
-
-              {v.video_id ? (
-                <div className="overflow-hidden rounded-xl bg-black aspect-video">
-                  <iframe
-                    className="h-full w-full"
-                    src={`https://www.youtube.com/embed/${v.video_id}`}
-                    title={v.title}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              ) : (
-                <a
-                  href={`https://www.youtube.com/results?search_query=${encodeURIComponent(v.title || v.search_query || '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#E0F5FF] px-3 py-2 text-sm font-bold text-[#2B6FE0] hover:bg-[#c9ecff] active:scale-95 transition"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  Find on YouTube
-                </a>
-              )}
-
-              <p className="mt-3 text-sm text-black/60">{v.description}</p>
-              {v.why && (
-                <p className="mt-1.5 text-xs font-semibold text-[#D96969]">
-                  Why: {v.why}
-                </p>
-              )}
-            </div>
-          ))}
+            );
+          })}
           <button
             onClick={generate}
             disabled={generating}

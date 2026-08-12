@@ -62,6 +62,14 @@
           }
         }
       }
+    },
+    "loved": {
+      "type": "array",
+      "title": "Loved Video IDs",
+      "description": "YouTube video IDs the kid marked as loved",
+      "items": {
+        "type": "string"
+      }
     }
   },
   "required": [
