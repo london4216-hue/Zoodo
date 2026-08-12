@@ -1,0 +1,33 @@
+{
+  "name": "Kid",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Kid's Name",
+      "description": "The child's first name"
+    },
+    "avatar_color": {
+      "type": "string",
+      "title": "Avatar Color",
+      "default": "#4969E1"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

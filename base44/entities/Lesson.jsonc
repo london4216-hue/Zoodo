@@ -1,0 +1,84 @@
+{
+  "name": "Lesson",
+  "type": "object",
+  "properties": {
+    "kid_id": {
+      "type": "string",
+      "title": "Kid ID",
+      "description": "Reference to the Kid this lesson belongs to"
+    },
+    "week_start": {
+      "type": "string",
+      "format": "date",
+      "title": "Week Start",
+      "description": "The Monday date of this week (ISO)"
+    },
+    "day": {
+      "type": "string",
+      "title": "Day",
+      "enum": [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday"
+      ]
+    },
+    "subject": {
+      "type": "string",
+      "title": "Subject",
+      "default": "Numbers"
+    },
+    "completed": {
+      "type": "boolean",
+      "title": "Completed",
+      "default": false
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Completed Date"
+    },
+    "ai_content": {
+      "type": "array",
+      "title": "AI YouTube Recommendations",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "search_query": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "kid_id",
+    "week_start",
+    "day",
+    "subject"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}
