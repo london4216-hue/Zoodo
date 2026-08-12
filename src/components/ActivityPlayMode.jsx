@@ -107,6 +107,18 @@ export default function ActivityPlayMode({ activity, kidName, onComplete, onClos
         </button>
       </div>
 
+      {/* Caregiver instruction — what the kid needs to do */}
+      <div className="px-4">
+        <div className="rounded-2xl bg-white/80 px-3 py-2 text-left shadow-sm">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#D96969]">
+            For the caregiver
+          </p>
+          <p className="text-xs font-semibold text-black/60">
+            Help {kidName} tap the glowing button {TAPS_TO_SUCCESS} times along with the voice. When the stars fill up, tap "Mark complete".
+          </p>
+        </div>
+      </div>
+
       {/* Animated gesture character */}
       <div className="flex justify-center mt-2">
         <motion.div

@@ -67,6 +67,29 @@
       "title": "Audio URL",
       "description": "TTS narration in the signature EduPath voice"
     },
+    "video": {
+      "type": "object",
+      "title": "Supporting Video",
+      "description": "A kid-friendly YouTube video that supports this activity's skill",
+      "properties": {
+        "video_id": {
+          "type": "string",
+          "title": "YouTube Video ID"
+        },
+        "title": {
+          "type": "string",
+          "title": "Video Title"
+        },
+        "channel": {
+          "type": "string",
+          "title": "Channel"
+        },
+        "why": {
+          "type": "string",
+          "title": "Why It Supports This Skill"
+        }
+      }
+    },
     "status": {
       "type": "string",
       "title": "Status",

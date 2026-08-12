@@ -5,6 +5,7 @@ import confetti from 'canvas-confetti';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import ActivityPlayMode from '@/components/ActivityPlayMode';
+import ActivityVideo from '@/components/ActivityVideo';
 import { getMondayISO, addWeeksISO, formatWeekRange } from '@/lib/lessonConfig';
 import { ChevronLeft, ChevronRight, Loader2, Play, SkipForward, Check } from 'lucide-react';
 
@@ -77,6 +78,8 @@ export default function WeeklyActivities() {
 
   const merge = (id, patch) =>
     setActivities((arr) => arr.map((a) => (a.id === id ? { ...a, ...patch } : a)));
+
+  const onVideo = (id, video) => merge(id, { video });
 
   const play = async (a) => {
     const updated = await base44.entities.SensoryActivity.update(a.id, {
@@ -206,6 +209,8 @@ export default function WeeklyActivities() {
                     <Check className="h-4 w-4" strokeWidth={3} />
                   </button>
                 </div>
+
+                <ActivityVideo activity={a} age={kid?.age || 3} onVideo={onVideo} />
               </motion.div>
             );
           })}
