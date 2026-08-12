@@ -6,13 +6,7 @@ import { Sparkles, Camera, Check, Loader2, ArrowRight, Heart } from 'lucide-reac
 import KidAvatar from '@/components/KidAvatar';
 import ParentVideoPicker from '@/components/ParentVideoPicker';
 
-const MILESTONES = [
-  { value: 'pre_verbal', label: 'Level 1' },
-  { value: 'single_words', label: 'Level 2' },
-  { value: 'two_word', label: 'Level 3' },
-  { value: 'short_sentences', label: 'Level 4' },
-  { value: 'sentences', label: 'Level 5' },
-];
+const START_AGES = [2, 3, 4, 5, 6, 7, 8];
 
 // First-run intake: a cute Zoodo intro, then a short questionnaire (name, age,
 // program length, developmental milestone), then camera permission — all before
@@ -21,7 +15,7 @@ export default function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState('intro'); // intro | form | camera
   const [name, setName] = useState('');
-  const [milestone, setMilestone] = useState('two_word');
+  const [startAge, setStartAge] = useState(4);
   const [programLength, setProgramLength] = useState(8);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -45,7 +39,8 @@ export default function Onboarding() {
     try {
       const kid = await base44.entities.Kid.create({
         name: 'friend',
-        developmental_milestone: milestone,
+        age: Number(startAge),
+        developmental_milestone: String(startAge),
         program_length: programLength,
       });
       setKidId(kid.id);
@@ -297,21 +292,21 @@ export default function Onboarding() {
         <form onSubmit={submit} className="mt-8 space-y-5 text-left">
           <div>
             <label className="block text-sm font-semibold text-black/70 mb-2">
-              Best guess age where your child should start <span className="text-black/40 font-normal">— based on current milestones</span>
+              What age, based on their milestones, would you like to begin lesson plans?
             </label>
-            <div className="flex flex-col gap-2">
-              {MILESTONES.map((m) => (
+            <div className="grid grid-cols-3 gap-2">
+              {START_AGES.map((a) => (
                 <button
-                  key={m.value}
+                  key={a}
                   type="button"
-                  onClick={() => setMilestone(m.value)}
-                  className={`rounded-2xl border-2 px-4 py-3 text-left text-base font-semibold transition active:scale-[0.98] ${
-                    milestone === m.value
+                  onClick={() => setStartAge(a)}
+                  className={`rounded-2xl border-2 py-5 text-center text-2xl font-bold transition active:scale-95 ${
+                    startAge === a
                       ? 'bg-[#7B4FE0] text-white border-[#7B4FE0] shadow'
                       : 'bg-white text-black/70 border-black/10 hover:border-[#7B4FE0]/50'
                   }`}
                 >
-                  {m.label}
+                  {a}
                 </button>
               ))}
             </div>
