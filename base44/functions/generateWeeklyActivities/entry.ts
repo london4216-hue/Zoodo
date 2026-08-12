@@ -1,4 +1,37 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { secrets } from "base44:runtime";
+
+// Premium TTS: ElevenLabs (warm, expressive, human-like) with a safe fallback to
+// the built-in "honey" voice. Returns a stored file_url. Activates only when
+// ELEVENLABS_API_KEY is set; otherwise the built-in voice is used seamlessly.
+const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — warm, friendly female
+async function synthesizeSpeech(base44, text) {
+  const clean = (text || "").slice(0, 4500);
+  try {
+    const key = secrets.get("ELEVENLABS_API_KEY");
+    if (key) {
+      const customVoice = secrets.get("ELEVENLABS_VOICE_ID");
+      const voiceId = customVoice || ELEVEN_VOICE_ID;
+      const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+        method: "POST",
+        headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },
+        body: JSON.stringify({
+          text: clean,
+          model_id: "eleven_turbo_v2_5",
+          voice_settings: { stability: 0.45, similarity_boost: 0.75, style: 0.45, use_speaker_boost: true },
+        }),
+      });
+      if (resp.ok) {
+        const buf = await resp.arrayBuffer();
+        const file = new File([buf], "edu_speech.mp3", { type: "audio/mpeg" });
+        const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+        if (up && up.file_url) return up.file_url;
+      }
+    }
+  } catch (e) { /* fall through to built-in voice */ }
+  const fb = await base44.asServiceRole.integrations.Core.GenerateSpeech({ text: clean, voice: "honey" });
+  return (fb && fb.url) || "";
+}
 
 // The signature EduPath AI teaching voice — warm, musical, sensory-rich, Ms-Rachel-inspired.
 const EDU_VOICE_ID = 'honey';
@@ -87,11 +120,7 @@ export default async function(req) {
     for (const a of acts) {
       let audio_url = '';
       try {
-        const speechRes = await base44.asServiceRole.integrations.Core.GenerateSpeech({
-          text: (a.script || '').slice(0, 5000),
-          voice: EDU_VOICE_ID,
-        });
-        audio_url = (speechRes && speechRes.url) || '';
+        audio_url = await synthesizeSpeech(base44, a.script || '');
       } catch (e) { /* keep going even if one audio fails */ }
       enriched.push({ ...a, audio_url });
     }
