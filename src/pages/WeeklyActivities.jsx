@@ -170,7 +170,7 @@ export default function WeeklyActivities() {
       >
         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl">🫧</div>
         <div className="flex-1 text-left">
-          <h3 className="font-bold text-black/80">Pop the Bubbles!</h3>
+          <h3 className="font-bold text-black/80">Zoodo</h3>
           <p className="text-sm text-black/50">Tap or use camera moves to pop bubbles</p>
         </div>
         <span className="text-sm font-bold text-[#7B4FE0]">Play →</span>

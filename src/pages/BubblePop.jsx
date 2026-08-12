@@ -232,7 +232,7 @@ export default function BubblePop() {
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h2 className="text-lg font-bold text-black/70">Pop the Bubbles! 🫧</h2>
+        <h2 className="text-lg font-bold text-black/70">Zoodo 🫧</h2>
         <div className="flex items-center gap-2 rounded-full bg-white/85 px-3 py-1.5 shadow">
           <span className="text-lg">🫧</span>
           <span className="text-lg font-bold text-[#7B4FE0]">{popped}</span>
