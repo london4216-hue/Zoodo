@@ -304,7 +304,7 @@ export default function LessonDetail() {
         <CelebrationOverlay
           kidName={kid?.name || 'the child'}
           subject={dayCfg.subject}
-          parentPhoto={kid?.parent_photo_url}
+          parentVideo={kid?.parent_video_url}
           onClose={() => { setCelebrating(false); navigate('/'); }}
         />
       )}

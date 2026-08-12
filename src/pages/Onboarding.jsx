@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Camera, Check, Loader2, ArrowRight, Heart, Upload } from 'lucide-react';
+import { Sparkles, Camera, Check, Loader2, ArrowRight, Heart } from 'lucide-react';
 import KidAvatar from '@/components/KidAvatar';
-import { Image } from '@/components/ui/image';
+import ParentVideoRecorder from '@/components/ParentVideoRecorder';
 
 const AGES = [2, 3, 4, 5, 6, 7, 8];
 const PROGRAM_LENGTHS = [4, 8, 12, 16];
@@ -23,13 +23,10 @@ export default function Onboarding() {
   const [camStream, setCamStream] = useState(null);
   const [camStatus, setCamStatus] = useState('asking');
   const [introAudio, setIntroAudio] = useState('');
-  const [parentPhoto, setParentPhoto] = useState(null);
-  const [parentPreview, setParentPreview] = useState('');
   const [uploading, setUploading] = useState(false);
   const [kidId, setKidId] = useState(null);
   const [countdown, setCountdown] = useState(0);
   const videoRef = useRef(null);
-  const fileRef = useRef(null);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -95,19 +92,12 @@ export default function Onboarding() {
     return () => { cancelled = true; };
   }, [step]);
 
-  const onPickPhoto = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setParentPhoto(file);
-    setParentPreview(URL.createObjectURL(file));
-  };
-
-  const saveParentPhoto = async () => {
-    if (!parentPhoto || !kidId) { setStep('camera'); return; }
+  const saveParentVideo = async (file) => {
+    if (!file || !kidId) { setStep('camera'); return; }
     setUploading(true);
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file: parentPhoto });
-      await base44.entities.Kid.update(kidId, { parent_photo_url: file_url });
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      await base44.entities.Kid.update(kidId, { parent_video_url: file_url });
     } catch (e) { /* non-fatal — celebration still works without it */ }
     setUploading(false);
     setStep('camera');
@@ -162,45 +152,31 @@ export default function Onboarding() {
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#FAD7D7]">
             <Heart className="h-8 w-8 text-[#D96969]" />
           </div>
-          <h1 className="text-3xl font-bold" style={{ color: '#D96969' }}>Add a parent photo</h1>
+          <h1 className="text-3xl font-bold" style={{ color: '#D96969' }}>Record a cheer</h1>
           <p className="mt-2 text-black/60 font-medium">
-            Upload a real photo of you (one or both parents). At the end of each
-            lesson it'll flash on screen so you can cheer {name || 'your child'} on
-            by name — “You did it, {name || 'friend'}!”
+            Record a short video of you saying the cheer. At the end of every
+            lesson it'll play so {name || 'your child'} hears it from you!
           </p>
 
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            onChange={onPickPhoto}
-            className="hidden"
-          />
+          <div className="mt-5">
+            {uploading ? (
+              <div className="flex flex-col items-center gap-2 py-10 text-black/50 font-semibold">
+                <Loader2 className="h-7 w-7 animate-spin text-[#D96969]" /> Saving your cheer…
+              </div>
+            ) : (
+              <ParentVideoRecorder
+                cheer={`Yes! You did it, ${name || 'friend'}!`}
+                onRecorded={saveParentVideo}
+              />
+            )}
+          </div>
 
           <button
-            type="button"
-            onClick={() => fileRef.current?.click()}
-            className="relative mx-auto mt-6 flex h-48 w-48 items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-[#D96969]/40 bg-white/70 transition active:scale-95"
+            onClick={() => setStep('camera')}
+            className="mt-4 text-sm font-bold text-black/40 underline"
           >
-            {parentPreview ? (
-              <Image src={parentPreview} fittingType="fill" className="h-full w-full" />
-            ) : (
-              <div className="flex flex-col items-center text-[#D96969]">
-                <Upload className="h-8 w-8" />
-                <span className="mt-2 text-sm font-bold">Tap to add photo</span>
-              </div>
-            )}
+            Skip for now
           </button>
-
-          <Button
-            onClick={saveParentPhoto}
-            disabled={uploading}
-            className="mt-6 w-full rounded-2xl bg-[#D96969] py-6 text-lg font-bold text-white hover:bg-[#c95a5a] disabled:opacity-60"
-          >
-            {uploading ? (
-              <span className="flex items-center justify-center gap-2"><Loader2 className="h-5 w-5 animate-spin" /> Saving…</span>
-            ) : parentPreview ? 'Save & continue' : 'Skip for now'}
-          </Button>
         </div>
       </div>
     );

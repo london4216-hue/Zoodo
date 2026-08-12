@@ -36,10 +36,10 @@
       "default": "A",
       "maxLength": 1
     },
-    "parent_photo_url": {
+    "parent_video_url": {
       "type": "string",
-      "title": "Parent Photo",
-      "description": "A real photo of one or both parents, shown at the end of each lesson so the grown-up can cheer the child on by name.",
+      "title": "Parent Cheer Video",
+      "description": "A short recording of the parent saying the child's cheer (e.g. 'Yes! You did it, [name]!'), played at the end of each lesson.",
       "format": "uri"
     }
   },
