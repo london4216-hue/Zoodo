@@ -73,6 +73,8 @@ The story is about: ${subject}.
 
 Make ${kidName} the brave, curious main character. Include one friendly animal sidekick with a silly name. Keep sentences short, fun, and easy to read aloud. Subtly weave in one simple, true idea about ${subject} that a ${age}-year-old can grasp. End with a happy, encouraging moment and a tiny question that invites ${kidName} to respond.
 
+RULES: Speak ONLY the exact words meant to be read aloud to the child. No stage directions, no parentheses, no brackets, no notes. Use "..." for natural pauses. Use the child's name warmly. Keep the language simple, warm, and musical.
+
 Return only JSON: { "story": "the full story text" }.`;
 
     const result = await base44.asServiceRole.integrations.Core.InvokeLLM({

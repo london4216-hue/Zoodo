@@ -70,8 +70,9 @@ export default async function(req) {
       EDU_VOICE_PERSONA + '\n\n' +
       `You are cheering for a 3-year-old named ${kidName} who just finished their "${subject}" activity. ` +
       `Write a short, super excited, sing-song celebration cheer (about 20-45 words) cheering them on. ` +
-      `Use tiny sentences, HUGE energy, playful sounds like "Yay!" and "Woohoo!", and say their name. ` +
-      `Write ONLY the exact words to be spoken out loud — no stage directions, no parentheses, no notes. ` +
+      `Use tiny sentences, HUGE energy, playful sounds like "Yay!" and "Woohoo!", and say their name at least twice. ` +
+      `Make it sound warm and genuine, not over-the-top. ` +
+      `Write ONLY the exact words to be spoken out loud — no stage directions, no parentheses, no notes, no spelling-out. Use "..." for natural pauses. ` +
       `Return JSON with keys "message" (a 2-6 word cheer, like "You did it, Avi!") and "script" (the spoken words).`;
 
     const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({

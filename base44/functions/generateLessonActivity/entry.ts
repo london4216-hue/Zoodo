@@ -85,12 +85,23 @@ export default async function(req) {
     const kidName = String(body.kidName || 'friend');
     const age = Number(body.age) || 4;
 
+    // Turn the lesson subject into a natural verb phrase so the opening line
+    // sounds right (e.g. "Numbers" -> "count numbers").
+    const SUBJECT_VERB: Record<string, string> = {
+      'Numbers': 'count numbers',
+      'Letters': 'learn our letters',
+      'Outdoor activity': 'explore outside',
+      'Music': 'make music',
+      'Exercises': 'move and exercise',
+    };
+    const action = SUBJECT_VERB[subject] || subject.toLowerCase();
+
     const prompt =
       EDU_VOICE_PERSONA + '\n\n' +
       `Write a short, super catchy, sing-song spoken script (about 60-120 words) for a little child named ${kidName}. ` +
-      `It MUST open by cheerfully naming the child — for example "Hi ${kidName}! ... let's get ready to ${subject}!" — because the child cannot read and the voice is their guide. ` +
+      `It MUST open by cheerfully naming the child — exactly: "Hi ${kidName}! ... let's get ready to ${action}!" — because the child cannot read and the voice is their guide. ` +
       `Today's theme is "${subject}" (${dayLabel}). ` +
-      `Talk like you are speaking to a 3-year-old: tiny sentences, HUGE energy, lots of repetition, very simple words, ` +
+      `Talk like you are speaking to a ${age}-year-old: tiny sentences, HUGE energy, lots of repetition, very simple words, ` +
       `and playful sounds like "Wheee!" and "Yay!". ` +
       `For Numbers, count from 1 to 10 VERY slowly and excitedly — say just ONE number at a time on its own ` +
       `(like "One! ... Two! ... Three! ..."), cheering ${kidName} on after each one, and ask them to say it with you. ` +
