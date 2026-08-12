@@ -27,6 +27,7 @@ export default function Onboarding() {
   const [parentPreview, setParentPreview] = useState('');
   const [uploading, setUploading] = useState(false);
   const [kidId, setKidId] = useState(null);
+  const [countdown, setCountdown] = useState(0);
   const videoRef = useRef(null);
   const fileRef = useRef(null);
 
@@ -110,6 +111,22 @@ export default function Onboarding() {
     } catch (e) { /* non-fatal — celebration still works without it */ }
     setUploading(false);
     setStep('camera');
+  };
+
+  const startCountdown = () => {
+    let n = 3;
+    setCountdown(n);
+    const tick = () => {
+      n -= 1;
+      if (n > 0) {
+        setCountdown(n);
+        setTimeout(tick, 800);
+      } else {
+        setCountdown(0);
+        navigate('/');
+      }
+    };
+    setTimeout(tick, 800);
   };
 
   const finish = () => navigate('/');
@@ -215,14 +232,19 @@ export default function Onboarding() {
             )}
           </div>
           <Button
-            onClick={finish}
-            disabled={camStatus === 'asking'}
+            onClick={startCountdown}
+            disabled={camStatus === 'asking' || countdown > 0}
             className="mt-6 w-full rounded-2xl bg-[#7B4FE0] py-6 text-lg font-bold text-white hover:bg-[#6a3fd0] disabled:opacity-60"
           >
             {camStatus === 'asking' ? (
               <span className="flex items-center justify-center gap-2"><Loader2 className="h-5 w-5 animate-spin" /> Asking for permission…</span>
-            ) : camStatus === 'ready' ? 'Continue to home' : 'Continue'}
+            ) : 'Ready to record'}
           </Button>
+          {countdown > 0 && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+              <span className="text-8xl font-bold text-white animate-ping-slow">{countdown}</span>
+            </div>
+          )}
         </div>
       </div>
     );
