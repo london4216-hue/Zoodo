@@ -20,12 +20,12 @@ export default function KidAvatar({ greeting, audioUrl, size = 150, autoSpeak = 
   };
 
   useEffect(() => {
-    if (autoSpeak && (audioUrl || greeting) && !spokenRef.current) {
+    if (autoSpeak && audioUrl && !spokenRef.current) {
       spokenRef.current = true;
       const t = setTimeout(() => speak(), 500);
       return () => clearTimeout(t);
     }
-  }, [autoSpeak, audioUrl, greeting]);
+  }, [autoSpeak, audioUrl]);
 
   useEffect(() => {
     return () => {
