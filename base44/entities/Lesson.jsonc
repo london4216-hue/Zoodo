@@ -34,6 +34,11 @@
       "title": "Completed",
       "default": false
     },
+    "skipped": {
+      "type": "boolean",
+      "title": "Skipped",
+      "default": false
+    },
     "completed_date": {
       "type": "string",
       "format": "date-time",

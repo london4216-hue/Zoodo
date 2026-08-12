@@ -8,7 +8,7 @@ import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
 import { DAY_MAP } from '@/lib/lessonConfig';
 import { isGenerating } from '@/lib/weekGenState';
-import { ArrowLeft, Check, ExternalLink, Heart, Loader2, Sparkles, Pencil, BookOpen } from 'lucide-react';
+import { ArrowLeft, Check, ExternalLink, Heart, Loader2, Sparkles, Pencil, BookOpen, SkipForward } from 'lucide-react';
 
 const hasVideos = (lesson) =>
   lesson?.ai_content && lesson.ai_content.some((v) => v.video_id);
@@ -110,12 +110,32 @@ export default function LessonDetail() {
     }
   };
 
-  const toggleComplete = async () => {
+  const markComplete = async () => {
     if (!lesson) return;
-    const newCompleted = !lesson.completed;
     const updated = await base44.entities.Lesson.update(lesson.id, {
-      completed: newCompleted,
-      completed_date: newCompleted ? new Date().toISOString() : null,
+      completed: true,
+      skipped: false,
+      completed_date: new Date().toISOString(),
+    });
+    setLesson(updated);
+  };
+
+  const skip = async () => {
+    if (!lesson) return;
+    const updated = await base44.entities.Lesson.update(lesson.id, {
+      skipped: true,
+      completed: false,
+      completed_date: null,
+    });
+    setLesson(updated);
+  };
+
+  const uncomplete = async () => {
+    if (!lesson) return;
+    const updated = await base44.entities.Lesson.update(lesson.id, {
+      completed: false,
+      skipped: false,
+      completed_date: null,
     });
     setLesson(updated);
   };
@@ -206,24 +226,59 @@ export default function LessonDetail() {
         </div>
       </div>
 
-      {/* Completion checkbox */}
-      <button
-        onClick={toggleComplete}
-        className="w-full mb-5 flex items-center gap-3 rounded-2xl bg-white px-4 py-3.5 shadow-sm active:scale-[0.99] transition text-left"
-      >
-        <span
-          className={`flex h-7 w-7 items-center justify-center rounded-lg border-2 transition ${
-            lesson?.completed
-              ? 'bg-green-500 border-green-500 text-white'
-              : 'border-black/20 bg-white'
-          }`}
-        >
-          {lesson?.completed && <Check className="h-5 w-5" strokeWidth={3} />}
-        </span>
-        <span className="font-semibold text-black/80">
-          {lesson?.completed ? 'Lesson complete' : 'Mark lesson as complete'}
-        </span>
-      </button>
+      {/* Status + caregiver actions: complete / skip / uncomplete */}
+      <div className="mb-5 rounded-2xl bg-white p-3 shadow-sm">
+        {lesson?.completed ? (
+          <div className="flex items-center gap-2">
+            <span className="flex flex-1 items-center gap-2 rounded-2xl bg-green-100 px-4 py-3 font-bold text-green-700">
+              <Check className="h-5 w-5" strokeWidth={3} />
+              Lesson complete
+            </span>
+            <button
+              onClick={uncomplete}
+              className="rounded-2xl border-2 border-black/10 px-4 py-3 text-sm font-bold text-black/60 active:scale-95 transition"
+            >
+              Uncomplete
+            </button>
+          </div>
+        ) : lesson?.skipped ? (
+          <div className="flex items-center gap-2">
+            <span className="flex flex-1 items-center gap-2 rounded-2xl bg-amber-100 px-4 py-3 font-bold text-amber-700">
+              <SkipForward className="h-5 w-5" strokeWidth={3} />
+              Skipped
+            </span>
+            <button
+              onClick={uncomplete}
+              className="rounded-2xl border-2 border-black/10 px-4 py-3 text-sm font-bold text-black/60 active:scale-95 transition"
+            >
+              Undo
+            </button>
+            <button
+              onClick={markComplete}
+              className="rounded-2xl bg-green-500 px-4 py-3 text-sm font-bold text-white active:scale-95 transition"
+            >
+              Complete
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={markComplete}
+              className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-green-500 px-4 py-3 font-bold text-white active:scale-95 transition"
+            >
+              <Check className="h-5 w-5" strokeWidth={3} />
+              Mark complete
+            </button>
+            <button
+              onClick={skip}
+              className="flex items-center gap-2 rounded-2xl border-2 border-black/10 px-4 py-3 font-bold text-black/60 active:scale-95 transition"
+            >
+              <SkipForward className="h-5 w-5" strokeWidth={2.5} />
+              Skip
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Today's video */}
       <div className="mb-3 flex items-center gap-2">
