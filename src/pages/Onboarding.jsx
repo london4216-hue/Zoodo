@@ -297,7 +297,7 @@ export default function Onboarding() {
         <form onSubmit={submit} className="mt-8 space-y-5 text-left">
           <div>
             <label className="block text-sm font-semibold text-black/70 mb-2">
-              Where should we start? <span className="text-black/40 font-normal">— pick a level</span>
+              Best guess age where your child should start <span className="text-black/40 font-normal">— based on current milestones</span>
             </label>
             <div className="flex flex-col gap-2">
               {MILESTONES.map((m) => (
