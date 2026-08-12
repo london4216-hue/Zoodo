@@ -53,7 +53,7 @@ For each video return:
 - description: 1-2 sentences on what it teaches and why it's great for a ${age}-year-old
 - why: one short sentence connecting it to the day's theme
 
-Only return real videos you actually found on the web; never invent video IDs. Return only JSON keyed by day name, where each day is an array containing exactly one video.`;
+Only return real videos you actually found on the web; never invent video IDs. Do NOT use any video from "Ms Rachel" / "MsRachelSpeakman" or any Ms Rachel channel — choose a different creator. Return only JSON keyed by day name, where each day is an array containing exactly one video.`;
 
     const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt,

@@ -29,6 +29,7 @@ Search the web for 1 real, high-quality YouTube video that fits this theme for a
 
 Rules:
 - Only return a real video you actually found on the web. Do not make up video IDs.
+- Do NOT use any video from "Ms Rachel" / "MsRachelSpeakman" or any Ms Rachel channel — choose a different creator.
 - Keep language simple, warm, and encouraging.
 - Return only the JSON.`;
 

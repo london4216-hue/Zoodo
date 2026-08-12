@@ -20,7 +20,7 @@ export default async function(req: Request): Promise<Response> {
     const buildPrompt = (avoidIds: string[]) => `You are a warm, expert early-childhood educator helping a ${age}-year-old child.
 The activity is: "${title}" — ${description || 'a sensory learning activity'}.
 
-Search the web for 1 real, high-quality, kid-friendly YouTube video that supports this skill for a ${age}-year-old (e.g. from channels like Ms Rachel, Super Simple Songs, Cocomelon, or similar toddler-friendly educators). Return:
+Search the web for 1 real, high-quality, kid-friendly YouTube video that supports this skill for a ${age}-year-old (e.g. from channels like Super Simple Songs, Cocomelon, Pinkfong, or similar toddler-friendly educators). Return:
 - title: the real video title as it appears on YouTube
 - video_id: the actual 11-character YouTube video ID (the part after "v=" in the watch URL) — only use a real id you found, never invent one
 - channel: the channel name that published it
@@ -29,6 +29,7 @@ Search the web for 1 real, high-quality, kid-friendly YouTube video that support
 Rules:
 - Only return a real video you actually found on the web. Do not make up video IDs.
 - The video MUST be publicly available and embeddable (not private, not removed, not age-restricted).
+- Do NOT use any video from "Ms Rachel" / "MsRachelSpeakman" or any Ms Rachel channel — choose a different creator.
 ${avoidIds.length ? `- Do not return any of these ids, they were invalid: ${avoidIds.join(', ')}\n` : ''}- Keep language simple, warm, and encouraging.
 - Return only the JSON.`;
 
