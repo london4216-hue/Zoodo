@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Volume2 } from 'lucide-react';
 
-// A funny, silly creature "learning buddy" that greets the kid by name and
-// speaks the greeting aloud using the browser's built-in speech synthesis.
+// Zobo — the funny, silly creature "learning buddy" that greets the kid by name
+// and speaks the greeting aloud using the browser's built-in speech synthesis.
 export default function KidAvatar({ greeting, audioUrl, size = 150, autoSpeak = true, showBubble = true }) {
   const [speaking, setSpeaking] = useState(false);
   const spokenRef = useRef(false);
@@ -88,7 +88,7 @@ export default function KidAvatar({ greeting, audioUrl, size = 150, autoSpeak = 
           className="relative block w-full h-full"
           animate={{ y: [0, -8, 0] }}
           transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-          aria-label="Play greeting"
+          aria-label="Zobo — play greeting"
         >
           <svg viewBox="0 0 220 200" className="w-full h-full overflow-visible">
             {/* Antennae */}
