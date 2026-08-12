@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import DayCard from '@/components/DayCard';
-import KidAvatar from '@/components/KidAvatar';
 import { DAYS, DAY_MAP, getMondayISO, addWeeksISO, formatWeekRange } from '@/lib/lessonConfig';
 import { isGenerating, markGenerating, clearGenerating } from '@/lib/weekGenState';
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
@@ -134,16 +133,10 @@ export default function Home() {
   }
 
   const todayKey = DAY_MAP[new Date().toLocaleDateString('en', { weekday: 'long' }).toLowerCase()]?.key;
-  const greeting = `Hi ${kid?.name}! Let's get ready to learn! This week: Numbers, Letters, Outdoor fun, Music, and Exercises!`;
 
   return (
     <Layout>
       <MusicToggle />
-
-      {/* Learning buddy greeting */}
-      <div className="flex justify-center pt-2 pb-4">
-        <KidAvatar greeting={greeting} size={150} />
-      </div>
 
       {/* Week switcher */}
       <div className="flex items-center justify-between mb-4 px-1">
