@@ -95,9 +95,19 @@ export default function CelebrationOverlay({ kidName, subject, onClose }) {
               Great job with {subject}, {kidName}!
             </p>
             <audio ref={audioRef} src={data?.audio_url} />
+            {/* Parent affirmation prompt — say it out loud so the praise feels real */}
+            <div className="mt-4 rounded-2xl bg-white/70 p-3">
+              <p className="text-xs font-bold uppercase tracking-wide text-black/40">For the grown-up</p>
+              <p className="mt-1 text-sm font-semibold text-black/70">
+                Say it out loud with a big smile:
+              </p>
+              <p className="mt-1 text-lg font-bold text-[#D96969]">
+                “You did it, {kidName}!”
+              </p>
+            </div>
             <button
               onClick={onClose}
-              className="mt-5 w-full rounded-2xl bg-[#4969E1] py-4 text-lg font-bold text-white active:scale-95 transition hover:bg-[#3b54c9]"
+              className="mt-4 w-full rounded-2xl bg-[#4969E1] py-4 text-lg font-bold text-white active:scale-95 transition hover:bg-[#3b54c9]"
             >
               Yay! 🎉
             </button>

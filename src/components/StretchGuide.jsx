@@ -118,6 +118,12 @@ export default function StretchGuide({ kidName }) {
                 🎉
               </motion.div>
               <p className="mt-3 text-2xl font-bold text-[#4FAE5A]">Great stretching!</p>
+              <div className="mt-3 rounded-2xl bg-white/70 px-4 py-2">
+                <p className="text-xs font-bold uppercase tracking-wide text-black/40">For the grown-up</p>
+                <p className="mt-1 text-lg font-bold text-[#4FAE5A]">
+                  Say it out loud: “You did it, {kidName || 'friend'}!”
+                </p>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
