@@ -70,6 +70,7 @@ export default async function(req) {
     const prompt =
       EDU_VOICE_PERSONA + '\n\n' +
       `Write a short, super catchy, sing-song spoken script (about 60-120 words) for a little child named ${kidName}. ` +
+      `It MUST open by cheerfully naming the child — for example "Hi ${kidName}! ... let's get ready to ${subject}!" — because the child cannot read and the voice is their guide. ` +
       `Today's theme is "${subject}" (${dayLabel}). ` +
       `Talk like you are speaking to a 3-year-old: tiny sentences, HUGE energy, lots of repetition, very simple words, ` +
       `and playful sounds like "Wheee!" and "Yay!". ` +
