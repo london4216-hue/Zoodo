@@ -3,10 +3,11 @@ import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { base44 } from '@/api/base44Client';
 import { Loader2, X, Mic } from 'lucide-react';
+import { Image } from '@/components/ui/image';
 
 // Full-screen celebration that fires when a lesson is marked complete:
 // confetti + a bouncing party character + an encouraging voice cheer.
-export default function CelebrationOverlay({ kidName, subject, onClose }) {
+export default function CelebrationOverlay({ kidName, subject, parentPhoto, onClose }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const audioRef = useRef(null);
@@ -101,6 +102,15 @@ export default function CelebrationOverlay({ kidName, subject, onClose }) {
                 <Mic className="h-4 w-4 text-[#D96969]" />
                 <p className="text-xs font-bold uppercase tracking-wide text-black/40">For the grown-up</p>
               </div>
+              {parentPhoto && (
+                <motion.div
+                  animate={{ opacity: [0.5, 1, 0.5, 1], scale: [0.96, 1.04, 0.96, 1.04] }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+                  className="mx-auto mb-2 h-24 w-24 overflow-hidden rounded-2xl border-4 border-[#D96969] shadow-lg"
+                >
+                  <Image src={parentPhoto} fittingType="fill" className="h-full w-full" />
+                </motion.div>
+              )}
               <p className="mt-1 text-sm font-semibold text-black/70">
                 Say it out loud with a big smile:
               </p>

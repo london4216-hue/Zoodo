@@ -35,6 +35,12 @@
       "description": "The letter the child is currently working on in articulation therapy. Starts at A and advances only once the sound is mastered.",
       "default": "A",
       "maxLength": 1
+    },
+    "parent_photo_url": {
+      "type": "string",
+      "title": "Parent Photo",
+      "description": "A real photo of one or both parents, shown at the end of each lesson so the grown-up can cheer the child on by name.",
+      "format": "uri"
     }
   },
   "required": [
