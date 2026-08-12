@@ -7,16 +7,6 @@ import KidAvatar from '@/components/KidAvatar';
 
 const AGES = [2, 3, 4, 5, 6, 7, 8];
 const PROGRAM_LENGTHS = [4, 8, 12, 16];
-const MILESTONES = [
-  'First words',
-  'Walking',
-  'Combining words',
-  'Following simple instructions',
-  'Counting to 10',
-  'Recognizing colors',
-  'Recognizing shapes',
-  'Potty training',
-];
 
 // First-run intake: a cute Zoodo intro, then a short questionnaire (name, age,
 // program length, developmental milestone), then camera permission — all before
@@ -27,7 +17,6 @@ export default function Onboarding() {
   const [name, setName] = useState('');
   const [age, setAge] = useState(4);
   const [programLength, setProgramLength] = useState(8);
-  const [milestone, setMilestone] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [camStream, setCamStream] = useState(null);
@@ -42,10 +31,6 @@ export default function Onboarding() {
       setError("Please enter the child's name");
       return;
     }
-    if (!milestone) {
-      setError('Please pick a developmental milestone');
-      return;
-    }
     setSaving(true);
     setError('');
     try {
@@ -53,7 +38,6 @@ export default function Onboarding() {
         name: trimmed,
         age: Number(age),
         program_length: Number(programLength),
-        developmental_milestone: milestone,
       });
       setStep('camera');
     } catch (err) {
@@ -237,28 +221,6 @@ export default function Onboarding() {
                   }`}
                 >
                   {w}w
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-black/70 mb-2">
-              Developmental milestone <span className="text-black/40 font-normal">— current focus</span>
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {MILESTONES.map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  onClick={() => setMilestone(m)}
-                  className={`rounded-2xl px-3 py-2.5 text-sm font-bold transition active:scale-95 ${
-                    milestone === m
-                      ? 'bg-[#4FAE5A] text-white border-2 border-[#4FAE5A] shadow'
-                      : 'bg-white text-black/70 border-2 border-black/10 hover:border-[#4FAE5A]/50'
-                  }`}
-                >
-                  {m}
                 </button>
               ))}
             </div>
