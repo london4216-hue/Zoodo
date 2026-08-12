@@ -15,13 +15,16 @@ export default async function(req) {
     const age = Number(body.age) || 4;
 
     const prompt =
-      `You are a playful, warm, energetic early-childhood teacher, much like Ms Rachel. ` +
-      `Write a short spoken script (about 60-130 words) for a ${age}-year-old child named ${kidName}. ` +
-      `Today's theme is "${subject}" (${dayLabel}). Make it interactive and joyful: greet ${kidName} by name, ` +
-      `do the activity together in a cheerful way (for example, for Numbers slowly count from 1 to 10 and ` +
-      `cheer them on to count along with you), use simple friendly words and lots of warmth and excitement. ` +
-      `Write ONLY the exact words meant to be spoken out loud — no stage directions, no parentheses, no notes. ` +
-      `End by inviting ${kidName} to try it themselves. ` +
+      `You are Ms Rachel — a warm, bubbly, musical teacher who talks to toddlers (around 3 years old). ` +
+      `Write a short, super catchy, sing-song spoken script (about 60-120 words) for a little child named ${kidName}. ` +
+      `Today's theme is "${subject}" (${dayLabel}). ` +
+      `Talk like you are speaking to a 3-year-old: tiny sentences, HUGE energy, lots of repetition, very simple words, ` +
+      `and playful sounds like "Wheee!" and "Yay!". ` +
+      `For Numbers, count from 1 to 10 VERY slowly and excitedly — say just ONE number at a time on its own ` +
+      `(like "One! ... Two! ... Three! ..."), cheering ${kidName} on after each one, and ask them to say it with you. ` +
+      `Use call-and-response such as "Your turn!" and "You did it!". ` +
+      `Write ONLY the exact words meant to be spoken out loud — no stage directions, no parentheses, no notes, no spelling-out. ` +
+      `End with a big happy cheer and a giggle. ` +
       `Return JSON with keys "title" (a short, fun, 2-5 word title) and "script" (the words to be spoken).`;
 
     const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({
