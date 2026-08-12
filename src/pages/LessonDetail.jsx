@@ -5,6 +5,7 @@ import Layout from '@/components/Layout';
 import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
 import AiLessonActivity from '@/components/AiLessonActivity';
+import InteractivePhonicsActivity from '@/components/InteractivePhonicsActivity';
 import LunchActivity from '@/components/LunchActivity';
 import DayGraphic from '@/components/DayGraphic';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
@@ -167,23 +168,43 @@ export default function LessonDetail() {
       <div className="flex-1 min-h-0 overflow-y-auto">
       {step === 'activity' && (
         <div ref={activityRef} className="space-y-3 scroll-mt-4">
-          <AiLessonActivity
-            kidName={kid?.name || 'the child'}
-            subject={dayCfg.subject}
-            dayLabel={dayCfg.label}
-            age={kid?.age || 4}
-            lesson={lesson}
-            currentLetter={kid?.current_letter || 'A'}
-            onMastery={async (next) => {
-              try {
-                const updated = await base44.entities.Kid.update(kid.id, { current_letter: next });
-                setKid(updated);
-              } catch (e) { /* ignore */ }
-            }}
-            onUpdate={setLesson}
-            onComplete={() => setActivityDone(true)}
-            onPlay={() => setActivityStarted(true)}
-          />
+          {dayCfg.subject === 'Letters' ? (
+            <InteractivePhonicsActivity
+              kidName={kid?.name || 'the child'}
+              subject={dayCfg.subject}
+              dayLabel={dayCfg.label}
+              age={kid?.age || 4}
+              lesson={lesson}
+              currentLetter={kid?.current_letter || 'A'}
+              onMastery={async (next) => {
+                try {
+                  const updated = await base44.entities.Kid.update(kid.id, { current_letter: next });
+                  setKid(updated);
+                } catch (e) { /* ignore */ }
+              }}
+              onUpdate={setLesson}
+              onComplete={() => setActivityDone(true)}
+              onPlay={() => setActivityStarted(true)}
+            />
+          ) : (
+            <AiLessonActivity
+              kidName={kid?.name || 'the child'}
+              subject={dayCfg.subject}
+              dayLabel={dayCfg.label}
+              age={kid?.age || 4}
+              lesson={lesson}
+              currentLetter={kid?.current_letter || 'A'}
+              onMastery={async (next) => {
+                try {
+                  const updated = await base44.entities.Kid.update(kid.id, { current_letter: next });
+                  setKid(updated);
+                } catch (e) { /* ignore */ }
+              }}
+              onUpdate={setLesson}
+              onComplete={() => setActivityDone(true)}
+              onPlay={() => setActivityStarted(true)}
+            />
+          )}
           {activityDone && (
             <SensoryButton
               onClick={() => setStep('drawing')}
