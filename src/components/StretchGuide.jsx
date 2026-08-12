@@ -79,18 +79,20 @@ export default function StretchGuide({ kidName }) {
         ))}
       </div>
 
-      {/* Animated character stage */}
-      <div className="relative flex h-48 items-end justify-center overflow-hidden rounded-2xl bg-white">
-        {/* Soft sun / glow backdrop */}
-        <div className="pointer-events-none absolute top-3 right-4 h-12 w-12 rounded-full bg-[#FFE08A]/60 blur-[2px]" />
+      {/* Full-bleed character stage */}
+      <div className="relative flex h-[26rem] items-end justify-center overflow-hidden rounded-2xl bg-gradient-to-b from-[#E8F8FF] to-[#E0F5D5]">
+        {/* Decorative sky elements */}
+        <div className="pointer-events-none absolute top-4 right-6 h-14 w-14 rounded-full bg-[#FFE08A]/70 blur-[1px]" />
+        <div className="pointer-events-none absolute top-10 left-6 text-3xl opacity-70">☁️</div>
+        <div className="pointer-events-none absolute bottom-3 left-0 right-0 h-10 bg-[#9CDA5B]/40" />
 
         <AnimatePresence mode="wait">
           {phase !== 'done' ? (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              exit={{ opacity: 0, y: -14 }}
               transition={{ duration: 0.3 }}
               className="flex flex-col items-center"
             >
@@ -101,16 +103,16 @@ export default function StretchGuide({ kidName }) {
               key="done"
               initial={{ scale: 0.7, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="flex flex-col items-center justify-center py-10"
+              className="flex flex-col items-center justify-center py-16"
             >
               <motion.div
                 animate={{ rotate: [0, -8, 8, 0], y: [0, -6, 0] }}
                 transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-                className="text-6xl"
+                className="text-7xl"
               >
                 🎉
               </motion.div>
-              <p className="mt-2 text-lg font-bold text-[#4FAE5A]">Great stretching!</p>
+              <p className="mt-3 text-2xl font-bold text-[#4FAE5A]">Great stretching!</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -193,7 +195,7 @@ function StretchCharacter({ pose, animate }) {
   return (
     <motion.svg
       viewBox="0 0 180 200"
-      className="h-44 w-44"
+      className="h-[24rem] w-[24rem]"
       animate={animate ? { y: [0, -4, 0] } : {}}
       transition={animate ? { duration: REP_MS / 1000, repeat: Infinity, ease: 'easeInOut' } : {}}
     >
