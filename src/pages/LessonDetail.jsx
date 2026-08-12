@@ -7,6 +7,7 @@ import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
 import AiLessonActivity from '@/components/AiLessonActivity';
 import LunchActivity from '@/components/LunchActivity';
+import DayGraphic from '@/components/DayGraphic';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
 import SensoryBackground from '@/components/SensoryBackground';
 import SensoryButton from '@/components/SensoryButton';
@@ -159,6 +160,23 @@ export default function LessonDetail() {
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
+      </div>
+
+      {/* Today's subject banner */}
+      <div
+        className="rounded-[24px] px-4 py-3 mb-4 flex items-center gap-3"
+        style={{ backgroundColor: dayCfg.bg }}
+      >
+        <DayGraphic type={dayCfg.graphic} />
+        <div
+          className="text-2xl font-bold leading-tight"
+          style={{
+            color: dayCfg.titleColor,
+            WebkitTextStroke: `1px ${dayCfg.titleStroke}`,
+          }}
+        >
+          Learning {dayCfg.subject}
+        </div>
       </div>
 
       {/* Learning buddy greets the kid by name with today's topic */}
