@@ -269,11 +269,23 @@ export const developmentalFramework = {
   },
 };
 
+export const getCognitiveStage = (age) => {
+  const normalizedAge = Number(age) || 4;
+  return developmentalFramework.ageStages[normalizedAge] || developmentalFramework.ageStages[4];
+};
+
+export const getPedagogicalStrategies = (ageOrStage) => {
+  const stage = typeof ageOrStage === 'object' && ageOrStage
+    ? ageOrStage
+    : getCognitiveStage(ageOrStage);
+  return developmentalFramework.strategies[stage?.pedagogy] || developmentalFramework.strategies[developmentalFramework.ageStages[4].pedagogy];
+};
+
 // Generate lesson prompt for AI voice and activity
 export const generateLessonPrompt = (kidName, age, subject, developmental_milestone, support_needs) => {
-  const stage = developmentalFramework.ageStages[age] || developmentalFramework.ageStages[4];
+  const stage = getCognitiveStage(age);
   const voiceGuide = developmentalFramework.voiceGuidance[age] || developmentalFramework.voiceGuidance[4];
-  const strategy = developmentalFramework.strategies[stage.pedagogy] || {};
+  const strategy = getPedagogicalStrategies(stage);
 
   return `
 ## Lesson Planning Context
@@ -309,3 +321,12 @@ Use this framework: ${stage.pedagogy}
 - Make it engaging and encouraging
 `;
 };
+
+const childDevelopmentFramework = {
+  developmentalFramework,
+  generateLessonPrompt,
+  getCognitiveStage,
+  getPedagogicalStrategies,
+};
+
+export default childDevelopmentFramework;

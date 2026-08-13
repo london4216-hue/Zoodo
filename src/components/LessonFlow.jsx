@@ -8,7 +8,9 @@ import CountingCards from '@/components/CountingCards';
 import CameraValidator from '@/components/CameraValidator';
 import MicAssessment from '@/components/MicAssessment';
 import SensoryButton from '@/components/SensoryButton';
+import { ZoodoAvatar } from '@/components/ZoodoAvatar';
 import { Image } from '@/components/ui/image';
+import childDevelopmentFramework from '@/lib/childDevelopmentFramework';
 import { playOutro, playPraiseJingle, playSparkle } from '@/lib/sensoryAudio';
 
 const COLORS = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#7B4FE0'];
@@ -23,35 +25,6 @@ function fallbackAction(strand) {
   if (strand === 'music') return 'clap your hands';
   if (strand === 'sensory') return 'wave hello';
   return 'clap your hands';
-}
-
-function Zoodo({ size = 96, bounce }) {
-  return (
-    <motion.div
-      animate={bounce ? { y: [0, -10, 0], rotate: [0, -4, 4, 0] } : { y: 0, rotate: 0 }}
-      transition={bounce ? { duration: 0.8, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.3 }}
-      style={{ width: size, height: size }}
-    >
-      <svg viewBox="0 0 120 120" className="h-full w-full">
-        <defs>
-          <radialGradient id="lfBody" cx="50%" cy="40%" r="65%">
-            <stop offset="0%" stopColor="#FFD9E6" />
-            <stop offset="100%" stopColor="#FF9EC4" />
-          </radialGradient>
-        </defs>
-        <circle cx="60" cy="62" r="50" fill="url(#lfBody)" stroke="#E07A9F" strokeWidth="3" />
-        <circle cx="32" cy="72" r="8" fill="#FF8FA8" opacity="0.7" />
-        <circle cx="88" cy="72" r="8" fill="#FF8FA8" opacity="0.7" />
-        <circle cx="44" cy="56" r="6" fill="#3a2a3a" />
-        <circle cx="76" cy="56" r="6" fill="#3a2a3a" />
-        <circle cx="46" cy="54" r="2" fill="#fff" />
-        <circle cx="78" cy="54" r="2" fill="#fff" />
-        <path d="M44 74 Q60 88 76 74" stroke="#3a2a3a" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-        <path d="M60 12 Q60 22 60 26" stroke="#E07A9F" strokeWidth="3" strokeLinecap="round" />
-        <circle cx="60" cy="10" r="4" fill="#FFE08A" stroke="#E0A800" strokeWidth="2" />
-      </svg>
-    </motion.div>
-  );
 }
 
 function StageDots({ stage }) {
@@ -84,6 +57,9 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
   const [stars, setStars] = useState(0);
   const [revealStep, setRevealStep] = useState(0);
   const audioRef = useRef(null);
+  const normalizedAge = Number(age) || 4;
+  const cognitiveStage = childDevelopmentFramework.getCognitiveStage(normalizedAge);
+  const pedagogicalStrategies = childDevelopmentFramework.getPedagogicalStrategies(cognitiveStage);
 
   // Build a sequential reveal queue — one card at a time so the child focuses
   // on a single visual before moving on. Literacy: letter → picture → word →
@@ -143,6 +119,24 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
   const verbal = assess ? assess.mode === 'mic' : isVerbal(strand);
   const assessTarget = assess?.target
     || (verbal ? (content?.sound || content?.word || subject) : fallbackAction(strand));
+  const stageHeadline = (cognitiveStage?.cognitiveStage || '').replaceAll('_', ' ');
+  const strategyLabel = (cognitiveStage?.pedagogy || '').replaceAll('_', ' ');
+  const principlePreview = (pedagogicalStrategies?.principles || [])
+    .slice(0, 2)
+    .map((item) => item.replaceAll('_', ' '))
+    .join(' • ');
+
+  const renderDevelopmentContext = () => (
+    <div className="mt-3 w-full rounded-2xl bg-[#EEF2FF] p-3 text-left">
+      <p className="text-[11px] font-bold uppercase tracking-wide text-[#4969E1]">Developmental context</p>
+      <p className="mt-1 text-sm font-semibold text-black/70">
+        {kidName} is learning within the {stageHeadline} stage and does best with {cognitiveStage.attention.duration} focus bursts.
+      </p>
+      <p className="mt-1 text-xs text-black/55">
+        Strategy: {strategyLabel}. {principlePreview || 'Use play, repetition, and warm guidance.'}
+      </p>
+    </div>
+  );
 
   const handleAssessResult = (success, fb) => {
     setFeedback(fb || '');
@@ -186,7 +180,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
       {/* ───────── INTRO ───────── */}
       {stage === 'intro' && (
         <div className="mt-3 flex flex-col items-center text-center">
-          <Zoodo size={80} bounce={playing} />
+          <ZoodoAvatar size={80} emotion="happy" isSpeaking={playing} className="mb-1" />
           <h2 className="mt-1 text-base font-bold text-black/80">
             Today we're learning {subject}, {kidName}!
           </h2>
@@ -203,6 +197,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
 
           {contentStatus === 'ready' && content && (
             <>
+              {renderDevelopmentContext()}
               {/* Counting cards already reveal one at a time */}
               {content.counting_cards && content.counting_cards.length >= 2 ? (
                 <div className="mt-3 w-full"><CountingCards cards={content.counting_cards} /></div>
@@ -313,11 +308,12 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
       {/* ───────── EXPLAIN (post-video, caregiver prep) ───────── */}
       {stage === 'explain' && (
         <div className="mt-3 flex flex-col items-center text-center">
-          <Zoodo size={96} bounce />
+          <ZoodoAvatar size={96} emotion="thinking" isListening className="mb-1" />
           <h2 className="mt-2 text-lg font-bold text-black/80">Now it's your turn, {kidName}!</h2>
           <p className="mt-1 text-sm font-semibold text-black/50">
             Did you see how? Let's try it together — nice and slow.
           </p>
+          {renderDevelopmentContext()}
           <button
             onClick={replayModel}
             className="mt-2 inline-flex items-center gap-2 rounded-2xl border-2 border-black/10 bg-white px-4 py-2 text-sm font-bold text-black/60 active:scale-95"
@@ -343,6 +339,9 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
       {/* ───────── ASSESS ───────── */}
       {stage === 'assess' && (
         <div className="mt-3">
+          <div className="mb-3 flex justify-center">
+            <ZoodoAvatar size={72} emotion="encouraging" isListening={verbal} />
+          </div>
           <div className="flex items-center justify-center gap-2 text-black/40">
             {verbal ? <Mic className="h-4 w-4" /> : <Camera className="h-4 w-4" />}
             <span className="text-xs font-bold uppercase tracking-wide">
@@ -375,7 +374,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
           <AnimatePresence mode="wait">
             {result === 'success' && (
               <motion.div key="success" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center">
-                <Zoodo size={120} bounce />
+                <ZoodoAvatar size={120} emotion="celebrating" isSpeaking className="mb-1" />
                 <h2 className="mt-2 text-2xl font-bold text-[#4FAE5A]">You did it, {kidName}!</h2>
                 <div className="mt-1 flex items-center gap-1">
                   {Array.from({ length: Math.max(1, stars) }).map((_, i) => (
@@ -395,7 +394,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
 
             {result === 'needsHelp' && (
               <motion.div key="needsHelp" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex w-full flex-col items-center">
-                <Zoodo size={96} bounce={false} />
+                <ZoodoAvatar size={96} emotion="encouraging" className="mb-1" />
                 <h2 className="mt-2 text-xl font-bold text-[#F2A03D]">Let's try that again!</h2>
                 <p className="mt-1 text-sm font-semibold text-black/50">
                   That one was a little tricky. That's okay — we learn by trying!
@@ -423,7 +422,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
 
             {result === 'notReady' && (
               <motion.div key="notReady" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex w-full flex-col items-center">
-                <Zoodo size={96} bounce={false} />
+                <ZoodoAvatar size={96} emotion="encouraging" className="mb-1" />
                 <h2 className="mt-2 text-xl font-bold text-black/70">Good try, {kidName}!</h2>
                 <p className="mt-1 text-sm font-semibold text-black/50">
                   Let's revisit this later. You're doing great!

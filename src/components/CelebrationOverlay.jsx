@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { base44 } from '@/api/base44Client';
 import { Loader2, X, Mic } from 'lucide-react';
+import { ZoodoAvatar } from '@/components/ZoodoAvatar';
 
 // Full-screen celebration that fires when a lesson is marked complete:
 // confetti + a bouncing party character + an encouraging voice cheer.
@@ -114,32 +115,7 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
         </button>
 
         {/* Bouncing party character */}
-        <motion.div
-          animate={{ y: [0, -14, 0], rotate: [0, -6, 6, 0] }}
-          transition={{ duration: 0.6, repeat: Infinity, ease: 'easeInOut' }}
-          className="mx-auto h-32 w-32"
-        >
-          <svg viewBox="0 0 120 120" className="h-full w-full">
-            <defs>
-              <radialGradient id="celebBody" cx="50%" cy="40%" r="65%">
-                <stop offset="0%" stopColor="#FFD9E6" />
-                <stop offset="100%" stopColor="#FF9EC4" />
-              </radialGradient>
-            </defs>
-            {/* party hat */}
-            <path d="M60 6 L78 40 L42 40 Z" fill="#4969E1" stroke="#3b54c9" strokeWidth="2" />
-            <circle cx="60" cy="6" r="4" fill="#FFE08A" stroke="#E0A800" strokeWidth="1.5" />
-            {/* body */}
-            <circle cx="60" cy="66" r="48" fill="url(#celebBody)" stroke="#E07A9F" strokeWidth="3" />
-            <circle cx="32" cy="76" r="8" fill="#FF8FA8" opacity="0.7" />
-            <circle cx="88" cy="76" r="8" fill="#FF8FA8" opacity="0.7" />
-            {/* happy eyes (closed smile arcs) */}
-            <path d="M38 58 Q44 52 50 58" stroke="#3a2a3a" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-            <path d="M70 58 Q76 52 82 58" stroke="#3a2a3a" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-            {/* big smile */}
-            <path d="M42 80 Q60 96 78 80" stroke="#3a2a3a" strokeWidth="4" fill="none" strokeLinecap="round" />
-          </svg>
-        </motion.div>
+        <ZoodoAvatar size={128} emotion="celebrating" isSpeaking className="mx-auto" />
 
         {loading ? (
           <div className="flex flex-col items-center py-4">

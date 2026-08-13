@@ -377,3 +377,13 @@ export const sensoryBreakSuggestions = {
     'Soft lighting and bubbles',
   ],
 };
+
+const sensoryActivityLibrary = {
+  sensoryActivityOptions,
+  getSensoryActivitiesByAge,
+  getSensoryActivitiesByType,
+  generateDailySensoryPlan,
+  sensoryBreakSuggestions,
+};
+
+export default sensoryActivityLibrary;
