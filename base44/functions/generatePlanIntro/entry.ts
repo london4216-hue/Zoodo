@@ -18,7 +18,7 @@ export default async function(req: Request): Promise<Response> {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json().catch(() => ({}));
-    const kidName = String(body.kidName || 'friend').trim();
+    const kidName = String(body.kidName || '').trim();
     const age = Number(body.age) || 4;
     const milestone = String(body.milestone || '').trim();
     const weekRange = String(body.weekRange || 'this week').trim();
