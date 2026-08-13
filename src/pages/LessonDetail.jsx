@@ -112,18 +112,18 @@ export default function LessonDetail() {
         <div className="flex items-center gap-2 mb-1">
           <button
             onClick={() => navigate('/')}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white shadow-sm text-black/60 hover:text-black active:scale-95 transition"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white shadow-sm text-black/60 hover:text-black active:scale-95 transition"
             aria-label="Back"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-4 w-4" />
           </button>
           <div
-            className="flex flex-1 items-center gap-2 rounded-2xl px-3 py-2"
+            className="flex flex-1 items-center gap-2 rounded-2xl px-3 py-1.5"
             style={{ backgroundColor: dayCfg.bg }}
           >
             <DayGraphic type={dayCfg.graphic} />
             <div
-              className="text-xl font-bold leading-tight"
+              className="text-lg font-bold leading-tight"
               style={{
                 color: dayCfg.titleColor,
                 WebkitTextStroke: `1px ${dayCfg.titleStroke}`,
@@ -146,7 +146,7 @@ export default function LessonDetail() {
           ))}
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto flex flex-col justify-center">
+        <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center">
           {step === 'lesson' && (
             <div className="space-y-3">
               {dayCfg.stretchGuide && !lessonDone && (

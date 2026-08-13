@@ -156,7 +156,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
   const watchAgain = () => { setResult(null); setFeedback(''); setStage('video'); };
 
   return (
-    <div className="rounded-2xl bg-white p-3 shadow-sm">
+    <div className="rounded-2xl bg-white p-2.5 shadow-sm">
       <StageDots stage={stage} />
 
       {content?.audio_url && <audio ref={audioRef} src={content.audio_url} onEnded={() => setPlaying(false)} />}
@@ -165,7 +165,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
       {stage === 'intro' && (
         <div className="mt-3 flex flex-col items-center text-center">
           <Zoodo size={80} bounce={playing} />
-          <h2 className="mt-2 text-lg font-bold text-black/80">
+          <h2 className="mt-1 text-base font-bold text-black/80">
             Today we're learning {subject}, {kidName}!
           </h2>
 
