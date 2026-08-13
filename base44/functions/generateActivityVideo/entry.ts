@@ -1,8 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 
-// Finds one real, kid-friendly YouTube video that supports a weekly sensory
-// activity's skill, using web search. Validates each candidate via YouTube's
-// oEmbed endpoint and retries until a real, playable video is found.
+// Finds one REAL YouTube video that DEMONSTRATES how a teacher, therapist, or
+// educator actually works on the child's specific milestone — the real-world
+// classroom/therapy way it's done (not animated songs). Validates each
+// candidate via YouTube's oEmbed endpoint.
 export default async function(req: Request): Promise<Response> {
   try {
     const base44 = createClientFromRequest(req);
@@ -13,27 +14,43 @@ export default async function(req: Request): Promise<Response> {
     const title = (body?.title || '').toString().trim();
     const description = (body?.description || '').toString().trim();
     const age = Number(body?.age) || 3;
-    if (!title) {
-      return Response.json({ error: 'title is required' }, { status: 400 });
+    const milestone = (body?.milestone || '').toString().trim();
+    const supportNeeds = (body?.supportNeeds || '').toString().trim();
+    const subject = (body?.subject || '').toString().trim();
+    const kidName = (body?.kidName || '').toString().trim();
+    if (!title && !milestone && !subject) {
+      return Response.json({ error: 'milestone or subject is required' }, { status: 400 });
     }
 
-    const buildPrompt = (avoidIds: string[]) => `You are a warm, expert early-childhood educator helping a ${age}-year-old child.
-The activity is: "${title}" — ${description || 'a sensory learning activity'}.
+    const focus = milestone || subject || title;
 
-Search the web for 1 real, high-quality, kid-friendly YouTube video that supports this skill for a ${age}-year-old (e.g. from channels like Super Simple Songs, Cocomelon, Pinkfong, or similar toddler-friendly educators). Return:
+    const buildPrompt = (avoidIds: string[]) => `You are an expert early-childhood educator and pediatric therapist.
+A caregiver is teaching a ${age}-year-old child${kidName ? ` named ${kidName}` : ''}.
+Today's focus: "${focus}".
+${subject ? `Subject area: ${subject}.` : ''}
+${supportNeeds ? `The child's support needs / adaptations: ${supportNeeds}. Pick a demonstration that respects these needs.` : ''}
+
+Search the web for ONE real, high-quality YouTube video that DEMONSTRATES the real-world, classroom-or-therapy way this skill or milestone is actually taught to a child this age. The video should show a real educator, speech-language pathologist, occupational or physical therapist, or teacher modeling the activity with a child — NOT an animated song, NOT a cartoon, NOT a nursery-rhyme compilation.
+
+Good examples of what to look for:
+- A speech therapist demonstrating how to elicit a target sound
+- An occupational therapist showing a fine-motor or sensory activity
+- A preschool teacher modeling a counting or letter-sound activity with real children
+- A real classroom or therapy demonstration of this exact milestone
+
+Return ONLY real videos you actually found on the web. Do NOT invent video IDs.
 - title: the real video title as it appears on YouTube
-- video_id: the actual 11-character YouTube video ID (the part after "v=" in the watch URL) — only use a real id you found, never invent one
-- channel: the channel name that published it
-- why: one short sentence on how this video supports the "${title}" skill
+- video_id: the actual 11-character YouTube video ID (the part after "v=") — only a real id you found
+- channel: the channel name
+- why: one short sentence on how this real demonstration helps the caregiver teach "${focus}" to a ${age}-year-old
 
 Rules:
-- Only return a real video you actually found on the web. Do not make up video IDs.
-- The video MUST be publicly available and embeddable (not private, not removed, not age-restricted).
+- The video MUST be publicly available and embeddable (not private, removed, or age-restricted).
+- Prefer real-person demonstration / instructional videos over animated songs.
 - Do NOT use any video from "Ms Rachel" / "MsRachelSpeakman" or any Ms Rachel channel — choose a different creator.
 ${avoidIds.length ? `- Do not return any of these ids, they were invalid: ${avoidIds.join(', ')}\n` : ''}- Keep language simple, warm, and encouraging.
 - Return only the JSON.`;
 
-    // Validate a YouTube video id is real + embeddable via the public oEmbed endpoint.
     const isValid = async (vid: string): Promise<boolean> => {
       try {
         const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vid}&format=json`;
@@ -44,16 +61,10 @@ ${avoidIds.length ? `- Do not return any of these ids, they were invalid: ${avoi
       }
     };
 
-    // Keep it fast + reliable: one web-search attempt, validate via oEmbed,
-    // and always return a real kid-friendly video (curated fallback if needed)
-    // so the UI never shows an error.
     const triedIds: string[] = [];
     let chosen: any = null;
     let lastCandidate: any = null;
 
-    // Single fast attempt: one web-search LLM call, validate via oEmbed, and
-    // fall back to the curated video if the candidate isn't usable. Keeps the
-    // recommended video populating as fast as possible.
     const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt: buildPrompt(triedIds),
       add_context_from_internet: true,
@@ -80,7 +91,6 @@ ${avoidIds.length ? `- Do not return any of these ids, they were invalid: ${avoi
       }
     }
 
-    // Trust the last format-valid candidate even if oEmbed was unreachable.
     if (!chosen && lastCandidate) chosen = lastCandidate;
 
     // Curated, always-embeddable fallback so a video always shows.
@@ -89,7 +99,7 @@ ${avoidIds.length ? `- Do not return any of these ids, they were invalid: ${avoi
         video_id: '0TgLtF3PMOc',
         title: 'Seven Steps | Super Simple Songs',
         channel: 'Super Simple Songs - Kids Songs',
-        why: 'A catchy, gentle counting song that supports early number learning.',
+        why: 'A gentle counting song that supports early number learning.',
       };
     }
 

@@ -259,11 +259,15 @@ export default function AiLessonActivity({ kidName, subject, strand, dayLabel, a
         </>
       )}
 
-      {/* Recommended video — fetched in parallel so it's ready fast */}
+      {/* Real demonstration video for the child's exact milestone */}
       <LessonSupportVideo
         title={`${subject} for ${age}-year-olds`}
         description={`${subject} activity for ${age}-year-olds`}
         age={age}
+        milestone={milestone}
+        supportNeeds={supportNeeds}
+        subject={subject}
+        kidName={kidName}
       />
     </div>
   );

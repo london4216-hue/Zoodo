@@ -5,13 +5,13 @@ import { Loader2, Youtube, AlertCircle } from 'lucide-react';
 // Optional supporting YouTube video for a lesson activity. Finds a kid-friendly
 // video based on the activity title + script. Marked optional — failures are
 // shown quietly and never block the activity.
-export default function LessonSupportVideo({ title, description, age }) {
+export default function LessonSupportVideo({ title, description, age, milestone, supportNeeds, subject, kidName }) {
   const [loading, setLoading] = useState(false);
   const [video, setVideo] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!title) return;
+    if (!title && !milestone && !subject) return;
     let cancelled = false;
     (async () => {
       setLoading(true);
@@ -21,6 +21,10 @@ export default function LessonSupportVideo({ title, description, age }) {
           title,
           description: description || title,
           age,
+          milestone,
+          supportNeeds,
+          subject,
+          kidName,
         });
         if (cancelled) return;
         if (res?.data?.error) throw new Error(res.data.error);
@@ -35,14 +39,14 @@ export default function LessonSupportVideo({ title, description, age }) {
     })();
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title]);
+  }, [title, milestone, subject]);
 
   return (
     <div className="mt-3 rounded-2xl bg-white p-3 shadow-sm">
       <div className="flex items-center gap-2 mb-2">
         <Youtube className="h-4 w-4 text-[#D96969]" />
         <span className="text-xs font-bold uppercase tracking-wide text-black/40">
-          Recommended video · optional
+          How it's really done · real demonstration
         </span>
       </div>
 
@@ -50,7 +54,7 @@ export default function LessonSupportVideo({ title, description, age }) {
         <div className="flex items-center justify-center py-6">
           <Loader2 className="h-5 w-5 animate-spin text-[#D96969]" />
           <span className="ml-2 text-sm font-semibold text-black/50">
-            Finding a good video…
+            Finding a real demonstration for {kidName || 'your child'}…
           </span>
         </div>
       )}
