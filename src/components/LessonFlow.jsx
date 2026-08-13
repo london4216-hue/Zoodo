@@ -15,11 +15,13 @@ const COLORS = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#7B4FE0'];
 const STAGES = ['intro', 'video', 'explain', 'assess', 'result'];
 const STAGE_LABELS = ['Learn', 'Watch', 'Ready', 'Try', 'Done'];
 
+// Fallback only if the AI didn't return an expert assessment — keeps the
+// flow working while never overriding the age-appropriate AI choice.
 function isVerbal(strand) { return strand === 'literacy' || strand === 'language'; }
-function physicalActionFor(strand, subject) {
-  if (strand === 'numeracy') return 'hold up your fingers and count to three';
-  if (strand === 'music') return 'clap your hands to the beat';
-  if (strand === 'sensory') return 'point at the screen';
+function fallbackAction(strand) {
+  if (strand === 'numeracy') return 'clap your hands three times';
+  if (strand === 'music') return 'clap your hands';
+  if (strand === 'sensory') return 'wave hello';
   return 'clap your hands';
 }
 
@@ -123,10 +125,10 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
     a.currentTime = 0; a.play(); setPlaying(true);
   };
 
-  const verbal = isVerbal(strand);
-  const assessTarget = verbal
-    ? (content?.sound || content?.word || subject)
-    : physicalActionFor(strand, subject);
+  const assess = content?.assessment;
+  const verbal = assess ? assess.mode === 'mic' : isVerbal(strand);
+  const assessTarget = assess?.target
+    || (verbal ? (content?.sound || content?.word || subject) : fallbackAction(strand));
 
   const handleAssessResult = (success, fb) => {
     setFeedback(fb || '');

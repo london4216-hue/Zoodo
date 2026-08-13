@@ -99,8 +99,17 @@ const LESSON_PLAN_SCHEMA = {
       },
     },
     camera_recommended: { type: 'boolean' },
+    assessment: {
+      type: 'object',
+      properties: {
+        mode: { type: 'string', enum: ['camera', 'mic'] },
+        target: { type: 'string' },
+        why: { type: 'string' },
+      },
+      required: ['mode', 'target'],
+    },
   },
-  required: ['title', 'script', 'camera_recommended'],
+  required: ['title', 'script', 'camera_recommended', 'assessment'],
 };
 
 function buildLessonPrompt(kidName: string, age: number, subject: string, dayLabel: string, currentLetter: string, milestone: string, supportNeeds: string) {
@@ -114,6 +123,7 @@ function buildLessonPrompt(kidName: string, age: number, subject: string, dayLab
   const countingDirective = strand === 'numeracy'
     ? `Also return counting_cards: an array of exactly 3 objects, each {n, word} where n is 1, 2, 3 in order and word is a real, common, photogenic countable object. Each card MUST use a DIFFERENT object (e.g. 1 apple, 2 grapes, 3 bananas — never reuse the same object across cards). Use the singular form when n is 1 and the plural form when n is more than 1. These are shown one at a time, slowly, with real photos of that many objects — so the child counts real things, not just numbers. `
     : '';
+  const assessmentDirective = `Also return "assessment": an expert-designed, DEVELOPMENTALLY APPROPRIATE way to check the child's participation at the end of the lesson. Choose mode "mic" ONLY for literacy/language (the child says the target sound or word) — a webcam cannot verify a young child's articulation, so never use the camera for speech. Choose mode "camera" for movement/music/sensory/numeracy (the child shows a visible gross-motor gesture). The camera is a FIXED front-facing INDOOR webcam, so the target action MUST be a single, clearly visible gesture doable standing or sitting in place — e.g. clap your hands, wave hello, reach both arms up high, tap your head, tap your tummy, march in place, blow a kiss. NEVER request actions needing space, equipment, or that the camera cannot see (kicking a ball, running, climbing, jumping far, throwing, pedaling). The action MUST be developmentally achievable for a ${age}-year-old per the CDC reference above — simpler and more fundamental for younger children (toddlers: clap, wave, reach; preschool+: also tap body parts, march, balance briefly). "target" is the short instruction shown to the child (e.g. "clap your hands", "say AH"). "why" is one sentence on why this action fits this child's exact age and today's skill. `;
   return PERSONA + '\n\n' +
     `Developmental reference — ${cdc}\n` +
     (milestone ? `Current milestone focus for this child: ${milestone}. Target this specific milestone where it fits today's theme.\n` : '') +
@@ -123,7 +133,7 @@ function buildLessonPrompt(kidName: string, age: number, subject: string, dayLab
     `Today's theme is "${subject}" (${dayLabel}). ${letterDirective}${guide}${otpt} ` +
     `Use the full I-do -> we-do -> you-do production hierarchy. Use specific praise. ` +
     `Keep it tiny-sentence, huge-warmth, sing-song, and developmentally on-target for a ${age}-year-old per the CDC reference above. ` +
-    `${countingDirective}Return JSON with keys: title (2-5 word fun title), script (exact spoken words only), letter (target uppercase letter or ""), sound (target phoneme like "AH" or ""), word (the picture word or ""), counting_cards (array of {n, word} for numeracy only, else []), and camera_recommended (true if a camera check would help verify the child's production or movement, false otherwise).`;
+    `${countingDirective}${assessmentDirective}Return JSON with keys: title (2-5 word fun title), script (exact spoken words only), letter (target uppercase letter or ""), sound (target phoneme like "AH" or ""), word (the picture word or ""), counting_cards (array of {n, word} for numeracy only, else []), camera_recommended (true if a camera check would help verify the child's production or movement, false otherwise), and assessment ({mode, target, why}).`;
 }
 
 function picturePromptFor(word: string) {
@@ -262,6 +272,7 @@ export default async function(req) {
       picture_url,
       counting_cards,
       camera_recommended,
+      assessment: (llmRes && llmRes.assessment) || null,
     });
   } catch (error) {
     return Response.json({ error: (error as Error).message }, { status: 500 });
