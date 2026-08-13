@@ -67,6 +67,21 @@ const STRAND_GUIDES: Record<string, string> = {
   sensory: `Target: cognitive/sensory play scaled to the child's age and CDC milestones — sorting by color/shape, stacking, matching, or simple puzzles. Use I-do/we-do/you-do with one clear concept. Name the attribute (color, shape, size). Set letter/sound to "" and word to the key object or attribute.`,
 };
 
+function ageBand(age: number): 'toddler' | 'preschool' | 'school' {
+  const a = Number(age) || 4;
+  if (a <= 3) return 'toddler';
+  if (a <= 5) return 'preschool';
+  return 'school';
+}
+
+// OT/PT best-practice guidance for the movement strand, per age band. Keeps
+// generated movement activities developmentally and therapeutically on-target.
+const OTPT_MOVEMENT: Record<string, string> = {
+  toddler: `OT/PT best practice for a 2-3-year-old (DO NOT use static held stretches): use PLAY-BASED, short-burst movement. Target fundamental locomotor and stability skills — walking on varied surfaces, climbing stairs with a rail, running with control, kicking or rolling a ball, jumping off a low step, brief one-foot balance. Build core and proximal (shoulder) stability through animal walks, pushing/pulling, and crawling. Include proprioceptive "heavy work" (carry, push, crawl) and gentle vestibular input. Keep each move a few seconds, model slowly, and never hold a stretch — keep it dynamic and playful.`,
+  preschool: `OT/PT best practice for a 4-5-year-old: target emerging locomotor and balance skills — hopping on one foot, jumping forward, catching a bounced ball, standing on one foot 5-10s, stair climbing with alternating feet, pedaling. Build bilateral coordination and crossing midline, postural control, and motor planning (praxis). Use I-do/we-do/you-do with slow models. Include proprioceptive (heavy work) and vestibular (balance, head-position changes) input for regulation. Avoid prolonged static holds; keep it dynamic.`,
+  school: `OT/PT best practice for a 6-8-year-old: target complex motor coordination — skipping, galloping, hopping, sustained balance, sport-based ball skills, strength and endurance. Build sustained postural control, bilateral coordination, and praxis. Use yoga/balance poses with slow, controlled holds of a few seconds, proprioceptive heavy work, and vestibular challenge. Model form and control; emphasize quality of movement over speed.`,
+};
+
 const LESSON_PLAN_SCHEMA = {
   type: 'object',
   properties: {
@@ -84,6 +99,7 @@ function buildLessonPrompt(kidName: string, age: number, subject: string, dayLab
   const strand = strandFor(subject);
   const guide = STRAND_GUIDES[strand] || STRAND_GUIDES.movement;
   const cdc = cdcForAge(age);
+  const otpt = strand === 'movement' ? `\n\n${OTPT_MOVEMENT[ageBand(age)]}` : '';
   const letterDirective = strand === 'literacy' && currentLetter
     ? `The target letter for today is "${currentLetter}". Teach ONLY that letter — its name, its phoneme sound, and one picture word starting with that sound. `
     : '';
@@ -91,7 +107,7 @@ function buildLessonPrompt(kidName: string, age: number, subject: string, dayLab
     `Developmental reference — ${cdc}\n\n` +
     `Write a short, high-dosage spoken script (about 60-120 words) for a ${age}-year-old child named ${kidName}. ` +
     `It MUST open by naming the child: "Hi ${kidName}! ..." ` +
-    `Today's theme is "${subject}" (${dayLabel}). ${letterDirective}${guide} ` +
+    `Today's theme is "${subject}" (${dayLabel}). ${letterDirective}${guide}${otpt} ` +
     `Use the full I-do -> we-do -> you-do production hierarchy. Use specific praise. ` +
     `Keep it tiny-sentence, huge-warmth, sing-song, and developmentally on-target for a ${age}-year-old per the CDC reference above. ` +
     `Return JSON with keys: title (2-5 word fun title), script (exact spoken words only), letter (target uppercase letter or ""), sound (target phoneme like "AH" or ""), word (the picture word or ""), and camera_recommended (true if a camera check would help verify the child's production or movement, false otherwise).`;

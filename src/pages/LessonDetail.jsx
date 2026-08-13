@@ -170,7 +170,7 @@ export default function LessonDetail() {
       {step === 'activity' && (
         <div ref={activityRef} className="space-y-3 scroll-mt-4">
           {dayCfg.stretchGuide && (
-            <StretchGuide kidName={kid?.name} />
+            <StretchGuide kidName={kid?.name} age={kid?.age || 4} />
           )}
           {dayCfg.strand === 'literacy' ? (
             <InteractivePhonicsActivity

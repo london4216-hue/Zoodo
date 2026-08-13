@@ -10,7 +10,9 @@ import { Check, Hand, Mic } from 'lucide-react';
 // (proprioceptive/body-schema input) and gives a clear, modelable action.
 // Includes crossing midline (bilateral coordination) and a vestibular
 // head-down pose. Order is calm → big → calm for arousal regulation.
-const STRETCHES = [
+// OT/PT-aligned (Ayres SI + praxis) sequences, age-adaptive. Preschool keeps
+// it dynamic and play-based; school adds controlled holds and balance work.
+const PRESCHOOL_STRETCHES = [
   { label: 'Reach up high!', cue: 'Lift both arms to the sky — feel the stretch in your arms', pose: 'up', body: 'arms' },
   { label: 'Touch your toes', cue: 'Bend your head down and reach for your feet', pose: 'down', body: 'head & legs' },
   { label: 'Cross the middle', cue: 'Reach one hand across to the other side', pose: 'cross', body: 'arms crossing midline' },
@@ -18,10 +20,23 @@ const STRETCHES = [
   { label: 'Big hug squeeze', cue: 'Wrap both arms around yourself and squeeze', pose: 'hug', body: 'deep pressure hug' },
 ];
 
+const SCHOOL_STRETCHES = [
+  { label: 'Reach up high!', cue: 'Lift both arms to the sky and hold — feel the stretch', pose: 'up', body: 'arms' },
+  { label: 'Touch your toes', cue: 'Bend your head down, reach for your feet, and hold', pose: 'down', body: 'head & legs' },
+  { label: 'Cross the middle', cue: 'Reach one hand across — now switch hands', pose: 'cross', body: 'arms crossing midline' },
+  { label: 'Balance on one foot', cue: 'Stand tall and lift one foot off the ground — hold it', pose: 'star', body: 'balance & core' },
+  { label: 'Big hug squeeze', cue: 'Wrap both arms around yourself, squeeze, and take a big breath', pose: 'hug', body: 'deep pressure hug' },
+];
+
+function stretchesForAge(age) {
+  return Number(age) >= 6 ? SCHOOL_STRETCHES : PRESCHOOL_STRETCHES;
+}
+
 const REPS = 4;
 const REP_MS = 1500;
 
-export default function StretchGuide({ kidName }) {
+export default function StretchGuide({ kidName, age }) {
+  const STRETCHES = stretchesForAge(age);
   const [index, setIndex] = useState(0);
   const [rep, setRep] = useState(0);       // 0..REPS during demo
   const [phase, setPhase] = useState('demo'); // demo | yourturn | done
