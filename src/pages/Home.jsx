@@ -98,6 +98,7 @@ export default function Home() {
       const res = await base44.functions.invoke('generateWeekContent', {
         kidName: kidObj.name,
         age: kidObj.age,
+        milestone: kidObj.developmental_milestone,
         lovedSubjects,
       });
       const content = res?.data || {};

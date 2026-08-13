@@ -11,6 +11,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [cheerText, setCheerText] = useState('');
   const [savingCheer, setSavingCheer] = useState(false);
+  const [milestone, setMilestone] = useState('');
+  const [savingMilestone, setSavingMilestone] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -19,6 +21,7 @@ export default function Dashboard() {
         if (kids[0]) {
           setKid(kids[0]);
           setCheerText(kids[0].cheer_text || '');
+          setMilestone(kids[0].developmental_milestone || '');
         }
         const all = await base44.entities.Lesson.filter({ kid_id: kids[0]?.id });
         setLessons(all || []);
@@ -174,6 +177,42 @@ export default function Dashboard() {
               className="rounded-2xl bg-[#D96969] px-5 py-3 font-bold text-white active:scale-95 transition disabled:opacity-60"
             >
               {savingCheer ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Save'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Editable current milestone focus — drives age- and milestone-aligned content */}
+      {kid && (
+        <div className="rounded-[28px] bg-white p-5 mb-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingUp className="h-5 w-5 text-[#4969E1]" />
+            <h2 className="font-bold text-black/80">Current milestone focus</h2>
+          </div>
+          <p className="text-xs text-black/40 mb-2">
+            The developmental milestone {kid?.name ? `${kid.name}'s` : "your child's"} activities target right now. Update it anytime as they grow.
+          </p>
+          <div className="flex gap-2">
+            <input
+              value={milestone}
+              onChange={(e) => setMilestone(e.target.value)}
+              placeholder="e.g. hopping on one foot, counting to 10"
+              className="flex-1 rounded-2xl border-2 border-black/10 bg-white px-4 py-3 text-base font-semibold text-black focus:border-[#4969E1] focus:outline-none transition-colors"
+            />
+            <button
+              onClick={async () => {
+                if (!kid) return;
+                setSavingMilestone(true);
+                try {
+                  const updated = await base44.entities.Kid.update(kid.id, { developmental_milestone: milestone });
+                  setKid(updated);
+                } catch (e) { /* ignore */ }
+                setSavingMilestone(false);
+              }}
+              disabled={savingMilestone || !milestone.trim()}
+              className="rounded-2xl bg-[#4969E1] px-5 py-3 font-bold text-white active:scale-95 transition disabled:opacity-60"
+            >
+              {savingMilestone ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Save'}
             </button>
           </div>
         </div>

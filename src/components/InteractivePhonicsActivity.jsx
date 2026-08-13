@@ -31,7 +31,7 @@ function speak(text) {
 // with immediate feedback and retry-until-correct (success is guaranteed).
 // Phase 3 "Done" advances the child's current_letter (mastery gate).
 export default function InteractivePhonicsActivity({
-  kidName, subject, strand, dayLabel, age, lesson, currentLetter, onMastery, onUpdate, onComplete, onPlay,
+  kidName, subject, strand, dayLabel, age, lesson, currentLetter, milestone, onMastery, onUpdate, onComplete, onPlay,
 }) {
   const [status, setStatus] = useState('loading');
   const [data, setData] = useState(null);
@@ -51,7 +51,7 @@ export default function InteractivePhonicsActivity({
     (async () => {
       try {
         const res = await base44.functions.invoke('generateLessonActivity', {
-          subject, dayLabel, kidName, age,
+          subject, dayLabel, kidName, age, milestone,
           currentLetter: strand === 'literacy' ? (currentLetter || 'A') : undefined,
         });
         if (cancelled) return;

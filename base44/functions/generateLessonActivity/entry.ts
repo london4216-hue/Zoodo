@@ -95,7 +95,7 @@ const LESSON_PLAN_SCHEMA = {
   required: ['title', 'script', 'camera_recommended'],
 };
 
-function buildLessonPrompt(kidName: string, age: number, subject: string, dayLabel: string, currentLetter: string) {
+function buildLessonPrompt(kidName: string, age: number, subject: string, dayLabel: string, currentLetter: string, milestone: string) {
   const strand = strandFor(subject);
   const guide = STRAND_GUIDES[strand] || STRAND_GUIDES.movement;
   const cdc = cdcForAge(age);
@@ -104,8 +104,9 @@ function buildLessonPrompt(kidName: string, age: number, subject: string, dayLab
     ? `The target letter for today is "${currentLetter}". Teach ONLY that letter — its name, its phoneme sound, and one picture word starting with that sound. `
     : '';
   return PERSONA + '\n\n' +
-    `Developmental reference — ${cdc}\n\n` +
-    `Write a short, high-dosage spoken script (about 60-120 words) for a ${age}-year-old child named ${kidName}. ` +
+    `Developmental reference — ${cdc}\n` +
+    (milestone ? `Current milestone focus for this child: ${milestone}. Target this specific milestone where it fits today's theme.\n` : '') +
+    `\nWrite a short, high-dosage spoken script (about 60-120 words) for a ${age}-year-old child named ${kidName}. ` +
     `It MUST open by naming the child: "Hi ${kidName}! ..." ` +
     `Today's theme is "${subject}" (${dayLabel}). ${letterDirective}${guide}${otpt} ` +
     `Use the full I-do -> we-do -> you-do production hierarchy. Use specific praise. ` +
@@ -180,8 +181,9 @@ export default async function(req) {
     const kidName = String(body.kidName || 'friend');
     const age = Number(body.age) || 4;
     const currentLetter = (String(body.currentLetter || 'A').toUpperCase().match(/[A-Z]/) || ['A'])[0];
+    const milestone = String(body.milestone || '');
 
-    const prompt = buildLessonPrompt(kidName, age, subject, dayLabel, currentLetter);
+    const prompt = buildLessonPrompt(kidName, age, subject, dayLabel, currentLetter, milestone);
 
     const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt,

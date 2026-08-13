@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Sparkles, Camera, Check, Loader2, ArrowRight, Heart } from 'lucide-react';
 import KidAvatar from '@/components/KidAvatar';
 import ParentVideoPicker from '@/components/ParentVideoPicker';
+import { defaultMilestoneForAge } from '@/lib/lessonConfig';
 
 const START_AGES = [2, 3, 4, 5, 6, 7, 8];
 
@@ -41,7 +42,7 @@ export default function Onboarding() {
       const kid = await base44.entities.Kid.create({
         name: 'friend',
         age: Number(startAge),
-        developmental_milestone: String(startAge),
+        developmental_milestone: defaultMilestoneForAge(startAge),
         program_length: programLength,
         cheer_text: 'You did it!',
       });

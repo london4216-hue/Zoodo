@@ -177,6 +177,7 @@ export default function LessonDetail() {
               kidName={kid?.name || 'the child'}
               subject={dayCfg.subject}
               strand={dayCfg.strand}
+              milestone={kid?.developmental_milestone}
               dayLabel={dayCfg.label}
               age={kid?.age || 4}
               lesson={lesson}
@@ -196,6 +197,7 @@ export default function LessonDetail() {
               kidName={kid?.name || 'the child'}
               subject={dayCfg.subject}
               strand={dayCfg.strand}
+              milestone={kid?.developmental_milestone}
               dayLabel={dayCfg.label}
               age={kid?.age || 4}
               lesson={lesson}

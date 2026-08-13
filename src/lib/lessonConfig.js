@@ -53,6 +53,22 @@ export function ageBand(age) {
   return 'school';
 }
 
+// A concrete CDC milestone phrase for a given intake age — stored as the
+// child's starting "current milestone" and editable from the dashboard.
+export function defaultMilestoneForAge(age) {
+  const a = Number(age) || 4;
+  const map = {
+    2: 'stacking 4+ blocks, 2-word phrases, and kicking a ball',
+    3: 'counting to 3, naming colors, and pedaling a tricycle',
+    4: 'counting to 10, hopping on one foot, and beginning letter sounds',
+    5: 'skipping, recognizing letters, and rhyming',
+    6: 'reading CVC words, adding within 5, and balancing',
+    7: 'reading simple sentences and adding within 20',
+    8: 'reading fluently and multiplying',
+  };
+  return map[a] || map[4];
+}
+
 // Full 5-day config for a child's age.
 export function getDayConfigForAge(age) {
   const band = AGE_DAYS[ageBand(age)];
