@@ -12,7 +12,7 @@ const CONFETTI_COLORS = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#7B4FE0'];
 // shows a live preview, and on tap captures a frame and asks a vision model
 // whether the child is doing the target action. On success: confetti, a warm
 // voice praise (via generateCelebration), and onSuccess(). Always closeable.
-export default function CameraValidator({ targetAction, kidName, onSuccess, onClose, inline }) {
+export default function CameraValidator({ targetAction, kidName, onSuccess, onClose, onFail, inline }) {
   const videoRef = useRef(null);
   const [stream, setStream] = useState(null);
   const [status, setStatus] = useState('idle'); // idle | checking | success | fail
@@ -105,10 +105,12 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
         onSuccess?.();
       } else {
         setStatus('fail');
+        onFail?.(data.feedback || "Let's try again!");
       }
     } catch (e) {
       setStatus('fail');
       setFeedback("Hmm, let's try again!");
+      onFail?.("Hmm, let's try again!");
     }
   };
 
