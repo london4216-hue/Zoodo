@@ -30,15 +30,20 @@ Today's focus: "${focus}".
 ${subject ? `Subject area: ${subject}.` : ''}
 ${supportNeeds ? `The child's support needs / adaptations: ${supportNeeds}. Pick a demonstration that respects these needs.` : ''}
 
-Search the web for ONE real, high-quality YouTube video that DEMONSTRATES the real-world, classroom-or-therapy way this skill or milestone is actually taught to a child this age. The video should show a real educator, speech-language pathologist, occupational or physical therapist, or teacher modeling the activity with a child — NOT an animated song, NOT a cartoon, NOT a nursery-rhyme compilation.
+Search the web for ONE real, high-quality YouTube video that DEMONSTRATES the real-world, classroom-or-therapy way this skill or milestone is actually taught to a child this age. The video MUST show a REAL HUMAN ADULT (an educator, speech-language pathologist, occupational or physical therapist, or teacher) modeling the activity — ideally with a real child.
+
+ABSOLUTELY FORBIDDEN — do NOT return any of these, they are not real demonstrations:
+- Animated videos, cartoons, nursery-rhyme compilations, or AI-generated content
+- Super Simple Songs, Cocomelon, Pinkfong, Little Baby Bum, ChuChu TV, Dave & Ava, or any animated kids channel
+- "Ms Rachel" / "MsRachelSpeakman" or any Ms Rachel channel
 
 Good examples of what to look for:
 - A speech therapist demonstrating how to elicit a target sound
-- An occupational therapist showing a fine-motor or sensory activity
+- An occupational or physical therapist showing a fine-motor, sensory, or gross-motor activity
 - A preschool teacher modeling a counting or letter-sound activity with real children
 - A real classroom or therapy demonstration of this exact milestone
 
-Return ONLY real videos you actually found on the web. Do NOT invent video IDs.
+Return ONLY a real video you actually found on the web. Do NOT invent video IDs.
 - title: the real video title as it appears on YouTube
 - video_id: the actual 11-character YouTube video ID (the part after "v=") — only a real id you found
 - channel: the channel name
@@ -46,10 +51,8 @@ Return ONLY real videos you actually found on the web. Do NOT invent video IDs.
 
 Rules:
 - The video MUST be publicly available and embeddable (not private, removed, or age-restricted).
-- Prefer real-person demonstration / instructional videos over animated songs.
-- Do NOT use any video from "Ms Rachel" / "MsRachelSpeakman" or any Ms Rachel channel — choose a different creator.
-${avoidIds.length ? `- Do not return any of these ids, they were invalid: ${avoidIds.join(', ')}\n` : ''}- Keep language simple, warm, and encouraging.
-- Return only the JSON.`;
+- It MUST be a real-person demonstration, not an animation.
+${avoidIds.length ? `- Do not return any of these ids, they were invalid: ${avoidIds.join(', ')}\n` : ''}- Return only the JSON.`;
 
     const isValid = async (vid: string): Promise<boolean> => {
       try {
@@ -63,44 +66,39 @@ ${avoidIds.length ? `- Do not return any of these ids, they were invalid: ${avoi
 
     const triedIds: string[] = [];
     let chosen: any = null;
-    let lastCandidate: any = null;
 
-    const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
-      prompt: buildPrompt(triedIds),
-      add_context_from_internet: true,
-      model: 'gemini_3_flash',
-      response_json_schema: {
-        type: 'object',
-        properties: {
-          video_id: { type: 'string' },
-          title: { type: 'string' },
-          channel: { type: 'string' },
-          why: { type: 'string' },
+    // Try up to 3 times to find a real, embeddable demonstration video.
+    for (let attempt = 0; attempt < 3 && !chosen; attempt++) {
+      const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
+        prompt: buildPrompt(triedIds),
+        add_context_from_internet: true,
+        model: 'gemini_3_flash',
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            video_id: { type: 'string' },
+            title: { type: 'string' },
+            channel: { type: 'string' },
+            why: { type: 'string' },
+          },
+          required: ['video_id', 'title', 'channel', 'why'],
         },
-        required: ['video_id', 'title', 'channel', 'why'],
-      },
-    });
+      });
 
-    const v = (result as any) || null;
-    const candidateVid = v && v.video_id ? String(v.video_id).trim() : '';
-    if (candidateVid && /^[A-Za-z0-9_-]{11}$/.test(candidateVid)) {
-      triedIds.push(candidateVid);
-      lastCandidate = v;
-      if (await isValid(candidateVid)) {
-        chosen = v;
+      const v = (result as any) || null;
+      const candidateVid = v && v.video_id ? String(v.video_id).trim() : '';
+      if (candidateVid && /^[A-Za-z0-9_-]{11}$/.test(candidateVid)) {
+        triedIds.push(candidateVid);
+        if (await isValid(candidateVid)) {
+          chosen = v;
+        }
       }
     }
 
-    if (!chosen && lastCandidate) chosen = lastCandidate;
-
-    // Curated, always-embeddable fallback so a video always shows.
+    // No animated fallback — if we can't find a real demonstration, the UI shows
+    // a graceful "no video right now" message rather than a cartoon.
     if (!chosen) {
-      chosen = {
-        video_id: '0TgLtF3PMOc',
-        title: 'Seven Steps | Super Simple Songs',
-        channel: 'Super Simple Songs - Kids Songs',
-        why: 'A gentle counting song that supports early number learning.',
-      };
+      return Response.json({ video: null });
     }
 
     const vid = String(chosen.video_id).trim();
