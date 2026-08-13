@@ -134,7 +134,7 @@ function buildLessonPrompt(kidName: string, age: number, subject: string, dayLab
     (milestone ? `Current milestone focus for this child: ${milestone}. Target this specific milestone where it fits today's theme.\n` : '') +
     (supportNeeds ? `Support needs for this child: ${supportNeeds}. Adapt the activity to these needs — e.g., seated or supported positioning, reduced movement demands, non-verbal or gesture-based responses, slower pacing, more repetition. Never push past the child's comfort or ability.\n` : '') +
     `\nWrite a short, high-dosage spoken script (about 60-120 words) for a ${age}-year-old child named ${kidName}. ` +
-    `It MUST open by naming the child: "Hi ${kidName}! ..." ` +
+    `It MUST open by naming the child: "Hi ${kidName}! ..." and MUST use the name "${kidName}" at least 3 times total — once in the opening hello, once while teaching, and once in the closing cheer. ` +
     `Today's theme is "${subject}" (${dayLabel}). ${letterDirective}${guide}${otpt} ` +
     `Use the full I-do -> we-do -> you-do production hierarchy. Use specific praise. ` +
     `Keep it tiny-sentence, huge-warmth, sing-song, and developmentally on-target for a ${age}-year-old per the CDC reference above. ` +

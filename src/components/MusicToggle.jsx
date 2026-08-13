@@ -6,7 +6,11 @@ import { startAmbientMusic, stopAmbientMusic, isMusicPlaying } from '@/lib/senso
 // Floating music toggle: turns a gentle ambient melody on/off. Off by default
 // (browsers block autoplay until a user interacts).
 export default function MusicToggle() {
-  const [on, setOn] = useState(false);
+  const [on, setOn] = useState(true);
+
+  useEffect(() => {
+    setOn(isMusicPlaying());
+  }, []);
 
   const toggle = () => {
     if (on) {
