@@ -31,7 +31,7 @@ function speak(text) {
 // with immediate feedback and retry-until-correct (success is guaranteed).
 // Phase 3 "Done" advances the child's current_letter (mastery gate).
 export default function InteractivePhonicsActivity({
-  kidName, subject, dayLabel, age, lesson, currentLetter, onMastery, onUpdate, onComplete, onPlay,
+  kidName, subject, strand, dayLabel, age, lesson, currentLetter, onMastery, onUpdate, onComplete, onPlay,
 }) {
   const [status, setStatus] = useState('loading');
   const [data, setData] = useState(null);
@@ -42,7 +42,7 @@ export default function InteractivePhonicsActivity({
   const [feedback, setFeedback] = useState(null); // null | 'correct' | 'wrong'
   const [wrongId, setWrongId] = useState(null);
   const audioRef = useRef(null);
-  const letter = (subject === 'Letters' ? (currentLetter || 'A') : '').toUpperCase();
+  const letter = (strand === 'literacy' ? (currentLetter || 'A') : '').toUpperCase();
   const sound = PHONEMES[letter] || letter;
 
   // Reuse the SLP narration + flashcard image from the existing generator.
@@ -52,7 +52,7 @@ export default function InteractivePhonicsActivity({
       try {
         const res = await base44.functions.invoke('generateLessonActivity', {
           subject, dayLabel, kidName, age,
-          currentLetter: subject === 'Letters' ? (currentLetter || 'A') : undefined,
+          currentLetter: strand === 'literacy' ? (currentLetter || 'A') : undefined,
         });
         if (cancelled) return;
         if (res?.data?.error) throw new Error(res.data.error);

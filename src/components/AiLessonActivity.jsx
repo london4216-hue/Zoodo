@@ -9,7 +9,7 @@ import { Image } from '@/components/ui/image';
 // AI-generated interactive audio activity: a cute character narrates a fun,
 // Ms-Rachel-style lesson that invites the kid to join in. Includes a replay
 // button and a caregiver "repeat next week?" prompt at the end.
-export default function AiLessonActivity({ kidName, subject, dayLabel, age, lesson, currentLetter, onMastery, onUpdate, onComplete, onPlay }) {
+export default function AiLessonActivity({ kidName, subject, strand, dayLabel, age, lesson, currentLetter, onMastery, onUpdate, onComplete, onPlay }) {
   const [status, setStatus] = useState('generating'); // generating | ready | error
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
@@ -27,7 +27,7 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
       setError('');
       try {
         const res = await base44.functions.invoke('generateLessonActivity', {
-          subject, dayLabel, kidName, age, currentLetter: subject === 'Letters' ? (currentLetter || 'A') : undefined,
+          subject, dayLabel, kidName, age,           currentLetter: strand === 'literacy' ? (currentLetter || 'A') : undefined,
         });
         if (cancelled) return;
         if (res?.data?.error) throw new Error(res.data.error);
@@ -73,7 +73,7 @@ export default function AiLessonActivity({ kidName, subject, dayLabel, age, less
   // Tier-one mastery gating: only advance to the next letter once the child
   // actually produces the current one (confirmed by the camera or mic check).
   const handleMastery = () => {
-    if (subject !== 'Letters' || !currentLetter) return;
+    if (strand !== 'literacy' || !currentLetter) return;
     const code = currentLetter.charCodeAt(0);
     if (code >= 90) return; // already at Z — stay
     const next = String.fromCharCode(code + 1);

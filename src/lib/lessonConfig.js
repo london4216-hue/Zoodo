@@ -1,58 +1,74 @@
 // Shared configuration for the weekly lesson plan days.
-// Colors and subjects match the home-page design reference.
+//
+// The plan is age-banded to CDC "Learn the Signs. Act Early." milestones:
+//   toddler  (2-3): language emergence, rote counting, gross-motor fundamentals,
+//                   rhythm, and sensory/cognitive play — NO structured stretching.
+//   preschool(4-5): counting to 10, letter-sound articulation, OT stretch/yoga,
+//                   steady beat, gross-motor exercise.
+//   school   (6-8): numbers/math, reading & letters, yoga stretch, music, exercise.
+//
+// Visual styling (colors) is stable per weekday slot; the subject, graphic,
+// strand, and stretch-guide flag adapt to the child's intake age.
 
-export const DAYS = [
-  {
-    key: 'monday',
-    label: 'Monday',
-    subject: 'Numbers',
-    bg: '#EBE4DE',
-    titleColor: '#D96969',
-    titleStroke: '#F4B6B6',
-    graphic: 'numbers',
-  },
-  {
-    key: 'tuesday',
-    label: 'Tuesday',
-    subject: 'Letters',
-    bg: '#E0F5FF',
-    titleColor: '#7B4FE0',
-    titleStroke: '#C9B6F4',
-    graphic: 'letters',
-  },
-  {
-    key: 'wednesday',
-    label: 'Wednesday',
-    subject: 'Stretch time',
-    bg: '#E0F5D5',
-    titleColor: '#E0A800',
-    titleStroke: '#3a3a3a',
-    graphic: 'stretch',
-  },
-  {
-    key: 'thursday',
-    label: 'Thursday',
-    subject: 'Music',
-    bg: '#FEF5B0',
-    titleColor: '#2B6FE0',
-    titleStroke: '#ffffff',
-    graphic: 'music',
-  },
-  {
-    key: 'friday',
-    label: 'Friday',
-    subject: 'Exercises',
-    bg: '#FAD7D7',
-    titleColor: '#2B6FE0',
-    titleStroke: '#ffffff',
-    graphic: 'exercise',
-  },
-];
+const DAY_KEYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 
-export const DAY_MAP = DAYS.reduce((acc, d) => {
-  acc[d.key] = d;
-  return acc;
-}, {});
+const DAY_STYLE = {
+  monday:    { label: 'Monday',    bg: '#EBE4DE', titleColor: '#D96969', titleStroke: '#F4B6B6' },
+  tuesday:   { label: 'Tuesday',   bg: '#E0F5FF', titleColor: '#7B4FE0', titleStroke: '#C9B6F4' },
+  wednesday: { label: 'Wednesday', bg: '#E0F5D5', titleColor: '#E0A800', titleStroke: '#3a3a3a' },
+  thursday:  { label: 'Thursday',  bg: '#FEF5B0', titleColor: '#2B6FE0', titleStroke: '#ffffff' },
+  friday:    { label: 'Friday',    bg: '#FAD7D7', titleColor: '#2B6FE0', titleStroke: '#ffffff' },
+};
+
+// strand drives which activity component + backend guide is used:
+// numeracy | language | literacy | movement | music | sensory
+const AGE_DAYS = {
+  toddler: {
+    monday:    { subject: 'Counting',         graphic: 'numbers',  strand: 'numeracy', stretchGuide: false },
+    tuesday:   { subject: 'First Words',      graphic: 'letters',  strand: 'language', stretchGuide: false },
+    wednesday: { subject: 'Move & Play',      graphic: 'exercise', strand: 'movement', stretchGuide: false },
+    thursday:  { subject: 'Music & Clapping', graphic: 'music',    strand: 'music',    stretchGuide: false },
+    friday:    { subject: 'Sensory Play',     graphic: 'sensory',  strand: 'sensory',  stretchGuide: false },
+  },
+  preschool: {
+    monday:    { subject: 'Counting 1-10',     graphic: 'numbers',  strand: 'numeracy', stretchGuide: false },
+    tuesday:   { subject: 'Letter Sounds',    graphic: 'letters',  strand: 'literacy', stretchGuide: false },
+    wednesday: { subject: 'Stretch time',     graphic: 'stretch',  strand: 'movement', stretchGuide: true  },
+    thursday:  { subject: 'Music & Beat',     graphic: 'music',    strand: 'music',    stretchGuide: false },
+    friday:    { subject: 'Move & Exercise',  graphic: 'exercise', strand: 'movement', stretchGuide: true  },
+  },
+  school: {
+    monday:    { subject: 'Numbers & Math',   graphic: 'numbers',  strand: 'numeracy', stretchGuide: false },
+    tuesday:   { subject: 'Letters & Reading',graphic: 'letters',  strand: 'literacy', stretchGuide: false },
+    wednesday: { subject: 'Stretch time',     graphic: 'stretch',  strand: 'movement', stretchGuide: true  },
+    thursday:  { subject: 'Music',            graphic: 'music',    strand: 'music',    stretchGuide: false },
+    friday:    { subject: 'Exercises',        graphic: 'exercise', strand: 'movement', stretchGuide: true  },
+  },
+};
+
+export function ageBand(age) {
+  const a = Number(age) || 4;
+  if (a <= 3) return 'toddler';
+  if (a <= 5) return 'preschool';
+  return 'school';
+}
+
+// Full 5-day config for a child's age.
+export function getDayConfigForAge(age) {
+  const band = AGE_DAYS[ageBand(age)];
+  return DAY_KEYS.map((key) => ({ key, ...DAY_STYLE[key], ...band[key] }));
+}
+
+// Single day config by key, age-aware. Falls back to preschool styling.
+export function getDayConfigForAgeAndKey(age, dayKey) {
+  const band = AGE_DAYS[ageBand(age)];
+  if (!DAY_STYLE[dayKey] || !band[dayKey]) return undefined;
+  return { key: dayKey, ...DAY_STYLE[dayKey], ...band[dayKey] };
+}
+
+// Default (preschool) arrays kept for backward compatibility.
+export const DAYS = getDayConfigForAge(5);
+export const DAY_MAP = DAYS.reduce((acc, d) => { acc[d.key] = d; return acc; }, {});
 
 // Returns the ISO date (yyyy-mm-dd) of the Monday for the week containing the given date.
 export function getMondayISO(date = new Date()) {

@@ -47,5 +47,14 @@ export default function DayGraphic({ type }) {
       </div>
     );
   }
+  if (type === 'sensory') {
+    return (
+      <div className="flex items-center gap-1">
+        <span className="text-3xl">🧩</span>
+        <span className="text-4xl">🟦</span>
+        <span className="text-3xl">🎨</span>
+      </div>
+    );
+  }
   return null;
 }

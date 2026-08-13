@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import DayCard from '@/components/DayCard';
-import { DAYS, DAY_MAP, getMondayISO, addWeeksISO, formatWeekRange } from '@/lib/lessonConfig';
+import { DAY_MAP, getMondayISO, addWeeksISO, formatWeekRange, getDayConfigForAge } from '@/lib/lessonConfig';
 import { isGenerating, markGenerating, clearGenerating } from '@/lib/weekGenState';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MusicToggle from '@/components/MusicToggle';
@@ -41,6 +41,7 @@ export default function Home() {
   useEffect(() => {
     if (!kid) return;
     let cancelled = false;
+    const days = getDayConfigForAge(kid.age);
 
     (async () => {
       try {
@@ -51,7 +52,7 @@ export default function Home() {
         const existing = {};
         lessons.forEach((l) => { existing[l.day] = l; });
 
-        const missing = DAYS.filter((d) => !existing[d.key]);
+        const missing = days.filter((d) => !existing[d.key]);
         if (missing.length > 0) {
           const created = await base44.entities.Lesson.bulkCreate(
             missing.map((d) => ({
@@ -66,7 +67,7 @@ export default function Home() {
         }
         if (!cancelled) setLessonsByDay(existing);
 
-        const needsGen = DAYS.some((d) => !hasVideos(existing[d.key]));
+        const needsGen = days.some((d) => !hasVideos(existing[d.key]));
         if (needsGen && !isGenerating(weekStart)) {
           preGenerate(kid, weekStart, existing, cancelled);
         }
@@ -82,6 +83,7 @@ export default function Home() {
   const preGenerate = async (kidObj, monday, existing, cancelled) => {
     markGenerating(monday);
     setPreparing(true);
+    const days = getDayConfigForAge(kidObj.age);
     try {
       let lovedSubjects = [];
       try {
@@ -101,7 +103,7 @@ export default function Home() {
       const content = res?.data || {};
 
       const updates = [];
-      for (const d of DAYS) {
+      for (const d of days) {
         const vids = content[d.key];
         if (vids && Array.isArray(vids) && existing[d.key]) {
           updates.push({ id: existing[d.key].id, ai_content: vids });
@@ -111,7 +113,7 @@ export default function Home() {
         const updated = await base44.entities.Lesson.bulkUpdate(updates);
         const byId = {};
         (updated || []).forEach((l) => { byId[l.id] = l; });
-        for (const d of DAYS) {
+        for (const d of days) {
           if (existing[d.key] && byId[existing[d.key].id]) existing[d.key] = byId[existing[d.key].id];
         }
       }
@@ -132,6 +134,7 @@ export default function Home() {
     );
   }
 
+  const days = getDayConfigForAge(kid?.age || 4);
   const todayKey = DAY_MAP[new Date().toLocaleDateString('en', { weekday: 'long' }).toLowerCase()]?.key;
 
   return (
@@ -162,7 +165,7 @@ export default function Home() {
 
       {/* Day cards */}
       <div className="space-y-3">
-        {DAYS.map((day) => (
+        {days.map((day) => (
           <div key={day.key} className="relative">
             <DayCard
               day={day}

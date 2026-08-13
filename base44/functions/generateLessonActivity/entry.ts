@@ -2,22 +2,46 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { secrets } from "base44:runtime";
 
 // ─────────────────────────────────────────────────────────────────────────
-// System-wide tier-one speech-therapy persona + lesson-plan builder.
-// Every lesson is treated like a real, high-dosage articulation therapy session.
+// Age-aware, CDC-milestone-aligned lesson generator. Each session is a real,
+// high-dosage early-learning activity scaled to the child's intake age, with
+// the signature warm, musical EduPath teaching voice.
 // ─────────────────────────────────────────────────────────────────────────
-const SPEECH_THERAPIST_PERSONA = `You are a world-class, tier-one pediatric speech-language pathologist (SLP) and the signature warm, musical teaching voice of EduPath AI. You work with toddlers (around 3 years old) and you treat every single lesson like a real, high-dosage articulation therapy session.
 
-CLINICAL FRAMEWORK (tier-one articulation & phonological therapy):
-- TARGET: Every lesson has ONE clear target. For Letters: one letter, its phoneme (sound), and one picture word that begins with that sound.
-- AUDITORY BOMBARDMENT: Say the target sound/letter many times, clearly and slowly, BEFORE asking the child to produce it.
-- PRODUCTION HIERARCHY ("I do -> we do -> you do"):
-  1. MODEL: "Watch my mouth... AH." (exaggerated, slow)
-  2. TOGETHER: "Let's say it together... AH."
-  3. INDEPENDENT: "Your turn! Say AH!"
-- SOUND ISOLATION: Teach the sound alone first ("Say AH") before attaching the word ("AH... apple"). Use the phrase "say AH like apple".
-- TACTILE/KINESTHETIC CUES: Gently describe what the mouth does ("open your mouth wide", "lips smiling", "tongue down").
-- REPETITIONS: Aim for many correct, spaced repetitions of the target sound and word.
-- SPECIFIC PRAISE: Praise the specific attempt ("Great AH sound!"), not generic "good job".
+// Map a subject label to its developmental strand so the right pedagogical
+// guide is used regardless of the age-band wording.
+function strandFor(subject: string): string {
+  const s = (subject || '').toLowerCase();
+  if (s.includes('first word')) return 'language';
+  if (s.includes('count') || s.includes('number') || s.includes('math')) return 'numeracy';
+  if (s.includes('letter') || s.includes('reading') || s.includes('sound')) return 'literacy';
+  if (s.includes('music') || s.includes('clap') || s.includes('beat')) return 'music';
+  if (s.includes('sensory') || s.includes('sort')) return 'sensory';
+  return 'movement';
+}
+
+const CDC_MILESTONES: Record<number, string> = {
+  2: 'CDC milestones for a 2-year-old: says 2-4 word phrases; points to named things; follows 2-step instructions; sorts shapes/colors; stacks 4+ blocks; runs; kicks a ball; walks up/down stairs; points to body parts. Very short attention — keep activities to 1-2 minutes, one tiny goal, lots of repetition and sensory input.',
+  3: 'CDC milestones for a 3-year-old: counts to 3; knows some colors; draws a circle; runs and climbs well; pedals a tricycle; copies a circle; simple conversations. 2-3 minute activities, one clear goal, lots of modeling and repetition.',
+  4: 'CDC milestones for a 4-year-old: counts to 10; names some numbers/colors; draws a person with 2-4 body parts; catches a bounced ball; hops on one foot; knows beginning letter sounds. 3-5 minute activities, one target, I-do/we-do/you-do.',
+  5: 'CDC milestones for a 5-year-old: counts to 10+; tells simple stories; skips; stands on one foot 10s; recognizes some letters and sounds; rhymes. 5-7 minute activities with clear goals.',
+  6: 'CDC milestones for a 6-year-old: counts to 20+; adds/subtracts within 5; reads simple CVC words; hops, skips, balances; copies shapes; multi-step directions. 7-10 minute activities.',
+  7: 'CDC milestones for a 7-year-old: reads sight words and simple sentences; adds/subtracts within 20; tells time; complex motor coordination. ~10 minute activities.',
+  8: 'CDC milestones for an 8-year-old: reads fluently; multiplies; complex motor coordination; independent learning. 10-15 minute activities.',
+};
+
+function cdcForAge(age: number): string {
+  const a = Math.max(2, Math.min(8, Number(age) || 4));
+  return CDC_MILESTONES[a] || CDC_MILESTONES[4];
+}
+
+const PERSONA = `You are a world-class early-childhood educator and the signature warm, musical teaching voice of EduPath AI. You are leading a real, high-dosage early-learning session, scaled to the child's exact developmental level.
+
+TEACHING FRAMEWORK (I do -> we do -> you do):
+- MODEL: "Watch my mouth... " or "Watch me... " (exaggerated, slow).
+- TOGETHER: "Let's do it together... "
+- INDEPENDENT: "Your turn!"
+- REPETITION: Many clear, spaced repetitions of the target.
+- SPECIFIC PRAISE: Praise the specific attempt ("Great AH sound!", "You counted to three!"), not generic "good job".
 
 VOICE & DELIVERY (warm, musical, human — never robotic):
 - Soft, warm, friendly, with a smile in your voice. Musical sing-song rhythm.
@@ -30,9 +54,18 @@ RULES:
 - Speak ONLY the exact words meant to be spoken aloud. Use "..." for pauses.
 - No stage directions, no parentheses, no brackets, no notes, no spelling-out of symbols.
 - Keep words tiny, sentences short, full of warmth.
-- For Letters: always teach letter NAME -> SOUND -> WORD, e.g. "A... AH... AH-apple... say AH like apple!"
-- For Numbers: count slowly, one number at a time, with the child.
 - Always end with specific praise and a warm cheer.`;
+
+// Evidence-based guides per developmental strand. The camera is never used for
+// speech lessons (hardcoded off below), so these focus purely on pedagogy.
+const STRAND_GUIDES: Record<string, string> = {
+  numeracy: `Target: early numeracy using the counting principles (Gelman & Gallistel), scaled to the child's age and CDC milestones. Teach in order: (1) ROTE COUNTING — say the number sequence aloud; (2) ONE-TO-ONE CORRESPONDENCE — touch or tap one object for each number said; (3) CARDINALITY — after counting, the last number tells how many. Count slowly with the child using I-do/we-do/you-do, fingers or visible objects. Set letter/sound to "" and word to the key number or object.`,
+  language: `Target: early SPOKEN LANGUAGE for a toddler — naming a familiar picture, animal sounds, and playful first-sound awareness (NOT formal letter articulation). Model naming the picture ("This is a dog! Dog says woof!"), invite the child to imitate. Use I-do/we-do/you-do with lots of repetition. Set letter/sound to "" and word to the named picture.`,
+  literacy: `Target: the EXACT uppercase letter provided for today (do NOT pick a different letter). Pick ONE concrete, high-frequency picture word that begins with that letter's sound and where the sound is clear and isolated (A->apple, B->ball, C->cat, D->dog — avoid long or ambiguous words). Teach in order: letter NAME -> phoneme SOUND (e.g. "AH" for A) -> WORD. Use auditory bombardment (say the sound many times), then "say AH like apple" sound-isolation, then I-do/we-do/you-do production. Set word to the picture word.`,
+  movement: `Target: gross-motor and body-awareness movement scaled to the child's age and CDC milestones. Use "watch me -> together -> your turn" with clear, slow modeling, one movement at a time. Name the body parts. For toddlers focus on fundamental locomotor skills (running, climbing, kicking a ball, stepping up). For preschool+ include balance, bilateral coordination, and crossing midline. Set letter/sound to "" and word to the key body part or object.`,
+  music: `Target: steady beat and rhythm scaled to the child's age. Teach call-and-response clapping/tapping to a steady beat. Use I-do/we-do/you-do ("watch me clap... together... your turn!"). Emphasize keeping a steady beat and copying a simple rhythm pattern. Set letter/sound to "" and word to the key instrument or body part.`,
+  sensory: `Target: cognitive/sensory play scaled to the child's age and CDC milestones — sorting by color/shape, stacking, matching, or simple puzzles. Use I-do/we-do/you-do with one clear concept. Name the attribute (color, shape, size). Set letter/sound to "" and word to the key object or attribute.`,
+};
 
 const LESSON_PLAN_SCHEMA = {
   type: 'object',
@@ -47,31 +80,24 @@ const LESSON_PLAN_SCHEMA = {
   required: ['title', 'script', 'camera_recommended'],
 };
 
-// Evidence-based targets per subject. The camera is never used for speech
-// lessons (hardcoded off below), so these guides focus purely on pedagogy.
-const SUBJECT_GUIDE = {
-  'Numbers': 'Target: early numeracy using the counting principles (Gelman & Gallistel). For a young child focus on a SMALL set (start 1-3, build to 5). Teach in this order: (1) ROTE COUNTING — say the number sequence aloud; (2) ONE-TO-ONE CORRESPONDENCE — touch or tap one object for each number said ("touch... one... touch... two"); (3) CARDINALITY — after counting, emphasize the last number tells how many ("so there are THREE!"). Count slowly with the child using I-do/we-do/you-do, using fingers or visible objects. Set letter, sound, word to "".',
-  'Letters': 'Target: the EXACT uppercase letter provided for today (do NOT pick a different letter). Pick ONE concrete, high-frequency picture word that begins with that letter\'s sound and where the sound is clear and isolated (A->apple, B->ball, C->cat, D->dog — avoid long or ambiguous words). Teach in order: letter NAME -> phoneme SOUND (e.g. "AH" for A) -> WORD. Use auditory bombardment (say the sound many times), then "say AH like apple" sound-isolation, then I-do/we-do/you-do production. Set word to the picture word.',
-  'Stretch time': 'Target: a sensory-motor warm-up grounded in occupational therapy (Ayres Sensory Integration + praxis/motor planning). Emphasize PROPRIOCEPTIVE input (name the body part and the feeling: "feel the stretch in your arms", "press your feet into the floor"), VESTIBULAR input (head changes position, e.g. bending down), BILATERAL COORDINATION and CROSSING MIDLINE (reach one hand across to the other side), and AROUSAL REGULATION (breathe in and out, slow and calm). Teach ONE stretch with the full I-do -> we-do -> you-do motor-planning hierarchy ("watch me... together... your turn!"). Keep it calm, indoor, and slow. Set letter/sound to "" and word to the key body part being moved.',
-  'Music': 'Target: steady beat and rhythm. Teach call-and-response clapping/tapping to a steady beat. Use I-do/we-do/you-do ("watch me clap... together... your turn!"). Emphasize keeping a steady beat and copying a simple rhythm pattern. Set letter/sound to "" and word to the key object/instrument if there is one.',
-  'Exercises': 'Target: a body-awareness movement (gross motor, bilateral coordination, or crossing midline). Teach "watch me -> together -> your turn" with clear, slow modeling, one movement at a time. Use body-part vocabulary (arms, legs, tummy). Set letter/sound to "" and word to the key object if there is one.',
-};
-
-function buildLessonPrompt(kidName, age, subject, dayLabel, currentLetter) {
-  const guide = SUBJECT_GUIDE[subject] || `Target: ${subject}. Use I-do/we-do/you-do. Decide if a camera check would help verify the child's production.`;
-  const letterDirective = subject === 'Letters' && currentLetter
+function buildLessonPrompt(kidName: string, age: number, subject: string, dayLabel: string, currentLetter: string) {
+  const strand = strandFor(subject);
+  const guide = STRAND_GUIDES[strand] || STRAND_GUIDES.movement;
+  const cdc = cdcForAge(age);
+  const letterDirective = strand === 'literacy' && currentLetter
     ? `The target letter for today is "${currentLetter}". Teach ONLY that letter — its name, its phoneme sound, and one picture word starting with that sound. `
     : '';
-  return SPEECH_THERAPIST_PERSONA + '\n\n' +
-    `Write a short, high-dosage speech-therapy spoken script (about 60-120 words) for a ${age}-year-old child named ${kidName}. ` +
+  return PERSONA + '\n\n' +
+    `Developmental reference — ${cdc}\n\n` +
+    `Write a short, high-dosage spoken script (about 60-120 words) for a ${age}-year-old child named ${kidName}. ` +
     `It MUST open by naming the child: "Hi ${kidName}! ..." ` +
     `Today's theme is "${subject}" (${dayLabel}). ${letterDirective}${guide} ` +
-    `Use the full I-do -> we-do -> you-do production hierarchy. Use auditory bombardment (say the target many times). Use specific praise. ` +
-    `Keep it tiny-sentence, huge-warmth, sing-song. ` +
+    `Use the full I-do -> we-do -> you-do production hierarchy. Use specific praise. ` +
+    `Keep it tiny-sentence, huge-warmth, sing-song, and developmentally on-target for a ${age}-year-old per the CDC reference above. ` +
     `Return JSON with keys: title (2-5 word fun title), script (exact spoken words only), letter (target uppercase letter or ""), sound (target phoneme like "AH" or ""), word (the picture word or ""), and camera_recommended (true if a camera check would help verify the child's production or movement, false otherwise).`;
 }
 
-function picturePromptFor(word) {
+function picturePromptFor(word: string) {
   return `A bright, friendly, simple photograph of a single ${word} centered on a clean pure-white background, soft even lighting, sharp focus, children's speech-therapy flashcard style, no text, no people.`;
 }
 
@@ -79,7 +105,7 @@ function picturePromptFor(word) {
 // TTS — premium ElevenLabs voice with built-in fallback.
 // ─────────────────────────────────────────────────────────────────────────
 const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — warm, friendly female
-async function synthesizeSpeech(base44, text) {
+async function synthesizeSpeech(base44, text: string): Promise<string> {
   const clean = (text || "").slice(0, 4500);
   const key = secrets.get("ELEVENLABS_API_KEY");
   if (!key) return await builtinTTS(base44, text);
@@ -97,7 +123,7 @@ async function synthesizeSpeech(base44, text) {
       }),
     });
   } catch (e) {
-    console.warn('ElevenLabs fetch error — using built-in voice.', e?.message);
+    console.warn('ElevenLabs fetch error — using built-in voice.', (e as Error)?.message);
     return await builtinTTS(base44, text);
   }
   if (!resp.ok) {
@@ -112,7 +138,7 @@ async function synthesizeSpeech(base44, text) {
   return up.file_url;
 }
 
-async function builtinTTS(base44, text) {
+async function builtinTTS(base44, text: string): Promise<string> {
   const res = await base44.asServiceRole.integrations.Core.GenerateSpeech({
     text: (text || '').slice(0, 5000),
     voice: 'honey',
@@ -122,13 +148,9 @@ async function builtinTTS(base44, text) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// Tier-one speech-therapy lesson generator.
-// Builds an articulation-therapy plan (target letter/sound/word + I-do/we-do/
-// you-do script), narrates it, and — when the plan has a picture word —
-// generates a clean photo of the target object so the child sees the real
-// thing (e.g. a photo of an apple for the letter A). The plan flags whether a
-// camera participation check would help verify the child's production, so the
-// camera only launches when clinically useful.
+// Main: builds an age-appropriate activity (target + I-do/we-do/you-do script),
+// narrates it, and — when the plan has a picture word — generates a clean photo
+// of the target object so the child sees the real thing.
 // ─────────────────────────────────────────────────────────────────────────
 export default async function(req) {
   try {
@@ -187,6 +209,6 @@ export default async function(req) {
       camera_recommended,
     });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ error: (error as Error).message }, { status: 500 });
   }
 }

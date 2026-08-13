@@ -14,13 +14,13 @@ import SensoryBackground from '@/components/SensoryBackground';
 import SensoryButton from '@/components/SensoryButton';
 import MusicToggle from '@/components/MusicToggle';
 import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
-import { DAY_MAP } from '@/lib/lessonConfig';
+import { getDayConfigForAgeAndKey } from '@/lib/lessonConfig';
 import { ArrowLeft, Loader2, Pencil, Sparkles } from 'lucide-react';
 
 export default function LessonDetail() {
   const { kidId, weekStart, day } = useParams();
   const navigate = useNavigate();
-  const dayCfg = DAY_MAP[day];
+  const dayCfg = getDayConfigForAgeAndKey(kid?.age || 4, day);
 
   const [kid, setKid] = useState(null);
   const [lesson, setLesson] = useState(null);
@@ -169,13 +169,14 @@ export default function LessonDetail() {
       <div className="flex-1 min-h-0 overflow-y-auto">
       {step === 'activity' && (
         <div ref={activityRef} className="space-y-3 scroll-mt-4">
-          {(dayCfg.graphic === 'stretch' || dayCfg.graphic === 'exercise') && (
+          {dayCfg.stretchGuide && (
             <StretchGuide kidName={kid?.name} />
           )}
-          {dayCfg.subject === 'Letters' ? (
+          {dayCfg.strand === 'literacy' ? (
             <InteractivePhonicsActivity
               kidName={kid?.name || 'the child'}
               subject={dayCfg.subject}
+              strand={dayCfg.strand}
               dayLabel={dayCfg.label}
               age={kid?.age || 4}
               lesson={lesson}
@@ -194,6 +195,7 @@ export default function LessonDetail() {
             <AiLessonActivity
               kidName={kid?.name || 'the child'}
               subject={dayCfg.subject}
+              strand={dayCfg.strand}
               dayLabel={dayCfg.label}
               age={kid?.age || 4}
               lesson={lesson}
