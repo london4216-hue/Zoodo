@@ -6,6 +6,7 @@ import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
 import LessonFlow from '@/components/LessonFlow';
 import ParentRecordingPrompt from '@/components/ParentRecordingPrompt';
+import OptionalLessonVideo from '@/components/OptionalLessonVideo';
 import LunchActivity from '@/components/LunchActivity';
 import StretchGuide from '@/components/StretchGuide';
 import DayGraphic from '@/components/DayGraphic';
@@ -159,8 +160,17 @@ export default function LessonDetail() {
                   </div>
                   <h2 className="text-xl font-bold text-black/80">Lesson complete!</h2>
                   <p className="mt-1 text-sm font-semibold text-black/50">
-                    Nice work, {kid?.name || 'friend'}! Want to draw or tell a story?
+                    Nice work, {kid?.name}! Want to draw or tell a story?
                   </p>
+                  {lesson?.ai_content?.[0] && (
+                    <div className="mt-3">
+                      <OptionalLessonVideo
+                      video={lesson.ai_content[0]}
+                      subject={dayCfg.subject}
+                      kidName={kid?.name}
+                    />
+                    </div>
+                  )}
                   <div className="mt-3 flex flex-col gap-2">
                     <SensoryButton
                       onClick={() => setStep('drawing')}
