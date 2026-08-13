@@ -40,7 +40,7 @@ export default function Onboarding() {
     setError('');
     try {
       const kid = await base44.entities.Kid.create({
-        name: name.trim() || 'friend',
+        name: name.trim(),
         age: Number(startAge),
         developmental_milestone: defaultMilestoneForAge(startAge),
         program_length: programLength,
@@ -204,7 +204,7 @@ export default function Onboarding() {
                   </div>
                 ) : (
                   <ParentVideoPicker
-                    cheer={kid?.cheer_text ? `${kid.cheer_text}` : `You did it, ${name || 'friend'}!`}
+                    cheer={kid?.cheer_text ? `${kid.cheer_text}` : `You did it, ${name}!`}
                     onRecorded={saveParentVideo}
                   />
                 )}
