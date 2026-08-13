@@ -5,6 +5,7 @@ import Layout from '@/components/Layout';
 import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
 import LessonFlow from '@/components/LessonFlow';
+import LessonPreflight from '@/components/LessonPreflight';
 import LunchActivity from '@/components/LunchActivity';
 import StretchGuide from '@/components/StretchGuide';
 import DayGraphic from '@/components/DayGraphic';
@@ -26,6 +27,7 @@ export default function LessonDetail() {
   const [celebrating, setCelebrating] = useState(false);
   const [lessonDone, setLessonDone] = useState(false);
   const [step, setStep] = useState('lesson'); // lesson | drawing | lunch | story
+  const [preflightDone, setPreflightDone] = useState(false);
   useAutoAmbientMusic();
   const dayCfg = getDayConfigForAgeAndKey(kid?.age || 4, day);
 
@@ -54,6 +56,7 @@ export default function LessonDetail() {
   useEffect(() => {
     setStep('lesson');
     setLessonDone(false);
+    setPreflightDone(false);
   }, [kidId, weekStart, day]);
 
   const markComplete = async () => {
@@ -148,10 +151,26 @@ export default function LessonDetail() {
         <div className="flex-1 min-h-0 overflow-y-auto">
           {step === 'lesson' && (
             <div className="space-y-3">
-              {dayCfg.stretchGuide && !lessonDone && (
+              {dayCfg.stretchGuide && !lessonDone && preflightDone && (
                 <StretchGuide kidName={kid?.name} age={kid?.age || 4} />
               )}
-              {lessonDone ? (
+              {!lessonDone && !preflightDone ? (
+                <LessonPreflight
+                  kidName={kid?.name || 'the child'}
+                  lessonTitle={`Learning ${dayCfg.subject}`}
+                  objective={dayCfg.subject}
+                  parentVideos={kid?.parent_videos}
+                  onStart={() => setPreflightDone(true)}
+                  onRecorded={async (url) => {
+                    try {
+                      const updated = await base44.entities.Kid.update(kid.id, {
+                        parent_videos: [...(kid.parent_videos || []), url],
+                      });
+                      setKid(updated);
+                    } catch (e) { /* ignore */ }
+                  }}
+                />
+              ) : lessonDone ? (
                 <div className="rounded-2xl bg-white p-5 text-center shadow-sm">
                   <div className="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-[#4FAE5A] text-white">
                     <Sparkles className="h-7 w-7" />

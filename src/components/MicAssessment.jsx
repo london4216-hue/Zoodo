@@ -4,6 +4,7 @@ import { Mic, Loader2, Check, Square } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { base44 } from '@/api/base44Client';
 import { playPraiseJingle, playSparkle, vibrate } from '@/lib/sensoryAudio';
+import DeviceConsent from '@/components/DeviceConsent';
 
 const COLORS = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A'];
 
@@ -13,6 +14,7 @@ export default function MicAssessment({ kidName, target, onResult }) {
   const [status, setStatus] = useState('idle'); // idle | recording | uploading | checking | success | fail
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState('');
+  const [consentState, setConsentState] = useState('pending'); // pending | allowed | denied
   const [recSecs, setRecSecs] = useState(0);
   const mediaRef = useRef(null);
   const chunksRef = useRef([]);
@@ -84,6 +86,26 @@ export default function MicAssessment({ kidName, target, onResult }) {
   };
 
   useEffect(() => () => cleanup(), []);
+
+  if (consentState === 'pending') {
+    return (
+      <div className="flex flex-col items-center rounded-2xl bg-[#FFF6E6] p-4 text-center">
+        <DeviceConsent type="mic" kidName={kidName} onAllow={() => setConsentState('allowed')} onDeny={() => setConsentState('denied')} />
+      </div>
+    );
+  }
+
+  if (consentState === 'denied') {
+    return (
+      <div className="flex flex-col items-center rounded-2xl bg-[#FFF6E6] p-4 text-center">
+        <p className="font-bold text-black/70">No mic? No problem!</p>
+        <p className="mt-1 text-sm font-semibold text-black/50">Did {kidName} say "{target}"?</p>
+        <button onClick={() => onResult?.(true, `Great job, ${kidName}!`)} className="mt-3 w-full rounded-2xl bg-[#4FAE5A] py-3 font-bold text-white active:scale-95 transition">
+          Yes, {kidName} said it!
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center rounded-2xl bg-[#FFF6E6] p-4 text-center">

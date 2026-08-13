@@ -5,6 +5,7 @@ import { X, Camera, Loader2, Sparkles, RotateCw } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { playPraiseJingle, vibrate } from '@/lib/sensoryAudio';
 import SensoryButton from '@/components/SensoryButton';
+import DeviceConsent from '@/components/DeviceConsent';
 
 const CONFETTI_COLORS = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#7B4FE0'];
 
@@ -18,11 +19,13 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
   const [status, setStatus] = useState('idle'); // idle | checking | success | fail
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState('');
+  const [consentState, setConsentState] = useState('pending'); // pending | allowed | denied
   const [praiseUrl, setPraiseUrl] = useState('');
   const praiseRef = useRef(null);
 
-  // Request camera access once.
+  // Request camera access after consent.
   useEffect(() => {
+    if (consentState !== 'allowed') return;
     let active = null;
     (async () => {
       try {
@@ -36,7 +39,7 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
     return () => {
       if (active) active.getTracks().forEach((t) => t.stop());
     };
-  }, [kidName]);
+  }, [consentState, kidName]);
 
   useEffect(() => {
     if (videoRef.current && stream) {
@@ -113,6 +116,42 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
       onFail?.("Hmm, let's try again!");
     }
   };
+
+  if (consentState === 'pending') {
+    return (
+      <div className={inline ? "mt-3" : "fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/40 p-5 backdrop-blur-sm"}>
+        <div className={inline ? "relative w-full rounded-3xl bg-white p-4 shadow-sm" : "relative w-full max-w-sm rounded-3xl bg-white p-5 shadow-2xl"}>
+          {!inline && (
+            <button type="button" onClick={onClose} aria-label="Close" className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-black/60 active:scale-95">
+              <X className="h-5 w-5" />
+            </button>
+          )}
+          <DeviceConsent type="camera" kidName={kidName} onAllow={() => setConsentState('allowed')} onDeny={() => setConsentState('denied')} />
+        </div>
+      </div>
+    );
+  }
+
+  if (consentState === 'denied') {
+    return (
+      <div className={inline ? "mt-3" : "fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/40 p-5 backdrop-blur-sm"}>
+        <div className={inline ? "relative w-full rounded-3xl bg-white p-4 shadow-sm" : "relative w-full max-w-sm rounded-3xl bg-white p-5 shadow-2xl"}>
+          {!inline && (
+            <button type="button" onClick={onClose} aria-label="Close" className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-black/60 active:scale-95">
+              <X className="h-5 w-5" />
+            </button>
+          )}
+          <div className="flex flex-col items-center py-2 text-center">
+            <p className="text-sm font-bold text-black/70">No camera? No problem!</p>
+            <p className="mt-1 text-xs font-semibold text-black/40">Did {kidName} show you: {targetAction}?</p>
+            <SensoryButton onClick={() => { onSuccess?.(); onClose?.(); }} glow="#4FAE5A" className="mt-3 w-full bg-[#4FAE5A] py-3 text-white">
+              Yes, {kidName} did it!
+            </SensoryButton>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={inline ? "mt-3" : "fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/40 p-5 backdrop-blur-sm"}>

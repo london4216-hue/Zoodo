@@ -181,6 +181,15 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
 
           {contentStatus === 'ready' && content && (
             <>
+              {/* Mouth model — "watch my mouth" */}
+              {content.mouth_model_url && (
+                <div className="mt-3 flex flex-col items-center rounded-2xl bg-gradient-to-b from-[#FFF6E6] to-white p-4 ring-1 ring-[#D96969]/10">
+                  <div className="text-xs font-bold uppercase tracking-wide text-[#D96969]">👄 Watch my mouth</div>
+                  <Image src={content.mouth_model_url} alt={`Mouth showing the ${content.sound || content.letter} sound`} fittingType="fill" className="mt-2 h-36 w-36 rounded-2xl shadow-md ring-2 ring-[#D96969]/20" />
+                  {content.phonetic_cue && <p className="mt-2 text-xs font-semibold text-black/50">{content.phonetic_cue}</p>}
+                </div>
+              )}
+
               {/* Visual scaffolding */}
               {(content.letter || content.picture_url) && (
                 <div className="mt-3 rounded-2xl bg-[#FFF6E6] p-3">

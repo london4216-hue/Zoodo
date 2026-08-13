@@ -151,6 +151,12 @@ function gestureImagePrompt(target: string, age: number): string {
   return `A bright, realistic photograph of a young ${age}-year-old child's real hands and arms demonstrating this exact gesture: "${target}". Real human skin, real hands, clean light background, soft natural lighting, sharp focus, warm and friendly, educational demonstration photo, no text, no cartoon, no animation, no illustration.`;
 }
 
+// Photorealistic close-up of a mouth demonstrating the exact articulation
+// position for the target sound — the "watch my mouth" visual model.
+function mouthModelPrompt(sound: string, word: string): string {
+  return `A photorealistic, extreme close-up photograph of a friendly young woman's mouth and lips clearly demonstrating the exact articulation position for the speech sound "${sound}" as in the word "${word}". Clean light background, soft natural lighting, sharp focus on lips teeth and tongue, warm and friendly, speech therapy articulation reference photo, no text, no cartoon, no animation, no full face — mouth and lips only.`;
+}
+
 function countingPicturePrompt(n: number, word: string) {
   return `A bright, friendly photograph of exactly ${n} ${word} grouped together on a clean pure-white background, soft even lighting, sharp focus, clearly separated so each one can be counted, children's counting flashcard style, no text, no people, no numerals.`;
 }
@@ -268,6 +274,12 @@ export default async function(req) {
           .then((r) => (r && r.url) || '').catch(() => '')
       : Promise.resolve('');
 
+    const hasSpeechTarget = (strand === 'literacy' || strand === 'language') && !!(sound || word);
+    const mouthModelTask = hasSpeechTarget
+      ? base44.asServiceRole.integrations.Core.GenerateImage({ prompt: mouthModelPrompt(sound || letter, word || letter) })
+          .then((r) => (r && r.url) || '').catch(() => '')
+      : Promise.resolve('');
+
     const cardImageTasks = useCounting
       ? rawCards.map((c) =>
           base44.asServiceRole.integrations.Core.GenerateImage({ prompt: countingPicturePrompt(Number(c.n), String(c.word)) })
@@ -276,10 +288,11 @@ export default async function(req) {
         )
       : [];
 
-    const [audio_url, picture_url, gesture_url, ...cardResults] = await Promise.all([
+    const [audio_url, picture_url, gesture_url, mouth_model_url, ...cardResults] = await Promise.all([
       synthesizeSpeech(base44, script),
       singleImageTask,
       gestureImageTask,
+      mouthModelTask,
       ...cardImageTasks,
     ]);
 
@@ -295,6 +308,7 @@ export default async function(req) {
       phonetic_cue, bombardment_words,
       picture_url,
       gesture_url,
+      mouth_model_url,
       counting_cards,
       camera_recommended,
       assessment: (llmRes && llmRes.assessment) || null,
