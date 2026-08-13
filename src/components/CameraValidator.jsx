@@ -98,7 +98,7 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
       const conf = Math.round(data.confidence || 0);
       setConfidence(conf);
       setFeedback(data.feedback || '');
-      if (data.success && conf >= 70) {
+      if (conf >= 75) {
         setStatus('success');
         playPraiseJingle();
         vibrate([30, 30, 60]);
@@ -108,7 +108,7 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
           if (cel?.data?.audio_url) setPraiseUrl(cel.data.audio_url);
         } catch (e) {}
         onSuccess?.();
-      } else if (data.success && conf < 70) {
+      } else if (conf >= 50) {
         setStatus('confirm');
       } else {
         setStatus('fail');
@@ -217,6 +217,7 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
           ) : status === 'confirm' ? (
             <div className="space-y-2">
               <p className="text-center text-sm font-bold text-amber-600">Not sure yet — did {kidName} do it?</p>
+              <p className="text-center text-xs font-semibold text-black/40">Tip: try again with bigger movements, or move a little closer to the camera.</p>
               <div className="flex gap-2">
                 <button onClick={check} className="flex-1 rounded-2xl border-2 border-black/10 bg-white py-3 font-bold text-black/50 active:scale-95">Try again</button>
                 <SensoryButton onClick={() => { setStatus('success'); playPraiseJingle(); onSuccess?.(); }} glow="#4FAE5A" className="flex-[2] bg-[#4FAE5A] py-3 text-white">Yes, {kidName} did it!</SensoryButton>
