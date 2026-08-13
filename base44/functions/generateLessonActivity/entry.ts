@@ -95,7 +95,7 @@ const LESSON_PLAN_SCHEMA = {
   required: ['title', 'script', 'camera_recommended'],
 };
 
-function buildLessonPrompt(kidName: string, age: number, subject: string, dayLabel: string, currentLetter: string, milestone: string) {
+function buildLessonPrompt(kidName: string, age: number, subject: string, dayLabel: string, currentLetter: string, milestone: string, supportNeeds: string) {
   const strand = strandFor(subject);
   const guide = STRAND_GUIDES[strand] || STRAND_GUIDES.movement;
   const cdc = cdcForAge(age);
@@ -106,6 +106,7 @@ function buildLessonPrompt(kidName: string, age: number, subject: string, dayLab
   return PERSONA + '\n\n' +
     `Developmental reference — ${cdc}\n` +
     (milestone ? `Current milestone focus for this child: ${milestone}. Target this specific milestone where it fits today's theme.\n` : '') +
+    (supportNeeds ? `Support needs for this child: ${supportNeeds}. Adapt the activity to these needs — e.g., seated or supported positioning, reduced movement demands, non-verbal or gesture-based responses, slower pacing, more repetition. Never push past the child's comfort or ability.\n` : '') +
     `\nWrite a short, high-dosage spoken script (about 60-120 words) for a ${age}-year-old child named ${kidName}. ` +
     `It MUST open by naming the child: "Hi ${kidName}! ..." ` +
     `Today's theme is "${subject}" (${dayLabel}). ${letterDirective}${guide}${otpt} ` +
@@ -182,8 +183,9 @@ export default async function(req) {
     const age = Number(body.age) || 4;
     const currentLetter = (String(body.currentLetter || 'A').toUpperCase().match(/[A-Z]/) || ['A'])[0];
     const milestone = String(body.milestone || '');
+    const supportNeeds = String(body.supportNeeds || '');
 
-    const prompt = buildLessonPrompt(kidName, age, subject, dayLabel, currentLetter, milestone);
+    const prompt = buildLessonPrompt(kidName, age, subject, dayLabel, currentLetter, milestone, supportNeeds);
 
     const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt,

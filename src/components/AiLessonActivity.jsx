@@ -9,7 +9,7 @@ import { Image } from '@/components/ui/image';
 // AI-generated interactive audio activity: a cute character narrates a fun,
 // Ms-Rachel-style lesson that invites the kid to join in. Includes a replay
 // button and a caregiver "repeat next week?" prompt at the end.
-export default function AiLessonActivity({ kidName, subject, strand, dayLabel, age, lesson, currentLetter, milestone, onMastery, onUpdate, onComplete, onPlay }) {
+export default function AiLessonActivity({ kidName, subject, strand, dayLabel, age, lesson, currentLetter, milestone, supportNeeds, onMastery, onUpdate, onComplete, onPlay }) {
   const [status, setStatus] = useState('generating'); // generating | ready | error
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
@@ -27,7 +27,7 @@ export default function AiLessonActivity({ kidName, subject, strand, dayLabel, a
       setError('');
       try {
         const res = await base44.functions.invoke('generateLessonActivity', {
-          subject, dayLabel, kidName, age, milestone, currentLetter: strand === 'literacy' ? (currentLetter || 'A') : undefined,
+          subject, dayLabel, kidName, age, milestone, supportNeeds, currentLetter: strand === 'literacy' ? (currentLetter || 'A') : undefined,
         });
         if (cancelled) return;
         if (res?.data?.error) throw new Error(res.data.error);

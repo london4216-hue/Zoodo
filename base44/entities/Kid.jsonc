@@ -21,8 +21,14 @@
     },
     "developmental_milestone": {
       "type": "string",
-      "title": "Developmental Milestone",
-      "description": "The child's current developmental focus area"
+      "title": "Current Milestone Focus",
+      "description": "The specific developmental milestone the child is working on right now. Drives milestone-aligned content. Editable from the dashboard."
+    },
+    "support_needs": {
+      "type": "string",
+      "title": "Support Needs",
+      "description": "Any diagnoses, conditions, or adaptations (e.g., cerebral palsy, non-verbal, uses a wheelchair). Activities adapt to these needs so a nanny or caregiver can lead them. EduPath complements, not replaces, professional therapy.",
+      "default": ""
     },
     "cheer_text": {
       "type": "string",

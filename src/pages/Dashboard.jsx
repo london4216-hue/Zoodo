@@ -13,6 +13,8 @@ export default function Dashboard() {
   const [savingCheer, setSavingCheer] = useState(false);
   const [milestone, setMilestone] = useState('');
   const [savingMilestone, setSavingMilestone] = useState(false);
+  const [supportNeeds, setSupportNeeds] = useState('');
+  const [savingSupportNeeds, setSavingSupportNeeds] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -22,6 +24,7 @@ export default function Dashboard() {
           setKid(kids[0]);
           setCheerText(kids[0].cheer_text || '');
           setMilestone(kids[0].developmental_milestone || '');
+          setSupportNeeds(kids[0].support_needs || '');
         }
         const all = await base44.entities.Lesson.filter({ kid_id: kids[0]?.id });
         setLessons(all || []);
@@ -215,6 +218,45 @@ export default function Dashboard() {
               {savingMilestone ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Save'}
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Support needs — adapts content for special-needs children */}
+      {kid && (
+        <div className="rounded-[28px] bg-white p-5 mb-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <Heart className="h-5 w-5 text-pink-500" />
+            <h2 className="font-bold text-black/80">Support needs</h2>
+          </div>
+          <p className="text-xs text-black/40 mb-2">
+            Any diagnoses, conditions, or adaptations (e.g., “cerebral palsy, non-verbal, uses a wheelchair”). Activities adapt to these needs so a nanny or caregiver can lead them.
+          </p>
+          <div className="flex gap-2">
+            <input
+              value={supportNeeds}
+              onChange={(e) => setSupportNeeds(e.target.value)}
+              placeholder="e.g. cerebral palsy, limited verbal, wheelchair"
+              className="flex-1 rounded-2xl border-2 border-black/10 bg-white px-4 py-3 text-base font-semibold text-black focus:border-pink-500 focus:outline-none transition-colors"
+            />
+            <button
+              onClick={async () => {
+                if (!kid) return;
+                setSavingSupportNeeds(true);
+                try {
+                  const updated = await base44.entities.Kid.update(kid.id, { support_needs: supportNeeds });
+                  setKid(updated);
+                } catch (e) { /* ignore */ }
+                setSavingSupportNeeds(false);
+              }}
+              disabled={savingSupportNeeds || !supportNeeds.trim()}
+              className="rounded-2xl bg-pink-500 px-5 py-3 font-bold text-white active:scale-95 transition disabled:opacity-60"
+            >
+              {savingSupportNeeds ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Save'}
+            </button>
+          </div>
+          <p className="mt-3 text-xs text-black/40">
+            EduPath is a fun, caregiver-led companion that complements — it does not replace — professional therapy.
+          </p>
         </div>
       )}
 

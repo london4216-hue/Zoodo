@@ -78,6 +78,7 @@ export default async function(req: Request): Promise<Response> {
       ? body.lovedSubjects.filter(Boolean)
       : [];
     const milestone = String(body?.milestone || '');
+    const supportNeeds = String(body?.supportNeeds || '');
 
     const personalization = lovedSubjects.length
       ? ` The child has especially loved these topics before: ${lovedSubjects.join(', ')}. Lean slightly toward those interests where natural, while still covering all five themes.`
@@ -89,7 +90,7 @@ export default async function(req: Request): Promise<Response> {
 
     const prompt = `You are a warm, expert early-childhood educator building a weekly lesson plan for a ${age}-year-old child named ${kidName}.${personalization}
 
-Developmental reference — ${cdc}${milestone ? `\nCurrent milestone focus for this child: ${milestone}. Choose videos that help practice this specific milestone where it fits the day's theme.` : ''}
+Developmental reference — ${cdc}${milestone ? `\nCurrent milestone focus for this child: ${milestone}. Choose videos that help practice this specific milestone where it fits the day's theme.` : ''}${supportNeeds ? `\nSupport needs for this child: ${supportNeeds}. Choose videos that are accessible and adaptable to these needs (e.g., seated movement, sensory-friendly pacing, simple language).` : ''}
 
 For each of the 5 weekdays below, search the web for 1 real, high-quality YouTube video that fits that day's theme for a ${age}-year-old and matches the developmental level above.
 ${lines}

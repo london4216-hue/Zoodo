@@ -99,6 +99,7 @@ export default function Home() {
         kidName: kidObj.name,
         age: kidObj.age,
         milestone: kidObj.developmental_milestone,
+        supportNeeds: kidObj.support_needs,
         lovedSubjects,
       });
       const content = res?.data || {};

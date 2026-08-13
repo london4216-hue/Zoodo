@@ -178,6 +178,7 @@ export default function LessonDetail() {
               subject={dayCfg.subject}
               strand={dayCfg.strand}
               milestone={kid?.developmental_milestone}
+              supportNeeds={kid?.support_needs}
               dayLabel={dayCfg.label}
               age={kid?.age || 4}
               lesson={lesson}
@@ -198,6 +199,7 @@ export default function LessonDetail() {
               subject={dayCfg.subject}
               strand={dayCfg.strand}
               milestone={kid?.developmental_milestone}
+              supportNeeds={kid?.support_needs}
               dayLabel={dayCfg.label}
               age={kid?.age || 4}
               lesson={lesson}
