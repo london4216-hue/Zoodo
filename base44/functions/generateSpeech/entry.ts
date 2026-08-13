@@ -5,6 +5,8 @@ import { secrets } from "base44:runtime";
 // Returns a stored file_url. Only the lady voice is ever used — no fallback.
 const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — warm, friendly female
 
+// Warm-instance cache only (best-effort). This avoids duplicate generation
+// bursts while the function instance is hot; it is not cross-instance durable.
 const speechCache = new Map<string, string>();
 
 const SPECIAL_NAME_PRONUNCIATIONS: Record<string, string> = {

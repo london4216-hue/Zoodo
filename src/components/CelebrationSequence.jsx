@@ -4,7 +4,7 @@ import { triggerMusicCelebrationBoost, vibrate } from '@/lib/sensoryAudio';
 
 const COLORS = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#FFD9E6', '#7B4FE0'];
 
-export default function CelebrationSequence({ tier = 'first', burstAround }) {
+export default function CelebrationSequence({ tier = 'first' }) {
   useEffect(() => {
     const particleCount =
       tier === 'weekly' ? 220 :
@@ -21,8 +21,7 @@ export default function CelebrationSequence({ tier = 'first', burstAround }) {
     if (tier === 'weekly') vibrate([80, 40, 80, 40, 120]);
     if (tier === 'first') vibrate([30]);
     triggerMusicCelebrationBoost(tier === 'weekly' ? 0.34 : 0.28, 1300);
-    burstAround?.();
-  }, [tier, burstAround]);
+  }, [tier]);
 
   return null;
 }

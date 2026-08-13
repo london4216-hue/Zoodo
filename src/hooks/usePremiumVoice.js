@@ -1,9 +1,11 @@
 import { useCallback, useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 
+const EMPTY_PARENT_NAMES = [];
+
 // Shared premium narration helper that always passes child-name context
 // and returns a playable audio URL from the backend voice generator.
-export default function usePremiumVoice({ kidName = '', parentNames = [] } = {}) {
+export default function usePremiumVoice({ kidName = '', parentNames = EMPTY_PARENT_NAMES } = {}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [lastAudioUrl, setLastAudioUrl] = useState('');

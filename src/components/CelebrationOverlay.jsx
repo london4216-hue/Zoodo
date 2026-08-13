@@ -77,7 +77,6 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-6">
       <CelebrationSequence
         tier={videos.length > 1 ? 'streak' : 'first'}
-        burstAround={fireworksAroundVideo}
       />
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
