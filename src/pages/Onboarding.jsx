@@ -32,8 +32,6 @@ export default function Onboarding() {
   const [parentVideos, setParentVideos] = useState([]);
   const [currentParent, setCurrentParent] = useState(0);
   const [camConsent, setCamConsent] = useState(false);
-  const [photoFile, setPhotoFile] = useState(null);
-  const [photoPreview, setPhotoPreview] = useState('');
   const videoRef = useRef(null);
 
   const submit = async (e) => {
@@ -41,18 +39,12 @@ export default function Onboarding() {
     setSaving(true);
     setError('');
     try {
-      let photo_url = '';
-      if (photoFile) {
-        const up = await base44.integrations.Core.UploadFile({ file: photoFile });
-        photo_url = up?.file_url || '';
-      }
       const kid = await base44.entities.Kid.create({
         name: name.trim(),
         age: Number(startAge),
         developmental_milestone: defaultMilestoneForAge(startAge),
         program_length: programLength,
         cheer_text: 'You did it!',
-        photo_url,
       });
       setKidId(kid.id);
       setKid(kid);
@@ -115,7 +107,7 @@ export default function Onboarding() {
       if (done && kidId) {
         await base44.entities.Kid.update(kidId, { parent_videos: next });
         setUploading(false);
-        setStep('camera');
+        setStep('consent');
       } else {
         setUploading(false);
         setCurrentParent(currentParent + 1);
@@ -224,6 +216,46 @@ export default function Onboarding() {
     );
   }
 
+  if (step === 'consent') {
+    return (
+      <div className="min-h-screen bg-[#FFFDF8] flex flex-col items-center justify-center px-6 py-10">
+        <div className="w-full max-w-md text-center">
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#EDE6FF]">
+            <Camera className="h-8 w-8 text-[#7B4FE0]" />
+          </div>
+          <h1 className="text-3xl font-bold" style={{ color: '#7B4FE0' }}>Camera & microphone</h1>
+          <p className="mt-2 text-black/60 font-medium">
+            Zoodo uses the camera and microphone to cheer your child on during activities. Please allow them so the fun can begin!
+          </p>
+          <label className="mt-6 flex items-start gap-2 rounded-2xl bg-white/70 p-4 text-left text-sm font-medium text-black/70">
+            <input
+              type="checkbox"
+              checked={camConsent}
+              onChange={(e) => setCamConsent(e.target.checked)}
+              className="mt-0.5 h-5 w-5 shrink-0 accent-[#7B4FE0]"
+            />
+            <span>
+              I consent to Zoodo using the camera and microphone to cheer my child on during activities.
+            </span>
+          </label>
+          <Button
+            onClick={() => setStep('camera')}
+            disabled={!camConsent}
+            className="mt-5 w-full rounded-2xl bg-[#7B4FE0] py-6 text-lg font-bold text-white hover:bg-[#6a3fd0] disabled:opacity-60"
+          >
+            Allow camera & mic
+          </Button>
+          <button
+            onClick={finish}
+            className="mt-3 w-full text-sm font-semibold text-black/40 underline underline-offset-2 hover:text-black/60"
+          >
+            Skip for now — we can do this later
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (step === 'camera') {
     return (
       <div className="min-h-screen bg-[#FFFDF8] flex flex-col items-center justify-center px-6 py-10">
@@ -231,11 +263,11 @@ export default function Onboarding() {
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#EDE6FF]">
             <Camera className="h-8 w-8 text-[#7B4FE0]" />
           </div>
-          <h1 className="text-3xl font-bold" style={{ color: '#7B4FE0' }}>Turn on the camera</h1>
+          <h1 className="text-3xl font-bold" style={{ color: '#7B4FE0' }}>Camera's on!</h1>
           <p className="mt-2 text-black/60 font-medium">
-            Zoodo uses the camera to cheer your child on during activities. Let's allow it now!
+            Zoodo can see {name.trim() || 'your child'} now and is ready to cheer them on!
           </p>
-          <div className="relative mx-auto mt-6 aspect-video w-full max-w-sm overflow-hidden rounded-3xl bg-black/10 shadow-inner">
+          <div className="relative mx-auto mt-5 aspect-video w-full max-w-sm overflow-hidden rounded-3xl bg-black/10 shadow-inner">
             {camStatus === 'denied' ? (
               <div className="flex h-full items-center justify-center p-4 text-center text-sm font-semibold text-black/50">
                 Camera is off — that's okay, you can still play! You can enable it later.
@@ -249,32 +281,15 @@ export default function Onboarding() {
               </span>
             )}
           </div>
-          <label className="mt-5 flex items-start gap-2 rounded-2xl bg-white/70 p-3 text-left text-sm font-medium text-black/70">
-            <input
-              type="checkbox"
-              checked={camConsent}
-              onChange={(e) => setCamConsent(e.target.checked)}
-              className="mt-0.5 h-5 w-5 shrink-0 accent-[#7B4FE0]"
-            />
-            <span>
-              I consent to Zoodo using the camera to cheer my child on during activities.
-            </span>
-          </label>
           <Button
             onClick={startCountdown}
-            disabled={camStatus === 'asking' || countdown > 0 || !camConsent}
+            disabled={camStatus === 'asking' || countdown > 0}
             className="mt-4 w-full rounded-2xl bg-[#7B4FE0] py-6 text-lg font-bold text-white hover:bg-[#6a3fd0] disabled:opacity-60"
           >
             {camStatus === 'asking' ? (
               <span className="flex items-center justify-center gap-2"><Loader2 className="h-5 w-5 animate-spin" /> Asking for permission…</span>
             ) : 'Start the plan'}
           </Button>
-          <button
-            onClick={finish}
-            className="mt-3 w-full text-sm font-semibold text-black/40 underline underline-offset-2 hover:text-black/60"
-          >
-            Skip for now — we can do this later
-          </button>
           {countdown > 0 && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
               <span className="text-8xl font-bold text-white animate-ping-slow">{countdown}</span>
@@ -314,38 +329,6 @@ export default function Onboarding() {
               maxLength={30}
               className="w-full rounded-2xl border-2 border-black/10 bg-white px-4 py-4 text-xl font-bold text-black/80 placeholder:text-black/30 focus:border-[#7B4FE0] focus:outline-none"
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-black/70 mb-2">
-              Add a photo of {name.trim() || 'your child'}
-            </label>
-            <div className="flex items-center gap-4">
-              <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-3xl bg-[#FAD7D7] ring-2 ring-black/5">
-                {photoPreview ? (
-                  <img src={photoPreview} alt="Kid" className="h-full w-full object-cover" />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center">
-                    <Camera className="h-7 w-7 text-[#D96969]/50" />
-                  </div>
-                )}
-              </div>
-              <label className="flex-1 cursor-pointer rounded-2xl border-2 border-dashed border-black/10 bg-white px-4 py-3 text-center text-sm font-semibold text-black/50 hover:border-[#7B4FE0]/50 transition">
-                {photoPreview ? 'Change photo' : 'Upload photo'}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    const f = e.target.files?.[0];
-                    if (f) {
-                      setPhotoFile(f);
-                      setPhotoPreview(URL.createObjectURL(f));
-                    }
-                  }}
-                />
-              </label>
-            </div>
           </div>
 
           <div>
