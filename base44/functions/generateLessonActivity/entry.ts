@@ -141,6 +141,12 @@ function picturePromptFor(word: string) {
   return `A bright, friendly, simple photograph of a single ${word} centered on a clean pure-white background, soft even lighting, sharp focus, children's speech-therapy flashcard style, no text, no people.`;
 }
 
+// Real, photorealistic photo of a real human hand/child demonstrating the exact
+// assessment gesture — shown to the child as the "watch the real way" model.
+function gestureImagePrompt(target: string, age: number): string {
+  return `A bright, realistic photograph of a young ${age}-year-old child's real hands and arms demonstrating this exact gesture: "${target}". Real human skin, real hands, clean light background, soft natural lighting, sharp focus, warm and friendly, educational demonstration photo, no text, no cartoon, no animation, no illustration.`;
+}
+
 function countingPicturePrompt(n: number, word: string) {
   return `A bright, friendly photograph of exactly ${n} ${word} grouped together on a clean pure-white background, soft even lighting, sharp focus, clearly separated so each one can be counted, children's counting flashcard style, no text, no people, no numerals.`;
 }
@@ -247,6 +253,13 @@ export default async function(req) {
           .then((r) => (r && r.url) || '').catch(() => '')
       : Promise.resolve('');
 
+    const assessMode = llmRes?.assessment?.mode;
+    const assessTarget = llmRes?.assessment?.target || '';
+    const gestureImageTask = (assessMode === 'camera' && assessTarget)
+      ? base44.asServiceRole.integrations.Core.GenerateImage({ prompt: gestureImagePrompt(assessTarget, age) })
+          .then((r) => (r && r.url) || '').catch(() => '')
+      : Promise.resolve('');
+
     const cardImageTasks = useCounting
       ? rawCards.map((c) =>
           base44.asServiceRole.integrations.Core.GenerateImage({ prompt: countingPicturePrompt(Number(c.n), String(c.word)) })
@@ -255,9 +268,10 @@ export default async function(req) {
         )
       : [];
 
-    const [audio_url, picture_url, ...cardResults] = await Promise.all([
+    const [audio_url, picture_url, gesture_url, ...cardResults] = await Promise.all([
       synthesizeSpeech(base44, script),
       singleImageTask,
+      gestureImageTask,
       ...cardImageTasks,
     ]);
 
@@ -271,6 +285,7 @@ export default async function(req) {
       title, script, audio_url,
       letter, sound, word,
       picture_url,
+      gesture_url,
       counting_cards,
       camera_recommended,
       assessment: (llmRes && llmRes.assessment) || null,

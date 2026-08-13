@@ -247,7 +247,14 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
       {/* ───────── EXPLAIN (post-video, caregiver prep) ───────── */}
       {stage === 'explain' && (
         <div className="mt-3 flex flex-col items-center text-center">
-          <Zoodo size={96} bounce />
+          {content?.gesture_url ? (
+            <div className="flex flex-col items-center">
+              <span className="text-xs font-bold uppercase tracking-wide text-black/40">Watch the real way</span>
+              <Image src={content.gesture_url} alt={assessTarget} fittingType="fill" className="mt-1 h-32 w-32 rounded-2xl shadow-sm" />
+            </div>
+          ) : (
+            <Zoodo size={96} bounce />
+          )}
           <h2 className="mt-2 text-lg font-bold text-black/80">Now it's your turn, {kidName}!</h2>
           <p className="mt-1 text-sm font-semibold text-black/50">
             Did you see how? Let's try it together — nice and slow.
@@ -283,6 +290,12 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
               {verbal ? 'Say it for me!' : 'Show me!'}
             </span>
           </div>
+          {!verbal && content?.gesture_url && (
+            <div className="mb-2 flex flex-col items-center">
+              <span className="text-xs font-semibold text-black/50">Copy the real hand</span>
+              <Image src={content.gesture_url} alt={assessTarget} fittingType="fill" className="mt-1 h-24 w-24 rounded-2xl shadow-sm" />
+            </div>
+          )}
           {verbal ? (
             <MicAssessment kidName={kidName} target={assessTarget} onResult={handleAssessResult} />
           ) : (
