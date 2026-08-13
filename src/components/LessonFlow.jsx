@@ -164,7 +164,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
       {/* ───────── INTRO ───────── */}
       {stage === 'intro' && (
         <div className="mt-3 flex flex-col items-center text-center">
-          <Zoodo size={104} bounce={playing} />
+          <Zoodo size={80} bounce={playing} />
           <h2 className="mt-2 text-lg font-bold text-black/80">
             Today we're learning {subject}, {kidName}!
           </h2>
@@ -183,24 +183,24 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
             <>
               {/* Mouth model — "watch my mouth" */}
               {content.mouth_model_url && (
-                <div className="mt-3 flex flex-col items-center rounded-2xl bg-gradient-to-b from-[#FFF6E6] to-white p-4 ring-1 ring-[#D96969]/10">
+                <div className="mt-2 flex flex-col items-center rounded-2xl bg-gradient-to-b from-[#FFF6E6] to-white p-2.5 ring-1 ring-[#D96969]/10">
                   <div className="text-xs font-bold uppercase tracking-wide text-[#D96969]">👄 Watch my mouth</div>
-                  <Image src={content.mouth_model_url} alt={`Mouth showing the ${content.sound || content.letter} sound`} fittingType="fill" className="mt-2 h-36 w-36 rounded-2xl shadow-md ring-2 ring-[#D96969]/20" />
+                  <Image src={content.mouth_model_url} alt={`Mouth showing the ${content.sound || content.letter} sound`} fittingType="fill" className="mt-1 h-24 w-24 rounded-2xl shadow-md ring-2 ring-[#D96969]/20" />
                   {content.phonetic_cue && <p className="mt-2 text-xs font-semibold text-black/50">{content.phonetic_cue}</p>}
                 </div>
               )}
 
               {/* Visual scaffolding */}
               {(content.letter || content.picture_url) && (
-                <div className="mt-3 rounded-2xl bg-[#FFF6E6] p-3">
-                  <div className="flex items-center justify-center gap-3">
+                <div className="mt-2 rounded-2xl bg-[#FFF6E6] p-2">
+                  <div className="flex items-center justify-center gap-2">
                     {content.letter && (
-                      <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-white text-5xl font-bold text-[#D96969] shadow-sm">
+                      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white text-4xl font-bold text-[#D96969] shadow-sm">
                         {content.letter}
                       </div>
                     )}
                     {content.picture_url && (
-                      <Image src={content.picture_url} alt={content.word || content.title} fittingType="fill" className="h-20 w-20 shrink-0 rounded-2xl shadow-sm" />
+                      <Image src={content.picture_url} alt={content.word || content.title} fittingType="fill" className="h-16 w-16 shrink-0 rounded-2xl shadow-sm" />
                     )}
                     {content.word && <div className="text-xl font-bold text-black/70">{content.word}</div>}
                   </div>
@@ -213,7 +213,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
                 <div className="mt-3 w-full"><CountingCards cards={content.counting_cards} /></div>
               )}
               {content.bombardment_words && content.bombardment_words.length > 0 && (
-                <div className="mt-3 w-full rounded-2xl bg-[#EEF2FF] p-3">
+                <div className="mt-2 w-full rounded-2xl bg-[#EEF2FF] p-2">
                   <div className="text-xs font-bold uppercase tracking-wide text-[#4969E1]">Listen for the sound</div>
                   <div className="mt-1.5 flex flex-wrap justify-center gap-1.5">
                     {content.bombardment_words.map((w, i) => (
@@ -225,7 +225,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
 
               <button
                 onClick={togglePlay}
-                className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#4969E1] py-3 text-lg font-bold text-white active:scale-[0.98] transition hover:bg-[#3b54c9]"
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#4969E1] py-2.5 text-base font-bold text-white active:scale-[0.98] transition hover:bg-[#3b54c9]"
               >
                 {playing ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
                 {playing ? 'Pause' : 'Hear it again'}
@@ -234,7 +234,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
               <SensoryButton
                 onClick={() => setStage('video')}
                 glow="#7B4FE0"
-                className="mt-2 flex w-full items-center justify-center gap-2 bg-[#7B4FE0] py-4 text-lg text-white"
+                className="mt-2 flex w-full items-center justify-center gap-2 bg-[#7B4FE0] py-3 text-base text-white"
               >
                 Let's watch how it's done! <ArrowRight className="h-5 w-5" />
               </SensoryButton>

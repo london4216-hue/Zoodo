@@ -146,7 +146,7 @@ export default function LessonDetail() {
           ))}
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="flex-1 min-h-0 overflow-y-auto flex flex-col justify-center">
           {step === 'lesson' && (
             <div className="space-y-3">
               {dayCfg.stretchGuide && !lessonDone && (
