@@ -82,7 +82,20 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
   const [feedback, setFeedback] = useState('');
   const [attempts, setAttempts] = useState(0);
   const [stars, setStars] = useState(0);
+  const [revealStep, setRevealStep] = useState(0);
   const audioRef = useRef(null);
+
+  // Build a sequential reveal queue — one card at a time so the child focuses
+  // on a single visual before moving on. Literacy: letter → picture → word →
+  // sound → bombardment. Other strands: picture → word.
+  const revealCards = content ? [
+    ...(content.letter ? [{ kind: 'letter' }] : []),
+    ...(content.picture_url ? [{ kind: 'picture' }] : []),
+    ...(content.word ? [{ kind: 'word' }] : []),
+    ...(content.sound ? [{ kind: 'sound' }] : []),
+    ...(content.bombardment_words?.length ? [{ kind: 'bombardment' }] : []),
+  ] : [];
+  const revealedAll = revealStep >= revealCards.length;
 
   useEffect(() => {
     let cancelled = false;
@@ -96,6 +109,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
         if (cancelled) return;
         if (res?.data?.error) throw new Error(res.data.error);
         setContent(res.data);
+        setRevealStep(0);
         setContentStatus('ready');
       } catch (err) {
         if (cancelled) return;
@@ -108,10 +122,10 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
   }, [subject, dayLabel, kidName, age]);
 
   useEffect(() => {
-    if (stage === 'intro' && content?.audio_url && audioRef.current) {
+    if (stage === 'intro' && revealedAll && content?.audio_url && audioRef.current) {
       audioRef.current.play().then(() => { setPlaying(true); onPlay?.(); }).catch(() => {});
     }
-  }, [stage, content]);
+  }, [stage, content, revealedAll]);
 
   const togglePlay = () => {
     const a = audioRef.current;
@@ -161,6 +175,14 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
 
       {content?.audio_url && <audio ref={audioRef} src={content.audio_url} onEnded={() => setPlaying(false)} />}
 
+      <AnimatePresence mode="wait">
+      <motion.div
+        key={stage}
+        initial={{ opacity: 0, x: 24 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -24 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+      >
       {/* ───────── INTRO ───────── */}
       {stage === 'intro' && (
         <div className="mt-3 flex flex-col items-center text-center">
@@ -181,54 +203,88 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
 
           {contentStatus === 'ready' && content && (
             <>
-              {/* Visual scaffolding */}
-              {(content.letter || content.picture_url) && (
-                <div className="mt-2 rounded-2xl bg-[#FFF6E6] p-2">
-                  <div className="flex items-center justify-center gap-2">
-                    {content.letter && (
-                      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white text-4xl font-bold text-[#D96969] shadow-sm">
-                        {content.letter}
-                      </div>
-                    )}
-                    {content.picture_url && (
-                      <Image src={content.picture_url} alt={content.word || content.title} fittingType="fill" className="h-16 w-16 shrink-0 rounded-2xl shadow-sm" />
-                    )}
-                    {content.word && <div className="text-xl font-bold text-black/70">{content.word}</div>}
-                  </div>
-                  {content.sound && (
-                    <div className="mt-2 text-center text-sm font-bold text-[#D96969]">Say “{content.sound}” like {content.word}</div>
+              {/* Counting cards already reveal one at a time */}
+              {content.counting_cards && content.counting_cards.length >= 2 ? (
+                <div className="mt-3 w-full"><CountingCards cards={content.counting_cards} /></div>
+              ) : (
+                <div className="mt-3 flex w-full flex-col items-center">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={revealStep}
+                      initial={{ opacity: 0, scale: 0.85, y: 8 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.85, y: -8 }}
+                      transition={{ duration: 0.35, ease: 'easeOut' }}
+                      className="flex w-full flex-col items-center"
+                    >
+                      {revealCards[revealStep]?.kind === 'letter' && (
+                        <div className="flex flex-col items-center rounded-2xl bg-[#FFF6E6] p-4">
+                          <span className="text-xs font-bold uppercase tracking-wide text-black/40">This is the letter</span>
+                          <div className="mt-1 flex h-24 w-24 items-center justify-center rounded-2xl bg-white text-6xl font-bold text-[#D96969] shadow-md">
+                            {content.letter}
+                          </div>
+                        </div>
+                      )}
+                      {revealCards[revealStep]?.kind === 'picture' && (
+                        <div className="flex flex-col items-center rounded-2xl bg-[#FFF6E6] p-4">
+                          <span className="text-xs font-bold uppercase tracking-wide text-black/40">Look at this!</span>
+                          <Image src={content.picture_url} alt={content.word || content.title} fittingType="fill" className="mt-1 h-24 w-24 rounded-2xl shadow-md" />
+                        </div>
+                      )}
+                      {revealCards[revealStep]?.kind === 'word' && (
+                        <div className="flex flex-col items-center rounded-2xl bg-[#FFF6E6] p-4">
+                          <span className="text-xs font-bold uppercase tracking-wide text-black/40">This word says</span>
+                          <div className="mt-1 text-3xl font-bold text-black/80">{content.word}</div>
+                        </div>
+                      )}
+                      {revealCards[revealStep]?.kind === 'sound' && (
+                        <div className="flex flex-col items-center rounded-2xl bg-[#FFF6E6] p-4">
+                          <span className="text-xs font-bold uppercase tracking-wide text-black/40">Say this sound</span>
+                          <div className="mt-1 text-4xl font-bold text-[#D96969]">“{content.sound}”</div>
+                          <div className="mt-1 text-sm font-semibold text-black/50">like {content.word}</div>
+                        </div>
+                      )}
+                      {revealCards[revealStep]?.kind === 'bombardment' && (
+                        <div className="w-full rounded-2xl bg-[#EEF2FF] p-3">
+                          <div className="text-center text-xs font-bold uppercase tracking-wide text-[#4969E1]">Listen for the sound</div>
+                          <div className="mt-2 flex flex-wrap justify-center gap-1.5">
+                            {content.bombardment_words.map((w, i) => (
+                              <span key={i} className="rounded-full bg-white px-3 py-1 text-sm font-bold text-[#4969E1] shadow-sm">{w}</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+
+                  {!revealedAll ? (
+                    <SensoryButton
+                      onClick={() => setRevealStep((s) => s + 1)}
+                      glow="#F2A03D"
+                      className="mt-3 flex w-full items-center justify-center gap-2 bg-[#F2A03D] py-3 text-base text-white"
+                    >
+                      {revealStep === 0 ? 'Next' : 'Next'} <ArrowRight className="h-5 w-5" />
+                    </SensoryButton>
+                  ) : (
+                    <>
+                      <button
+                        onClick={togglePlay}
+                        className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#4969E1] py-2.5 text-base font-bold text-white active:scale-[0.98] transition hover:bg-[#3b54c9]"
+                      >
+                        {playing ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+                        {playing ? 'Pause' : 'Hear it again'}
+                      </button>
+                      <SensoryButton
+                        onClick={() => setStage('video')}
+                        glow="#7B4FE0"
+                        className="mt-2 flex w-full items-center justify-center gap-2 bg-[#7B4FE0] py-3 text-base text-white"
+                      >
+                        Let's watch how it's done! <ArrowRight className="h-5 w-5" />
+                      </SensoryButton>
+                    </>
                   )}
                 </div>
               )}
-              {content.counting_cards && content.counting_cards.length >= 2 && (
-                <div className="mt-3 w-full"><CountingCards cards={content.counting_cards} /></div>
-              )}
-              {content.bombardment_words && content.bombardment_words.length > 0 && (
-                <div className="mt-2 w-full rounded-2xl bg-[#EEF2FF] p-2">
-                  <div className="text-xs font-bold uppercase tracking-wide text-[#4969E1]">Listen for the sound</div>
-                  <div className="mt-1.5 flex flex-wrap justify-center gap-1.5">
-                    {content.bombardment_words.map((w, i) => (
-                      <span key={i} className="rounded-full bg-white px-3 py-1 text-sm font-bold text-[#4969E1] shadow-sm">{w}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <button
-                onClick={togglePlay}
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#4969E1] py-2.5 text-base font-bold text-white active:scale-[0.98] transition hover:bg-[#3b54c9]"
-              >
-                {playing ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-                {playing ? 'Pause' : 'Hear it again'}
-              </button>
-
-              <SensoryButton
-                onClick={() => setStage('video')}
-                glow="#7B4FE0"
-                className="mt-2 flex w-full items-center justify-center gap-2 bg-[#7B4FE0] py-3 text-base text-white"
-              >
-                Let's watch how it's done! <ArrowRight className="h-5 w-5" />
-              </SensoryButton>
             </>
           )}
         </div>
@@ -400,6 +456,8 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
           </AnimatePresence>
         </div>
       )}
+      </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
