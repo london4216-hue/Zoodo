@@ -8,8 +8,6 @@ import ActivityPlayMode from '@/components/ActivityPlayMode';
 import ActivityVideo from '@/components/ActivityVideo';
 import SensoryBackground from '@/components/SensoryBackground';
 import SensoryButton from '@/components/SensoryButton';
-import MusicToggle from '@/components/MusicToggle';
-import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { getMondayISO, addWeeksISO, formatWeekRange } from '@/lib/lessonConfig';
 import { ChevronLeft, ChevronRight, Loader2, Play, SkipForward, Check, ArrowLeft } from 'lucide-react';
 
@@ -32,7 +30,6 @@ export default function WeeklyActivities() {
   const [weekStart, setWeekStart] = useState(getMondayISO());
   const [activities, setActivities] = useState([]);
   const [playing, setPlaying] = useState(null);
-  useAutoAmbientMusic();
 
   useEffect(() => {
     (async () => {
@@ -133,7 +130,6 @@ export default function WeeklyActivities() {
   return (
     <Layout>
       <SensoryBackground />
-      <MusicToggle />
       <div className="relative z-10">
       <button
         onClick={() => navigate('/')}

@@ -123,18 +123,86 @@ const GROOVES = [
   { name: 'Pentatonic bright', root: 98.0, scale: [392.0, 440.0, 523.25, 587.33, 659.25, 783.99], bass: [98.0, 130.81, 110.0, 130.81], bpm: 126, wave: 'triangle' },
 ];
 
-let music = { playing: false, timer: null, master: null, nodes: [], lastSongIdx: -1 };
+const MUSIC_PREF_KEY = 'zoodo_music_enabled';
 
-export const startAmbientMusic = () => {
+let music = {
+  playing: false,
+  timer: null,
+  master: null,
+  baseLayer: null,
+  activityLayer: null,
+  celebrationLayer: null,
+  volume: 0.34,
+  nodes: [],
+  lastSongIdx: -1,
+};
+
+const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
+const getStoredMusicEnabled = () => {
+  if (typeof window === 'undefined') return true;
+  const raw = window.localStorage.getItem(MUSIC_PREF_KEY);
+  if (raw === null) return true;
+  return raw !== 'false';
+};
+
+export const isMusicEnabled = () => getStoredMusicEnabled();
+
+export const setMusicEnabled = (enabled) => {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(MUSIC_PREF_KEY, enabled ? 'true' : 'false');
+};
+
+export const setAmbientVolume = (volume = 0.34) => {
+  music.volume = clamp(Number(volume) || 0.34, 0, 1);
+  const c = getCtx();
+  if (c && music.baseLayer) {
+    music.baseLayer.gain.setTargetAtTime(music.volume, c.currentTime, 0.45);
+  }
+};
+
+export const setMusicActivityLayer = (level = 0.18) => {
+  const c = getCtx();
+  if (!c || !music.activityLayer) return;
+  const next = clamp(Number(level) || 0, 0, 0.45);
+  music.activityLayer.gain.setTargetAtTime(next, c.currentTime, 0.35);
+};
+
+export const triggerMusicCelebrationBoost = (peak = 0.28, ms = 1200) => {
+  const c = getCtx();
+  if (!c || !music.celebrationLayer) return;
+  const top = clamp(Number(peak) || 0.28, 0, 0.6);
+  music.celebrationLayer.gain.cancelScheduledValues(c.currentTime);
+  music.celebrationLayer.gain.setTargetAtTime(top, c.currentTime, 0.08);
+  setTimeout(() => {
+    const cc = getCtx();
+    if (!cc || !music.celebrationLayer) return;
+    music.celebrationLayer.gain.setTargetAtTime(0, cc.currentTime, 0.25);
+  }, ms);
+};
+
+export const startAmbientMusic = ({ volume = 0.34 } = {}) => {
   if (music.playing) return;
+  if (!getStoredMusicEnabled()) return;
   const c = getCtx();
   if (!c) return;
   music.playing = true;
   const master = c.createGain();
   master.gain.value = 0;
   master.connect(c.destination);
-  master.gain.setTargetAtTime(0.16, c.currentTime, 0.8);
+  music.volume = clamp(Number(volume) || 0.34, 0, 1);
+  master.gain.setTargetAtTime(1, c.currentTime, 0.8);
   music.master = master;
+  music.baseLayer = c.createGain();
+  music.baseLayer.gain.value = 0;
+  music.baseLayer.gain.setTargetAtTime(music.volume, c.currentTime, 0.6);
+  music.baseLayer.connect(master);
+  music.activityLayer = c.createGain();
+  music.activityLayer.gain.value = 0.15;
+  music.activityLayer.connect(master);
+  music.celebrationLayer = c.createGain();
+  music.celebrationLayer.gain.value = 0;
+  music.celebrationLayer.connect(master);
 
   let idx = Math.floor(Math.random() * GROOVES.length);
   if (GROOVES.length > 1 && idx === music.lastSongIdx) idx = (idx + 1) % GROOVES.length;
@@ -153,7 +221,7 @@ export const startAmbientMusic = () => {
     g.gain.setValueAtTime(0.0001, c.currentTime + t);
     g.gain.exponentialRampToValueAtTime(0.5, c.currentTime + t + 0.01);
     g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + t + 0.2);
-    o.connect(g); g.connect(master);
+    o.connect(g); g.connect(music.baseLayer);
     o.start(c.currentTime + t); o.stop(c.currentTime + t + 0.22);
   };
   const hat = (t, open = false) => {
@@ -166,7 +234,7 @@ export const startAmbientMusic = () => {
     g.gain.setValueAtTime(open ? 0.1 : 0.14, c.currentTime + t);
     g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + t + (open ? 0.12 : 0.04));
     const f = c.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 7000;
-    n.connect(f); f.connect(g); g.connect(master);
+    n.connect(f); f.connect(g); g.connect(music.activityLayer);
     n.start(c.currentTime + t); n.stop(c.currentTime + t + 0.14);
   };
   const snare = (t) => {
@@ -179,7 +247,7 @@ export const startAmbientMusic = () => {
     g.gain.setValueAtTime(0.22, c.currentTime + t);
     g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + t + 0.14);
     const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1800; f.Q.value = 0.8;
-    n.connect(f); f.connect(g); g.connect(master);
+    n.connect(f); f.connect(g); g.connect(music.activityLayer);
     n.start(c.currentTime + t); n.stop(c.currentTime + t + 0.16);
   };
 
@@ -190,7 +258,7 @@ export const startAmbientMusic = () => {
     o.type = 'sawtooth';
     o.frequency.value = freq;
     const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 600; f.Q.value = 4;
-    o.connect(f); f.connect(g); g.connect(master);
+    o.connect(f); f.connect(g); g.connect(music.baseLayer);
     const start = c.currentTime + t;
     g.gain.setValueAtTime(0.0001, start);
     g.gain.exponentialRampToValueAtTime(0.26, start + 0.02);
@@ -203,7 +271,7 @@ export const startAmbientMusic = () => {
     o.type = groove.wave;
     o.frequency.value = freq;
     const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 3000;
-    o.connect(f); f.connect(g); g.connect(master);
+    o.connect(f); f.connect(g); g.connect(music.baseLayer);
     const start = c.currentTime + t;
     g.gain.setValueAtTime(0.0001, start);
     g.gain.exponentialRampToValueAtTime(0.18, start + 0.02);
@@ -258,6 +326,9 @@ export const stopAmbientMusic = () => {
     try { master && master.disconnect(); } catch (e) {}
   }, 800);
   music.nodes = [];
+  music.baseLayer = null;
+  music.activityLayer = null;
+  music.celebrationLayer = null;
   music.master = null;
 };
 

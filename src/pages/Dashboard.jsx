@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import { DAYS, getMondayISO, formatWeekRange } from '@/lib/lessonConfig';
-import { Check, ChevronRight, Heart, TrendingUp, MessageCircle, Loader2 } from 'lucide-react';
+import { ChevronRight, Heart, TrendingUp, MessageCircle, Loader2 } from 'lucide-react';
 
 export default function Dashboard() {
   const [kid, setKid] = useState(null);
@@ -62,6 +62,16 @@ export default function Dashboard() {
   const totalLessons = lessons.length;
   const overallPercent = totalLessons ? Math.round((totalCompleted / totalLessons) * 100) : 0;
   const thisWeek = getMondayISO();
+  const weeklyWins = lessons.filter((l) => l.completed && l.week_start === thisWeek).length;
+  const dayOrder = DAYS.reduce((acc, d, idx) => ({ ...acc, [d.key]: idx }), {});
+  const thisWeekLessons = lessons
+    .filter((l) => l.week_start === thisWeek)
+    .sort((a, b) => (dayOrder[a.day] ?? 0) - (dayOrder[b.day] ?? 0));
+  let consecutiveWins = 0;
+  for (let i = thisWeekLessons.length - 1; i >= 0; i -= 1) {
+    if (thisWeekLessons[i].completed) consecutiveWins += 1;
+    else break;
+  }
 
   // Kid-driven favorites: subjects ranked by how many videos the kid loved.
   const lovedBySubject = useMemo(() => {
@@ -89,12 +99,23 @@ export default function Dashboard() {
     <Layout>
       <header className="mb-5">
         <h1 className="text-3xl font-bold" style={{ color: '#D96969' }}>
-          Learning Dashboard
+          {kid?.name ? `Welcome back, ${kid.name}!` : 'Learning Dashboard'}
         </h1>
         <p className="mt-1 text-black/50 font-medium">
-          {kid?.name ? `${kid.name}'s progress over the weeks` : 'Progress over the weeks'}
+          {kid?.name ? `Here is your week, ${kid.name}.` : 'Progress over the weeks'}
         </p>
       </header>
+
+      <div className="mb-5 grid grid-cols-2 gap-3">
+        <div className="rounded-2xl bg-white p-4 shadow-sm">
+          <p className="text-xs font-bold uppercase tracking-wide text-black/40">Consecutive wins</p>
+          <p className="mt-1 text-2xl font-bold text-[#4FAE5A]">{consecutiveWins}</p>
+        </div>
+        <div className="rounded-2xl bg-white p-4 shadow-sm">
+          <p className="text-xs font-bold uppercase tracking-wide text-black/40">Weekly wins</p>
+          <p className="mt-1 text-2xl font-bold text-[#4969E1]">{weeklyWins}</p>
+        </div>
+      </div>
 
       {/* Overall progress card */}
       <div className="rounded-[28px] bg-gradient-to-br from-[#4969E1] to-[#7B4FE0] p-5 text-white mb-5 shadow-sm">

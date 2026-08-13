@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
@@ -13,8 +13,6 @@ import DayGraphic from '@/components/DayGraphic';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
 import SensoryBackground from '@/components/SensoryBackground';
 import SensoryButton from '@/components/SensoryButton';
-import MusicToggle from '@/components/MusicToggle';
-import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { getDayConfigForAgeAndKey } from '@/lib/lessonConfig';
 import { ArrowLeft, Loader2, Pencil, Sparkles, Home } from 'lucide-react';
 
@@ -26,9 +24,9 @@ export default function LessonDetail() {
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [celebrating, setCelebrating] = useState(false);
+  const [celebrationTier, setCelebrationTier] = useState('first');
   const [lessonDone, setLessonDone] = useState(false);
   const [step, setStep] = useState('lesson'); // lesson | drawing | lunch | story
-  useAutoAmbientMusic();
   const dayCfg = getDayConfigForAgeAndKey(kid?.age || 4, day);
 
   useEffect(() => {
@@ -65,6 +63,18 @@ export default function LessonDetail() {
       skipped: false,
       completed_date: new Date().toISOString(),
     });
+    try {
+      const allLessons = await base44.entities.Lesson.filter({ kid_id: kidId });
+      const completedCount = (allLessons || []).filter((l) => l.completed).length;
+      const tier = completedCount >= 7 && completedCount % 7 === 0
+        ? 'weekly'
+        : completedCount >= 3 && completedCount % 3 === 0
+          ? 'streak'
+          : 'first';
+      setCelebrationTier(tier);
+    } catch (e) {
+      setCelebrationTier('first');
+    }
     setLesson(updated);
     setCelebrating(true);
   };
@@ -107,7 +117,6 @@ export default function LessonDetail() {
   return (
     <Layout>
       <SensoryBackground />
-      <MusicToggle />
       <div className="relative z-10 flex flex-col h-[calc(100vh-9.5rem)]">
         {/* Compact top bar: back + subject banner */}
         <div className="flex items-center gap-2 mb-1">
@@ -309,6 +318,7 @@ export default function LessonDetail() {
           subject={dayCfg.subject}
           parentVideos={kid?.parent_videos}
           cheerText={kid?.cheer_text}
+          celebrationTier={celebrationTier}
           onClose={() => { setCelebrating(false); setLessonDone(true); }}
         />
       )}

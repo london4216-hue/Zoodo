@@ -3,22 +3,20 @@ import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { base44 } from '@/api/base44Client';
 import { Loader2, X, Mic } from 'lucide-react';
+import CelebrationSequence from '@/components/CelebrationSequence';
+import ParentVideoPlayback from '@/components/ParentVideoPlayback';
 
 // Full-screen celebration that fires when a lesson is marked complete:
 // confetti + a bouncing party character + an encouraging voice cheer.
-export default function CelebrationOverlay({ kidName, subject, parentVideos, cheerText, onClose }) {
+export default function CelebrationOverlay({ kidName, subject, parentVideos, cheerText, celebrationTier = 'first', onClose }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const audioRef = useRef(null);
-  const videoRef = useRef(null);
-  const [videoIdx, setVideoIdx] = useState(0);
-  const [videosDone, setVideosDone] = useState(false);
   const videos = Array.isArray(parentVideos) ? parentVideos.filter(Boolean) : [];
   const colors = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#FFD9E6', '#7B4FE0'];
 
   // Fire confetti outward from around the video + a little firework pop sound.
-  const fireworksAroundVideo = () => {
-    const el = videoRef.current;
+  const fireworksAroundVideo = (el) => {
     let cx = 0.5, cy = 0.5;
     if (el) {
       const r = el.getBoundingClientRect();
@@ -59,22 +57,6 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
     };
     burst();
 
-    // Play the parent cheer video(s) with sound right away — the lesson
-    // "We finished!" tap counts as the user gesture autoplay needs.
-    if (videos.length > 0) {
-      setVideoIdx(0);
-      setVideosDone(false);
-      requestAnimationFrame(() => {
-        videoRef.current?.play().catch(() => {
-          // If autoplay-with-sound is blocked, fall back to muted so it still plays.
-          if (videoRef.current) {
-            videoRef.current.muted = true;
-            videoRef.current.play().catch(() => {});
-          }
-        });
-      });
-    }
-
     (async () => {
       try {
         const res = await base44.functions.invoke('generateCelebration', { kidName, subject });
@@ -91,14 +73,11 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
     return () => { cancelled = true; };
   }, [kidName, subject]);
 
-  // When we advance to the next parent's clip, make sure it actually plays.
-  useEffect(() => {
-    if (videoIdx === 0) return;
-    requestAnimationFrame(() => videoRef.current?.play().catch(() => {}));
-  }, [videoIdx]);
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-6">
+      <CelebrationSequence
+        tier={celebrationTier}
+      />
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -157,51 +136,7 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
             <audio ref={audioRef} src={data?.audio_url} />
             {/* Parent cheer video(s) — each grown-up's clip plays in order, with sound */}
             {videos.length > 0 && (
-              <div className="mt-4">
-                <div className="relative mx-auto aspect-video w-full max-w-xs overflow-hidden rounded-3xl border-4 border-[#D96969] bg-black shadow-lg">
-                  <video
-                    ref={videoRef}
-                    key={videoIdx}
-                    src={videos[videoIdx]}
-                    autoPlay
-                    playsInline
-                    controls={videosDone}
-                    className="h-full w-full object-cover"
-                    onPlay={fireworksAroundVideo}
-                    onEnded={() => {
-                      if (videoIdx < videos.length - 1) {
-                        setVideoIdx((i) => i + 1);
-                      } else {
-                        setVideosDone(true);
-                      }
-                    }}
-                  />
-                  {videos.length > 1 && (
-                    <div className="absolute bottom-2 left-2 flex gap-1">
-                      {videos.map((_, i) => (
-                        <span
-                          key={i}
-                          className={`h-1.5 rounded-full transition-all ${
-                            i === videoIdx ? 'w-5 bg-white' : 'w-1.5 bg-white/50'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-                {videosDone && (
-                  <button
-                    onClick={() => {
-                      setVideoIdx(0);
-                      setVideosDone(false);
-                      requestAnimationFrame(() => videoRef.current?.play().catch(() => {}));
-                    }}
-                    className="mt-2 text-sm font-semibold text-[#D96969] underline underline-offset-2"
-                  >
-                    Replay cheers
-                  </button>
-                )}
-              </div>
+              <ParentVideoPlayback videos={videos} className="mt-4" onPlay={(e) => fireworksAroundVideo(e?.currentTarget)} />
             )}
             {/* Parent affirmation prompt — say it out loud so the praise feels real */}
             <div className="mt-3 rounded-2xl bg-white/70 p-3">

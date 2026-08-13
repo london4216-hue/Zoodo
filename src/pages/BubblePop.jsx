@@ -46,6 +46,7 @@ function randBubble(id) {
 export default function BubblePop() {
   const navigate = useNavigate();
   useAutoAmbientMusic();
+  const [kidName, setKidName] = useState('friend');
   const [bubbles, setBubbles] = useState([]);
   const [popped, setPopped] = useState(0);
   const [best, setBest] = useState(0);
@@ -70,7 +71,7 @@ export default function BubblePop() {
   const speak = useCallback(async (text) => {
     if (!text) return;
     try {
-      const res = await base44.functions.invoke('generateSpeech', { text });
+      const res = await base44.functions.invoke('generateSpeech', { text, childName: kidName });
       const url = res?.data?.audio_url;
       if (!url) return;
       if (audioRef.current) { try { audioRef.current.pause(); } catch (e) { /* ignore */ } }
@@ -78,6 +79,15 @@ export default function BubblePop() {
       audioRef.current = audio;
       await audio.play().catch(() => {});
     } catch (e) { /* ignore */ }
+  }, [kidName]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const kids = await base44.entities.Kid.list();
+        if (kids?.[0]?.name) setKidName(kids[0].name);
+      } catch (e) { /* ignore */ }
+    })();
   }, []);
 
   // Intro voice guidance + start spawning bubbles.
@@ -200,7 +210,7 @@ export default function BubblePop() {
       const res = await base44.functions.invoke('validateParticipation', {
         image_file_url: file_url,
         target_action: g.action,
-        kidName: 'friend',
+        kidName,
         return_count: !!g.returnCount,
       });
       const data = res?.data || {};

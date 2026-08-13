@@ -4,6 +4,53 @@ import { secrets } from "base44:runtime";
 // Premium TTS for arbitrary text: the signature "lady" voice via ElevenLabs.
 // Returns a stored file_url. Only the lady voice is ever used — no fallback.
 const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — warm, friendly female
+
+// Warm-instance cache only (best-effort). This avoids duplicate generation
+// bursts while the function instance is hot; it is not cross-instance durable.
+const speechCache = new Map<string, string>();
+
+const SPECIAL_NAME_PRONUNCIATIONS: Record<string, string> = {
+  'zoë': 'Zo-ay',
+  'zoe': 'Zo-ee',
+  'chloë': 'Klo-ee',
+  'saoirse': 'Seer-sha',
+  'siobhan': 'Shi-vawn',
+  'x Æ a-12': 'Ex Ash A Twelve',
+};
+
+function simplifyDiacritics(input: string): string {
+  return (input || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function normalizeName(name: string): string {
+  return simplifyDiacritics(name || '')
+    .replace(/[^\p{L}\p{N}\s'\-]/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function phoneticizeName(name: string): string {
+  const clean = normalizeName(name);
+  if (!clean) return '';
+  const lower = clean.toLowerCase();
+  if (SPECIAL_NAME_PRONUNCIATIONS[lower]) return SPECIAL_NAME_PRONUNCIATIONS[lower];
+
+  return clean
+    .replace(/([aeiou])e$/i, '$1')
+    .replace(/thia$/i, 'thee-ah')
+    .replace(/eigh/i, 'ay')
+    .replace(/kh/i, 'k');
+}
+
+function shortHash(value: string): string {
+  let hash = 2166136261;
+  for (let i = 0; i < value.length; i += 1) {
+    hash ^= value.charCodeAt(i);
+    hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+  }
+  return (hash >>> 0).toString(36);
+}
+
 async function synthesizeSpeech(base44, text) {
   const clean = (text || "").slice(0, 4500);
   try {
@@ -40,12 +87,33 @@ export default async function(req: Request): Promise<Response> {
 
     const body = await req.json().catch(() => ({}));
     const text = (body?.text || '').toString().slice(0, 4500);
+    const childNameRaw = (body?.childName || body?.kidName || '').toString();
+    const parentNamesRaw = Array.isArray(body?.parentNames) ? body.parentNames : [];
+    const childName = normalizeName(childNameRaw);
+    const spokenChildName = phoneticizeName(childName);
+    const parentNames = parentNamesRaw
+      .map((n: unknown) => normalizeName(String(n || '')))
+      .filter(Boolean)
+      .slice(0, 4);
+
     if (!text) return Response.json({ error: 'Missing text' }, { status: 400 });
 
-    const audio_url = await synthesizeSpeech(base44, text);
+    const normalizedText = normalizeName(text);
+    const script = childName
+      ? `${normalizedText.includes(childName) || text.includes(childNameRaw) ? text : `Hi ${spokenChildName}... ${text}`}`
+      : text;
+    const nameHash = shortHash(`${spokenChildName}|${parentNames.join('|')}`);
+    const cacheKey = `${nameHash}:${shortHash(script)}`;
+
+    let audio_url = speechCache.get(cacheKey) || '';
+    if (!audio_url) {
+      audio_url = await synthesizeSpeech(base44, script);
+      if (audio_url) speechCache.set(cacheKey, audio_url);
+    }
+
     if (!audio_url) return Response.json({ error: 'Could not create audio' }, { status: 500 });
 
-    return Response.json({ audio_url, text });
+    return Response.json({ audio_url, text: script, childName, nameHash });
   } catch (error) {
     return Response.json({ error: (error as Error).message }, { status: 500 });
   }
