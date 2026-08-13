@@ -79,6 +79,7 @@ export default async function(req: Request): Promise<Response> {
       : [];
     const milestone = String(body?.milestone || '');
     const supportNeeds = String(body?.supportNeeds || '');
+    const progression = body?.progression || null;
 
     const personalization = lovedSubjects.length
       ? ` The child has especially loved these topics before: ${lovedSubjects.join(', ')}. Lean slightly toward those interests where natural, while still covering all five themes.`
@@ -88,9 +89,14 @@ export default async function(req: Request): Promise<Response> {
     const lines = themes.map((t) => `- ${t.day}: ${t.subject}`).join('\n');
     const cdc = cdcForAge(age);
 
+    // Progression context: tells the AI what the child has already done, loved,
+    // skipped, or been asked to repeat — so this week is the smart next step,
+    // not a repeat, and scales difficulty to how far along the program they are.
+    const progressionBlock = progression ? `\nProgression context — this is week ${progression.weekNumber} of a ${progression.programLength || '?'}-week program; the child has completed ${progression.weeksCompleted} week(s) so far.${(progression.completedSubjects && progression.completedSubjects.length) ? ` Completed activities: ${progression.completedSubjects.join(', ')}.` : ''}${(progression.lovedVideoTitles && progression.lovedVideoTitles.length) ? ` Videos they especially loved: ${progression.lovedVideoTitles.join('; ')}.` : ''}${(progression.skippedSubjects && progression.skippedSubjects.length) ? ` Activities skipped — offer gentler, simpler versions: ${progression.skippedSubjects.join(', ')}.` : ''}${(progression.repeatedRequests && progression.repeatedRequests.length) ? ` Caregiver asked to repeat: ${progression.repeatedRequests.join(', ')}.` : ''}${progression.currentLetter ? ` Current target letter for literacy: "${progression.currentLetter}".` : ''} Build on prior weeks — advance difficulty slightly where the child is succeeding, revisit skipped skills more gently, and lean into loved topics. Make this week the natural next step, not a repeat.` : '';
+
     const prompt = `You are a warm, expert early-childhood educator building a weekly lesson plan for a ${age}-year-old child named ${kidName}.${personalization}
 
-Developmental reference — ${cdc}${milestone ? `\nCurrent milestone focus for this child: ${milestone}. Choose videos that help practice this specific milestone where it fits the day's theme.` : ''}${supportNeeds ? `\nSupport needs for this child: ${supportNeeds}. Choose videos that are accessible and adaptable to these needs (e.g., seated movement, sensory-friendly pacing, simple language).` : ''}
+Developmental reference — ${cdc}${milestone ? `\nCurrent milestone focus for this child: ${milestone}. Choose videos that help practice this specific milestone where it fits the day's theme.` : ''}${supportNeeds ? `\nSupport needs for this child: ${supportNeeds}. Choose videos that are accessible and adaptable to these needs (e.g., seated movement, sensory-friendly pacing, simple language).` : ''}${progressionBlock}
 
 For each of the 5 weekdays below, search the web for 1 real, high-quality YouTube video that fits that day's theme for a ${age}-year-old and matches the developmental level above.
 ${lines}

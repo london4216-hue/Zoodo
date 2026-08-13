@@ -86,6 +86,7 @@ export default function Home() {
     const days = getDayConfigForAge(kidObj.age);
     try {
       let lovedSubjects = [];
+      let progression = null;
       try {
         const all = await base44.entities.Lesson.filter({ kid_id: kidObj.id });
         const subjectSet = new Set();
@@ -93,6 +94,34 @@ export default function Home() {
           if (l.loved && l.loved.length && l.subject) subjectSet.add(l.subject);
         });
         lovedSubjects = Array.from(subjectSet);
+
+        // Build a progression summary so each week intelligently builds on the last.
+        const completed = all.filter((l) => l.completed);
+        const skipped = all.filter((l) => l.skipped);
+        const repeated = all.filter((l) => l.repeat_next_week);
+        const weeksCompleted = new Set(completed.map((l) => l.week_start)).size;
+        const lovedTitles = [];
+        all.forEach((l) => {
+          if (l.loved && l.loved.length && Array.isArray(l.ai_content)) {
+            l.ai_content.forEach((v) => {
+              if (v && l.loved.includes(v.video_id) && v.title) lovedTitles.push(v.title);
+            });
+          }
+        });
+        const subjectCounts = {};
+        completed.forEach((l) => {
+          if (l.subject) subjectCounts[l.subject] = (subjectCounts[l.subject] || 0) + 1;
+        });
+        progression = {
+          weeksCompleted,
+          weekNumber: weeksCompleted + 1,
+          programLength: kidObj.program_length,
+          completedSubjects: Object.entries(subjectCounts).map(([s, n]) => `${s} (${n}x)`),
+          skippedSubjects: Array.from(new Set(skipped.map((l) => l.subject).filter(Boolean))),
+          repeatedRequests: repeated.map((l) => `${l.day}: ${l.subject}`).filter(Boolean),
+          lovedVideoTitles: lovedTitles.slice(0, 12),
+          currentLetter: kidObj.current_letter,
+        };
       } catch (e) { /* ignore */ }
 
       const res = await base44.functions.invoke('generateWeekContent', {
@@ -101,6 +130,7 @@ export default function Home() {
         milestone: kidObj.developmental_milestone,
         supportNeeds: kidObj.support_needs,
         lovedSubjects,
+        progression,
       });
       const content = res?.data || {};
 
