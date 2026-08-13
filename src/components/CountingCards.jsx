@@ -8,7 +8,7 @@ import { playCountNote } from '@/lib/sensoryAudio';
 // "1 apple" ... "2 grapes" ... "3 bananas" — paced gently so the child counts
 // real things, not just numbers. Auto-advances; caregiver/child can tap through.
 const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-const STEP_MS = 3400;
+const STEP_MS = 6500;
 
 export default function CountingCards({ cards }) {
   const total = cards.length;

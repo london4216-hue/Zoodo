@@ -52,7 +52,7 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
   // Auto-run the check shortly after the camera is ready — no need to tap.
   useEffect(() => {
     if (!stream) return;
-    const t = setTimeout(() => { check(); }, inline ? 5000 : 1200);
+    const t = setTimeout(() => { check(); }, inline ? 9000 : 1200);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stream]);
