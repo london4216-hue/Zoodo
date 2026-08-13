@@ -203,6 +203,16 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
               {content.counting_cards && content.counting_cards.length >= 2 && (
                 <div className="mt-3 w-full"><CountingCards cards={content.counting_cards} /></div>
               )}
+              {content.bombardment_words && content.bombardment_words.length > 0 && (
+                <div className="mt-3 w-full rounded-2xl bg-[#EEF2FF] p-3">
+                  <div className="text-xs font-bold uppercase tracking-wide text-[#4969E1]">Listen for the sound</div>
+                  <div className="mt-1.5 flex flex-wrap justify-center gap-1.5">
+                    {content.bombardment_words.map((w, i) => (
+                      <span key={i} className="rounded-full bg-white px-3 py-1 text-sm font-bold text-[#4969E1] shadow-sm">{w}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <button
                 onClick={togglePlay}
@@ -265,6 +275,15 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
           >
             <RotateCw className="h-4 w-4" /> Hear it again
           </button>
+          {content?.phonetic_cue && (
+            <div className="mt-3 flex items-start gap-2 rounded-2xl bg-[#EEF2FF] p-3 text-left">
+              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-[#4969E1]" />
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wide text-[#4969E1]">Therapist tip</span>
+                <p className="text-xs font-semibold text-black/70">{content.phonetic_cue}</p>
+              </div>
+            </div>
+          )}
           <div className="mt-3 flex items-start gap-2 rounded-2xl bg-[#FFF6E6] p-3 text-left">
             <Heart className="mt-0.5 h-4 w-4 shrink-0 text-[#D96969]" />
             <p className="text-xs font-semibold text-black/60">

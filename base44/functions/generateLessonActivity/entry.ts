@@ -34,14 +34,16 @@ function cdcForAge(age: number): string {
   return CDC_MILESTONES[a] || CDC_MILESTONES[4];
 }
 
-const PERSONA = `You are a world-class early-childhood educator and the signature warm, musical teaching voice of EduPath AI. You are leading a real, high-dosage early-learning session, scaled to the child's exact developmental level.
+const PERSONA = `You are a world-class pediatric speech-language pathologist (SLP) and the signature warm, musical teaching voice of EduPath AI. You are leading a real, evidence-based therapy session, scaled to the child's exact developmental level.
 
-TEACHING FRAMEWORK (I do -> we do -> you do):
-- MODEL: "Watch my mouth... " or "Watch me... " (exaggerated, slow).
-- TOGETHER: "Let's do it together... "
-- INDEPENDENT: "Your turn!"
-- REPETITION: Many clear, spaced repetitions of the target.
-- SPECIFIC PRAISE: Praise the specific attempt ("Great AH sound!", "You counted to three!"), not generic "good job".
+THERAPY FRAMEWORK (Van Riper traditional articulation + Hodson cycles + play-based therapy):
+- AUDITORY BOMBARDMENT: Begin by flooding the child with the target sound or word — say it many times slowly so they hear it correctly before trying it themselves.
+- PHONETIC PLACEMENT: Give a simple, child-friendly cue for where to put tongue, lips, or teeth (e.g. "put your tongue behind your teeth", "smile big and push the air out", "pop your lips together").
+- IMITATION: "Watch my mouth... " (exaggerated, slow) then "your turn — copy me."
+- PROMPTING HIERARCHY: independent -> model -> direct imitation -> phonetic placement cue -> tactile cue. Step up the hierarchy only as the child needs more help.
+- PRODUCTION LEVELS: sound -> syllable -> word -> short phrase. Progress up only as the child succeeds at each level.
+- REPETITION: Many clear, spaced repetitions of the target — at least 5-8 exposures per target.
+- SPECIFIC PRAISE: Praise the exact attempt ("Great AH sound!", "You got the /b/ at the start of ball!"), not generic "good job".
 
 VOICE & DELIVERY (warm, musical, human — never robotic):
 - Soft, warm, friendly, with a smile in your voice. Musical sing-song rhythm.
@@ -99,6 +101,8 @@ const LESSON_PLAN_SCHEMA = {
         required: ['n', 'word'],
       },
     },
+    phonetic_cue: { type: 'string' },
+    bombardment_words: { type: 'array', items: { type: 'string' } },
     camera_recommended: { type: 'boolean' },
     assessment: {
       type: 'object',
@@ -134,7 +138,7 @@ function buildLessonPrompt(kidName: string, age: number, subject: string, dayLab
     `Today's theme is "${subject}" (${dayLabel}). ${letterDirective}${guide}${otpt} ` +
     `Use the full I-do -> we-do -> you-do production hierarchy. Use specific praise. ` +
     `Keep it tiny-sentence, huge-warmth, sing-song, and developmentally on-target for a ${age}-year-old per the CDC reference above. ` +
-    `${countingDirective}${assessmentDirective}Return JSON with keys: title (2-5 word fun title), script (exact spoken words only), letter (target uppercase letter or ""), sound (target phoneme like "AH" or ""), word (the picture word or ""), counting_cards (array of {n, word} for numeracy only, else []), camera_recommended (true if a camera check would help verify the child's production or movement, false otherwise), and assessment ({mode, target, why}).`;
+    `${countingDirective}${assessmentDirective}Also return "phonetic_cue": a simple, caregiver-facing instruction for where to place the tongue, lips, or teeth to produce today's target sound (e.g. "Smile big and push a thin stream of air out for /s/" or "Pop your lips together for /b/"). Keep it to one short sentence a grown-up can follow. If the lesson has no speech target (e.g. movement or numeracy), return "". Also return "bombardment_words": an array of 3-5 simple, high-frequency words rich in today's target sound or theme, for auditory bombardment (e.g. for /b/: ball, baby, bubble, bird, banana). Return JSON with keys: title (2-5 word fun title), script (exact spoken words only), letter (target uppercase letter or ""), sound (target phoneme like "AH" or ""), word (the picture word or ""), phonetic_cue (string), bombardment_words (array of strings), counting_cards (array of {n, word} for numeracy only, else []), camera_recommended (true if a camera check would help verify the child's production or movement, false otherwise), and assessment ({mode, target, why}).`;
 }
 
 function picturePromptFor(word: string) {
@@ -229,6 +233,10 @@ export default async function(req) {
     const letter = (llmRes && llmRes.letter) || '';
     const sound = (llmRes && llmRes.sound) || '';
     const word = (llmRes && llmRes.word) || '';
+    const phonetic_cue = (llmRes && llmRes.phonetic_cue) || '';
+    const bombardment_words = (llmRes && Array.isArray(llmRes.bombardment_words))
+      ? llmRes.bombardment_words.filter((w) => w).slice(0, 6)
+      : [];
     // A webcam cannot reliably verify a toddler's articulation, so the camera
     // is never used for speech lessons. (Gross-movement activities elsewhere
     // in the app still use the camera, where it does make sense.)
@@ -284,6 +292,7 @@ export default async function(req) {
     return Response.json({
       title, script, audio_url,
       letter, sound, word,
+      phonetic_cue, bombardment_words,
       picture_url,
       gesture_url,
       counting_cards,
