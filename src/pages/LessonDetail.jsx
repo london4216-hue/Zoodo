@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
@@ -13,8 +13,6 @@ import DayGraphic from '@/components/DayGraphic';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
 import SensoryBackground from '@/components/SensoryBackground';
 import SensoryButton from '@/components/SensoryButton';
-import MusicToggle from '@/components/MusicToggle';
-import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { getDayConfigForAgeAndKey } from '@/lib/lessonConfig';
 import { ArrowLeft, Loader2, Pencil, Sparkles, Home } from 'lucide-react';
 
@@ -28,7 +26,6 @@ export default function LessonDetail() {
   const [celebrating, setCelebrating] = useState(false);
   const [lessonDone, setLessonDone] = useState(false);
   const [step, setStep] = useState('lesson'); // lesson | drawing | lunch | story
-  useAutoAmbientMusic();
   const dayCfg = getDayConfigForAgeAndKey(kid?.age || 4, day);
 
   useEffect(() => {
@@ -107,7 +104,6 @@ export default function LessonDetail() {
   return (
     <Layout>
       <SensoryBackground />
-      <MusicToggle />
       <div className="relative z-10 flex flex-col h-[calc(100vh-9.5rem)]">
         {/* Compact top bar: back + subject banner */}
         <div className="flex items-center gap-2 mb-1">

@@ -1,26 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Music, Music2 } from 'lucide-react';
-import { startAmbientMusic, stopAmbientMusic, isMusicPlaying } from '@/lib/sensoryAudio';
+import {
+  startAmbientMusic,
+  stopAmbientMusic,
+  isMusicPlaying,
+  isMusicEnabled,
+  setMusicEnabled,
+} from '@/lib/sensoryAudio';
 
 // Floating music toggle: turns a gentle ambient melody on/off. Off by default
 // (browsers block autoplay until a user interacts).
 export default function MusicToggle() {
-  const [on, setOn] = useState(false);
+  const [on, setOn] = useState(() => isMusicEnabled());
+
+  useEffect(() => {
+    setOn(isMusicEnabled());
+  }, []);
 
   const toggle = () => {
     if (on) {
+      setMusicEnabled(false);
       stopAmbientMusic();
       setOn(false);
     } else {
-      startAmbientMusic();
+      setMusicEnabled(true);
+      startAmbientMusic({ volume: 0.34 });
       setOn(true);
     }
   };
 
   useEffect(
     () => () => {
-      if (isMusicPlaying()) stopAmbientMusic();
+      if (!isMusicEnabled() && isMusicPlaying()) stopAmbientMusic();
     },
     [],
   );
@@ -31,7 +43,7 @@ export default function MusicToggle() {
       onClick={toggle}
       whileTap={{ scale: 0.9 }}
       whileHover={{ scale: 1.08 }}
-      className="fixed bottom-20 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-white/85 shadow-lg backdrop-blur"
+      className="fixed right-4 top-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-white/85 shadow-lg backdrop-blur"
       aria-label={on ? 'Turn music off' : 'Turn music on'}
     >
       <motion.span

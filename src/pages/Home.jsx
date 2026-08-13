@@ -6,8 +6,6 @@ import DayCard from '@/components/DayCard';
 import { DAY_MAP, getMondayISO, addWeeksISO, formatWeekRange, getDayConfigForAge } from '@/lib/lessonConfig';
 import { isGenerating, markGenerating, clearGenerating } from '@/lib/weekGenState';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import MusicToggle from '@/components/MusicToggle';
-import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { playSparkle } from '@/lib/sensoryAudio';
 
 const hasVideos = (lesson) =>
@@ -15,7 +13,6 @@ const hasVideos = (lesson) =>
 
 export default function Home() {
   const navigate = useNavigate();
-  useAutoAmbientMusic();
   const [kid, setKid] = useState(null);
   const [loading, setLoading] = useState(true);
   const [weekStart, setWeekStart] = useState(getMondayISO());
@@ -214,8 +211,6 @@ export default function Home() {
 
   return (
     <Layout>
-      <MusicToggle />
-
       {/* Week switcher */}
       <div className="flex items-center justify-between mb-4 px-1">
         <button

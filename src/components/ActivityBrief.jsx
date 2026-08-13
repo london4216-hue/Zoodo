@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, X, Play, Pause } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { X, Play, Pause } from 'lucide-react';
+import usePremiumVoice from '@/hooks/usePremiumVoice';
 
 // Pre-activity briefing modal with personalized voice + avatar animation
 // Explains what's about to happen, gets the child ready, then launches
@@ -11,6 +11,7 @@ export default function ActivityBrief({ kidName, subject, strand, activity, onBr
   const [isLoading, setIsLoading] = useState(true);
   const [autoPlayStarted, setAutoPlayStarted] = useState(false);
   const audioRef = useRef(null);
+  const { generate } = usePremiumVoice({ kidName });
 
   // Generate the brief explanation narration
   useEffect(() => {
@@ -19,13 +20,9 @@ export default function ActivityBrief({ kidName, subject, strand, activity, onBr
       try {
         setIsLoading(true);
         const briefText = getBriefText(kidName, subject, strand, activity);
-        const res = await base44.functions.invoke('generateSpeech', {
-          text: briefText,
-          style: 'warm_encouraging',
-          kidName,
-        });
-        if (!cancelled && res?.data?.audio_url) {
-          setAudioUrl(res.data.audio_url);
+        const url = await generate(briefText, { style: 'warm_encouraging' });
+        if (!cancelled && url) {
+          setAudioUrl(url);
         }
       } catch (e) {
         console.error('Failed to generate brief audio:', e);
@@ -34,7 +31,7 @@ export default function ActivityBrief({ kidName, subject, strand, activity, onBr
       }
     })();
     return () => { cancelled = true; };
-  }, [kidName, subject, strand, activity]);
+  }, [kidName, subject, strand, activity, generate]);
 
   // Auto-play audio once loaded
   useEffect(() => {

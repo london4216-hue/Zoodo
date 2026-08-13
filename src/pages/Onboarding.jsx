@@ -6,6 +6,7 @@ import { Sparkles, Camera, Check, Loader2, ArrowRight, Heart } from 'lucide-reac
 import KidAvatar from '@/components/KidAvatar';
 import ParentVideoPicker from '@/components/ParentVideoPicker';
 import { defaultMilestoneForAge } from '@/lib/lessonConfig';
+import usePremiumVoice from '@/hooks/usePremiumVoice';
 
 const START_AGES = [2, 3, 4, 5, 6, 7, 8];
 
@@ -31,10 +32,13 @@ export default function Onboarding() {
   const [parentCount, setParentCount] = useState(1);
   const [parentVideos, setParentVideos] = useState([]);
   const [currentParent, setCurrentParent] = useState(0);
+  const [parentNames, setParentNames] = useState(['']);
+  const [recordingConsent, setRecordingConsent] = useState(false);
   const [camConsent, setCamConsent] = useState(false);
   const [photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState('');
   const videoRef = useRef(null);
+  const { generate: generatePremiumVoice } = usePremiumVoice({ kidName: name.trim() });
 
   const submit = async (e) => {
     e.preventDefault();
@@ -95,14 +99,12 @@ export default function Onboarding() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await base44.functions.invoke('generateSpeech', {
-          text: "Hi! I'm Zoodo! Let's learn and play together!",
-        });
-        if (!cancelled && res?.data?.audio_url) setIntroAudio(res.data.audio_url);
+        const audioUrl = await generatePremiumVoice("Hi! I'm Zoodo! Let's learn and play together!");
+        if (!cancelled && audioUrl) setIntroAudio(audioUrl);
       } catch (e) { /* ignore — Zoodo stays silent rather than use another voice */ }
     })();
     return () => { cancelled = true; };
-  }, [step]);
+  }, [step, generatePremiumVoice]);
 
   const saveParentVideo = async (file) => {
     if (!file) return;
@@ -113,12 +115,16 @@ export default function Onboarding() {
       setParentVideos(next);
       const done = next.length >= parentCount;
       if (done && kidId) {
-        await base44.entities.Kid.update(kidId, { parent_videos: next });
+        await base44.entities.Kid.update(kidId, {
+          parent_videos: next,
+          parent_names: parentNames.map((n) => n?.trim()).filter(Boolean),
+        });
         setUploading(false);
         setStep('camera');
       } else {
         setUploading(false);
         setCurrentParent(currentParent + 1);
+        setRecordingConsent(false);
       }
     } catch (e) {
       setUploading(false);
@@ -184,7 +190,14 @@ export default function Onboarding() {
                 {[1, 2].map((n) => (
                   <button
                     key={n}
-                    onClick={() => { setParentCount(n); setParentVideos([]); setCurrentParent(0); setParentStep('video'); }}
+                    onClick={() => {
+                      setParentCount(n);
+                      setParentVideos([]);
+                      setCurrentParent(0);
+                      setParentNames(Array.from({ length: n }, (_, i) => parentNames[i] || ''));
+                      setRecordingConsent(false);
+                      setParentStep('video');
+                    }}
                     className={`flex-1 rounded-2xl border-2 py-8 text-2xl font-bold transition active:scale-95 ${
                       parentCount === n
                         ? 'border-[#D96969] bg-[#D96969] text-white shadow'
@@ -205,16 +218,49 @@ export default function Onboarding() {
                 Get ready to say it on the count of 3! At the end of every lesson
                 this plays back so {name || 'your child'} hears it from you.
               </p>
+              <div className="mt-4 rounded-2xl bg-white p-4 text-left shadow-sm">
+                <label className="block text-xs font-bold uppercase tracking-wide text-black/40">
+                  Grown-up name
+                </label>
+                <input
+                  type="text"
+                  value={parentNames[currentParent] || ''}
+                  onChange={(e) => {
+                    const next = [...parentNames];
+                    next[currentParent] = e.target.value;
+                    setParentNames(next);
+                  }}
+                  placeholder={`Grown-up ${currentParent + 1}`}
+                  className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm font-semibold text-black/70 focus:border-[#D96969] focus:outline-none"
+                />
+                <label className="mt-3 flex items-start gap-2 text-xs font-semibold text-black/60">
+                  <input
+                    type="checkbox"
+                    checked={recordingConsent}
+                    onChange={(e) => setRecordingConsent(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-[#D96969]"
+                  />
+                  <span>
+                    I consent to camera recording for this cheer video and agree it will auto-play after lessons for {name || 'my child'}.
+                  </span>
+                </label>
+              </div>
               <div className="mt-5">
                 {uploading ? (
                   <div className="flex flex-col items-center gap-2 py-10 text-black/50 font-semibold">
                     <Loader2 className="h-7 w-7 animate-spin text-[#D96969]" /> Saving cheer {currentParent + 1}…
                   </div>
                 ) : (
-                  <ParentVideoPicker
-                    cheer={kid?.cheer_text ? `${kid.cheer_text}` : `You did it, ${name}!`}
-                    onRecorded={saveParentVideo}
-                  />
+                  recordingConsent ? (
+                    <ParentVideoPicker
+                      cheer={kid?.cheer_text ? `${kid.cheer_text} ${name}` : `You did it, ${name}!`}
+                      onRecorded={saveParentVideo}
+                    />
+                  ) : (
+                    <p className="rounded-2xl bg-[#FFF6E6] p-4 text-sm font-semibold text-black/60">
+                      Please add consent above to start recording.
+                    </p>
+                  )
                 )}
               </div>
             </>
