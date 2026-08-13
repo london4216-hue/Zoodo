@@ -90,6 +90,14 @@ const LESSON_PLAN_SCHEMA = {
     letter: { type: 'string' },
     sound: { type: 'string' },
     word: { type: 'string' },
+    counting_cards: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { n: { type: 'number' }, word: { type: 'string' } },
+        required: ['n', 'word'],
+      },
+    },
     camera_recommended: { type: 'boolean' },
   },
   required: ['title', 'script', 'camera_recommended'],
@@ -103,6 +111,9 @@ function buildLessonPrompt(kidName: string, age: number, subject: string, dayLab
   const letterDirective = strand === 'literacy' && currentLetter
     ? `The target letter for today is "${currentLetter}". Teach ONLY that letter — its name, its phoneme sound, and one picture word starting with that sound. `
     : '';
+  const countingDirective = strand === 'numeracy'
+    ? `Also return counting_cards: an array of exactly 3 objects, each {n, word} where n is 1, 2, 3 in order and word is a real, common, photogenic countable object. Each card MUST use a DIFFERENT object (e.g. 1 apple, 2 grapes, 3 bananas — never reuse the same object across cards). Use the singular form when n is 1 and the plural form when n is more than 1. These are shown one at a time, slowly, with real photos of that many objects — so the child counts real things, not just numbers. `
+    : '';
   return PERSONA + '\n\n' +
     `Developmental reference — ${cdc}\n` +
     (milestone ? `Current milestone focus for this child: ${milestone}. Target this specific milestone where it fits today's theme.\n` : '') +
@@ -112,11 +123,15 @@ function buildLessonPrompt(kidName: string, age: number, subject: string, dayLab
     `Today's theme is "${subject}" (${dayLabel}). ${letterDirective}${guide}${otpt} ` +
     `Use the full I-do -> we-do -> you-do production hierarchy. Use specific praise. ` +
     `Keep it tiny-sentence, huge-warmth, sing-song, and developmentally on-target for a ${age}-year-old per the CDC reference above. ` +
-    `Return JSON with keys: title (2-5 word fun title), script (exact spoken words only), letter (target uppercase letter or ""), sound (target phoneme like "AH" or ""), word (the picture word or ""), and camera_recommended (true if a camera check would help verify the child's production or movement, false otherwise).`;
+    `${countingDirective}Return JSON with keys: title (2-5 word fun title), script (exact spoken words only), letter (target uppercase letter or ""), sound (target phoneme like "AH" or ""), word (the picture word or ""), counting_cards (array of {n, word} for numeracy only, else []), and camera_recommended (true if a camera check would help verify the child's production or movement, false otherwise).`;
 }
 
 function picturePromptFor(word: string) {
   return `A bright, friendly, simple photograph of a single ${word} centered on a clean pure-white background, soft even lighting, sharp focus, children's speech-therapy flashcard style, no text, no people.`;
+}
+
+function countingPicturePrompt(n: number, word: string) {
+  return `A bright, friendly photograph of exactly ${n} ${word} grouped together on a clean pure-white background, soft even lighting, sharp focus, clearly separated so each one can be counted, children's counting flashcard style, no text, no people, no numerals.`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -206,17 +221,36 @@ export default async function(req) {
       return Response.json({ error: 'Could not create the activity. Please try again.' }, { status: 500 });
     }
 
-    // Narrate the script and (if there's a picture word) generate a clean photo
-    // of the object in parallel so the flashcard is ready with the audio.
-    const imageTask = word
+    // Narrate the script. For numeracy, generate a slow one-at-a-time counting
+    // sequence of REAL object photos (1 apple, 2 grapes, 3 bananas…) instead
+    // of a single flashcard, so the child counts real things, not just numbers.
+    // For other strands, generate one clean photo of the target object.
+    const strand = strandFor(subject);
+    const rawCards = strand === 'numeracy' && Array.isArray(llmRes?.counting_cards)
+      ? llmRes.counting_cards.filter((c) => c && Number(c.n) > 0 && c.word).slice(0, 4)
+      : [];
+    const useCounting = rawCards.length >= 2;
+
+    const singleImageTask = (word && !useCounting)
       ? base44.asServiceRole.integrations.Core.GenerateImage({ prompt: picturePromptFor(word) })
           .then((r) => (r && r.url) || '').catch(() => '')
       : Promise.resolve('');
 
-    const [audio_url, picture_url] = await Promise.all([
+    const cardImageTasks = useCounting
+      ? rawCards.map((c) =>
+          base44.asServiceRole.integrations.Core.GenerateImage({ prompt: countingPicturePrompt(Number(c.n), String(c.word)) })
+            .then((r) => ({ n: Number(c.n), word: String(c.word), picture_url: (r && r.url) || '' }))
+            .catch(() => ({ n: Number(c.n), word: String(c.word), picture_url: '' }))
+        )
+      : [];
+
+    const [audio_url, picture_url, ...cardResults] = await Promise.all([
       synthesizeSpeech(base44, script),
-      imageTask,
+      singleImageTask,
+      ...cardImageTasks,
     ]);
+
+    const counting_cards = useCounting ? cardResults : undefined;
 
     if (!audio_url) {
       return Response.json({ error: 'Could not create the audio. Please try again.' }, { status: 500 });
@@ -226,6 +260,7 @@ export default async function(req) {
       title, script, audio_url,
       letter, sound, word,
       picture_url,
+      counting_cards,
       camera_recommended,
     });
   } catch (error) {

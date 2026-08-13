@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { Loader2, Play, Pause, RotateCcw, Sparkles, Volume2 } from 'lucide-react';
 import LessonSupportVideo from '@/components/LessonSupportVideo';
+import CountingCards from '@/components/CountingCards';
 import MicParticipation from '@/components/MicParticipation';
 import { Image } from '@/components/ui/image';
 
@@ -190,6 +191,11 @@ export default function AiLessonActivity({ kidName, subject, strand, dayLabel, a
                 </div>
               )}
             </div>
+          )}
+
+          {/* Slow real-object counting sequence for numeracy (1 apple, 2 grapes…) */}
+          {data.counting_cards && data.counting_cards.length >= 2 && (
+            <CountingCards cards={data.counting_cards} />
           )}
 
           {/* Play / pause button */}
