@@ -2,11 +2,16 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, LayoutDashboard, Sparkles } from 'lucide-react';
 import RestartDemoButton from '@/components/RestartDemoButton';
+import MusicToggle from '@/components/MusicToggle';
+import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 
 // Bottom navigation shared across the app screens.
 export default function Layout({ children }) {
   const location = useLocation();
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/');
+
+  // Auto-start ambient music on first user interaction.
+  useAutoAmbientMusic();
 
   return (
     <div className="min-h-screen bg-[#FFFDF8] flex flex-col">
@@ -16,6 +21,8 @@ export default function Layout({ children }) {
         </div>
         {children}
       </main>
+      {/* Always-visible music toggle (top-right floating button) */}
+      <MusicToggle />
       <nav className="fixed bottom-0 inset-x-0 z-20 border-t border-black/5 bg-white/90 backdrop-blur">
         <div className="mx-auto max-w-2xl flex items-center justify-around px-6 py-2">
           <NavItem to="/" label="Home" icon={Home} active={isActive('/') && !isActive('/dashboard') && !isActive('/activities')} />
