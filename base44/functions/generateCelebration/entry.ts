@@ -63,7 +63,7 @@ export default async function(req) {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json().catch(() => ({}));
-    const kidName = String(body.kidName || 'friend');
+    const kidName = String(body.kidName || '');
     const subject = String(body.subject || 'today');
 
     const prompt =

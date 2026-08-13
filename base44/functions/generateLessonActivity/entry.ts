@@ -221,7 +221,7 @@ export default async function(req) {
     const body = await req.json().catch(() => ({}));
     const subject = String(body.subject || 'Numbers');
     const dayLabel = String(body.dayLabel || 'today');
-    const kidName = String(body.kidName || 'friend');
+    const kidName = String(body.kidName || '');
     const age = Number(body.age) || 4;
     const currentLetter = (String(body.currentLetter || 'A').toUpperCase().match(/[A-Z]/) || ['A'])[0];
     const milestone = String(body.milestone || '');

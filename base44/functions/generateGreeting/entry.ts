@@ -53,7 +53,7 @@ export default async function(req: Request): Promise<Response> {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const kidName = (body?.kidName || 'friend').toString().trim();
+    const kidName = (body?.kidName || '').toString().trim();
     const subject = (body?.subject || 'learning').toString().trim();
     const dayLabel = (body?.dayLabel || 'today').toString().trim();
 
