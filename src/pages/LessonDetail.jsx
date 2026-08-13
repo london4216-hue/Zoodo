@@ -20,7 +20,6 @@ import { ArrowLeft, Loader2, Pencil, Sparkles } from 'lucide-react';
 export default function LessonDetail() {
   const { kidId, weekStart, day } = useParams();
   const navigate = useNavigate();
-  const dayCfg = getDayConfigForAgeAndKey(kid?.age || 4, day);
 
   const [kid, setKid] = useState(null);
   const [lesson, setLesson] = useState(null);
@@ -30,6 +29,7 @@ export default function LessonDetail() {
   const [activityDone, setActivityDone] = useState(false);
   const [activityStarted, setActivityStarted] = useState(false);
   const activityRef = useRef(null);
+  const dayCfg = getDayConfigForAgeAndKey(kid?.age || 4, day);
   useAutoAmbientMusic();
 
   useEffect(() => {
