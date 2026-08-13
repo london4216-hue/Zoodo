@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, X, Play, Pause } from 'lucide-react';
+import { X, Play, Pause } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { ZoodoAvatar } from '@/components/ZoodoAvatar';
 
 // Pre-activity briefing modal with personalized voice + avatar animation
 // Explains what's about to happen, gets the child ready, then launches
@@ -81,13 +82,12 @@ export default function ActivityBrief({ kidName, subject, strand, activity, onBr
 
           <div className="flex flex-col items-center justify-center px-6 py-8 sm:px-8 sm:py-10">
             {/* Zoodo avatar */}
-            <motion.div
-              className="mb-6 flex h-32 w-32 items-center justify-center rounded-3xl bg-gradient-to-br from-[#FF9EC4] to-[#FFB8D4] shadow-lg"
-              animate={{ y: isPlaying ? [0, -8, 0] : 0 }}
-              transition={{ duration: 0.6, repeat: isPlaying ? Infinity : 0 }}
-            >
-              <ZoodoFaceAvatar />
-            </motion.div>
+            <ZoodoAvatar
+              size={128}
+              emotion="encouraging"
+              isSpeaking={isPlaying}
+              className="mb-6"
+            />
 
             {/* Activity title */}
             <h2 className="text-center text-2xl font-bold text-black/80 sm:text-3xl">
@@ -150,36 +150,6 @@ export default function ActivityBrief({ kidName, subject, strand, activity, onBr
         </motion.div>
       </motion.div>
     </AnimatePresence>
-  );
-}
-
-// Animated Zoodo face avatar
-function ZoodoFaceAvatar() {
-  return (
-    <svg viewBox="0 0 120 120" className="h-full w-full">
-      <defs>
-        <radialGradient id="zoodoGrad" cx="50%" cy="40%" r="65%">
-          <stop offset="0%" stopColor="#FFD9E6" />
-          <stop offset="100%" stopColor="#FF9EC4" />
-        </radialGradient>
-      </defs>
-      {/* Head */}
-      <circle cx="60" cy="62" r="50" fill="url(#zoodoGrad)" stroke="#E07A9F" strokeWidth="3" />
-      {/* Cheeks */}
-      <circle cx="32" cy="72" r="8" fill="#FF8FA8" opacity="0.7" />
-      <circle cx="88" cy="72" r="8" fill="#FF8FA8" opacity="0.7" />
-      {/* Eyes */}
-      <circle cx="44" cy="56" r="6" fill="#3a2a3a" />
-      <circle cx="76" cy="56" r="6" fill="#3a2a3a" />
-      {/* Eye highlights */}
-      <circle cx="46" cy="54" r="2" fill="#fff" />
-      <circle cx="78" cy="54" r="2" fill="#fff" />
-      {/* Smile */}
-      <path d="M44 74 Q60 88 76 74" stroke="#3a2a3a" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-      {/* Horn */}
-      <path d="M60 12 Q60 22 60 26" stroke="#E07A9F" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="60" cy="10" r="4" fill="#FFE08A" stroke="#E0A800" strokeWidth="2" />
-    </svg>
   );
 }
 

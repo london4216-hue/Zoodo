@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import { DAYS, getMondayISO, formatWeekRange } from '@/lib/lessonConfig';
-import { Check, ChevronRight, Heart, TrendingUp, MessageCircle, Loader2 } from 'lucide-react';
+import sensoryActivityLibrary from '@/lib/sensoryActivityLibrary';
+import { ChevronRight, Heart, TrendingUp, MessageCircle, Loader2 } from 'lucide-react';
 
 export default function Dashboard() {
   const [kid, setKid] = useState(null);
@@ -62,6 +63,9 @@ export default function Dashboard() {
   const totalLessons = lessons.length;
   const overallPercent = totalLessons ? Math.round((totalCompleted / totalLessons) * 100) : 0;
   const thisWeek = getMondayISO();
+  const sensoryBreakActivities = useMemo(() => {
+    return sensoryActivityLibrary.getSensoryActivitiesByAge(Number(kid?.age) || 4).slice(0, 3);
+  }, [kid?.age]);
 
   // Kid-driven favorites: subjects ranked by how many videos the kid loved.
   const lovedBySubject = useMemo(() => {
@@ -256,6 +260,43 @@ export default function Dashboard() {
           </div>
           <p className="mt-3 text-xs text-black/40">
             EduPath is a fun, caregiver-led companion that complements — it does not replace — professional therapy.
+          </p>
+        </div>
+      )}
+
+      {!!kid && sensoryBreakActivities.length > 0 && (
+        <div className="rounded-[28px] bg-white p-5 mb-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xl">🧠</span>
+            <h2 className="font-bold text-black/80">Sensory Break</h2>
+            <span className="ml-auto text-xs font-semibold text-black/40">Age {kid.age}</span>
+          </div>
+          <p className="text-xs text-black/40 mb-3">
+            Age-appropriate regulation ideas for {kid.name} between lessons or any time they need a quick reset.
+          </p>
+          <div className="space-y-3">
+            {sensoryBreakActivities.map((activity) => (
+              <div key={activity.id} className="rounded-2xl bg-[#FFF6E6] p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-xl shadow-sm">
+                    {activity.icon}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-bold text-black/80">{activity.name}</h3>
+                      <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-[#D96969]">
+                        {activity.duration}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-sm font-semibold text-black/60">{activity.description}</p>
+                    <p className="mt-2 text-xs text-black/50">{activity.instructions}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-black/40">
+            Calming favorites: {(sensoryActivityLibrary.sensoryBreakSuggestions?.needsCalming || []).slice(0, 3).join(' • ')}
           </p>
         </div>
       )}
