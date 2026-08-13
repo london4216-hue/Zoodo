@@ -313,14 +313,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
       {/* ───────── EXPLAIN (post-video, caregiver prep) ───────── */}
       {stage === 'explain' && (
         <div className="mt-3 flex flex-col items-center text-center">
-          {content?.gesture_url ? (
-            <div className="flex flex-col items-center">
-              <span className="text-xs font-bold uppercase tracking-wide text-black/40">Watch the real way</span>
-              <Image src={content.gesture_url} alt={assessTarget} fittingType="fill" className="mt-1 h-32 w-32 rounded-2xl shadow-sm" />
-            </div>
-          ) : (
-            <Zoodo size={96} bounce />
-          )}
+          <Zoodo size={96} bounce />
           <h2 className="mt-2 text-lg font-bold text-black/80">Now it's your turn, {kidName}!</h2>
           <p className="mt-1 text-sm font-semibold text-black/50">
             Did you see how? Let's try it together — nice and slow.
@@ -331,15 +324,6 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
           >
             <RotateCw className="h-4 w-4" /> Hear it again
           </button>
-          {content?.phonetic_cue && (
-            <div className="mt-3 flex items-start gap-2 rounded-2xl bg-[#EEF2FF] p-3 text-left">
-              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-[#4969E1]" />
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wide text-[#4969E1]">Therapist tip</span>
-                <p className="text-xs font-semibold text-black/70">{content.phonetic_cue}</p>
-              </div>
-            </div>
-          )}
           <div className="mt-3 flex items-start gap-2 rounded-2xl bg-[#FFF6E6] p-3 text-left">
             <Heart className="mt-0.5 h-4 w-4 shrink-0 text-[#D96969]" />
             <p className="text-xs font-semibold text-black/60">
