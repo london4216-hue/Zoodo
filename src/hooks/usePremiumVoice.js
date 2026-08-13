@@ -19,7 +19,6 @@ export default function usePremiumVoice({ kidName = '', parentNames = EMPTY_PARE
       const res = await base44.functions.invoke('generateSpeech', {
         text,
         childName: options.childName || kidName || '',
-        kidName: options.childName || kidName || '',
         parentNames: options.parentNames || parentNames || [],
         style: options.style || 'warm_encouraging',
       });

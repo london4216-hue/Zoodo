@@ -8,7 +8,7 @@ import ParentVideoPlayback from '@/components/ParentVideoPlayback';
 
 // Full-screen celebration that fires when a lesson is marked complete:
 // confetti + a bouncing party character + an encouraging voice cheer.
-export default function CelebrationOverlay({ kidName, subject, parentVideos, cheerText, onClose }) {
+export default function CelebrationOverlay({ kidName, subject, parentVideos, cheerText, celebrationTier = 'first', onClose }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const audioRef = useRef(null);
@@ -76,7 +76,7 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-6">
       <CelebrationSequence
-        tier={videos.length > 1 ? 'streak' : 'first'}
+        tier={celebrationTier}
       />
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}

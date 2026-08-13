@@ -24,6 +24,7 @@ export default function LessonDetail() {
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [celebrating, setCelebrating] = useState(false);
+  const [celebrationTier, setCelebrationTier] = useState('first');
   const [lessonDone, setLessonDone] = useState(false);
   const [step, setStep] = useState('lesson'); // lesson | drawing | lunch | story
   const dayCfg = getDayConfigForAgeAndKey(kid?.age || 4, day);
@@ -62,6 +63,18 @@ export default function LessonDetail() {
       skipped: false,
       completed_date: new Date().toISOString(),
     });
+    try {
+      const allLessons = await base44.entities.Lesson.filter({ kid_id: kidId });
+      const completedCount = (allLessons || []).filter((l) => l.completed).length;
+      const tier = completedCount >= 7 && completedCount % 7 === 0
+        ? 'weekly'
+        : completedCount >= 3 && completedCount % 3 === 0
+          ? 'streak'
+          : 'first';
+      setCelebrationTier(tier);
+    } catch (e) {
+      setCelebrationTier('first');
+    }
     setLesson(updated);
     setCelebrating(true);
   };
@@ -305,6 +318,7 @@ export default function LessonDetail() {
           subject={dayCfg.subject}
           parentVideos={kid?.parent_videos}
           cheerText={kid?.cheer_text}
+          celebrationTier={celebrationTier}
           onClose={() => { setCelebrating(false); setLessonDone(true); }}
         />
       )}

@@ -5,11 +5,12 @@ export default function ParentVideoPlayback({ videos = [], onPlay, className = '
   const [videoIdx, setVideoIdx] = useState(0);
   const [videosDone, setVideosDone] = useState(false);
   const videoRef = useRef(null);
+  const clipSignature = clipList.join('|');
 
   useEffect(() => {
     setVideoIdx(0);
     setVideosDone(false);
-  }, [clipList.length]);
+  }, [clipSignature]);
 
   useEffect(() => {
     if (!clipList.length) return;

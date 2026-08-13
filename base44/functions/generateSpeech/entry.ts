@@ -98,8 +98,9 @@ export default async function(req: Request): Promise<Response> {
 
     if (!text) return Response.json({ error: 'Missing text' }, { status: 400 });
 
+    const normalizedText = normalizeName(text);
     const script = childName
-      ? `${text.includes(childName) ? text : `Hi ${spokenChildName}... ${text}`}`
+      ? `${normalizedText.includes(childName) || text.includes(childNameRaw) ? text : `Hi ${spokenChildName}... ${text}`}`
       : text;
     const nameHash = shortHash(`${spokenChildName}|${parentNames.join('|')}`);
     const cacheKey = `${nameHash}:${shortHash(script)}`;
