@@ -15,6 +15,7 @@ export default function MicAssessment({ kidName, target, onResult }) {
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState('');
   const [consentState, setConsentState] = useState('pending'); // pending | allowed | denied
+  const [confidence, setConfidence] = useState(0);
   const [recSecs, setRecSecs] = useState(0);
   const mediaRef = useRef(null);
   const chunksRef = useRef([]);
@@ -68,12 +69,16 @@ export default function MicAssessment({ kidName, target, onResult }) {
       setStatus('checking');
       const res = await base44.functions.invoke('validateSpeech', { audio_url: file_url, target, kidName });
       const data = res?.data || {};
+      const conf = Math.round(data.confidence || 0);
+      setConfidence(conf);
       setFeedback(data.feedback || '');
-      if (data.success) {
+      if (data.success && conf >= 70) {
         setStatus('success');
         playPraiseJingle(); playSparkle(); vibrate([30, 30, 60]);
         confetti({ particleCount: 80, spread: 80, origin: { y: 0.6 }, colors: COLORS });
         onResult?.(true, data.feedback);
+      } else if (data.success && conf < 70) {
+        setStatus('confirm');
       } else {
         setStatus('fail');
         onResult?.(false, data.feedback);
@@ -127,7 +132,7 @@ export default function MicAssessment({ kidName, target, onResult }) {
           >
             <Square className="h-8 w-8 fill-white" />
           </motion.button>
-        ) : status === 'success' ? (
+        ) : (status === 'success' || status === 'confirm') ? (
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#4FAE5A] text-white">
             <Check className="h-10 w-10" strokeWidth={3} />
           </div>
@@ -162,6 +167,20 @@ export default function MicAssessment({ kidName, target, onResult }) {
         }`}>
           {feedback}
         </p>
+      )}
+
+      {status === 'confirm' && (
+        <div className="mt-3 w-full">
+          <p className="text-sm font-bold text-amber-600">Not sure yet — did {kidName} say it?</p>
+          <div className="mt-2 flex gap-2">
+            <button onClick={start} className="flex-1 rounded-2xl border-2 border-black/10 bg-white py-2 text-sm font-bold text-black/50 active:scale-95">Try again</button>
+            <button onClick={() => { setStatus('success'); playPraiseJingle(); onResult?.(true, `Great job, ${kidName}!`); }} className="flex-[2] rounded-2xl bg-[#4FAE5A] py-2 text-sm font-bold text-white active:scale-95">Yes, {kidName} said it!</button>
+          </div>
+        </div>
+      )}
+
+      {confidence > 0 && status !== 'idle' && (
+        <p className="mt-1 text-xs font-bold text-black/30">Confidence: {confidence}%</p>
       )}
     </div>
   );

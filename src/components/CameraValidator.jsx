@@ -20,6 +20,7 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState('');
   const [consentState, setConsentState] = useState('pending'); // pending | allowed | denied
+  const [confidence, setConfidence] = useState(0);
   const [praiseUrl, setPraiseUrl] = useState('');
   const praiseRef = useRef(null);
 
@@ -95,8 +96,10 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
         kidName,
       });
       const data = res?.data || {};
+      const conf = Math.round(data.confidence || 0);
+      setConfidence(conf);
       setFeedback(data.feedback || '');
-      if (data.success) {
+      if (data.success && conf >= 70) {
         setStatus('success');
         playPraiseJingle();
         vibrate([30, 30, 60]);
@@ -106,6 +109,8 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
           if (cel?.data?.audio_url) setPraiseUrl(cel.data.audio_url);
         } catch (e) {}
         onSuccess?.();
+      } else if (data.success && conf < 70) {
+        setStatus('confirm');
       } else {
         setStatus('fail');
         onFail?.(data.feedback || "Let's try again!");
@@ -211,6 +216,10 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
           )}
         </AnimatePresence>
 
+        {confidence > 0 && status !== 'idle' && (
+          <p className="mt-1 text-center text-xs font-bold text-black/30">Confidence: {confidence}%</p>
+        )}
+
         {/* Action */}
         <div className="mt-4">
           {status === 'success' ? (
@@ -221,6 +230,14 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
             >
               <Sparkles className="h-5 w-5" /> Yay! Done
             </SensoryButton>
+          ) : status === 'confirm' ? (
+            <div className="space-y-2">
+              <p className="text-center text-sm font-bold text-amber-600">Not sure yet — did {kidName} do it?</p>
+              <div className="flex gap-2">
+                <button onClick={check} className="flex-1 rounded-2xl border-2 border-black/10 bg-white py-3 font-bold text-black/50 active:scale-95">Try again</button>
+                <SensoryButton onClick={() => { setStatus('success'); playPraiseJingle(); onSuccess?.(); }} glow="#4FAE5A" className="flex-[2] bg-[#4FAE5A] py-3 text-white">Yes, {kidName} did it!</SensoryButton>
+              </div>
+            </div>
           ) : (
             <SensoryButton
               onClick={check}

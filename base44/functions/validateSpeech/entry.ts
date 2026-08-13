@@ -29,12 +29,14 @@ Decide if the child attempted and reasonably produced the target sound or word. 
 
 Return JSON:
 - success: boolean (true if the child produced a reasonable attempt of the target)
-- feedback: one short, warm sentence spoken to the child. If success, celebrate the specific attempt. If not, gently encourage another try. Never harsh.`,
+- feedback: one short, warm sentence spoken to the child. If success, celebrate the specific attempt. If not, gently encourage another try. Never harsh.
+- confidence: integer 0-100 for how confident you are the child produced the target.`,
       response_json_schema: {
         type: 'object',
         properties: {
           success: { type: 'boolean' },
           feedback: { type: 'string' },
+          confidence: { type: 'number' },
         },
         required: ['success', 'feedback'],
       },
@@ -43,6 +45,7 @@ Return JSON:
     return Response.json({
       success: !!(judge as any)?.success,
       feedback: (judge as any)?.feedback || '',
+      confidence: Math.max(0, Math.min(100, Math.round(Number((judge as any)?.confidence) || 0))),
       transcript,
     });
   } catch (error) {

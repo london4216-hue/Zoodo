@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Youtube, AlertCircle, Play } from 'lucide-react';
+import { Loader2, Youtube, AlertCircle, Play, RotateCw } from 'lucide-react';
 
 // Bug-free lesson video: fetches a real demonstration video, shows a loading
 // animation, then a "Tap to play" thumbnail (fresh user gesture → guaranteed
@@ -10,6 +10,7 @@ export default function LessonVideo({ kidName, age, milestone, supportNeeds, sub
   const [video, setVideo] = useState(null);
   const [error, setError] = useState('');
   const [started, setStarted] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -28,14 +29,17 @@ export default function LessonVideo({ kidName, age, milestone, supportNeeds, sub
         setVideo(v);
         onReady?.();
       } catch (e) {
-        if (!cancelled) setError(e?.message || 'Could not find a video.');
+        if (!cancelled) {
+          setError(e?.message || 'Could not find a video.');
+          try { base44.analytics.track({ eventName: 'lesson_video_error', properties: { subject: String(subject) } }); } catch (_) {}
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
     })();
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subject, age, milestone]);
+  }, [subject, age, milestone, reloadKey]);
 
   if (loading) {
     return (
@@ -55,6 +59,9 @@ export default function LessonVideo({ kidName, age, milestone, supportNeeds, sub
         <p className="mt-2 text-sm font-semibold text-black/40">
           No video right now — you can still do the activity!
         </p>
+        <button onClick={() => setReloadKey((k) => k + 1)} className="mt-3 flex items-center gap-1 rounded-2xl border-2 border-black/10 bg-white px-4 py-2 text-sm font-bold text-black/60 active:scale-95">
+          <RotateCw className="h-4 w-4" /> Try again
+        </button>
       </div>
     );
   }
