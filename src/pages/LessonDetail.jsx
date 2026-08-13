@@ -13,7 +13,7 @@ import DayGraphic from '@/components/DayGraphic';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
 import SensoryBackground from '@/components/SensoryBackground';
 import SensoryButton from '@/components/SensoryButton';
-import MusicToggle from '@/components/MusicToggle';
+import StudioMixToggle from '@/components/StudioMixToggle';
 import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { getDayConfigForAgeAndKey } from '@/lib/lessonConfig';
 import { ArrowLeft, Loader2, Pencil, Sparkles, Home } from 'lucide-react';
@@ -107,7 +107,7 @@ export default function LessonDetail() {
   return (
     <Layout>
       <SensoryBackground />
-      <MusicToggle />
+      <StudioMixToggle />
       <div className="relative z-10 flex flex-col h-[calc(100vh-9.5rem)]">
         {/* Compact top bar: back + subject banner */}
         <div className="flex items-center gap-2 mb-1">

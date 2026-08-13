@@ -10,7 +10,7 @@ import MicAssessment from '@/components/MicAssessment';
 import SensoryButton from '@/components/SensoryButton';
 import ZoodoAvatar2D from '@/components/ZoodoAvatar2D';
 import { Image } from '@/components/ui/image';
-import { playOutro, playPraiseJingle, playSparkle } from '@/lib/sensoryAudio';
+import { playOutro, playPraiseJingle, playSparkle, duckMusic, unDuckMusic } from '@/lib/sensoryAudio';
 
 const COLORS = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#7B4FE0'];
 const STAGES = ['intro', 'video', 'explain', 'assess', 'result'];
@@ -149,7 +149,15 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
     <div className="rounded-2xl bg-white p-2.5 shadow-sm">
       <StageDots stage={stage} />
 
-      {content?.audio_url && <audio ref={audioRef} src={content.audio_url} onEnded={() => setPlaying(false)} />}
+      {content?.audio_url && (
+        <audio
+          ref={audioRef}
+          src={content.audio_url}
+          onPlay={() => { duckMusic(); setPlaying(true); }}
+          onPause={() => { unDuckMusic(); setPlaying(false); }}
+          onEnded={() => { unDuckMusic(); setPlaying(false); }}
+        />
+      )}
 
       <AnimatePresence mode="wait">
       <motion.div

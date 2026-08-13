@@ -123,7 +123,29 @@ const GROOVES = [
   { name: 'Pentatonic bright', root: 98.0, scale: [392.0, 440.0, 523.25, 587.33, 659.25, 783.99], bass: [98.0, 130.81, 110.0, 130.81], bpm: 126, wave: 'triangle' },
 ];
 
-let music = { playing: false, timer: null, master: null, nodes: [], lastSongIdx: -1 };
+let music = { playing: false, timer: null, master: null, nodes: [], lastSongIdx: -1, mode: 'full', ducked: false };
+
+const NORMAL_LEVEL = 0.16;
+const DUCK_LEVEL = 0.05;
+function targetLevel() {
+  if (music.mode === 'voice') return 0;
+  return music.ducked ? DUCK_LEVEL : NORMAL_LEVEL;
+}
+function applyMusicGain() {
+  const c = getCtx();
+  if (!c || !music.master) return;
+  music.master.gain.setTargetAtTime(targetLevel(), c.currentTime, 0.25);
+}
+// Lower the music bed while voice/parent audio plays so the voice stays clear.
+export const duckMusic = () => { music.ducked = true; applyMusicGain(); };
+export const unDuckMusic = () => { music.ducked = false; applyMusicGain(); };
+// Studio mix: 'full' = music + voice, 'voice' = music off.
+export const setMusicMode = (mode) => {
+  music.mode = (mode === 'voice') ? 'voice' : 'full';
+  if (music.mode === 'full' && !music.playing) startAmbientMusic();
+  applyMusicGain();
+};
+export const getMusicMode = () => music.mode;
 
 export const startAmbientMusic = () => {
   if (music.playing) return;
@@ -133,7 +155,7 @@ export const startAmbientMusic = () => {
   const master = c.createGain();
   master.gain.value = 0;
   master.connect(c.destination);
-  master.gain.setTargetAtTime(0.16, c.currentTime, 0.8);
+  master.gain.setTargetAtTime(targetLevel(), c.currentTime, 0.8);
   music.master = master;
 
   let idx = Math.floor(Math.random() * GROOVES.length);

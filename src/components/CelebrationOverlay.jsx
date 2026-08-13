@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { base44 } from '@/api/base44Client';
 import { Loader2, X, Mic } from 'lucide-react';
+import { duckMusic, unDuckMusic } from '@/lib/sensoryAudio';
 
 // Full-screen celebration that fires when a lesson is marked complete:
 // confetti + a bouncing party character + an encouraging voice cheer.
@@ -90,6 +91,12 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
     })();
     return () => { cancelled = true; };
   }, [kidName, subject]);
+
+  // Duck the ambient music while parent audio plays so the cheer is clear.
+  useEffect(() => {
+    duckMusic();
+    return () => unDuckMusic();
+  }, []);
 
   // When we advance to the next parent's clip, make sure it actually plays.
   useEffect(() => {
