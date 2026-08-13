@@ -40,7 +40,7 @@ export default function Onboarding() {
     setError('');
     try {
       const kid = await base44.entities.Kid.create({
-        name: 'friend',
+        name: name.trim() || 'friend',
         age: Number(startAge),
         developmental_milestone: defaultMilestoneForAge(startAge),
         program_length: programLength,
@@ -287,13 +287,27 @@ export default function Onboarding() {
           className="text-4xl font-bold leading-tight"
           style={{ color: '#D96969' }}
         >
-          Let's set up<br />your child's program
+          Making this plan fun<br />for {name.trim() || 'your child'}
         </h1>
         <p className="mt-3 text-black/60 font-medium">
-          A few quick questions so Zoodo can tailor the fun to your child.
+          A few quick questions so Zoodo can tailor the fun to {name.trim() || 'your child'}.
         </p>
 
         <form onSubmit={submit} className="mt-8 space-y-5 text-left">
+          <div>
+            <label className="block text-sm font-semibold text-black/70 mb-2">
+              What's your child's first name?
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Avi"
+              maxLength={30}
+              className="w-full rounded-2xl border-2 border-black/10 bg-white px-4 py-4 text-xl font-bold text-black/80 placeholder:text-black/30 focus:border-[#7B4FE0] focus:outline-none"
+            />
+          </div>
+
           <div>
             <label className="block text-sm font-semibold text-black/70 mb-2">
               What age, based on their milestones, would you like to begin lesson plans?
@@ -344,7 +358,7 @@ export default function Onboarding() {
 
           <Button
             type="submit"
-            disabled={saving}
+            disabled={saving || !name.trim()}
             className="w-full rounded-2xl bg-[#4969E1] py-6 text-lg font-bold text-white hover:bg-[#3b54c9] disabled:opacity-60"
           >
             {saving ? 'Setting up…' : 'Continue'}
