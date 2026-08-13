@@ -156,7 +156,7 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
         ) : (
           <>
             <h2 className="text-4xl font-bold text-[#D96969] leading-tight uppercase tracking-wide">
-              {cheerText || `You did it, ${kidName}!`}
+              You did it, {kidName}!
             </h2>
             <p className="mt-1 font-semibold text-black/60">
               Great job with {subject}, {kidName}!
@@ -210,19 +210,12 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
                 )}
               </div>
             )}
-            {/* Parent affirmation prompt — say it out loud so the praise feels real */}
-            <div className="mt-3 rounded-2xl bg-white/70 p-3">
-              <div className="flex items-center gap-1.5">
-                <Mic className="h-4 w-4 text-[#D96969]" />
-                <p className="text-xs font-bold uppercase tracking-wide text-black/40">For the grown-up</p>
-              </div>
-              <p className="mt-1 text-sm font-semibold text-black/70">
-                Say it out loud with a big smile:
+            {/* Cheer caption — comes up with the pre-recorded parent video */}
+            {cheerText && (
+              <p className="mt-3 text-lg font-bold text-[#D96969]">
+                “{cheerText}”
               </p>
-              <p className="mt-1 text-lg font-bold text-[#D96969]">
-                “{cheerText || `You did it, ${kidName}!`}”
-              </p>
-            </div>
+            )}
             <button
               onClick={onClose}
               className="mt-4 w-full rounded-2xl bg-[#4969E1] py-4 text-lg font-bold text-white active:scale-95 transition hover:bg-[#3b54c9]"
