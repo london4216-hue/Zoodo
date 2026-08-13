@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
@@ -8,6 +8,7 @@ import { isGenerating, markGenerating, clearGenerating } from '@/lib/weekGenStat
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MusicToggle from '@/components/MusicToggle';
 import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
+import { playSparkle } from '@/lib/sensoryAudio';
 
 const hasVideos = (lesson) =>
   lesson?.ai_content && lesson.ai_content.some((v) => v.video_id);
@@ -20,6 +21,8 @@ export default function Home() {
   const [weekStart, setWeekStart] = useState(getMondayISO());
   const [lessonsByDay, setLessonsByDay] = useState({});
   const [preparing, setPreparing] = useState(false);
+  const [planIntroUrl, setPlanIntroUrl] = useState('');
+  const introAudioRef = useRef(null);
 
   useEffect(() => {
     (async () => {
@@ -150,6 +153,37 @@ export default function Home() {
         }
       }
       if (!cancelled) setLessonsByDay({ ...existing });
+
+      // Voice-over: explain the freshly generated plan once per week.
+      const introKey = `planIntro_${monday}`;
+      if (!cancelled && updates.length > 0 && !localStorage.getItem(introKey)) {
+        try {
+          const verbMap = {
+            'Numbers': 'count numbers',
+            'Letters': 'learn our letters',
+            'Stretch time': 'stretch and move',
+            'Music': 'make music',
+            'Exercises': 'move and exercise',
+            'First words': 'say first words',
+            'Sensory sort': 'sort and play',
+          };
+          const introDays = days.map((d) => ({
+            label: d.label || d.key.charAt(0).toUpperCase() + d.key.slice(1),
+            verb: verbMap[d.subject] || (d.subject || 'play').toLowerCase(),
+          }));
+          const intro = await base44.functions.invoke('generatePlanIntro', {
+            kidName: kidObj.name,
+            age: kidObj.age,
+            milestone: kidObj.developmental_milestone,
+            weekRange: formatWeekRange(monday),
+            days: introDays,
+          });
+          if (!cancelled && intro?.data?.audio_url) {
+            localStorage.setItem(introKey, intro.data.audio_url);
+            setPlanIntroUrl(intro.data.audio_url);
+          }
+        } catch (e) { /* ignore intro failure */ }
+      }
     } catch (err) {
       console.error('week pre-gen failed', err);
     } finally {
@@ -157,6 +191,15 @@ export default function Home() {
       if (!cancelled) setPreparing(false);
     }
   };
+
+  // Play the plan-intro voice-over once it's ready.
+  useEffect(() => {
+    if (!planIntroUrl) return;
+    if (introAudioRef.current) {
+      introAudioRef.current.src = planIntroUrl;
+      introAudioRef.current.play().then(() => playSparkle()).catch(() => {});
+    }
+  }, [planIntroUrl]);
 
   if (loading) {
     return (
@@ -215,6 +258,8 @@ export default function Home() {
       <p className="mt-6 text-center text-sm text-black/40 font-medium">
         Tap a day to open its lesson, watch the video, draw, and hear a story!
       </p>
+
+      <audio ref={introAudioRef} className="hidden" />
     </Layout>
   );
 }
