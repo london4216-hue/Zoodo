@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mic, Check } from 'lucide-react';
-import { playSuccess, vibrate } from '@/lib/sensoryAudio';
+import confetti from 'canvas-confetti';
+import { playPraiseJingle, playSparkle, vibrate } from '@/lib/sensoryAudio';
 
 // Lightweight participation check for lessons where the camera isn't useful
 // (e.g. counting, where there's no visible mouth movement to verify). The kid
@@ -10,8 +11,10 @@ export default function MicParticipation({ kidName, targetLabel, onDone }) {
   const [done, setDone] = useState(false);
 
   const handleTap = () => {
-    playSuccess();
-    vibrate(40);
+    playPraiseJingle();
+    playSparkle();
+    vibrate([30, 30, 60]);
+    confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 }, colors: ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A'] });
     setDone(true);
     onDone?.();
   };

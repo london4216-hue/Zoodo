@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { X, Camera, Loader2, Sparkles, RotateCw } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { playSuccess, vibrate } from '@/lib/sensoryAudio';
+import { playPraiseJingle, vibrate } from '@/lib/sensoryAudio';
 import SensoryButton from '@/components/SensoryButton';
 
 const CONFETTI_COLORS = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#7B4FE0'];
@@ -95,7 +95,7 @@ export default function CameraValidator({ targetAction, kidName, onSuccess, onCl
       setFeedback(data.feedback || '');
       if (data.success) {
         setStatus('success');
-        playSuccess();
+        playPraiseJingle();
         vibrate([30, 30, 60]);
         confetti({ particleCount: 120, spread: 90, origin: { y: 0.5 }, colors: CONFETTI_COLORS });
         try {

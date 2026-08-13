@@ -432,4 +432,31 @@ export const playSillyGiggle = () => {
   vib.stop(c.currentTime + tailStart + 0.8);
 };
 
+// Gentle ascending chime for each counted object — one note per number, rising
+// up a pentatonic scale so counting feels musical (do-re-mi-fa…). Soft sine bell.
+const COUNT_SCALE = [523.25, 587.33, 659.25, 783.99, 880.0, 1046.5, 1174.66, 1318.51, 1396.91, 1567.98];
+export const playCountNote = (n) => {
+  const idx = Math.max(0, Math.min(COUNT_SCALE.length - 1, (Number(n) || 1) - 1));
+  const f = COUNT_SCALE[idx];
+  tone(f, 0, 0.5, 'sine', 0.14);
+  tone(f * 2, 0.02, 0.4, 'sine', 0.05);
+};
+
+// Warm "Great job!" praise jingle — a bright rising C-E-G-C phrase with a
+// sparkle on top. Played when a child's participation is validated.
+export const playPraiseJingle = () => {
+  tone(523.25, 0, 0.18, 'triangle', 0.16);
+  tone(659.25, 0.14, 0.18, 'triangle', 0.16);
+  tone(783.99, 0.28, 0.18, 'triangle', 0.16);
+  tone(1046.5, 0.42, 0.4, 'triangle', 0.2);
+  tone(1318.5, 0.44, 0.3, 'sine', 0.07);
+};
+
+// Gentle musical outro — a soft descending chime to close an activity warmly.
+export const playOutro = () => {
+  tone(783.99, 0, 0.3, 'sine', 0.12);
+  tone(659.25, 0.18, 0.3, 'sine', 0.12);
+  tone(523.25, 0.36, 0.5, 'sine', 0.14);
+};
+
 export const isMusicPlaying = () => music.playing;

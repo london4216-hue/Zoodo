@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Loader2, Play, Pause, RotateCcw, Sparkles, Volume2 } from 'lucide-react';
 import LessonSupportVideo from '@/components/LessonSupportVideo';
 import CountingCards from '@/components/CountingCards';
+import { playOutro } from '@/lib/sensoryAudio';
 import MicParticipation from '@/components/MicParticipation';
 import { Image } from '@/components/ui/image';
 
@@ -68,6 +69,7 @@ export default function AiLessonActivity({ kidName, subject, strand, dayLabel, a
   const onEnded = () => {
     setPlaying(false);
     setShowRepeat(true);
+    playOutro();
     onComplete?.();
   };
 

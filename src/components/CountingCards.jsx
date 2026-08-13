@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Image } from '@/components/ui/image';
 import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
+import { playCountNote } from '@/lib/sensoryAudio';
 
 // Slow, one-at-a-time counting sequence with REAL object photos:
 // "1 apple" ... "2 grapes" ... "3 bananas" — paced gently so the child counts
@@ -22,6 +23,13 @@ export default function CountingCards({ cards }) {
     timer.current = setTimeout(() => setIdx((i) => (i + 1) % total), STEP_MS);
     return () => clearTimeout(timer.current);
   }, [idx, auto, total]);
+
+  // Play a gentle rising chime for each counted object — counting is musical.
+  useEffect(() => {
+    if (total < 2) return;
+    playCountNote(cards[idx].n);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idx, total]);
 
   const card = cards[idx];
   const numberWord = NUMBER_WORDS[card.n] || String(card.n);
