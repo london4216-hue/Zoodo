@@ -67,7 +67,13 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
   const [attempts, setAttempts] = useState(0);
   const [stars, setStars] = useState(0);
   const [revealStep, setRevealStep] = useState(0);
+  // Intro plays in two phases: Zoodo's silly greeting first, then Zoodo fades
+  // away and the professional editorial VO narrates the reveal cards.
+  const [introPhase, setIntroPhase] = useState('zoodo'); // 'zoodo' | 'vo'
+  const [greeting, setGreeting] = useState(null);
+  const [greetingPlaying, setGreetingPlaying] = useState(false);
   const audioRef = useRef(null);
+  const greetingRef = useRef(null);
 
   // Build a sequential reveal queue — one card at a time so the child focuses
   // on a single visual before moving on. Literacy: letter → picture → word →
@@ -95,6 +101,14 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
         setContent(res.data);
         setRevealStep(0);
         setContentStatus('ready');
+        // Zoodo's silly intro greeting — plays first, then fades as the
+        // professional editorial VO takes over.
+        try {
+          const gres = await base44.functions.invoke('generateGreeting', {
+            kidName, subject, day: dayLabel,
+          });
+          if (!cancelled && gres?.data?.audio_url) setGreeting(gres.data);
+        } catch (e) { /* greeting optional — fall through to VO */ }
       } catch (err) {
         if (cancelled) return;
         setError(err?.message || 'Could not create the activity.');
@@ -105,11 +119,19 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subject, dayLabel, kidName, age]);
 
+  // Play Zoodo's intro greeting as soon as it's ready (while Zoodo is on stage).
   useEffect(() => {
-    if (stage === 'intro' && revealedAll && content?.audio_url && audioRef.current) {
+    if (stage === 'intro' && introPhase === 'zoodo' && greeting?.audio_url && greetingRef.current) {
+      greetingRef.current.play().then(() => setGreetingPlaying(true)).catch(() => {});
+    }
+  }, [stage, introPhase, greeting]);
+
+  // Once Zoodo fades, the professional editorial VO narrates the reveal cards.
+  useEffect(() => {
+    if (stage === 'intro' && introPhase === 'vo' && revealedAll && content?.audio_url && audioRef.current) {
       audioRef.current.play().then(() => { setPlaying(true); onPlay?.(); }).catch(() => {});
     }
-  }, [stage, content, revealedAll]);
+  }, [stage, introPhase, content, revealedAll]);
 
   const togglePlay = () => {
     const a = audioRef.current;
@@ -121,6 +143,12 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
     const a = audioRef.current;
     if (!a || !content?.audio_url) return;
     a.currentTime = 0; a.play(); setPlaying(true);
+  };
+
+  const playGreeting = () => {
+    const a = greetingRef.current;
+    if (!a) { setIntroPhase('vo'); return; }
+    a.play().then(() => setGreetingPlaying(true)).catch(() => setIntroPhase('vo'));
   };
 
   const assess = content?.assessment;
@@ -157,6 +185,14 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
     <div className="rounded-3xl bg-studio-card p-4 shadow-2xl">
       <StageDots stage={stage} />
 
+      {greeting?.audio_url && (
+        <audio
+          ref={greetingRef}
+          src={greeting.audio_url}
+          onPlay={() => { duckMusic(); setGreetingPlaying(true); }}
+          onEnded={() => { setGreetingPlaying(false); unDuckMusic(); setIntroPhase('vo'); }}
+        />
+      )}
       {content?.audio_url && (
         <audio
           ref={audioRef}
@@ -178,107 +214,161 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
       {/* ───────── INTRO ───────── */}
       {stage === 'intro' && (
         <div className="mt-4 flex flex-col items-center text-center">
-          <Zoodo size={80} talking={playing} />
-          <h2 className="mt-2 text-lg font-bold text-studio-ink">
-            Today we're learning {subject}, {kidName}!
-          </h2>
+          <AnimatePresence mode="wait">
+            {/* Phase 1 — Zoodo's silly intro greeting */}
+            {introPhase === 'zoodo' && (
+              <motion.div
+                key="zoodo-intro"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8, y: -12 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+                className="flex w-full flex-col items-center"
+              >
+                <Zoodo size={120} talking={greetingPlaying} />
+                <h2 className="mt-3 max-w-xs text-lg font-bold leading-snug text-studio-ink">
+                  {greeting?.script || `Hi ${kidName}! Today we're learning ${subject}!`}
+                </h2>
+                {!greeting?.audio_url && contentStatus === 'generating' && (
+                  <div className="flex flex-col items-center py-4">
+                    <Loader2 className="h-6 w-6 animate-spin text-studio-coral" />
+                    <p className="mt-2 text-sm font-semibold text-studio-ink/50">Zoodo's getting ready…</p>
+                  </div>
+                )}
+                {greeting?.audio_url && !greetingPlaying && (
+                  <SensoryButton
+                    onClick={playGreeting}
+                    glow="#E8B14A"
+                    className="mt-4 flex items-center justify-center gap-2 bg-studio-gold px-6 py-3 text-studio-ink"
+                  >
+                    <Play className="h-5 w-5" /> Tap to say hi!
+                  </SensoryButton>
+                )}
+                {!greeting?.audio_url && contentStatus === 'ready' && (
+                  <SensoryButton
+                    onClick={() => setIntroPhase('vo')}
+                    glow="#E8B14A"
+                    className="mt-4 flex items-center justify-center gap-2 bg-studio-gold px-6 py-3 text-studio-ink"
+                  >
+                    <Play className="h-5 w-5" /> Let's start!
+                  </SensoryButton>
+                )}
+                {contentStatus === 'error' && (
+                  <p className="py-4 text-sm font-semibold text-studio-coral">{error}</p>
+                )}
+              </motion.div>
+            )}
 
-          {contentStatus === 'generating' && (
-            <div className="flex flex-col items-center py-6">
-              <Loader2 className="h-7 w-7 animate-spin text-studio-coral" />
-              <p className="mt-2 text-sm font-semibold text-studio-ink/50">Making something fun…</p>
-            </div>
-          )}
-          {contentStatus === 'error' && (
-            <p className="py-4 text-sm font-semibold text-studio-coral">{error}</p>
-          )}
+            {/* Phase 2 — Zoodo fades, professional editorial VO narrates the reveal */}
+            {introPhase === 'vo' && (
+              <motion.div
+                key="vo"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+                className="flex w-full flex-col items-center"
+              >
+                <h2 className="text-lg font-bold text-studio-ink">
+                  Today we're learning {subject}, {kidName}!
+                </h2>
+                {contentStatus === 'generating' && (
+                  <div className="flex flex-col items-center py-6">
+                    <Loader2 className="h-7 w-7 animate-spin text-studio-coral" />
+                    <p className="mt-2 text-sm font-semibold text-studio-ink/50">Making something fun…</p>
+                  </div>
+                )}
+                {contentStatus === 'error' && (
+                  <p className="py-4 text-sm font-semibold text-studio-coral">{error}</p>
+                )}
+                {contentStatus === 'ready' && content && (
+                  <>
+                    {/* Counting cards already reveal one at a time */}
+                    {content.counting_cards && content.counting_cards.length >= 2 ? (
+                      <div className="mt-3 w-full"><CountingCards cards={content.counting_cards} /></div>
+                    ) : (
+                      <div className="mt-3 flex w-full flex-col items-center">
+                        <AnimatePresence mode="wait">
+                          <motion.div
+                            key={revealStep}
+                            initial={{ opacity: 0, scale: 0.85, y: 8 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.85, y: -8 }}
+                            transition={{ duration: 0.35, ease: 'easeOut' }}
+                            className="flex w-full flex-col items-center"
+                          >
+                            {revealCards[revealStep]?.kind === 'letter' && (
+                              <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-4">
+                                <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">This is the letter</span>
+                                <div className="mt-1 flex h-24 w-24 items-center justify-center rounded-2xl bg-white text-6xl font-bold text-studio-coral shadow-md">
+                                  {content.letter}
+                                </div>
+                              </div>
+                            )}
+                            {revealCards[revealStep]?.kind === 'picture' && (
+                              <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-4">
+                                <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">Look at this!</span>
+                                <Image src={content.picture_url} alt={content.word || content.title} fittingType="fill" className="mt-1 h-24 w-24 rounded-2xl shadow-md" />
+                              </div>
+                            )}
+                            {revealCards[revealStep]?.kind === 'word' && (
+                              <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-4">
+                                <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">This word says</span>
+                                <div className="mt-1 text-3xl font-bold text-studio-ink">{content.word}</div>
+                              </div>
+                            )}
+                            {revealCards[revealStep]?.kind === 'sound' && (
+                              <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-4">
+                                <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">Say this sound</span>
+                                <div className="mt-1 text-4xl font-bold text-studio-coral">“{content.sound}”</div>
+                                <div className="mt-1 text-sm font-semibold text-studio-ink/50">like {content.word}</div>
+                              </div>
+                            )}
+                            {revealCards[revealStep]?.kind === 'bombardment' && (
+                              <div className="w-full rounded-2xl bg-studio-coral/10 p-3">
+                                <div className="text-center text-xs font-bold uppercase tracking-wide text-studio-coral">Listen for the sound</div>
+                                <div className="mt-2 flex flex-wrap justify-center gap-1.5">
+                                  {content.bombardment_words.map((w, i) => (
+                                    <span key={i} className="rounded-full bg-white px-3 py-1 text-sm font-bold text-studio-coral shadow-sm">{w}</span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </motion.div>
+                        </AnimatePresence>
 
-          {contentStatus === 'ready' && content && (
-            <>
-              {/* Counting cards already reveal one at a time */}
-              {content.counting_cards && content.counting_cards.length >= 2 ? (
-                <div className="mt-3 w-full"><CountingCards cards={content.counting_cards} /></div>
-              ) : (
-                <div className="mt-3 flex w-full flex-col items-center">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={revealStep}
-                      initial={{ opacity: 0, scale: 0.85, y: 8 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.85, y: -8 }}
-                      transition={{ duration: 0.35, ease: 'easeOut' }}
-                      className="flex w-full flex-col items-center"
-                    >
-                      {revealCards[revealStep]?.kind === 'letter' && (
-                        <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-4">
-                          <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">This is the letter</span>
-                          <div className="mt-1 flex h-24 w-24 items-center justify-center rounded-2xl bg-white text-6xl font-bold text-studio-coral shadow-md">
-                            {content.letter}
-                          </div>
-                        </div>
-                      )}
-                      {revealCards[revealStep]?.kind === 'picture' && (
-                        <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-4">
-                          <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">Look at this!</span>
-                          <Image src={content.picture_url} alt={content.word || content.title} fittingType="fill" className="mt-1 h-24 w-24 rounded-2xl shadow-md" />
-                        </div>
-                      )}
-                      {revealCards[revealStep]?.kind === 'word' && (
-                        <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-4">
-                          <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">This word says</span>
-                          <div className="mt-1 text-3xl font-bold text-studio-ink">{content.word}</div>
-                        </div>
-                      )}
-                      {revealCards[revealStep]?.kind === 'sound' && (
-                        <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-4">
-                          <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">Say this sound</span>
-                          <div className="mt-1 text-4xl font-bold text-studio-coral">“{content.sound}”</div>
-                          <div className="mt-1 text-sm font-semibold text-studio-ink/50">like {content.word}</div>
-                        </div>
-                      )}
-                      {revealCards[revealStep]?.kind === 'bombardment' && (
-                        <div className="w-full rounded-2xl bg-studio-coral/10 p-3">
-                          <div className="text-center text-xs font-bold uppercase tracking-wide text-studio-coral">Listen for the sound</div>
-                          <div className="mt-2 flex flex-wrap justify-center gap-1.5">
-                            {content.bombardment_words.map((w, i) => (
-                              <span key={i} className="rounded-full bg-white px-3 py-1 text-sm font-bold text-studio-coral shadow-sm">{w}</span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </motion.div>
-                  </AnimatePresence>
-
-                  {!revealedAll ? (
-                    <SensoryButton
-                      onClick={() => setRevealStep((s) => s + 1)}
-                      glow="#E8B14A"
-                      className="mt-3 flex w-full items-center justify-center gap-2 bg-studio-gold py-3 text-base text-studio-ink"
-                    >
-                      Next <ArrowRight className="h-5 w-5" />
-                    </SensoryButton>
-                  ) : (
-                    <>
-                      <button
-                        onClick={togglePlay}
-                        className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-studio-coral py-2.5 text-base font-bold text-white active:scale-[0.98] transition hover:opacity-90"
-                      >
-                        {playing ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-                        {playing ? 'Pause' : 'Hear it again'}
-                      </button>
-                      <SensoryButton
-                        onClick={() => setStage('video')}
-                        glow="#34302C"
-                        className="mt-2 flex w-full items-center justify-center gap-2 bg-studio-ink py-3 text-base text-studio-card"
-                      >
-                        Let's watch how it's done! <ArrowRight className="h-5 w-5" />
-                      </SensoryButton>
-                    </>
-                  )}
-                </div>
-              )}
-            </>
-          )}
+                        {!revealedAll ? (
+                          <SensoryButton
+                            onClick={() => setRevealStep((s) => s + 1)}
+                            glow="#E8B14A"
+                            className="mt-3 flex w-full items-center justify-center gap-2 bg-studio-gold py-3 text-base text-studio-ink"
+                          >
+                            Next <ArrowRight className="h-5 w-5" />
+                          </SensoryButton>
+                        ) : (
+                          <>
+                            <button
+                              onClick={togglePlay}
+                              className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-studio-coral py-2.5 text-base font-bold text-white active:scale-[0.98] transition hover:opacity-90"
+                            >
+                              {playing ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+                              {playing ? 'Pause' : 'Hear it again'}
+                            </button>
+                            <SensoryButton
+                              onClick={() => setStage('video')}
+                              glow="#34302C"
+                              className="mt-2 flex w-full items-center justify-center gap-2 bg-studio-ink py-3 text-base text-studio-card"
+                            >
+                              Let's watch how it's done! <ArrowRight className="h-5 w-5" />
+                            </SensoryButton>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
 
