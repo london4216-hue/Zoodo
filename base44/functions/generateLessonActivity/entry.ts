@@ -262,41 +262,18 @@ export default async function(req) {
       : [];
     const useCounting = rawCards.length >= 2;
 
-    const singleImageTask = (word && !useCounting)
-      ? base44.asServiceRole.integrations.Core.GenerateImage({ prompt: picturePromptFor(word) })
-          .then((r) => (r && r.url) || '').catch(() => '')
-      : Promise.resolve('');
+    // The lesson UI uses custom animated scenes (AnimatedLessonScene) built
+    // from the same content fields — no static generated photos are shown.
+    // Skip all image generation so the lesson prepares fast (LLM + narration
+    // only), which lets the narration be pre-generated and cached per lesson.
+    const counting_cards = useCounting
+      ? rawCards.map((c) => ({ n: Number(c.n), word: String(c.word) }))
+      : undefined;
 
-    const assessMode = llmRes?.assessment?.mode;
-    const assessTarget = llmRes?.assessment?.target || '';
-    const gestureImageTask = (assessMode === 'camera' && assessTarget)
-      ? base44.asServiceRole.integrations.Core.GenerateImage({ prompt: gestureImagePrompt(assessTarget, age) })
-          .then((r) => (r && r.url) || '').catch(() => '')
-      : Promise.resolve('');
-
-    const hasSpeechTarget = (strand === 'literacy' || strand === 'language') && !!(sound || word);
-    const mouthModelTask = hasSpeechTarget
-      ? base44.asServiceRole.integrations.Core.GenerateImage({ prompt: mouthModelPrompt(sound || letter, word || letter) })
-          .then((r) => (r && r.url) || '').catch(() => '')
-      : Promise.resolve('');
-
-    const cardImageTasks = useCounting
-      ? rawCards.map((c) =>
-          base44.asServiceRole.integrations.Core.GenerateImage({ prompt: countingPicturePrompt(Number(c.n), String(c.word)) })
-            .then((r) => ({ n: Number(c.n), word: String(c.word), picture_url: (r && r.url) || '' }))
-            .catch(() => ({ n: Number(c.n), word: String(c.word), picture_url: '' }))
-        )
-      : [];
-
-    const [audio_url, picture_url, gesture_url, mouth_model_url, ...cardResults] = await Promise.all([
-      synthesizeSpeech(base44, script),
-      singleImageTask,
-      gestureImageTask,
-      mouthModelTask,
-      ...cardImageTasks,
-    ]);
-
-    const counting_cards = useCounting ? cardResults : undefined;
+    const audio_url = await synthesizeSpeech(base44, script);
+    const picture_url = '';
+    const gesture_url = '';
+    const mouth_model_url = '';
 
     if (!audio_url) {
       return Response.json({ error: 'Could not create the audio. Please try again.' }, { status: 500 });

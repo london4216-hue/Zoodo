@@ -3,20 +3,21 @@ import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { base44 } from '@/api/base44Client';
 import { Loader2, X } from 'lucide-react';
-import { duckMusic, unDuckMusic } from '@/lib/sensoryAudio';
+import { stopAll, playAudio } from '@/lib/lessonAudioController';
 
-// Full-screen parent celebration: the pre-recorded intake parent video plays
-// with confetti around the frame, then auto-completes the lesson and returns
-// to the dashboard. Reuses the existing intake parent video capture — no
-// parallel capture flow.
+// Full-screen parent celebration. The parent's pre-recorded video plays
+// automatically WITH SOUND (audio was unlocked by the day-card click and the
+// lesson interactions) alongside confetti — no tap, no muted fallback. This is
+// the ONLY track: the controller stops the lesson narration before the video
+// starts, and the generated cheer is only used when there is no parent video
+// (never both at once).
 export default function CelebrationOverlay({ kidName, subject, parentVideos, cheerText, onAllDone }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const audioRef = useRef(null);
   const videoRef = useRef(null);
   const [videoIdx, setVideoIdx] = useState(0);
   const [videosDone, setVideosDone] = useState(false);
-  const videos = Array.isArray(parentVideos) ? parentVideos.filter(Boolean) : [];
+  const videos = (parentVideos || []).filter(Boolean);
   const colors = ['#FF9EC4', '#4969E1', '#FFE08A', '#4FAE5A', '#FFD9E6', '#7B4FE0'];
 
   const fireworksAroundVideo = () => {
@@ -33,71 +34,62 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
   };
 
   useEffect(() => {
+    // The parent video / cheer is now the ONLY track. Stop any narration first.
+    stopAll();
     let cancelled = false;
-    const burst = () => {
-      confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 }, colors });
-      setTimeout(() => confetti({ particleCount: 60, angle: 60, spread: 60, origin: { x: 0, y: 0.7 }, colors }), 180);
-      setTimeout(() => confetti({ particleCount: 60, angle: 120, spread: 60, origin: { x: 1, y: 0.7 }, colors }), 360);
-    };
-    burst();
+    confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 }, colors });
 
     if (videos.length > 0) {
+      // Parent video is the single audio track — no generated cheer alongside it.
       setVideoIdx(0);
       setVideosDone(false);
       requestAnimationFrame(() => {
-        // Autoplay WITH SOUND — audio was unlocked by the day-card click and
-        // the lesson interactions, so this should not be blocked. Retry once
-        // if the browser is still warming up; never mute.
         const v = videoRef.current;
         if (!v) return;
-        v.play().catch(() => { setTimeout(() => v.play().catch(() => {}), 400); });
+        // Autoplay WITH SOUND — audio context was unlocked by the day-card click
+        // and the lesson interactions. Retry once if the browser is warming up;
+        // never mute as a workaround.
+        v.play().catch(() => setTimeout(() => v.play().catch(() => {}), 400));
       });
+    } else {
+      // No parent video — the generated cheer is the single track.
+      (async () => {
+        try {
+          const res = await base44.functions.invoke('generateCelebration', { kidName, subject });
+          if (cancelled) return;
+          setData(res?.data || null);
+          setLoading(false);
+          if (res?.data?.audio_url) {
+            playAudio(res.data.audio_url, { kind: 'cheer', onEnded: () => { if (!cancelled) setVideosDone(true); } });
+          } else {
+            setVideosDone(true);
+          }
+        } catch (e) {
+          if (cancelled) return;
+          setLoading(false);
+          setVideosDone(true);
+        }
+      })();
     }
-
-    (async () => {
-      try {
-        const res = await base44.functions.invoke('generateCelebration', { kidName, subject });
-        if (cancelled) return;
-        setData(res?.data || null);
-        setLoading(false);
-        setTimeout(() => audioRef.current?.play().catch(() => {}), 250);
-        setTimeout(burst, 1100);
-      } catch (e) {
-        if (cancelled) return;
-        setLoading(false);
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [kidName, subject]);
-
-  useEffect(() => {
-    duckMusic();
-    return () => unDuckMusic();
+    return () => { cancelled = true; stopAll(); };
   }, []);
 
+  // Advance to the next parent video.
   useEffect(() => {
     if (videoIdx === 0) return;
     requestAnimationFrame(() => {
       const v = videoRef.current;
       if (!v) return;
-      v.play().catch(() => { setTimeout(() => v.play().catch(() => {}), 400); });
+      v.play().catch(() => setTimeout(() => v.play().catch(() => {}), 400));
     });
   }, [videoIdx]);
 
-  // When all parent videos are done (or there are none), fire completion after
-  // a short beat so the cheer sound sting lands first.
+  // When the celebration is done, return home after a short beat.
   useEffect(() => {
     if (!videosDone) return;
     const t = setTimeout(() => onAllDone?.(), 1400);
     return () => clearTimeout(t);
   }, [videosDone]);
-
-  // No parent video: complete after the generated cheer audio ends (or a
-  // fallback timer) so the moment still has a celebration.
-  const handleCheerEnded = () => {
-    if (videos.length > 0) return;
-    setTimeout(() => onAllDone?.(), 1200);
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/55 backdrop-blur-sm p-4">
@@ -123,24 +115,15 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
           🎉
         </motion.div>
 
-        {loading ? (
+        {loading && videos.length === 0 ? (
           <div className="flex flex-col items-center py-4">
             <Loader2 className="h-7 w-7 animate-spin text-white/80 mb-2" />
             <p className="font-semibold text-white/70">Getting your cheer ready…</p>
           </div>
         ) : (
           <>
-            <h2 className="text-4xl font-bold text-white leading-tight">
-              You did it, {kidName}!
-            </h2>
-            <p className="mt-1 font-semibold text-white/70">
-              Great job with {subject}, {kidName}!
-            </p>
-            <audio
-              ref={audioRef}
-              src={data?.audio_url}
-              onEnded={handleCheerEnded}
-            />
+            <h2 className="text-4xl font-bold text-white leading-tight">You did it, {kidName}!</h2>
+            <p className="mt-1 font-semibold text-white/70">Great job with {subject}, {kidName}!</p>
 
             {videos.length > 0 ? (
               <div className="mt-4 w-full">
@@ -155,11 +138,8 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
                     className="h-full w-full object-cover"
                     onPlay={fireworksAroundVideo}
                     onEnded={() => {
-                      if (videoIdx < videos.length - 1) {
-                        setVideoIdx((i) => i + 1);
-                      } else {
-                        setVideosDone(true);
-                      }
+                      if (videoIdx < videos.length - 1) setVideoIdx((i) => i + 1);
+                      else setVideosDone(true);
                     }}
                   />
                   {videos.length > 1 && (
@@ -175,9 +155,7 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
                     </div>
                   )}
                 </div>
-                {cheerText && (
-                  <p className="mt-3 text-lg font-bold text-white">“{cheerText}”</p>
-                )}
+                {cheerText && <p className="mt-3 text-lg font-bold text-white">“{cheerText}”</p>}
                 {videosDone && (
                   <button
                     onClick={() => onAllDone?.()}
@@ -189,9 +167,7 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
               </div>
             ) : (
               <div className="mt-5 w-full">
-                {cheerText && (
-                  <p className="text-xl font-bold text-white">“{cheerText}”</p>
-                )}
+                {cheerText && <p className="text-xl font-bold text-white">“{cheerText}”</p>}
                 <button
                   onClick={() => onAllDone?.()}
                   className="mt-4 w-full rounded-2xl bg-[#4969E1] py-3.5 text-lg font-bold text-white active:scale-95 transition hover:bg-[#3b54c9]"

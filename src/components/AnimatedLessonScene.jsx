@@ -26,11 +26,12 @@ const STRAND_EMOJI = { numeracy: '🔢', literacy: '🔤', language: '🗣️', 
 
 export default function AnimatedLessonScene({ strand, content, step }) {
   const counting = content?.counting_cards && content.counting_cards.length >= 2 ? content.counting_cards : null;
+  // Reveal order matches the narration order (letter → sound → word →
+  // bombardment) so what the child hears and what they see stay in sync.
   const revealCards = [
     ...(content?.letter ? [{ kind: 'letter' }] : []),
-    ...(content?.picture_url ? [{ kind: 'picture' }] : []),
-    ...(content?.word ? [{ kind: 'word' }] : []),
     ...(content?.sound ? [{ kind: 'sound' }] : []),
+    ...(content?.word ? [{ kind: 'word' }] : []),
     ...(content?.bombardment_words?.length ? [{ kind: 'bombardment' }] : []),
   ];
 
@@ -101,31 +102,31 @@ export default function AnimatedLessonScene({ strand, content, step }) {
                 {content.letter}
               </motion.div>
             )}
-            {kind === 'picture' && (
-              <motion.div
-                animate={{ rotate: [-8, 8, -8], y: [0, -8, 0] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                className="text-7xl"
-              >
-                {emojiFor(content.word, '⭐')}
-              </motion.div>
-            )}
             {kind === 'word' && (
-              <div className="flex gap-1">
-                {(content.word || '').split('').map((ch, i) => (
-                  <motion.span
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: [0, -6, 0] }}
-                    transition={{
-                      opacity: { delay: i * 0.08 },
-                      y: { duration: 1.4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.08 },
-                    }}
-                    className="text-4xl font-bold text-studio-ink"
-                  >
-                    {ch}
-                  </motion.span>
-                ))}
+              <div className="flex flex-col items-center gap-2">
+                <motion.div
+                  animate={{ rotate: [-8, 8, -8], y: [0, -8, 0] }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                  className="text-7xl"
+                >
+                  {emojiFor(content.word, '⭐')}
+                </motion.div>
+                <div className="flex gap-1">
+                  {(content.word || '').split('').map((ch, i) => (
+                    <motion.span
+                      key={i}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: [0, -6, 0] }}
+                      transition={{
+                        opacity: { delay: i * 0.08 },
+                        y: { duration: 1.4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.08 },
+                      }}
+                      className="text-4xl font-bold text-studio-ink"
+                    >
+                      {ch}
+                    </motion.span>
+                  ))}
+                </div>
               </div>
             )}
             {kind === 'sound' && (

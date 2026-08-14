@@ -6,10 +6,16 @@ import LessonFlow from '@/components/LessonFlow';
 import DayGraphic from '@/components/DayGraphic';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
 import StudioBackground from '@/components/StudioBackground';
-import useAutoAmbientMusic from '@/hooks/useAutoAmbientMusic';
 import { getDayConfigForAgeAndKey } from '@/lib/lessonConfig';
+import { silenceAmbient, stopAll } from '@/lib/lessonAudioController';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 
+// One continuous state machine for the whole lesson experience:
+//   HOME (day card click) → ZOODO INTRO → LESSON PLAYBACK → PARENT CELEBRATION
+//   → RETURN + COMPLETE.
+// The lesson page is a single-audio zone: the ambient bed is silenced on
+// enter and every sound is gated through lessonAudioController, so only one
+// track is ever live.
 export default function LessonDetail() {
   const { kidId, weekStart, day } = useParams();
   const navigate = useNavigate();
@@ -18,8 +24,14 @@ export default function LessonDetail() {
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [celebrating, setCelebrating] = useState(false);
-  useAutoAmbientMusic();
   const dayCfg = getDayConfigForAgeAndKey(kid?.age || 4, day);
+
+  // Silence the ambient music bed for the entire lesson — no background track.
+  // Stop everything on unmount; Home restarts ambient on the next gesture.
+  useEffect(() => {
+    silenceAmbient();
+    return () => { stopAll(); };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -43,39 +55,33 @@ export default function LessonDetail() {
     return () => { cancelled = true; };
   }, [kidId, weekStart, day]);
 
-  // Cache the generated Zoodo lesson activity on the lesson entity so the next
-  // open is instant (no live regeneration, no stutter).
+  // Cache the generated activity on the lesson so reopen is instant.
   const saveActivity = async (content) => {
     if (!lesson) return;
     try {
-      const updated = await base44.entities.Lesson.update(lesson.id, { activity_content: content });
+      await base44.entities.Lesson.update(lesson.id, { activity_content: content });
       setLesson((prev) => (prev ? { ...prev, activity_content: content } : prev));
-      void updated;
     } catch (e) { /* ignore — cache is best-effort */ }
   };
 
-  // Fires ONLY after the full sequence (Zoodo intro → teaching → assessment →
-  // parent celebration) finishes. Marks today's lesson complete + returns home.
+  // After the full sequence (Zoodo intro → lesson narration → parent video)
+  // finishes, mark today's lesson complete and return to the dashboard.
   const finishLesson = async () => {
     setCelebrating(false);
-    if (!lesson) { navigate('/'); return; }
-    try {
-      await base44.entities.Lesson.update(lesson.id, {
-        completed: true,
-        skipped: false,
-        completed_date: new Date().toISOString(),
-      });
-    } catch (e) { /* ignore */ }
+    stopAll();
+    if (lesson) {
+      try {
+        await base44.entities.Lesson.update(lesson.id, {
+          completed: true,
+          skipped: false,
+          completed_date: new Date().toISOString(),
+        });
+      } catch (e) { /* ignore */ }
+    }
     navigate('/');
   };
 
-  const skipAndHome = async () => {
-    if (!lesson) { navigate('/'); return; }
-    try {
-      await base44.entities.Lesson.update(lesson.id, { skipped: true, completed: false, completed_date: null });
-    } catch (e) { /* ignore */ }
-    navigate('/');
-  };
+  const backHome = () => { stopAll(); navigate('/'); };
 
   if (!dayCfg) {
     return (
@@ -104,7 +110,7 @@ export default function LessonDetail() {
         {/* Header */}
         <div className="flex items-center gap-2 mb-2">
           <button
-            onClick={() => navigate('/')}
+            onClick={backHome}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-studio-card backdrop-blur-sm hover:bg-white/20 active:scale-95 transition"
             aria-label="Back"
           >
@@ -129,15 +135,8 @@ export default function LessonDetail() {
             currentLetter={kid?.current_letter || 'A'}
             milestone={kid?.developmental_milestone}
             supportNeeds={kid?.support_needs}
-            onMastery={async (next) => {
-              try {
-                const updated = await base44.entities.Kid.update(kid.id, { current_letter: next });
-                setKid(updated);
-              } catch (e) { /* ignore */ }
-            }}
             onPersistContent={saveActivity}
             onComplete={() => setCelebrating(true)}
-            onNotReady={skipAndHome}
           />
         </div>
       </div>
