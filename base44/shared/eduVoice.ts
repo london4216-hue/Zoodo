@@ -17,8 +17,9 @@ export async function synthesizeSpeech(
   try {
     const key = secrets.get("ELEVENLABS_API_KEY");
     if (key) {
-      const customVoice = secrets.get("ELEVENLABS_VOICE_ID");
-      const voiceId = (customVoice && /^[A-Za-z0-9]{16,}$/.test(customVoice)) ? customVoice : ELEVEN_VOICE_ID;
+      // Narrator voice hardcoded to Rachel (warm American female) — the
+      // British-sounding secret voice can no longer override it.
+      const voiceId = ELEVEN_VOICE_ID;
       const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
         method: "POST",
         headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },

@@ -45,12 +45,12 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
       setVideoIdx(0);
       setVideosDone(false);
       requestAnimationFrame(() => {
-        videoRef.current?.play().catch(() => {
-          if (videoRef.current) {
-            videoRef.current.muted = true;
-            videoRef.current.play().catch(() => {});
-          }
-        });
+        // Autoplay WITH SOUND — audio was unlocked by the day-card click and
+        // the lesson interactions, so this should not be blocked. Retry once
+        // if the browser is still warming up; never mute.
+        const v = videoRef.current;
+        if (!v) return;
+        v.play().catch(() => { setTimeout(() => v.play().catch(() => {}), 400); });
       });
     }
 
@@ -77,7 +77,11 @@ export default function CelebrationOverlay({ kidName, subject, parentVideos, che
 
   useEffect(() => {
     if (videoIdx === 0) return;
-    requestAnimationFrame(() => videoRef.current?.play().catch(() => {}));
+    requestAnimationFrame(() => {
+      const v = videoRef.current;
+      if (!v) return;
+      v.play().catch(() => { setTimeout(() => v.play().catch(() => {}), 400); });
+    });
   }, [videoIdx]);
 
   // When all parent videos are done (or there are none), fire completion after

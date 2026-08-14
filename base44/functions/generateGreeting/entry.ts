@@ -14,10 +14,9 @@ async function synthesizeSpeech(base44, text) {
     const key = secrets.get("ELEVENLABS_API_KEY");
     if (key) {
       const zoodoVoice = secrets.get("ELEVENLABS_ZOODO_VOICE_ID");
-      const narratorVoice = secrets.get("ELEVENLABS_VOICE_ID");
-      const voiceId = (zoodoVoice && /^[A-Za-z0-9]{16,}$/.test(zoodoVoice))
-        ? zoodoVoice
-        : ((narratorVoice && /^[A-Za-z0-9]{16,}$/.test(narratorVoice)) ? narratorVoice : ELEVEN_VOICE_ID);
+      // Zoodo uses his own voice ID when provided; otherwise the warm American
+      // Rachel voice with zany settings (never the British narrator secret).
+      const voiceId = (zoodoVoice && /^[A-Za-z0-9]{16,}$/.test(zoodoVoice)) ? zoodoVoice : ELEVEN_VOICE_ID;
       const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
         method: "POST",
         headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },

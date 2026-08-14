@@ -2,19 +2,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Play, Mic, Camera, Home, Heart, Sparkles, Check } from 'lucide-react';
-import CountingCards from '@/components/CountingCards';
+import { Loader2, Mic, Camera, Home, Heart, Sparkles, Check } from 'lucide-react';
 import CameraValidator from '@/components/CameraValidator';
 import MicAssessment from '@/components/MicAssessment';
 import SensoryButton from '@/components/SensoryButton';
 import ZoodoAvatar2D from '@/components/ZoodoAvatar2D';
+import AnimatedLessonScene from '@/components/AnimatedLessonScene';
 import { Image } from '@/components/ui/image';
 import { playOutro, playPraiseJingle, playSparkle, duckMusic, unDuckMusic } from '@/lib/sensoryAudio';
+import { unlockAudio } from '@/lib/audioUnlock';
 
 const COLORS = ['#E8B14A', '#E26D6D', '#FBF7EE', '#4969E1', '#4FAE5A'];
-// Hybrid flow: Zoodo intro → continuous teaching narration over reveal cards →
-// participation assessment → result. (No mid-lesson YouTube; the mic/camera
-// check is the final step before the parent celebration.)
+// Hybrid flow: Zoodo intro (auto-plays) → continuous teaching narration over an
+// animated scene → participation assessment → result. No mid-lesson YouTube;
+// the mic/camera check is the final step before the parent celebration.
 const STAGES = ['intro', 'assess', 'result'];
 
 function isVerbal(strand) { return strand === 'literacy' || strand === 'language'; }
@@ -64,18 +65,20 @@ export default function LessonFlow({
   const [contentStatus, setContentStatus] = useState('generating');
   const [error, setError] = useState('');
   const [playing, setPlaying] = useState(false);
-  const [voDone, setVoDone] = useState(false);
   const [result, setResult] = useState(null);
   const [feedback, setFeedback] = useState('');
-  const [attempts, setAttempts] = useState(0);
   const [stars, setStars] = useState(0);
   const [revealStep, setRevealStep] = useState(0);
   const [introPhase, setIntroPhase] = useState('zoodo');
+  // null = still fetching, {} = fetched but no audio, { audio_url, script } = ready
   const [greeting, setGreeting] = useState(null);
   const [greetingPlaying, setGreetingPlaying] = useState(false);
   const audioRef = useRef(null);
   const greetingRef = useRef(null);
   const pacingRef = useRef(null);
+
+  // Safety net: prime audio on mount (the day-card click already did it).
+  useEffect(() => { unlockAudio(); }, []);
 
   const revealCards = content ? [
     ...(content.letter ? [{ kind: 'letter' }] : []),
@@ -84,9 +87,15 @@ export default function LessonFlow({
     ...(content.sound ? [{ kind: 'sound' }] : []),
     ...(content.bombardment_words?.length ? [{ kind: 'bombardment' }] : []),
   ] : [];
+  const counting = content?.counting_cards && content.counting_cards.length >= 2 ? content.counting_cards : null;
+  const sceneSteps = counting ? counting.length : (revealCards.length || 1);
 
-  // Load cached activity if present; otherwise generate + cache it. Greeting
-  // is always fetched (lightweight) so Zoodo's intro VO is fresh.
+  const goToAssess = () => {
+    if (pacingRef.current) { clearInterval(pacingRef.current); pacingRef.current = null; }
+    setStage('assess');
+  };
+
+  // Load cached activity or generate + cache. Greeting is always fetched fresh.
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -115,58 +124,78 @@ export default function LessonFlow({
         }
       }
       try {
-        const gres = await base44.functions.invoke('generateGreeting', { kidName, subject, day: dayLabel });
-        if (!cancelled && gres?.data?.audio_url) setGreeting(gres.data);
-      } catch (e) { /* greeting optional */ }
+        const gres = await base44.functions.invoke('generateGreeting', { kidName, subject, dayLabel });
+        if (cancelled) return;
+        setGreeting(gres?.data?.audio_url ? gres.data : {});
+      } catch (e) {
+        if (!cancelled) setGreeting({});
+      }
     })();
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subject, dayLabel, kidName, age]);
 
-  // Play Zoodo's intro greeting as soon as it's ready.
+  // Auto-play Zoodo's greeting the moment it's ready — no extra tap. Retry on
+  // reject (autoplay can be flaky right after navigation); if it never plays,
+  // advance to the lesson so the flow never stalls on a button.
   useEffect(() => {
-    if (stage === 'intro' && introPhase === 'zoodo' && greeting?.audio_url && greetingRef.current) {
-      greetingRef.current.play().then(() => setGreetingPlaying(true)).catch(() => {});
-    }
+    if (stage !== 'intro' || introPhase !== 'zoodo') return;
+    if (!greeting || !greeting.audio_url || !greetingRef.current) return;
+    const a = greetingRef.current;
+    let cancelled = false;
+    const tryPlay = (retries = 3) => {
+      a.play().then(() => setGreetingPlaying(true)).catch(() => {
+        if (!cancelled && retries > 0) setTimeout(() => tryPlay(retries - 1), 350);
+      });
+    };
+    tryPlay();
+    const t = setTimeout(() => { if (!cancelled && a.paused) setIntroPhase('vo'); }, 6500);
+    return () => { cancelled = true; clearTimeout(t); };
   }, [stage, introPhase, greeting]);
 
-  // Teaching phase: one continuous narration VO plays over the reveal cards,
-  // auto-advancing the cards paced to the VO duration, then transitions to the
-  // assessment when the narration ends.
+  // No greeting audio (fetch failed) — show the text briefly, then start.
+  useEffect(() => {
+    if (stage !== 'intro' || introPhase !== 'zoodo') return;
+    if (!greeting || greeting.audio_url) return;
+    const t = setTimeout(() => setIntroPhase('vo'), 2600);
+    return () => clearTimeout(t);
+  }, [stage, introPhase, greeting]);
+
+  // Teaching phase: play the narration VO continuously, auto-advancing the
+  // animated scene paced to the VO duration, then go to the assessment. If
+  // autoplay is blocked or audio is missing, advance on a timer instead.
   useEffect(() => {
     if (stage !== 'intro' || introPhase !== 'vo') return;
-    if (!content?.audio_url || !audioRef.current) return;
-    const a = audioRef.current;
-    const startPacing = () => {
-      const dur = a.duration && isFinite(a.duration) ? a.duration : 0;
-      const n = revealCards.length || 1;
-      const interval = dur > 0 ? (dur * 1000) / n : 3500;
+    if (contentStatus !== 'ready' || !content) return;
+    const n = sceneSteps || 1;
+    let fallbackTimer = null;
+    const clearPacing = () => { if (pacingRef.current) { clearInterval(pacingRef.current); pacingRef.current = null; } };
+    const runTimerFallback = () => {
       setRevealStep(0);
-      if (pacingRef.current) clearInterval(pacingRef.current);
-      pacingRef.current = setInterval(() => {
-        setRevealStep((s) => (s + 1 >= revealCards.length ? s : s + 1));
-      }, interval);
+      clearPacing();
+      pacingRef.current = setInterval(() => setRevealStep((s) => (s + 1 >= n ? s : s + 1)), 3500);
+      fallbackTimer = setTimeout(() => { if (stage === 'intro') goToAssess(); }, n * 3500 + 600);
     };
-    a.play().then(() => { setPlaying(true); duckMusic(); }).catch(() => {});
-    if (a.readyState >= 1) startPacing();
-    else a.addEventListener('loadedmetadata', startPacing, { once: true });
-    return () => {
-      if (pacingRef.current) { clearInterval(pacingRef.current); pacingRef.current = null; }
-    };
+    if (!content.audio_url || !audioRef.current) {
+      runTimerFallback();
+    } else {
+      const a = audioRef.current;
+      const startPacing = () => {
+        const dur = a.duration && isFinite(a.duration) ? a.duration : 0;
+        const interval = dur > 0 ? (dur * 1000) / n : 3500;
+        setRevealStep(0);
+        clearPacing();
+        pacingRef.current = setInterval(() => setRevealStep((s) => (s + 1 >= n ? s : s + 1)), interval);
+      };
+      a.play()
+        .then(() => { setPlaying(true); duckMusic(); if (a.readyState >= 1) startPacing(); })
+        .catch(() => runTimerFallback());
+      if (a.readyState >= 1) startPacing();
+      else a.addEventListener('loadedmetadata', startPacing, { once: true });
+    }
+    return () => { clearPacing(); if (fallbackTimer) clearTimeout(fallbackTimer); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stage, introPhase, content]);
-
-  const playGreeting = () => {
-    const a = greetingRef.current;
-    if (!a) { setIntroPhase('vo'); return; }
-    a.play().then(() => setGreetingPlaying(true)).catch(() => setIntroPhase('vo'));
-  };
-
-  const goToAssess = () => {
-    if (pacingRef.current) { clearInterval(pacingRef.current); pacingRef.current = null; }
-    setVoDone(false);
-    setStage('assess');
-  };
+  }, [stage, introPhase, content, contentStatus]);
 
   const assess = content?.assessment;
   const verbal = assess ? assess.mode === 'mic' : isVerbal(strand);
@@ -187,7 +216,6 @@ export default function LessonFlow({
         if (code < 90) onMastery?.(String.fromCharCode(code + 1));
       }
     } else {
-      setAttempts((n) => n + 1);
       setResult('needsHelp');
       setStage('result');
     }
@@ -215,8 +243,7 @@ export default function LessonFlow({
           onPlay={() => { duckMusic(); setPlaying(true); }}
           onEnded={() => {
             unDuckMusic(); setPlaying(false);
-            setRevealStep(revealCards.length - 1);
-            setVoDone(true);
+            setRevealStep((sceneSteps || 1) - 1);
             setTimeout(() => { if (stage === 'intro') goToAssess(); }, 1000);
           }}
         />
@@ -234,7 +261,7 @@ export default function LessonFlow({
         {stage === 'intro' && (
           <div className="mt-2 flex flex-col items-center text-center">
             <AnimatePresence mode="wait">
-              {/* Phase 1 — Zoodo's silly intro greeting */}
+              {/* Phase 1 — Zoodo's silly intro greeting (auto-plays) */}
               {introPhase === 'zoodo' && (
                 <motion.div
                   key="zoodo-intro"
@@ -248,29 +275,11 @@ export default function LessonFlow({
                   <h2 className="mt-2 max-w-xs text-base font-bold leading-snug text-studio-ink line-clamp-3">
                     {greeting?.script || `Hi ${kidName}! Today we're learning ${subject}!`}
                   </h2>
-                  {!greeting?.audio_url && contentStatus === 'generating' && (
+                  {greeting === null && (
                     <div className="flex flex-col items-center py-4">
                       <Loader2 className="h-6 w-6 animate-spin text-studio-coral" />
                       <p className="mt-2 text-sm font-semibold text-studio-ink/50">Zoodo's getting ready…</p>
                     </div>
-                  )}
-                  {greeting?.audio_url && !greetingPlaying && (
-                    <SensoryButton
-                      onClick={playGreeting}
-                      glow="#E8B14A"
-                      className="mt-4 flex items-center justify-center gap-2 bg-studio-gold px-6 py-3 text-studio-ink"
-                    >
-                      <Play className="h-5 w-5" /> Tap to say hi!
-                    </SensoryButton>
-                  )}
-                  {!greeting?.audio_url && contentStatus === 'ready' && (
-                    <SensoryButton
-                      onClick={() => setIntroPhase('vo')}
-                      glow="#E8B14A"
-                      className="mt-4 flex items-center justify-center gap-2 bg-studio-gold px-6 py-3 text-studio-ink"
-                    >
-                      <Play className="h-5 w-5" /> Let's start!
-                    </SensoryButton>
                   )}
                   {contentStatus === 'error' && (
                     <p className="py-4 text-sm font-semibold text-studio-coral">{error}</p>
@@ -278,7 +287,7 @@ export default function LessonFlow({
                 </motion.div>
               )}
 
-              {/* Phase 2 — continuous teaching narration over reveal cards */}
+              {/* Phase 2 — continuous teaching narration over an animated scene */}
               {introPhase === 'vo' && (
                 <motion.div
                   key="vo"
@@ -300,81 +309,9 @@ export default function LessonFlow({
                     <p className="py-4 text-sm font-semibold text-studio-coral">{error}</p>
                   )}
                   {contentStatus === 'ready' && content && (
-                    <>
-                      {content.counting_cards && content.counting_cards.length >= 2 ? (
-                        <div className="mt-3 w-full"><CountingCards cards={content.counting_cards} /></div>
-                      ) : (
-                        <div className="mt-3 flex w-full flex-col items-center">
-                          <AnimatePresence mode="wait">
-                            <motion.div
-                              key={revealStep}
-                              initial={{ opacity: 0, scale: 0.85, y: 8 }}
-                              animate={{ opacity: 1, scale: 1, y: 0 }}
-                              exit={{ opacity: 0, scale: 0.85, y: -8 }}
-                              transition={{ duration: 0.35, ease: 'easeOut' }}
-                              className="flex w-full flex-col items-center"
-                            >
-                              {revealCards[revealStep]?.kind === 'letter' && (
-                                <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-3">
-                                  <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">This is the letter</span>
-                                  <div className="mt-1 flex h-20 w-20 items-center justify-center rounded-2xl bg-white text-5xl font-bold text-studio-coral shadow-md">
-                                    {content.letter}
-                                  </div>
-                                </div>
-                              )}
-                              {revealCards[revealStep]?.kind === 'picture' && (
-                                <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-3">
-                                  <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">Look at this!</span>
-                                  <Image src={content.picture_url} alt={content.word || content.title} fittingType="fill" className="mt-1 h-20 w-20 rounded-2xl shadow-md" />
-                                </div>
-                              )}
-                              {revealCards[revealStep]?.kind === 'word' && (
-                                <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-3">
-                                  <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">This word says</span>
-                                  <div className="mt-1 text-3xl font-bold text-studio-ink">{content.word}</div>
-                                </div>
-                              )}
-                              {revealCards[revealStep]?.kind === 'sound' && (
-                                <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-3">
-                                  <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">Say this sound</span>
-                                  <div className="mt-1 text-4xl font-bold text-studio-coral">“{content.sound}”</div>
-                                  <div className="mt-1 text-sm font-semibold text-studio-ink/50">like {content.word}</div>
-                                </div>
-                              )}
-                              {revealCards[revealStep]?.kind === 'bombardment' && (
-                                <div className="w-full rounded-2xl bg-studio-coral/10 p-3">
-                                  <div className="text-center text-xs font-bold uppercase tracking-wide text-studio-coral">Listen for the sound</div>
-                                  <div className="mt-2 flex flex-wrap justify-center gap-1.5">
-                                    {content.bombardment_words.map((w, i) => (
-                                      <span key={i} className="rounded-full bg-white px-3 py-1 text-sm font-bold text-studio-coral shadow-sm">{w}</span>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                            </motion.div>
-                          </AnimatePresence>
-
-                          <div className="mt-3 flex items-center gap-2 text-studio-ink/40">
-                            {playing ? (
-                              <>
-                                <span className="flex h-2 w-2 rounded-full bg-studio-coral animate-pulse" />
-                                <span className="text-xs font-semibold">Listening…</span>
-                              </>
-                            ) : (voDone || !content?.audio_url) ? (
-                              <SensoryButton
-                                onClick={goToAssess}
-                                glow="#E8B14A"
-                                className="flex items-center justify-center gap-2 bg-studio-gold px-6 py-2.5 text-studio-ink"
-                              >
-                                Ready to try! <Play className="h-4 w-4" />
-                              </SensoryButton>
-                            ) : (
-                              <span className="text-xs font-semibold">Listening…</span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </>
+                    <div className="mt-3 w-full">
+                      <AnimatedLessonScene strand={strand} content={content} step={revealStep} playing={playing} />
+                    </div>
                   )}
                 </motion.div>
               )}

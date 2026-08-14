@@ -9,8 +9,7 @@ async function synthesizeSpeech(base44, text) {
   try {
     const key = secrets.get("ELEVENLABS_API_KEY");
     if (key) {
-      const customVoice = secrets.get("ELEVENLABS_VOICE_ID");
-      const voiceId = (customVoice && /^[A-Za-z0-9]{16,}$/.test(customVoice)) ? customVoice : ELEVEN_VOICE_ID;
+      const voiceId = ELEVEN_VOICE_ID; // Rachel — warm American female narrator (hardcoded)
       const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
         method: "POST",
         headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },
@@ -27,8 +26,9 @@ async function synthesizeSpeech(base44, text) {
         if (up && up.file_url) return up.file_url;
       }
     }
-  } catch (e) { /* lady voice only — no fallback voice */ }
-  return "";
+  } catch (e) { /* fall through to built-in voice */ }
+  const res = await base44.asServiceRole.integrations.Core.GenerateSpeech({ text: clean, voice: 'honey' });
+  return (res && res.url) ? res.url : "";
 }
 
 // The signature EduPath AI teaching voice — warm, musical, sensory-rich.

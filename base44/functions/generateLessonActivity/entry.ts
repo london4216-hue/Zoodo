@@ -138,6 +138,7 @@ function buildLessonPrompt(kidName: string, age: number, subject: string, dayLab
     `Today's theme is "${subject}" (${dayLabel}). ${letterDirective}${guide}${otpt} ` +
     `Use the full I-do -> we-do -> you-do production hierarchy. Use specific praise. ` +
     `Keep it tiny-sentence, huge-warmth, sing-song, and developmentally on-target for a ${age}-year-old per the CDC reference above. ` +
+    `SYNC WITH ON-SCREEN REVEAL: the spoken script MUST narrate the lesson in the exact order the child sees it on screen — (1) greet and name today's topic "${subject}", (2) if there is a letter, name the letter then its sound, (3) the picture word, (4) the sound again, (5) the auditory-bombardment words, (6) invite the child to try. Never mention a card the child cannot currently see. The narration and the on-screen content come from this same response so they can never drift apart. ` +
     `${countingDirective}${assessmentDirective}Also return "phonetic_cue": a simple, caregiver-facing instruction for where to place the tongue, lips, or teeth to produce today's target sound (e.g. "Smile big and push a thin stream of air out for /s/" or "Pop your lips together for /b/"). Keep it to one short sentence a grown-up can follow. If the lesson has no speech target (e.g. movement or numeracy), return "". Also return "bombardment_words": an array of 3-5 simple, high-frequency words rich in today's target sound or theme, for auditory bombardment (e.g. for /b/: ball, baby, bubble, bird, banana). Return JSON with keys: title (2-5 word fun title), script (exact spoken words only), letter (target uppercase letter or ""), sound (target phoneme like "AH" or ""), word (the picture word or ""), phonetic_cue (string), bombardment_words (array of strings), counting_cards (array of {n, word} for numeracy only, else []), camera_recommended (true if a camera check would help verify the child's production or movement, false otherwise), and assessment ({mode, target, why}).`;
 }
 
@@ -169,8 +170,7 @@ async function synthesizeSpeech(base44, text: string): Promise<string> {
   const clean = (text || "").slice(0, 4500);
   const key = secrets.get("ELEVENLABS_API_KEY");
   if (!key) return await builtinTTS(base44, text);
-  const customVoice = secrets.get("ELEVENLABS_VOICE_ID");
-  const voiceId = (customVoice && /^[A-Za-z0-9]{16,}$/.test(customVoice)) ? customVoice : ELEVEN_VOICE_ID;
+  const voiceId = ELEVEN_VOICE_ID; // Rachel — warm American female narrator (hardcoded; secret voice no longer overrides)
   let resp;
   try {
     resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
