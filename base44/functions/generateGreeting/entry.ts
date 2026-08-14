@@ -3,21 +3,28 @@ import { secrets } from "base44:runtime";
 
 // Premium TTS: the signature "lady" voice via ElevenLabs. Returns a stored
 // file_url. Only the lady voice is ever used — no fallback to any other voice.
-const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — warm, friendly female
+const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — narrator fallback
+// Zoodo gets its OWN voice profile: a distinct ElevenLabs voice ID when
+// ELEVENLABS_ZOODO_VOICE_ID is provided, plus zany settings (low stability,
+// high style) so even on the shared fallback it reads as a cartoon character
+// — never the same calm delivery as the lesson narrator.
 async function synthesizeSpeech(base44, text) {
   const clean = (text || "").slice(0, 4500);
   try {
     const key = secrets.get("ELEVENLABS_API_KEY");
     if (key) {
-      const customVoice = secrets.get("ELEVENLABS_VOICE_ID");
-      const voiceId = (customVoice && /^[A-Za-z0-9]{16,}$/.test(customVoice)) ? customVoice : ELEVEN_VOICE_ID;
+      const zoodoVoice = secrets.get("ELEVENLABS_ZOODO_VOICE_ID");
+      const narratorVoice = secrets.get("ELEVENLABS_VOICE_ID");
+      const voiceId = (zoodoVoice && /^[A-Za-z0-9]{16,}$/.test(zoodoVoice))
+        ? zoodoVoice
+        : ((narratorVoice && /^[A-Za-z0-9]{16,}$/.test(narratorVoice)) ? narratorVoice : ELEVEN_VOICE_ID);
       const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
         method: "POST",
         headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },
         body: JSON.stringify({
           text: clean,
           model_id: "eleven_turbo_v2_5",
-          voice_settings: { stability: 0.4, similarity_boost: 0.75, style: 0.6, use_speaker_boost: true },
+          voice_settings: { stability: 0.15, similarity_boost: 0.6, style: 0.85, use_speaker_boost: true },
         }),
       });
       if (resp.ok) {
