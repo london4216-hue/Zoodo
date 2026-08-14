@@ -74,6 +74,11 @@
         }
       }
     },
+    "activity_content": {
+      "type": "object",
+      "title": "Cached Zoodo Lesson Activity",
+      "description": "Pre-generated Zoodo lesson activity (narration audio_url, reveal cards, images, assessment) cached on the lesson so playback is instant on reopen \u2014 no live regeneration."
+    },
     "loved": {
       "type": "array",
       "title": "Loved Video IDs",

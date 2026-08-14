@@ -14,6 +14,13 @@ import { playSparkle } from '@/lib/sensoryAudio';
 const hasVideos = (lesson) =>
   lesson?.ai_content && lesson.ai_content.some((v) => v.video_id);
 
+const weeksBetween = (a, b) => {
+  if (!a || !b) return 0;
+  const da = new Date(a + 'T00:00:00');
+  const db = new Date(b + 'T00:00:00');
+  return Math.round((db - da) / (7 * 24 * 60 * 60 * 1000));
+};
+
 export default function Home() {
   const navigate = useNavigate();
   useAutoAmbientMusic();
@@ -23,6 +30,7 @@ export default function Home() {
   const [lessonsByDay, setLessonsByDay] = useState({});
   const [preparing, setPreparing] = useState(false);
   const [planIntroUrl, setPlanIntroUrl] = useState('');
+  const [earliestWeek, setEarliestWeek] = useState(getMondayISO());
   const introAudioRef = useRef(null);
 
   useEffect(() => {
@@ -34,6 +42,12 @@ export default function Home() {
           return;
         }
         setKid(kids[0]);
+        // Find the kid's first ever lesson week so we can show "Week: N".
+        try {
+          const all = await base44.entities.Lesson.filter({ kid_id: kids[0].id });
+          const weeks = all.map((l) => l.week_start).filter(Boolean).sort();
+          if (weeks.length) setEarliestWeek(weeks[0]);
+        } catch (e) { /* ignore */ }
       } catch (err) {
         console.error(err);
       } finally {
@@ -99,7 +113,6 @@ export default function Home() {
         });
         lovedSubjects = Array.from(subjectSet);
 
-        // Build a progression summary so each week intelligently builds on the last.
         const completed = all.filter((l) => l.completed);
         const skipped = all.filter((l) => l.skipped);
         const repeated = all.filter((l) => l.repeat_next_week);
@@ -155,7 +168,6 @@ export default function Home() {
       }
       if (!cancelled) setLessonsByDay({ ...existing });
 
-      // Voice-over: explain the freshly generated plan once per week.
       const introKey = `planIntro_${monday}`;
       if (!cancelled && updates.length > 0 && !localStorage.getItem(introKey)) {
         try {
@@ -193,7 +205,6 @@ export default function Home() {
     }
   };
 
-  // Play the plan-intro voice-over once it's ready.
   useEffect(() => {
     if (!planIntroUrl) return;
     if (introAudioRef.current) {
@@ -213,29 +224,32 @@ export default function Home() {
   const days = getDayConfigForAge(kid?.age || 4);
   const completedCount = days.filter((d) => lessonsByDay[d.key]?.completed).length;
   const todayKey = DAY_MAP[new Date().toLocaleDateString('en', { weekday: 'long' }).toLowerCase()]?.key;
+  const isCurrentWeek = weekStart === getMondayISO();
+  const weekNumber = Math.max(1, weeksBetween(earliestWeek, weekStart) + 1);
 
   return (
     <Layout>
       <MusicToggle />
 
-      {/* Child + week header with progress ring */}
-      <div className="mb-4 flex items-center gap-3 rounded-[28px] bg-white p-4 shadow-sm">
-        <div
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full"
-          style={{ backgroundColor: kid?.avatar_color || '#4969E1' }}
+      {/* Weekly Lesson Plan header */}
+      <div className="mb-4 rounded-[28px] bg-white p-5 shadow-sm">
+        <h1
+          className="text-3xl font-bold leading-none text-[#D96969]"
+          style={{ WebkitTextStroke: '1px #C84545', letterSpacing: '0.01em' }}
         >
-          <span className="text-xl font-bold text-white">
-            {(kid?.name || '?').charAt(0).toUpperCase()}
-          </span>
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="text-xs font-semibold uppercase tracking-wide text-black/40">Hi there!</div>
-          <div className="text-xl font-bold leading-tight text-black/80">
-            {kid?.name || 'Friend'}’s week
+          WEEKLY Lesson Plan
+        </h1>
+        <div className="mt-3 flex items-end justify-between gap-3">
+          <div className="min-w-0">
+            <div className="text-sm font-bold text-black/70">
+              Name: <span className="text-[#D96969]">{kid?.name || 'Friend'}</span>
+            </div>
+            <div className="text-sm font-bold text-black/70">
+              Week: <span className="text-[#D96969]">{weekNumber}</span>
+            </div>
           </div>
-          <div className="text-sm font-medium text-black/50">{formatWeekRange(weekStart)}</div>
+          <WeekProgressRing completed={completedCount} total={days.length} />
         </div>
-        <WeekProgressRing completed={completedCount} total={days.length} />
       </div>
 
       {/* Week switcher */}
@@ -248,7 +262,7 @@ export default function Home() {
           <ChevronLeft className="h-5 w-5" />
         </button>
         <div className="text-center">
-          <div className="text-xs font-semibold uppercase tracking-wide text-black/40">Week</div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-black/40">Week {weekNumber}</div>
           <div className="text-sm font-bold text-black/70">{formatWeekRange(weekStart)}</div>
         </div>
         <button
@@ -263,22 +277,23 @@ export default function Home() {
       {/* Day cards */}
       <div className="space-y-3">
         {days.map((day) => (
-          <div key={day.key} className="relative">
-            <DayCard
-              day={day}
-              lesson={lessonsByDay[day.key]}
-              kidId={kid.id}
-              weekStart={weekStart}
-            />
-            {day.key === todayKey && (
-              <span className="absolute -left-1 top-1/2 -translate-y-1/2 h-2.5 w-2.5 rounded-full bg-[#4969E1]" title="Today" />
-            )}
-          </div>
+          <DayCard
+            key={day.key}
+            day={day}
+            lesson={lessonsByDay[day.key]}
+            kidId={kid.id}
+            weekStart={weekStart}
+            isToday={isCurrentWeek && day.key === todayKey}
+          />
         ))}
       </div>
 
+      {preparing && (
+        <p className="mt-4 text-center text-sm font-medium text-black/40">Preparing this week's lessons…</p>
+      )}
+
       <p className="mt-6 text-center text-sm text-black/40 font-medium">
-        Tap a day to open its lesson, watch the video, draw, and hear a story!
+        Tap today's card to start the Zoodo lesson!
       </p>
 
       <Link
