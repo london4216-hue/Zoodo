@@ -125,8 +125,8 @@ const GROOVES = [
 
 let music = { playing: false, timer: null, master: null, nodes: [], lastSongIdx: -1, mode: 'full', ducked: false };
 
-const NORMAL_LEVEL = 0.16;
-const DUCK_LEVEL = 0.05;
+const NORMAL_LEVEL = 0.12;
+const DUCK_LEVEL = 0.02;
 function targetLevel() {
   if (music.mode === 'voice') return 0;
   return music.ducked ? DUCK_LEVEL : NORMAL_LEVEL;
