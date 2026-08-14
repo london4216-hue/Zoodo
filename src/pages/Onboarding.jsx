@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Camera, Check, Loader2, ArrowRight, Heart } from 'lucide-react';
-import KidAvatar from '@/components/KidAvatar';
+import ZoodoIntroAvatar from '@/components/ZoodoIntroAvatar';
 import ParentVideoPicker from '@/components/ParentVideoPicker';
 import { defaultMilestoneForAge } from '@/lib/lessonConfig';
 
@@ -141,7 +141,7 @@ export default function Onboarding() {
         <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/70 shadow-sm">
           <Sparkles className="h-6 w-6 text-[#D96969]" />
         </div>
-        <KidAvatar greeting="Hi! I'm Zoodo! Let's learn and play together!" audioUrl={introAudio} size={180} />
+        <ZoodoIntroAvatar greeting="Hi! I'm Zoodo! Let's learn and play together!" audioUrl={introAudio} size={180} />
         <h1 className="mt-6 text-4xl font-bold" style={{ color: '#7B4FE0' }}>
           Meet Zoodo!
         </h1>
