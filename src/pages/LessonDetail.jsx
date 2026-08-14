@@ -5,7 +5,6 @@ import Layout from '@/components/Layout';
 import DrawingCanvas from '@/components/DrawingCanvas';
 import StoryActivity from '@/components/StoryActivity';
 import LessonFlow from '@/components/LessonFlow';
-import ParentRecordingPrompt from '@/components/ParentRecordingPrompt';
 import OptionalLessonVideo from '@/components/OptionalLessonVideo';
 import LunchActivity from '@/components/LunchActivity';
 import StretchGuide from '@/components/StretchGuide';
@@ -182,19 +181,6 @@ export default function LessonDetail() {
                 </div>
               ) : (
                 <>
-                  {!kid?.parent_videos?.length && (
-                    <ParentRecordingPrompt
-                      kidName={kid?.name || 'the child'}
-                      onRecorded={async (url) => {
-                        try {
-                          const updated = await base44.entities.Kid.update(kid.id, {
-                            parent_videos: [...(kid.parent_videos || []), url],
-                          });
-                          setKid(updated);
-                        } catch (e) { /* ignore */ }
-                      }}
-                    />
-                  )}
                   <LessonFlow
                     kidName={kid?.name || 'the child'}
                     subject={dayCfg.subject}
