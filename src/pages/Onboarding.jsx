@@ -137,21 +137,21 @@ export default function Onboarding() {
 
   if (step === 'intro') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#FFFDF8] to-[#FDE9F0] flex flex-col items-center justify-center px-6 py-10 text-center">
+      <div className="h-screen overflow-hidden bg-gradient-to-b from-[#FFFDF8] to-[#FDE9F0] flex flex-col items-center justify-center px-6 py-4 text-center">
         <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/70 shadow-sm">
           <Sparkles className="h-6 w-6 text-[#D96969]" />
         </div>
-        <ZoodoIntroAvatar greeting="Hi! I'm Zoodo! Let's learn and play together!" audioUrl={introAudio} size={180} />
-        <h1 className="mt-6 text-4xl font-bold" style={{ color: '#7B4FE0' }}>
+        <ZoodoIntroAvatar greeting="Hi! I'm Zoodo! Let's learn and play together!" audioUrl={introAudio} size={140} />
+        <h1 className="mt-4 text-3xl font-bold" style={{ color: '#7B4FE0' }}>
           Meet Zoodo!
         </h1>
-        <p className="mt-3 max-w-sm text-black/60 font-medium">
+        <p className="mt-2 max-w-sm text-black/60 font-medium">
           I'm your silly, giggly learning buddy! I'll make a fun plan just for your
           little one — full of music, movement, and bubbles!
         </p>
         <Button
           onClick={() => setStep('form')}
-          className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-[#7B4FE0] px-8 py-6 text-lg font-bold text-white hover:bg-[#6a3fd0]"
+          className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-[#7B4FE0] px-8 py-4 text-base font-bold text-white hover:bg-[#6a3fd0]"
         >
           Let's go! <ArrowRight className="h-5 w-5" />
         </Button>
@@ -161,7 +161,7 @@ export default function Onboarding() {
 
   if (step === 'parent') {
     return (
-      <div className="min-h-screen bg-[#FFFDF8] flex flex-col items-center justify-center px-6 py-10">
+      <div className="h-screen overflow-hidden bg-[#FFFDF8] flex flex-col items-center justify-center px-6 py-4">
         <div className="w-full max-w-md text-center">
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#FAD7D7]">
             <Heart className="h-8 w-8 text-[#D96969]" />
@@ -199,7 +199,7 @@ export default function Onboarding() {
               </p>
               <div className="mt-5">
                 {uploading ? (
-                  <div className="flex flex-col items-center gap-2 py-10 text-black/50 font-semibold">
+                  <div className="flex flex-col items-center gap-2 py-4 text-black/50 font-semibold">
                     <Loader2 className="h-7 w-7 animate-spin text-[#D96969]" /> Saving cheer {currentParent + 1}…
                   </div>
                 ) : (
@@ -218,7 +218,7 @@ export default function Onboarding() {
 
   if (step === 'consent') {
     return (
-      <div className="min-h-screen bg-[#FFFDF8] flex flex-col items-center justify-center px-6 py-10">
+      <div className="h-screen overflow-hidden bg-[#FFFDF8] flex flex-col items-center justify-center px-6 py-4">
         <div className="w-full max-w-md text-center">
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#EDE6FF]">
             <Camera className="h-8 w-8 text-[#7B4FE0]" />
@@ -258,7 +258,7 @@ export default function Onboarding() {
 
   if (step === 'camera') {
     return (
-      <div className="min-h-screen bg-[#FFFDF8] flex flex-col items-center justify-center px-6 py-10">
+      <div className="h-screen overflow-hidden bg-[#FFFDF8] flex flex-col items-center justify-center px-6 py-4">
         <div className="w-full max-w-md text-center">
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#EDE6FF]">
             <Camera className="h-8 w-8 text-[#7B4FE0]" />
@@ -301,22 +301,22 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFFDF8] flex flex-col items-center justify-center px-6 py-10">
+    <div className="h-screen overflow-hidden bg-[#FFFDF8] flex flex-col items-center justify-center px-6 py-4">
       <div className="w-full max-w-md text-center">
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#FAD7D7]">
+        <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#FAD7D7]">
           <Sparkles className="h-8 w-8 text-[#D96969]" />
         </div>
         <h1
-          className="text-4xl font-bold leading-tight"
+          className="text-3xl font-bold leading-tight"
           style={{ color: '#D96969' }}
         >
           Making this plan fun<br />for {name.trim() || 'your child'}
         </h1>
-        <p className="mt-3 text-black/60 font-medium">
+        <p className="mt-2 text-black/60 font-medium">
           A few quick questions so Zoodo can tailor the fun to {name.trim() || 'your child'}.
         </p>
 
-        <form onSubmit={submit} className="mt-8 space-y-5 text-left">
+        <form onSubmit={submit} className="mt-5 space-y-3 text-left">
           <div>
             <label className="block text-sm font-semibold text-black/70 mb-2">
               What's your child's first name?
@@ -327,7 +327,7 @@ export default function Onboarding() {
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Avi"
               maxLength={30}
-              className="w-full rounded-2xl border-2 border-black/10 bg-white px-4 py-4 text-xl font-bold text-black/80 placeholder:text-black/30 focus:border-[#7B4FE0] focus:outline-none"
+              className="w-full rounded-2xl border-2 border-black/10 bg-white px-4 py-3 text-lg font-bold text-black/80 placeholder:text-black/30 focus:border-[#7B4FE0] focus:outline-none"
             />
           </div>
 
@@ -341,7 +341,7 @@ export default function Onboarding() {
                   key={a}
                   type="button"
                   onClick={() => setStartAge(a)}
-                  className={`rounded-2xl border-2 py-5 text-center text-2xl font-bold transition active:scale-95 ${
+                  className={`rounded-2xl border-2 py-3 text-center text-xl font-bold transition active:scale-95 ${
                     startAge === a
                       ? 'bg-[#7B4FE0] text-white border-[#7B4FE0] shadow'
                       : 'bg-white text-black/70 border-black/10 hover:border-[#7B4FE0]/50'
@@ -363,7 +363,7 @@ export default function Onboarding() {
                   key={n}
                   type="button"
                   onClick={() => setProgramLength(n)}
-                  className={`rounded-2xl border-2 py-4 text-center text-lg font-bold transition active:scale-95 ${
+                  className={`rounded-2xl border-2 py-3 text-center text-base font-bold transition active:scale-95 ${
                     programLength === n
                       ? 'bg-[#7B4FE0] text-white border-[#7B4FE0] shadow'
                       : 'bg-white text-black/70 border-black/10 hover:border-[#7B4FE0]/50'
@@ -382,7 +382,7 @@ export default function Onboarding() {
           <Button
             type="submit"
             disabled={saving || !name.trim()}
-            className="w-full rounded-2xl bg-[#4969E1] py-6 text-lg font-bold text-white hover:bg-[#3b54c9] disabled:opacity-60"
+            className="w-full rounded-2xl bg-[#4969E1] py-4 text-base font-bold text-white hover:bg-[#3b54c9] disabled:opacity-60"
           >
             {saving ? 'Setting up…' : 'Continue'}
           </Button>
