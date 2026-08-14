@@ -9,8 +9,7 @@ async function synthesizeSpeech(base44, text) {
   try {
     const key = secrets.get("ELEVENLABS_API_KEY");
     if (key) {
-      const customVoice = secrets.get("ELEVENLABS_VOICE_ID");
-      const voiceId = (customVoice && /^[A-Za-z0-9]{16,}$/.test(customVoice)) ? customVoice : ELEVEN_VOICE_ID;
+      const voiceId = ELEVEN_VOICE_ID; // Rachel — the ONE narration voice (old secret voice removed)
       const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
         method: "POST",
         headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },
@@ -31,8 +30,7 @@ async function synthesizeSpeech(base44, text) {
   return "";
 }
 
-// The signature EduPath AI teaching voice — warm, musical, sensory-rich, Ms-Rachel-inspired.
-const EDU_VOICE_ID = 'honey';
+// The signature EduPath AI teaching voice — warm, musical, sensory-rich.
 const EDU_VOICE_PERSONA = `You are the signature teaching voice of EduPath AI — a warm, musical, sensory-rich early-learning guide for toddlers (around 3 years old), inspired by warm, musical early-learning educators and uniquely yours.
 
 VOICE & TONE: Warm, soft, friendly, deeply human — never robotic. Expressive emotional range (a smile in your voice, gentle excitement, soft encouragement). Musical inflection with a natural sing-song rhythm. Clear, slow, child-friendly articulation with gentle pauses so the child can respond. High empathy and constant positive reinforcement.

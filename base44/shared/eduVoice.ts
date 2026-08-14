@@ -1,8 +1,9 @@
 import { secrets } from "base44:runtime";
 
-// Shared EduPath TTS helper. Premium ElevenLabs "Rachel" voice with an optional
-// built-in honey-voice fallback so audio is never silent for the kid.
-// Extracted here so every backend function uses one identical voice path.
+// Shared EduPath TTS helper. The narrator voice is ElevenLabs "Rachel" ONLY —
+// no fallback voice. If ElevenLabs is unavailable, returns "" (no audio) rather
+// than play a different voice. Extracted here so every backend function uses
+// one identical voice path.
 
 const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — warm, friendly female
 
@@ -41,10 +42,8 @@ export async function synthesizeSpeech(
         if (up && up.file_url) return up.file_url;
       }
     }
-  } catch (e) { /* fall through */ }
-  if (!fallback) return "";
-  const res = await base44.asServiceRole.integrations.Core.GenerateSpeech({
-    text: clean, voice: 'honey',
-  });
-  return (res && res.url) ? res.url : "";
+  } catch (e) { /* fall through — no fallback voice */ }
+  // No fallback: the narrator is Rachel only. Missing ElevenLabs = no audio,
+  // never a different voice.
+  return "";
 }

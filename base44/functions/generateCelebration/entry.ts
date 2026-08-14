@@ -4,31 +4,27 @@ import { secrets } from "base44:runtime";
 // Premium TTS: the signature "lady" voice via ElevenLabs. Returns a stored
 // file_url. Only the lady voice is ever used — no fallback to any other voice.
 const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — warm, friendly female
+// Narrator voice: ElevenLabs "Rachel" ONLY. No fallback voice.
 async function synthesizeSpeech(base44, text) {
   const clean = (text || "").slice(0, 4500);
-  try {
-    const key = secrets.get("ELEVENLABS_API_KEY");
-    if (key) {
-      const voiceId = ELEVEN_VOICE_ID; // Rachel — warm American female narrator (hardcoded)
-      const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-        method: "POST",
-        headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },
-        body: JSON.stringify({
-          text: clean,
-          model_id: "eleven_turbo_v2_5",
-          voice_settings: { stability: 0.45, similarity_boost: 0.75, style: 0.45, use_speaker_boost: true },
-        }),
-      });
-      if (resp.ok) {
-        const buf = await resp.arrayBuffer();
-        const file = new File([buf], "edu_speech.mp3", { type: "audio/mpeg" });
-        const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
-        if (up && up.file_url) return up.file_url;
-      }
-    }
-  } catch (e) { /* fall through to built-in voice */ }
-  const res = await base44.asServiceRole.integrations.Core.GenerateSpeech({ text: clean, voice: 'honey' });
-  return (res && res.url) ? res.url : "";
+  const key = secrets.get("ELEVENLABS_API_KEY");
+  if (!key) throw new Error("ElevenLabs API key not configured");
+  const voiceId = ELEVEN_VOICE_ID; // Rachel — the ONE narration voice
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: "POST",
+    headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },
+    body: JSON.stringify({
+      text: clean,
+      model_id: "eleven_turbo_v2_5",
+      voice_settings: { stability: 0.45, similarity_boost: 0.75, style: 0.45, use_speaker_boost: true },
+    }),
+  });
+  if (!resp.ok) throw new Error(`ElevenLabs TTS failed (${resp.status})`);
+  const buf = await resp.arrayBuffer();
+  const file = new File([buf], "edu_speech.mp3", { type: "audio/mpeg" });
+  const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+  if (!up || !up.file_url) throw new Error("UploadFile returned no file_url");
+  return up.file_url;
 }
 
 // The signature EduPath AI teaching voice — warm, musical, sensory-rich.

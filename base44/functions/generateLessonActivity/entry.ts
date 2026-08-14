@@ -166,45 +166,29 @@ function countingPicturePrompt(n: number, word: string) {
 // TTS — premium ElevenLabs voice with built-in fallback.
 // ─────────────────────────────────────────────────────────────────────────
 const ELEVEN_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // "Rachel" — warm, friendly female
+// Narrator voice: ElevenLabs "Rachel" ONLY. No fallback voice — if ElevenLabs
+// is unavailable, this throws and the lesson surfaces an error rather than
+// play a different (old) voice.
 async function synthesizeSpeech(base44, text: string): Promise<string> {
   const clean = (text || "").slice(0, 4500);
   const key = secrets.get("ELEVENLABS_API_KEY");
-  if (!key) return await builtinTTS(base44, text);
-  const voiceId = ELEVEN_VOICE_ID; // Rachel — warm American female narrator (hardcoded; secret voice no longer overrides)
-  let resp;
-  try {
-    resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-      method: "POST",
-      headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },
-      body: JSON.stringify({
-        text: clean,
-        model_id: "eleven_turbo_v2_5",
-        voice_settings: { stability: 0.45, similarity_boost: 0.75, style: 0.45, use_speaker_boost: true },
-      }),
-    });
-  } catch (e) {
-    console.warn('ElevenLabs fetch error — using built-in voice.', (e as Error)?.message);
-    return await builtinTTS(base44, text);
-  }
-  if (!resp.ok) {
-    const detail = await resp.text().catch(() => "");
-    console.warn(`ElevenLabs TTS failed (${resp.status}): ${detail.slice(0, 200)} — using built-in voice.`);
-    return await builtinTTS(base44, text);
-  }
+  if (!key) throw new Error("ElevenLabs API key not configured");
+  const voiceId = ELEVEN_VOICE_ID; // Rachel — the ONE narration voice
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: "POST",
+    headers: { "xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg" },
+    body: JSON.stringify({
+      text: clean,
+      model_id: "eleven_turbo_v2_5",
+      voice_settings: { stability: 0.45, similarity_boost: 0.75, style: 0.45, use_speaker_boost: true },
+    }),
+  });
+  if (!resp.ok) throw new Error(`ElevenLabs TTS failed (${resp.status})`);
   const buf = await resp.arrayBuffer();
   const file = new File([buf], "edu_speech.mp3", { type: "audio/mpeg" });
   const up = await base44.asServiceRole.integrations.Core.UploadFile({ file });
   if (!up || !up.file_url) throw new Error("UploadFile returned no file_url");
   return up.file_url;
-}
-
-async function builtinTTS(base44, text: string): Promise<string> {
-  const res = await base44.asServiceRole.integrations.Core.GenerateSpeech({
-    text: (text || '').slice(0, 5000),
-    voice: 'honey',
-  });
-  if (!res || !res.url) throw new Error('Built-in TTS returned no audio url');
-  return res.url;
 }
 
 // ─────────────────────────────────────────────────────────────────────────
