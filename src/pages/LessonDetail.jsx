@@ -107,7 +107,7 @@ export default function LessonDetail() {
   return (
     <Layout>
       <StudioBackground />
-      <div className="relative z-10 flex flex-col h-[calc(100vh-9.5rem)] text-studio-card">
+      <div className="relative z-10 flex flex-col h-[calc(100dvh-9.5rem)] overflow-hidden text-studio-card">
         {/* Header */}
         <div className="flex items-center gap-2 mb-2">
           <button

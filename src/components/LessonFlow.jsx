@@ -182,7 +182,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
   const watchAgain = () => { setResult(null); setFeedback(''); setStage('video'); };
 
   return (
-    <div className="rounded-3xl bg-studio-card p-4 shadow-2xl">
+    <div className="rounded-3xl bg-studio-card p-3 shadow-2xl max-h-full overflow-hidden">
       <StageDots stage={stage} />
 
       {greeting?.audio_url && (
@@ -213,7 +213,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
       >
       {/* ───────── INTRO ───────── */}
       {stage === 'intro' && (
-        <div className="mt-4 flex flex-col items-center text-center">
+        <div className="mt-2 flex flex-col items-center text-center">
           <AnimatePresence mode="wait">
             {/* Phase 1 — Zoodo's silly intro greeting */}
             {introPhase === 'zoodo' && (
@@ -225,8 +225,8 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
                 transition={{ duration: 0.4, ease: 'easeOut' }}
                 className="flex w-full flex-col items-center"
               >
-                <Zoodo size={120} talking={greetingPlaying} />
-                <h2 className="mt-3 max-w-xs text-lg font-bold leading-snug text-studio-ink">
+                <Zoodo size={88} talking={greetingPlaying} />
+                <h2 className="mt-2 max-w-xs text-base font-bold leading-snug text-studio-ink line-clamp-3">
                   {greeting?.script || `Hi ${kidName}! Today we're learning ${subject}!`}
                 </h2>
                 {!greeting?.audio_url && contentStatus === 'generating' && (
@@ -297,27 +297,27 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
                             className="flex w-full flex-col items-center"
                           >
                             {revealCards[revealStep]?.kind === 'letter' && (
-                              <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-4">
+                              <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-3">
                                 <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">This is the letter</span>
-                                <div className="mt-1 flex h-24 w-24 items-center justify-center rounded-2xl bg-white text-6xl font-bold text-studio-coral shadow-md">
+                                <div className="mt-1 flex h-20 w-20 items-center justify-center rounded-2xl bg-white text-5xl font-bold text-studio-coral shadow-md">
                                   {content.letter}
                                 </div>
                               </div>
                             )}
                             {revealCards[revealStep]?.kind === 'picture' && (
-                              <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-4">
+                              <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-3">
                                 <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">Look at this!</span>
-                                <Image src={content.picture_url} alt={content.word || content.title} fittingType="fill" className="mt-1 h-24 w-24 rounded-2xl shadow-md" />
+                                <Image src={content.picture_url} alt={content.word || content.title} fittingType="fill" className="mt-1 h-20 w-20 rounded-2xl shadow-md" />
                               </div>
                             )}
                             {revealCards[revealStep]?.kind === 'word' && (
-                              <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-4">
+                              <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-3">
                                 <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">This word says</span>
                                 <div className="mt-1 text-3xl font-bold text-studio-ink">{content.word}</div>
                               </div>
                             )}
                             {revealCards[revealStep]?.kind === 'sound' && (
-                              <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-4">
+                              <div className="flex flex-col items-center rounded-2xl bg-studio-gold/10 p-3">
                                 <span className="text-xs font-bold uppercase tracking-wide text-studio-ink/40">Say this sound</span>
                                 <div className="mt-1 text-4xl font-bold text-studio-coral">“{content.sound}”</div>
                                 <div className="mt-1 text-sm font-semibold text-studio-ink/50">like {content.word}</div>
@@ -394,7 +394,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
 
       {/* ───────── EXPLAIN (post-video, caregiver prep) ───────── */}
       {stage === 'explain' && (
-        <div className="mt-4 flex flex-col items-center text-center">
+        <div className="mt-2 flex flex-col items-center text-center">
           <Zoodo size={96} bounce />
           <h2 className="mt-2 text-lg font-bold text-studio-ink">Now it's your turn, {kidName}!</h2>
           <p className="mt-1 text-sm font-semibold text-studio-ink/50">
@@ -434,7 +434,7 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
           {!verbal && content?.gesture_url && (
             <div className="mb-2 flex flex-col items-center">
               <span className="text-xs font-semibold text-studio-ink/50">Copy the real hand</span>
-              <Image src={content.gesture_url} alt={assessTarget} fittingType="fill" className="mt-1 h-24 w-24 rounded-2xl shadow-sm" />
+              <Image src={content.gesture_url} alt={assessTarget} fittingType="fill" className="mt-1 h-20 w-20 rounded-2xl shadow-sm" />
             </div>
           )}
           {verbal ? (
@@ -453,11 +453,11 @@ export default function LessonFlow({ kidName, subject, strand, dayLabel, age, le
 
       {/* ───────── RESULT ───────── */}
       {stage === 'result' && (
-        <div className="mt-4 flex flex-col items-center text-center">
+        <div className="mt-2 flex flex-col items-center text-center">
           <AnimatePresence mode="wait">
             {result === 'success' && (
               <motion.div key="success" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center">
-                <Zoodo size={120} bounce />
+                <Zoodo size={96} bounce />
                 <h2 className="mt-2 text-2xl font-bold text-studio-gold">You did it, {kidName}!</h2>
                 <div className="mt-1 flex items-center gap-1">
                   {Array.from({ length: Math.max(1, stars) }).map((_, i) => (
