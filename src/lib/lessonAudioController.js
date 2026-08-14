@@ -1,11 +1,9 @@
-// THE single audio authority for the entire lesson experience.
+// THE single audio authority for the entire lesson experience (AudioController).
 //
+// Spec API: play(url) / stop() / unload() / on(event, cb) / off(event, cb).
 // Only one sound is ever allowed to play at a time. Before starting any new
-// track (Zoodo VO, lesson narration, celebration cheer) this controller
-// explicitly stops and unloads whatever was playing before — no exceptions.
-// The ambient background music bed is fully silenced for the whole lesson
-// (no background track, no ducked bed). UI stingers are not fired during the
-// lesson, so nothing overlaps the narration.
+// track this controller stops AND unloads whatever was playing before — no
+// exceptions. Emits: 'play' | 'stop' | 'unload' | 'ended' | 'error'.
 //
 // Nothing in the lesson plays outside this controller.
 
@@ -15,6 +13,23 @@ let currentEl = null;     // the active HTMLAudioElement (or null)
 let currentKind = null;   // 'greeting' | 'narration' | 'cheer' | null
 let endedHandler = null;
 
+// --- Event emitter (spec: on / off) ---
+const listeners = {}; // { event: Set<cb> }
+function emit(event, payload) {
+  const set = listeners[event];
+  if (!set) return;
+  for (const cb of set) { try { cb(payload); } catch (e) { /* ignore */ } }
+}
+export function on(event, cb) {
+  if (!listeners[event]) listeners[event] = new Set();
+  listeners[event].add(cb);
+  return () => off(event, cb); // unsubscribe handle
+}
+export function off(event, cb) {
+  const set = listeners[event];
+  if (set) set.delete(cb);
+}
+
 function detach() {
   if (endedHandler && currentEl) {
     currentEl.removeEventListener('ended', endedHandler);
@@ -23,19 +38,21 @@ function detach() {
   endedHandler = null;
 }
 
-function stopCurrent() {
+function stopCurrent(emitStop = true) {
   if (currentEl) {
     try { currentEl.pause(); } catch (e) { /* ignore */ }
     try { currentEl.src = ''; } catch (e) { /* ignore */ }
     detach();
     currentEl = null;
     currentKind = null;
+    if (emitStop) emit('stop');
   }
 }
 
-// Play one audio track from a URL. Stops whatever is currently playing FIRST,
-// then plays. Resolves when the track ends, errors, or is stopped.
-// onStarted(el) fires once playback begins so the caller can read el.duration.
+// Play one audio track from a URL. Stops + unloads whatever is currently
+// playing FIRST, then plays. Resolves when the track ends, errors, or is
+// stopped. onStarted(el) fires once playback begins (so callers can read
+// el.duration). Emits 'play' on start, 'ended'/'error' on finish.
 export function playAudio(src, { kind = 'audio', onEnded, onStarted } = {}) {
   if (!src) return Promise.resolve();
   stopCurrent();
@@ -45,24 +62,37 @@ export function playAudio(src, { kind = 'audio', onEnded, onStarted } = {}) {
     a.preload = 'auto';
     currentEl = a;
     currentKind = kind;
-    const finish = () => {
+    const finish = (ev) => {
       const cb = onEnded; onEnded = null;
-      stopCurrent();
+      stopCurrent(false);
+      emit(ev === 'error' ? 'error' : 'ended', { kind });
       try { cb?.(); } catch (e) { /* ignore */ }
       resolve();
     };
     endedHandler = finish;
-    a.addEventListener('ended', finish, { once: true });
-    a.addEventListener('error', finish, { once: true });
-    const started = (el) => { try { onStarted?.(el); } catch (e) { /* ignore */ } };
+    a.addEventListener('ended', () => finish('ended'), { once: true });
+    a.addEventListener('error', () => finish('error'), { once: true });
+    const started = (el) => { emit('play', { kind }); try { onStarted?.(el); } catch (e) { /* ignore */ } };
     a.addEventListener('loadedmetadata', () => started(a), { once: true });
     a.play()
       .then(() => started(a))
-      .catch(() => { stopCurrent(); resolve(); });
+      .catch(() => { stopCurrent(false); emit('error', { kind }); resolve(); });
   });
 }
 
-// Stop and unload the current track. Called on every transition and unmount.
+// Spec alias: play(url)
+export function play(url, opts) { return playAudio(url, opts); }
+
+// Stop the current track.
+export function stop() { stopCurrent(); }
+
+// Stop and fully unload the current track (release the element).
+export function unload() {
+  stopCurrent();
+  emit('unload');
+}
+
+// Back-compat alias used by existing lesson components.
 export function stopAll() { stopCurrent(); }
 
 export function getKind() { return currentKind; }
