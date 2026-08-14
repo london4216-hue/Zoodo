@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import DayCard from '@/components/DayCard';
+import WeekProgressRing from '@/components/WeekProgressRing';
 import { DAY_MAP, getMondayISO, addWeeksISO, formatWeekRange, getDayConfigForAge } from '@/lib/lessonConfig';
 import { isGenerating, markGenerating, clearGenerating } from '@/lib/weekGenState';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -210,11 +211,32 @@ export default function Home() {
   }
 
   const days = getDayConfigForAge(kid?.age || 4);
+  const completedCount = days.filter((d) => lessonsByDay[d.key]?.completed).length;
   const todayKey = DAY_MAP[new Date().toLocaleDateString('en', { weekday: 'long' }).toLowerCase()]?.key;
 
   return (
     <Layout>
       <MusicToggle />
+
+      {/* Child + week header with progress ring */}
+      <div className="mb-4 flex items-center gap-3 rounded-[28px] bg-white p-4 shadow-sm">
+        <div
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full"
+          style={{ backgroundColor: kid?.avatar_color || '#4969E1' }}
+        >
+          <span className="text-xl font-bold text-white">
+            {(kid?.name || '?').charAt(0).toUpperCase()}
+          </span>
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="text-xs font-semibold uppercase tracking-wide text-black/40">Hi there!</div>
+          <div className="text-xl font-bold leading-tight text-black/80">
+            {kid?.name || 'Friend'}’s week
+          </div>
+          <div className="text-sm font-medium text-black/50">{formatWeekRange(weekStart)}</div>
+        </div>
+        <WeekProgressRing completed={completedCount} total={days.length} />
+      </div>
 
       {/* Week switcher */}
       <div className="flex items-center justify-between mb-4 px-1">
@@ -258,6 +280,17 @@ export default function Home() {
       <p className="mt-6 text-center text-sm text-black/40 font-medium">
         Tap a day to open its lesson, watch the video, draw, and hear a story!
       </p>
+
+      <Link
+        to="/activities"
+        className="mt-4 flex items-center justify-between rounded-[24px] bg-gradient-to-r from-[#E0F5FF] to-[#EBE4DE] px-5 py-3.5 shadow-sm transition active:scale-[0.99]"
+      >
+        <div>
+          <div className="text-sm font-bold text-black/70">Sensory Activities this week</div>
+          <div className="text-xs font-medium text-black/45">Quick hands-on play ideas</div>
+        </div>
+        <span className="text-black/30 text-xl">›</span>
+      </Link>
 
       <audio ref={introAudioRef} className="hidden" />
     </Layout>

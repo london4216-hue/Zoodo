@@ -53,6 +53,29 @@ export function ageBand(age) {
   return 'school';
 }
 
+// Maps a strand to the iPad hardware capability that day's lesson primarily
+// leverages — shown as a badge on the weekly plan so parents see the device is
+// used actively, never as a passive video player.
+export function hardwareForStrand(strand) {
+  const s = (strand || '').toLowerCase();
+  if (s === 'literacy' || s === 'language') return 'mic';
+  if (s === 'movement' || s === 'music') return 'camera';
+  if (s === 'numeracy' || s === 'sensory') return 'touch';
+  return 'touch';
+}
+
+// A short, parent-friendly description of the day's focus.
+export function descriptionForStrand(strand, subject) {
+  const s = (strand || '').toLowerCase();
+  if (s === 'numeracy') return 'Count, tap, and play with real numbers.';
+  if (s === 'literacy') return 'Hear, say, and play with today’s letter sound.';
+  if (s === 'language') return 'Name pictures and try fun first sounds.';
+  if (s === 'movement') return 'Move, stretch, and build strong bodies.';
+  if (s === 'music') return 'Clap, tap, and keep a steady beat.';
+  if (s === 'sensory') return 'Sort, match, and explore with hands.';
+  return `Play and learn with ${subject || 'today’s activity'}.`;
+}
+
 // A concrete CDC milestone phrase for a given intake age — stored as the
 // child's starting "current milestone" and editable from the dashboard.
 export function defaultMilestoneForAge(age) {
