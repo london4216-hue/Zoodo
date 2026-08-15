@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import { DAYS, getMondayISO, formatWeekRange } from '@/lib/lessonConfig';
-import { Check, ChevronRight, Heart, TrendingUp, MessageCircle, Loader2 } from 'lucide-react';
+import { Check, ChevronRight, Heart, TrendingUp, MessageCircle, Loader2, Sparkles, RefreshCw } from 'lucide-react';
+import { sensoryActivityOptions } from '@/lib/sensoryActivityLibrary';
 
 export default function Dashboard() {
   const [kid, setKid] = useState(null);
@@ -16,6 +17,16 @@ export default function Dashboard() {
   const [supportNeeds, setSupportNeeds] = useState('');
   const [savingSupportNeeds, setSavingSupportNeeds] = useState(false);
 
+  // Pick a random daily sensory add-on appropriate for the kid's age.
+  const [sensorySuggestion, setSensorySuggestion] = useState(null);
+
+  const pickSensory = (age) => {
+    const all = Object.values(sensoryActivityOptions).flat();
+    const ageMatch = all.filter((a) => age >= a.age[0] && age <= a.age[1]);
+    const pool = ageMatch.length ? ageMatch : all;
+    setSensorySuggestion(pool[Math.floor(Math.random() * pool.length)]);
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -25,6 +36,7 @@ export default function Dashboard() {
           setCheerText(kids[0].cheer_text || '');
           setMilestone(kids[0].developmental_milestone || '');
           setSupportNeeds(kids[0].support_needs || '');
+          pickSensory(kids[0].age || 4);
         }
         const all = await base44.entities.Lesson.filter({ kid_id: kids[0]?.id });
         setLessons(all || []);
@@ -257,6 +269,44 @@ export default function Dashboard() {
           <p className="mt-3 text-xs text-black/40">
             EduPath is a fun, caregiver-led companion that complements — it does not replace — professional therapy.
           </p>
+        </div>
+      )}
+
+      {/* Daily sensory add-on suggestion */}
+      {sensorySuggestion && (
+        <div className="rounded-[28px] bg-gradient-to-br from-[#FFF3E0] to-[#FFE0B2] p-5 mb-5 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-orange-500" />
+              <h2 className="font-bold text-black/80">Today's sensory add-on</h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => pickSensory(kid?.age || 4)}
+              aria-label="Shuffle sensory activity"
+              className="rounded-full bg-white/60 p-1.5 hover:bg-white/80 transition active:scale-90"
+            >
+              <RefreshCw className="h-4 w-4 text-orange-600" />
+            </button>
+          </div>
+          <p className="text-xs text-black/50 mb-3">
+            A quick 2–5 min sensory activity you can slip in between lessons.
+          </p>
+          <div className="flex items-start gap-3">
+            <span className="text-3xl">{sensorySuggestion.icon}</span>
+            <div className="min-w-0">
+              <p className="font-bold text-black/80">{sensorySuggestion.name}</p>
+              <p className="text-sm text-black/60">{sensorySuggestion.description}</p>
+              <p className="mt-1.5 text-xs text-black/50 leading-relaxed">{sensorySuggestion.instructions}</p>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {(sensorySuggestion.benefits || []).map((b) => (
+                  <span key={b} className="rounded-full bg-orange-100 px-2 py-0.5 text-[10px] font-semibold text-orange-700 capitalize">
+                    {b.replace(/_/g, ' ')}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
