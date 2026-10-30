@@ -16,6 +16,8 @@ function mockSuccess(url) {
  const bodies={
   '/index.html':'<section id="accountability">LIVE SOURCE</section>',
   '/evidence-clock.mjs':'export function evaluateEvidence(input) {}',
+  '/automation-proof.mjs':'export function evaluateAutomationProof(feed) {}',
+  '/automation-proof.json':'{\n  "source": "connected_automations_peek"\n}',
   '/labs/myblock/index.html':'My Block · Creator-first lab',
   '/labs/myblock/logic.mjs':'export function publishPost() {}',
   '/labs/yearbook3/index.html':'Yearbook 3 · Student Lab',
