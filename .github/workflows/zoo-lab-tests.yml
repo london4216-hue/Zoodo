@@ -26,4 +26,6 @@ jobs:
         with:
           node-version: '22'
       - name: Run isolated engine and lab regression tests
-        run: npm --prefix engine test
+        run: |
+          npm --prefix engine test
+          node --test engine/dashboard/labs/yearbook3/logic.test.mjs
