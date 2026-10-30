@@ -2,11 +2,11 @@
   "schema_version": 1,
   "source": {
     "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
-    "head_before_ledger": "80a61aa937de1c96cef3108676a21f19162bbdd4",
-    "proof_blob": "2ec1e3401a776d74bbdea195ed5609eb699e98c4",
-    "proof_observed_at": "2026-10-30T21:13:30.967Z",
+    "head_before_ledger": "8e765577876556303816f27a40a7d772216947bb",
+    "proof_blob": "5e4bf890887dee7bc20566d94897a3e0a9747d18",
+    "proof_observed_at": "2026-10-30T21:16:03.854Z",
     "completed_scheduler_receipts": 4,
-    "in_progress_scheduler_receipts": 1,
+    "in_progress_scheduler_receipts": 2,
     "verified_productive_agents": null
   },
   "observed_at": "2026-10-30T21:14:00.979Z",
