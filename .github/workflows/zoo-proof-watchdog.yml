@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: '22'
       - name: Fail-first and recovery regression tests
-        run: node --test engine/dashboard/tests/watchdog.test.mjs
+        run: node --test engine/dashboard/tests/watchdog*.test.mjs
   inspect:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs: test
