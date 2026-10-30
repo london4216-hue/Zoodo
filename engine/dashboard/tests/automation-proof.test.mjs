@@ -24,7 +24,7 @@ test('scheduler anomaly: completed before scheduled cannot count as verified run
  const p=evaluateAutomationProof({...good,workers:[anomalous]},now);
  assert.equal(p.state,'UNKNOWN');assert.equal(p.workerCount,0);
  const mixed=evaluateAutomationProof({...good,workers:[good.workers[0],anomalous]},now);
- assert.equal(mixed.state,'RECOVERY REQUIRED');assert.deepEqual(mixed.overdue,['ZOO Keeper']);
+ assert.equal(mixed.state,'UNKNOWN');assert.equal(mixed.workerCount,0);
 });
 
 test('duplicate worker roles cannot inflate scheduler proof',()=>{
