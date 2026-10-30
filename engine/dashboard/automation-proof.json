@@ -1,11 +1,27 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-30T21:54:00.131Z",
-  "publication_scope": "Authenticated scheduler metadata only; completion is not proof of active productive work, CI, or deployed Netlify. evidence_url is a recovery issue, not direct execution receipt.",
-  "refresh_policy": "Single Dashboard Worker writer; conditional GitHub blob SHA; browser polling does not wake workers.",
+  "observed_at": "2026-10-30T21:55:17.917Z",
+  "expected_roles": [
+    "ZOO Keeper",
+    "ZOO Agent Hunter",
+    "ZOO Dashboard Worker",
+    "ZOO Asset Restoration"
+  ],
+  "publication_scope": "Authenticated scheduler metadata only; not proof of productive agents, GitHub CI, or Netlify deployment. evidence_url points to a recovery ticket, not a scheduler receipt.",
+  "refresh_policy": "Single Dashboard Worker writer, conditional GitHub blob SHA; browser polling does not wake workers.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
+    {
+      "role": "ZOO Keeper",
+      "run_id": "ffb58db8-0598-832f-ba37-1c61c30ee63a",
+      "recorded_status": "completed",
+      "scheduled_for": "2026-10-30T21:45:30Z",
+      "completed_at": "2026-10-30T21:54:00.686446Z",
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
+      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
+      "receipt_source": "run_details.last_run"
+    },
     {
       "role": "ZOO Dashboard Worker",
       "run_id": "387ccda5-1cdc-8329-ac50-2372f010db91",
@@ -28,14 +44,6 @@
     }
   ],
   "in_progress_runs": [
-    {
-      "role": "ZOO Keeper",
-      "run_id": "ffb58db8-0598-832f-ba37-1c61c30ee63a",
-      "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-30T21:45:30Z",
-      "started_at": "2026-10-30T21:50:17.475426Z",
-      "completed_at": null
-    },
     {
       "role": "ZOO Agent Hunter",
       "run_id": "73a6a044-37c0-8326-843b-d54b037d4f84",
@@ -63,18 +71,14 @@
   ],
   "source_anomalies": [
     {
-      "role": "ZOO Keeper",
-      "kind": "no_completed_run_receipt"
-    },
-    {
       "role": "ZOO Agent Hunter",
       "kind": "invalid_completion_timestamp",
       "run_id": "dc0f4381-e884-832b-9e5c-f955a6498940"
     }
   ],
   "prior_snapshot": {
-    "observed_at": "2026-10-30T21:16:03.854Z",
-    "previously_quarantined_anomalies": 0,
-    "note": "Previous snapshots preserved in Git history; actual reads only."
+    "observed_at": "2026-10-30T21:54:00.131Z",
+    "previously_quarantined_anomalies": 2,
+    "note": "Prior snapshots retained in Git history; current reads only."
   }
 }
