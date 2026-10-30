@@ -10,6 +10,7 @@ export function evaluateAutomationProof(feed, now=Date.now(), dueMs=75*60000){
  if(observed>now+60000)return unknown('Evidence publication timestamp is in the future');
  const valid=feed.workers.filter(w=>w&&typeof w.role==='string'&&RUN.test(w.run_id??'')&&
   w.recorded_status==='completed'&&DATE(w.completed_at)&&DATE(w.scheduled_for)&&
+  Date.parse(w.completed_at)>=Date.parse(w.scheduled_for)&&
   Date.parse(w.completed_at)<=observed+60000&&Date.parse(w.completed_at)<=now+60000);
  const last=valid.reduce((a,w)=>!a||Date.parse(w.completed_at)>Date.parse(a.completed_at)?w:a,null);
  if(!last)return unknown('No completed automation execution receipts in published feed');
