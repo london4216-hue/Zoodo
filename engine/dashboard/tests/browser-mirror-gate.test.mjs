@@ -7,8 +7,8 @@ import vm from 'node:vm';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const html=readFileSync(resolve(root,'index.html'),'utf8');
-const inline=html.match(/<script type="module">([\\s\\S]*?)<\\/script>/)?.[1]||'';
-const source=inline.match(/async function checkHostingMirrors\\(\\)\\{[\\s\\S]*?\\n\\}\\nconst fmt=/)?.[0].replace(/\\nconst fmt=$/,'');
+const inline=html.match(/<script type="module">([\s\S]*?)<\/script>/)?.[1]||'';
+const source=inline.match(/async function checkHostingMirrors\(\)\{[\s\S]*?\n\}\nconst fmt=/)?.[0].replace(/\nconst fmt=$/,'');
 assert.ok(source,'browser mirror check must be present');
 
 function element(tag='div'){
@@ -46,7 +46,7 @@ async function inspect({manifestSha='a'.repeat(40),badHtml=false,redirect=false}
  const context={URL,AbortSignal,fetch:fetcher,Date,
   $:id=>id==='hostMirrorRows'?box:stamp,
   document:{createElement:element}};
- const check=vm.runInNewContext('let mirrorCheckInFlight=false;\\n'+source+'\\ncheckHostingMirrors',context);
+ const check=vm.runInNewContext('let mirrorCheckInFlight=false;\n'+source+'\ncheckHostingMirrors',context);
  await check();
  const rows=box.children.filter(x=>x.tag==='div');
  const anchors=rows.flatMap(x=>x.children.filter(y=>y.tag==='a'));
@@ -70,7 +70,7 @@ test('public mirror configs permit cross-origin verification of HTML and lab JS'
  const prep=readFileSync(resolve(root,'scripts/prepare-mirror.mjs'),'utf8');
  const vercel=JSON.parse(readFileSync(resolve(root,'vercel.json'),'utf8'));
  const render=readFileSync(resolve(root,'../../render.yaml'),'utf8');
- assert.match(prep,/'\\/\\*'/);
+ assert.match(prep,/'\/\*'/);
  assert.ok(vercel.headers.some(x=>x.source==='/(.*)'&&x.headers.some(h=>h.key==='Access-Control-Allow-Origin'&&h.value==='*')));
- assert.match(render,/path: \\/\\*/);
+ assert.match(render,/path: \/\*/);
 });
