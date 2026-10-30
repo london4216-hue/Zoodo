@@ -139,7 +139,8 @@ async function checkHostingMirrors(){
    row.append(name,detail);
    if(!item.url){detail.textContent='NOT CONNECTED · no mirror deployment or failover claim';box.append(row);continue;}
    let u;try{u=new URL(item.url)}catch{detail.textContent='Invalid host address';box.append(row);continue;}
-   if(u.protocol!=='https:'||u.username||u.password||u.port||!u.hostname.includes('.')){
+   const privateAddress=/^(?:localhost|127\\.|10\\.|192\\.168\\.|169\\.254\\.|172\\.(?:1[6-9]|2\\d|3[01])\\.)/i.test(u.hostname)||u.hostname.startsWith('[');
+   if(u.protocol!=='https:'||u.username||u.password||u.port||!u.hostname.includes('.')||privateAddress){
     detail.textContent='Untrusted host address';box.append(row);continue;
    }
    try{
