@@ -1,9 +1,10 @@
 # ZOO — 18 Isolated Companies, One Autonomous Control Plane
 Status: OWNER-APPROVED ARCHITECTURAL INTENT — 2026-10-29
+Ownership clarification: All 18 repository-backed company projects belong to the same owner. 'Companies' names the owner's distinct company/project environments, not unrelated third-party businesses.
 Classification: Patent-candidate concept record, not a patent filing or legal determination.
 
 ## Exact plan — non-drift contract
-**ONE ZOO autonomous control plane supervising ALL 18 accessible GitHub repositories as 18 individually isolated companies.** Do not select only one company. Do not merge the 18 application codebases. Do not substitute toy demonstrations for real asset evidence. Every repo retains its own code, dependencies, tests, constitution, governance, scorecard, and permissions.
+**ONE ZOO autonomous control plane supervising ALL 18 owner-controlled GitHub repositories as 18 individually isolated companies.** Do not select only one company. Do not merge the 18 application codebases. Do not substitute toy demonstrations for real asset evidence. Every repo retains its own code, dependencies, tests, constitution, governance, scorecard, and permissions.
 
 ### Control plane
 ZOO centrally manages: owner ticket backlog and prioritization; autonomous builders, repairers, reviewers, judges and recovery agents; independent-provider exact-commit verification; bounded failover on non-choice/refusal/tool failure; dependency tracking; fixed-task cross-role benchmarks; timestamped per-agent/tool cost/speed/quality/recovery and claim-vs-proof evidence; shared learning and reusable fix candidates.
