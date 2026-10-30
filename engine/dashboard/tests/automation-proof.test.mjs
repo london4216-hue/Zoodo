@@ -53,3 +53,10 @@ test('a newer in-progress run is not treated as completed or a live heartbeat',(
  assert.equal(p.state,'RECORDED RUNS CURRENT');
  assert.equal(p.activeWorkersVerified,false);
 });
+
+test('declared four-worker roster cannot report healthy when a role is missing',()=>{
+ const p=evaluateAutomationProof({...good,expected_roles:['ZOO Keeper','ZOO Agent Hunter']},now);
+ assert.equal(p.state,'RECOVERY REQUIRED');
+ assert.deepEqual(p.overdue,['ZOO Agent Hunter']);
+ assert.equal(p.activeWorkersVerified,false);
+});
