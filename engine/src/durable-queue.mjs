@@ -74,7 +74,14 @@ export class DurableQueue {
     if(!valid(worker)||!valid(provider))fail('Real worker identity and provider required');
     if([...this.items.values()].some(x=>x.worker===worker&&['assigned','running'].includes(x.status)))
       fail('Worker already holds an active lease');
-    if(!id.startsWith('seeker:')&&this.#emptyHandoffs(worker)>=2)
+    const seeker=id.startsWith('seeker:');
+    if(seeker){
+      // A seeker is owned by the twice-stalled worker, never another worker.
+      // One lease/attempt bounds research and prevents recursive seeker work.
+      if(id!==`seeker:${worker}`)fail('Replacement-seeker owner mismatch');
+      if(this.#emptyHandoffs(worker)<2)fail('Replacement-seeker requires two handoffs');
+      if(t.attempts>=1)fail('Replacement-seeker attempt budget exhausted');
+    }else if(this.#emptyHandoffs(worker)>=2)
       fail('Worker restricted to bounded replacement-seeker after two handoffs');
     if(t.attempts>=this.maxAttempts)fail('Retry budget exhausted');
     return this.#record('claim',id,{worker,provider,leaseUntil:this.now()+this.leaseMs});
@@ -101,7 +108,7 @@ export class DurableQueue {
     return {reason,worker:t.worker,provider:t.provider,attempt:t.attempts,
       startedAt:claim?.at??null,endedAt:new Date(this.now()).toISOString(),elapsedMs,
       costUsd:null,artifactReceipt:null,testReceipt:null,receipt:receipt??null,
-      disposition,dead:t.attempts>=this.maxAttempts};
+      disposition,dead:t.id.startsWith('seeker:')||t.attempts>=this.maxAttempts};
   }
   fail(id,{worker,reason,receipt=null}){const t=this.get(id);
     if(!t||!['assigned','running'].includes(t.status)||t.worker!==worker||t.leaseUntil<=this.now()||!valid(reason)||receipt!==null&&!valid(receipt))
