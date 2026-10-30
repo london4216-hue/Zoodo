@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "source": "authenticated_github_connector_read",
+  "observed_at": "2026-10-30T23:36:29.150Z",
+  "publication_scope": "Sanitized public metadata only; private code, test data and credentials excluded.",
+  "privacy": "No private repo body, test payload, session URL or credentials.",
+  "priority": {
+    "id": "TRANSENDIQ-PR-787",
+    "asset": "TransendIQ",
+    "pr_url": "https://github.com/london4216-hue/TransendIQ/pull/787",
+    "stage": "DRAFT_PR_OPEN",
+    "stage_source": "GitHub PR metadata authenticated read",
+    "responsible_worker": "UNKNOWN — PR author not an authenticated active worker",
+    "source_head_sha": "86b854a1ac2e54fe703ec1ad7e320423c6a740cc",
+    "source_commit_url": "https://github.com/london4216-hue/TransendIQ/commit/86b854a1ac2e54fe703ec1ad7e320423c6a740cc",
+    "pr_opened_at": "2026-10-28T14:56:09Z",
+    "last_meaningful_update_at": "2026-10-28T18:41:49Z",
+    "last_meaningful_update_basis": "Last authenticated PR updated_at; not proof of new code/test execution",
+    "last_test": {
+      "state": "UNKNOWN",
+      "description": "PR author reports 8 passing tests in PR description; no independently retrieved test execution receipt for this run",
+      "test_url": null
+    },
+    "conflict": {
+      "pr_url": "https://github.com/london4216-hue/TransendIQ/pull/782",
+      "status": "PR #782 reports mergeable=false; PR #787 describes shared import-line conflict requiring manual reconciliation; exact merge outcome unverified",
+      "required_import": "gradKpis, cohortYearOf, isGrad, POPULATION_CAVEAT"
+    },
+    "interaction": {
+      "pr_url": "https://github.com/london4216-hue/TransendIQ/pull/788",
+      "status": "Separate date-boundary change; PR #787 describes merge-tree as clean, not independently retested"
+    },
+    "next_action": "Implementation Lead: rebase/reconcile #787 against #782, test #787 and #788 together on isolated branch, attach exact-SHA test receipt and update draft PR; do not merge without applicable protected-branch checks",
+    "owner": "ZOO Implementation Lead",
+    "backup": "ZOO Keeper"
+  },
+  "sara": {
+    "id": "SARA-UI-URL-DISCOVERY",
+    "issue_url": "https://github.com/london4216-hue/Zoodo/issues/24",
+    "url": null,
+    "state": "UNKNOWN",
+    "last_verified_at": null,
+    "observed_at": "2026-10-30T23:36:29.150Z",
+    "owner": "ZOO Agent Hunter",
+    "backup": "ZOO Dashboard Lead",
+    "next_action": "Inspect actual owner-controlled deployments and Sara-related PRs, verify expected new UI/UX landing, redirect, access and mobile; only then publish URL"
+  },
+  "dashboard": {
+    "source_pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "production_verified": false,
+    "reason": "Live Netlify HTTP/DNS inaccessible from two independent request paths; source-to-deploy mapping unavailable",
+    "next_action": "Read authorized Netlify site/deploy mapping and exact SHA, then browser verify source-linked row and refresh; retain rollback"
+  },
+  "hourly_movement": [
+    {
+      "hour_utc": "2026-10-30T23:00Z",
+      "hour_et": "2026-10-30 19:00 EDT",
+      "repo": "london4216-hue/Zoodo",
+      "pr_url": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "prior_status": "PR #787 not explicitly tracked in prominent dashboard row",
+      "new_status": "Source-only priority feed authored; hosted status UNKNOWN until deployed",
+      "source_sha": null,
+      "worker": "ZOO Dashboard Lead",
+      "gap_detected_at": "2026-10-30T23:34:16Z",
+      "fixed_at": null,
+      "verified_live_at": null,
+      "latency_minutes": null
+    }
+  ],
+  "timing": {
+    "pr787_open_to_observed_seconds": 204020,
+    "pr787_review_at": null,
+    "pr787_fix_at": null,
+    "pr787_tests_at": null,
+    "pr787_merge_at": null,
+    "pr787_deploy_at": null,
+    "pr787_verified_at": null,
+    "claim_to_fix_seconds": null,
+    "fix_to_pr_seconds": null,
+    "pr_to_deploy_seconds": null
+  }
+}
