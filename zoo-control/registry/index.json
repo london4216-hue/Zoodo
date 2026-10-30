@@ -1,13 +1,15 @@
 {
   "schema_version": 1,
   "source": "authenticated_github_issue_pr_inventory",
-  "observed_at": "2026-10-30T23:31:58.273Z",
+  "observed_at": "2026-10-30T23:39:30.105Z",
   "control_plane_repo": "london4216-hue/Zoodo",
   "privacy": "public issue/PR metadata only; no private TransendIQ payload, secrets, or user data",
-  "source_issue_count": 10,
+  "source_issue_count": 12,
   "source_open_pr_count": 12,
-  "coverage": "10 open Zoodo issues and 11 prior open PRs from authenticated search, plus newly created draft PR #22 confirmed by GitHub API. TransendIQ inventory excluded due cap.",
+  "coverage": "12 authenticated open Zoodo issues, including newly opened #24 Sara URL and #25 Prestige comparison; PR inventory retained from prior snapshot (not reverified in this update). TransendIQ inventory excluded due cap.",
   "ticket_ids": [
+    "ZOO-ISSUE-25",
+    "ZOO-ISSUE-24",
     "ZOO-ISSUE-18",
     "ZOO-ISSUE-17",
     "ZOO-ISSUE-14",
@@ -118,7 +120,7 @@
     }
   ],
   "metrics": {
-    "ready": 8,
+    "ready": 10,
     "blocked": 2,
     "claimed": 0,
     "in_progress": 0,
