@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { REQUIRED_LANES, verifiedPreview, validateDesignFeed } from './design-lanes.mjs';
+const issue = 'https://github.com/london4216-hue/Zoodo/issues/27';
+const lanes = REQUIRED_LANES.map(id => ({id, asset:id.startsWith('myblock')?'My Block':id.startsWith('yb3')?'YB3':'Prestige Engage',kind:id.endsWith('original')?'ORIGINAL':id.endsWith('gold')?'EXPERIMENT':'BASELINE',issue_url:issue}));
+const sha='a'.repeat(40), now=Date.parse('2026-10-30T23:45:00Z');
+const good={state:'HOSTED_VERIFIED',preview_url:'https://example.netlify.app/preview',verification:{checked_at:'2026-10-30T23:44:00Z',http_status:200,expected_route_ok:true,exact_commit_sha:sha,deployed_commit_sha:sha,checked_url:'https://example.netlify.app/preview'}};
+test('six nonconflated lanes required',()=>assert.equal(validateDesignFeed({schema_version:1,lanes}).length,6));
+test('missing lane rejected',()=>assert.throws(()=>validateDesignFeed({schema_version:1,lanes:lanes.slice(1)})));
+test('duplicate lane rejected',()=>assert.throws(()=>validateDesignFeed({schema_version:1,lanes:[...lanes,lanes[0]]})));
+test('original and experimental cannot be swapped',()=>assert.throws(()=>validateDesignFeed({schema_version:1,lanes:lanes.map(x=>x.id==='myblock-original'?{...x,kind:'EXPERIMENT'}:x)})));
+test('unverified URL cannot be shown',()=>assert.equal(verifiedPreview({...good,state:'UNKNOWN'},now),null));
+test('real verified exact SHA + endpoint can be shown',()=>assert.equal(verifiedPreview(good,now),good.preview_url));
+test('stale, future and mismatched deploy receipts rejected',()=>{for(const verification of [{...good.verification,checked_at:'2026-10-30T20:00:00Z'},{...good.verification,checked_at:'2026-10-31T00:00:00Z'},{...good.verification,deployed_commit_sha:'b'.repeat(40)}])assert.equal(verifiedPreview({...good,verification},now),null)});
+test('host must be expected HTTPS Netlify and verified route',()=>{assert.equal(verifiedPreview({...good,preview_url:'https://evil.example/preview',verification:{...good.verification,checked_url:'https://evil.example/preview'}},now),null);assert.equal(verifiedPreview({...good,verification:{...good.verification,expected_route_ok:false}},now),null)});

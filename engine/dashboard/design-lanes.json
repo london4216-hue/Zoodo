@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "source": "authenticated_github_issue_and_figma_probe",
+  "observed_at": "2026-10-30T23:45:00Z",
+  "lanes": [
+    {
+      "id": "myblock-original",
+      "asset": "My Block",
+      "kind": "ORIGINAL",
+      "issue_url": "https://github.com/london4216-hue/Zoodo/issues/27",
+      "state": "UNKNOWN",
+      "source_state": "ACCESS_DENIED",
+      "preview_url": null,
+      "verification": null,
+      "metrics": {
+        "functional_parity": null,
+        "accessibility": null,
+        "performance": null
+      },
+      "next_action": "Figma prototype file owner/editor permission denied on authenticated connector; recover authorized design read before UI fidelity claim"
+    },
+    {
+      "id": "myblock-gold",
+      "asset": "My Block",
+      "kind": "EXPERIMENT",
+      "issue_url": "https://github.com/london4216-hue/Zoodo/issues/27",
+      "state": "UNKNOWN",
+      "source_state": "NOT_STARTED",
+      "preview_url": null,
+      "verification": null,
+      "metrics": {
+        "functional_parity": null,
+        "accessibility": null,
+        "performance": null
+      },
+      "next_action": "Separate reversible branch and preview; preserve original Figma lane"
+    },
+    {
+      "id": "yb3-original",
+      "asset": "YB3",
+      "kind": "ORIGINAL",
+      "issue_url": "https://github.com/london4216-hue/Zoodo/issues/27",
+      "state": "UNKNOWN",
+      "source_state": "UNKNOWN",
+      "preview_url": null,
+      "verification": null,
+      "metrics": {
+        "functional_parity": null,
+        "accessibility": null,
+        "performance": null
+      },
+      "next_action": "Locate original YB3 Figma file key and verify frames before faithful UI build"
+    },
+    {
+      "id": "yb3-gold",
+      "asset": "YB3",
+      "kind": "EXPERIMENT",
+      "issue_url": "https://github.com/london4216-hue/Zoodo/issues/27",
+      "state": "UNKNOWN",
+      "source_state": "NOT_STARTED",
+      "preview_url": null,
+      "verification": null,
+      "metrics": {
+        "functional_parity": null,
+        "accessibility": null,
+        "performance": null
+      },
+      "next_action": "Separate reversible branch and preview; preserve original Figma lane"
+    },
+    {
+      "id": "prestige-baseline",
+      "asset": "Prestige Engage",
+      "kind": "BASELINE",
+      "issue_url": "https://github.com/london4216-hue/Zoodo/issues/25",
+      "state": "UNKNOWN",
+      "source_state": "OWNER_SUPPLIED",
+      "preview_url": null,
+      "verification": null,
+      "metrics": {
+        "functional_parity": null,
+        "accessibility": null,
+        "performance": null
+      },
+      "next_action": "Verify existing baseline Netlify demo HTTP, mobile workflow and exact deployed SHA"
+    },
+    {
+      "id": "prestige-gold",
+      "asset": "Prestige Engage",
+      "kind": "EXPERIMENT",
+      "issue_url": "https://github.com/london4216-hue/Zoodo/issues/25",
+      "state": "UNKNOWN",
+      "source_state": "NOT_STARTED",
+      "preview_url": null,
+      "verification": null,
+      "metrics": {
+        "functional_parity": null,
+        "accessibility": null,
+        "performance": null
+      },
+      "next_action": "Implement original cinematic opt-in sound/motion concept preserving functional workflow; deploy separate preview"
+    }
+  ]
+}
