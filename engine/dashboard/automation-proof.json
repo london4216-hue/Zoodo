@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "source": "connected_automations_peek",
+  "observed_at": "2026-10-30T16:23:38.599Z",
+  "publication_scope": "GitHub-published snapshot of scheduler execution records; not live heartbeat, app functionality, independent review, or continuous worker uptime",
+  "refresh_policy": "Publish after each worker cycle via authorized ZOO worker; dashboard re-checks this snapshot at least every minute",
+  "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
+  "workers": [
+    {
+      "role": "ZOO Keeper",
+      "run_id": "934eadc0-d66c-8323-ba39-0c1a224534bf",
+      "recorded_status": "completed",
+      "scheduled_for": "2026-10-30T15:59:42.996986Z",
+      "completed_at": "2026-10-30T16:03:53.039427Z",
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17"
+    },
+    {
+      "role": "ZOO Agent Hunter",
+      "run_id": "e7e928e9-83f8-8322-93e2-d43ab03bae49",
+      "recorded_status": "completed",
+      "scheduled_for": "2026-10-30T15:59:41.978237Z",
+      "completed_at": "2026-10-30T16:02:41.316259Z",
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17"
+    },
+    {
+      "role": "ZOO Dashboard Worker",
+      "run_id": "60a78be7-d2f8-832f-a788-25876c50adc2",
+      "recorded_status": "completed",
+      "scheduled_for": "2026-10-30T15:59:41.181217Z",
+      "completed_at": "2026-10-30T16:05:24.860524Z",
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17"
+    },
+    {
+      "role": "ZOO Asset Restoration",
+      "run_id": "b0a5d3e3-2654-832d-90c2-6142a4dd4d39",
+      "recorded_status": "completed",
+      "scheduled_for": "2026-10-30T15:24:51Z",
+      "completed_at": "2026-10-30T15:27:35.928742Z",
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17"
+    }
+  ]
+}
