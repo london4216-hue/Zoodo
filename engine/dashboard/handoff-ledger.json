@@ -2,14 +2,14 @@
   "schema_version": 1,
   "source": {
     "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
-    "head_before_ledger": "cfd3e33567a5c280a0eda440fe49d79a28270eda",
-    "proof_blob": "1e72cbe6a87fa929559e5cd61bf1bf6af5529123",
-    "proof_observed_at": "2026-10-30T21:55:17.917Z",
-    "completed_scheduler_receipts": 3,
-    "in_progress_scheduler_receipts": 3,
+    "head_before_ledger": "389d2e95615f95945a133800ee275fc30ff2d1e0",
+    "proof_blob": "0fc79284b0e50452389313c9a6738327fb585afe",
+    "proof_observed_at": "2026-10-30T23:05:25.384Z",
+    "completed_scheduler_receipts": 2,
+    "in_progress_scheduler_receipts": 1,
     "verified_productive_agents": null
   },
-  "observed_at": "2026-10-30T21:55:52.257Z",
+  "observed_at": "2026-10-30T23:05:57.360Z",
   "visibility": "sanitized_public_recovery_metadata",
   "state": "RECOVERING",
   "note": "Source-linked checkpoint only; not a deployed/live execution receipt or an independent panel vote.",
@@ -73,13 +73,29 @@
       "timestamp_utc": "2026-10-30T21:55:52.257Z",
       "next_trigger": "Implementation Lead next scheduled execution or authorized event-driven dispatch; Keeper integrates only after security and deploy mapping. No request equated with execution.",
       "receipt_scope": "Verified private-branch source repair and local test only; no live Netlify/browser receipt"
+    },
+    {
+      "from": "Dashboard Lead",
+      "to": "Implementation Lead",
+      "task_id": "ZOODO-18-PROOF-REFRESH-20261030-2305",
+      "decision": "REVISE",
+      "proposed_fix": "Obtain independent hosted exact-SHA Node test receipt and production Netlify site/deploy/source/rollback mapping; investigate zero-step Actions runner; preserve two quarantined early-completion scheduler anomalies.",
+      "evidence": [
+        "https://github.com/london4216-hue/Zoodo/commit/389d2e95615f95945a133800ee275fc30ff2d1e0",
+        "https://github.com/london4216-hue/Zoodo/actions/runs/41134618657",
+        "https://github.com/london4216-hue/Zoodo/issues/18"
+      ],
+      "tests": "8 authenticated snapshot structural/readback checks passed; baseline 26 href occurrences and candidate 34, none removed. Actions job 124333872890 failed with 0 steps and log 404. Netlify preview status success, browser and production unverified.",
+      "timestamp_utc": "2026-10-30T23:05:57.360Z",
+      "next_trigger": "Implementation Lead next authorized execution or durable issue assignment; Keeper maps Netlify production and integrates only after independent hosted tests.",
+      "receipt_scope": "Actual Dashboard Lead authenticated GitHub write/readback; not a downstream agent execution or production receipt"
     }
   ],
   "unresolved": [
     {
       "id": "ZOO-NETLIFY-MAPPING",
       "state": "UNKNOWN",
-      "root_cause": "No authenticated production site ID/deploy/source/rollback mapping; DNS request to production and preview failed in this environment",
+      "root_cause": "Actual production Netlify site ID/deploy/source/rollback unverified; HTTP DNS resolution failed from web and container at this check, not proof of outage.",
       "owner": "ZOO Keeper",
       "backup": "ZOO Agent Hunter",
       "next_action": "Read actual Netlify published deploy and source settings via authorized account; record site/deploy IDs, exact SHA, rollback and provider build receipt."
@@ -87,23 +103,23 @@
     {
       "id": "ZOO-CI-STARTUP",
       "state": "RECOVERING",
-      "root_cause": "Latest inspected Actions run 41129763183 failed with dashboard-contract job 124317385058, no recorded steps/log URL; exact-head preview pending on subsequent proof commit.",
+      "root_cause": "Actions run 41134618657 dashboard-contract job 124333872890 failed with zero recorded steps; logs returned 404 BlobNotFound at 2026-10-30T23:05:41Z. Netlify preview status success is not hosted Node test proof.",
       "owner": "Implementation Lead",
       "backup": "ZOO Agent Hunter",
-      "next_action": "Inspect runner policy/provisioning and independent Netlify build logs; execute exact SHA Node tests on qualified hosted runner; attach log URL."
+      "next_action": "Implementation Lead inspect GitHub runner provisioning/policy and Netlify provider build logs; run exact-SHA Node tests on an authorized independent host and link logs."
     },
     {
       "id": "ZOO-LIVE-PROOF",
       "state": "UNKNOWN",
-      "root_cause": "Authenticated scheduler snapshot observed 21:55:17.917Z on PR #16: three valid historical completions; Hunter latest_result completed before scheduled, quarantined; three in-progress records are not productive proof; live production fetch failed DNS.",
+      "root_cause": "Authenticated scheduler snapshot 2026-10-30T23:05:25.384Z: two valid historical completions, one Dashboard in-progress, Keeper and Hunter completed-before-scheduled anomalies quarantined. Production Netlify HTTP DNS unresolved in test environment.",
       "owner": "ZOO Dashboard Worker",
       "backup": "ZOO Agent Hunter",
-      "next_action": "Map actual production Netlify deploy ID/source and verify browser 30s polling against real source-linked receipts."
+      "next_action": "Dashboard Lead verify actual Netlify production deployment mapping, browser refresh and source-linked receipt; investigate scheduler early-completion semantics without accepting invalid timestamps."
     },
     {
       "id": "ZOO-DEMO-LINKS",
       "state": "UNKNOWN",
-      "root_cause": "Source href parity passed; external demo endpoints including Prestige Engage and owner auth not browser verified",
+      "root_cause": "Baseline 26 original href occurrences preserved among 34 candidate; Prestige Engage endpoint DNS unresolved from container; other external demo links/auth paths not browser verified.",
       "owner": "ZOO Dashboard Worker",
       "backup": "ZOO Agent Hunter",
       "next_action": "Verify each expected landing and redirect; keep unverified entries in repair section without deleting links."
@@ -158,6 +174,19 @@
         "test_blob": "6eaeea9b0e89905ae006535ab9e38ba2dd7dc9d9",
         "scope": "isolated exact-blob local tests, not hosted CI"
       }
+    },
+    {
+      "agent_id": "ZOO Dashboard Lead",
+      "task_id": "ZOODO-18-PROOF-REFRESH-20261030-2305",
+      "source_commit_sha": "389d2e95615f95945a133800ee275fc30ff2d1e0",
+      "command_action": "Authenticated connected_automations_peek for four roles, conditional GitHub update_file, readback verification; source navigation parity and Actions steps/log inspection",
+      "started_at_utc": "2026-10-30T23:04:28Z",
+      "completed_at_utc": "2026-10-30T23:05:57.360Z",
+      "test_api_result": "PASS 8 snapshot checks and exact readback; PASS 26/26 original href occurrences retained; Actions run 41134618657 zero steps, logs 404; production UNKNOWN",
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/commit/389d2e95615f95945a133800ee275fc30ff2d1e0",
+      "decision": "REVISE",
+      "next_action": "Verify Netlify production deploy ID and browser refresh; qualify independent hosted CI; repair scheduler anomalies",
+      "production_receipt": "UNKNOWN"
     }
   ],
   "agent_proof_matrix": {
@@ -166,13 +195,13 @@
       "lane_execution": "PASS_PRIVATE_SOURCE_ONLY",
       "production_display": "UNKNOWN",
       "evidence_url": "https://github.com/london4216-hue/TransendIQ/pull/1064",
-      "reason": "Private code fix and local tests have machine-readable receipt; required external capability invocation still UNKNOWN"
+      "reason": "Private provider-status check and checkpoint reported; no authenticated external replacement runner invocation; scheduler timestamp anomaly"
     },
     "dashboard_lead": {
-      "lane_execution": "PASS_LOCAL_SOURCE",
+      "lane_execution": "PASS_SOURCE_READBACK_ONLY",
       "production_display": "UNKNOWN",
-      "evidence_url": "https://github.com/london4216-hue/Zoodo/commit/a18c4176df49002828c5990092e19ea5fbd9e5cc",
-      "reason": "Authenticated GitHub source write/readback and exact-blob local Node tests; production Netlify not verified"
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/commit/389d2e95615f95945a133800ee275fc30ff2d1e0",
+      "reason": "Authenticated four-worker metadata reads, conditional source write, exact blob readback and link parity; no production Netlify browser proof"
     },
     "implementation_lead": {
       "lane_execution": "PASS_PRIVATE_SOURCE_ONLY",
@@ -183,7 +212,7 @@
     "zoo_keeper": {
       "lane_execution": "PARTIAL",
       "production_display": "UNKNOWN",
-      "reason": "Authenticated scheduler completion and claimed NEXT requests; no independently verified hosted recovery or production receipt"
+      "reason": "Scheduler reported completion before scheduled time, quarantined; separate code/test claims do not establish live dashboard"
     }
   }
 }
