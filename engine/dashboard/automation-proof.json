@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-30T16:23:38.599Z",
-  "publication_scope": "GitHub-published snapshot of scheduler execution records; not live heartbeat, app functionality, independent review, or continuous worker uptime",
-  "refresh_policy": "Publish after each worker cycle via authorized ZOO worker; dashboard re-checks this snapshot at least every minute",
+  "observed_at": "2026-10-30T16:31:24.724Z",
+  "publication_scope": "Authenticated scheduler records observed via connected Automations; not a live agent heartbeat, browser verification, deployment, or independent review",
+  "refresh_policy": "Publish on authorized worker runs; browser fetches at least every minute",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
     {
@@ -32,11 +32,32 @@
     },
     {
       "role": "ZOO Asset Restoration",
-      "run_id": "b0a5d3e3-2654-832d-90c2-6142a4dd4d39",
+      "run_id": "644b1160-3dfc-8324-b954-6ffc5ec619d4",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-30T15:24:51Z",
-      "completed_at": "2026-10-30T15:27:35.928742Z",
+      "scheduled_for": "2026-10-30T16:24:51Z",
+      "completed_at": "2026-10-30T16:30:52.473950Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17"
     }
+  ],
+  "in_progress_runs": [
+    {
+      "role": "ZOO Agent Hunter",
+      "run_id": "bcf2e5ce-9ac4-8333-9b95-f36be0443cf2",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-10-30T16:30:04.061041Z",
+      "started_at": "2026-10-30T16:30:18.471279Z",
+      "completed_at": null
+    },
+    {
+      "role": "ZOO Dashboard Worker",
+      "run_id": "19533753-9de4-832c-8242-7f06b3239bf9",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-10-30T16:30:03.024048Z",
+      "started_at": "2026-10-30T16:30:05.289660Z",
+      "completed_at": null
+    }
+  ],
+  "source_anomalies": [
+    "ZOO Agent Hunter: latest_result completed_at precedes scheduled_for; excluded from completed proof"
   ]
 }
