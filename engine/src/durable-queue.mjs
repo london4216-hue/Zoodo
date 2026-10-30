@@ -52,9 +52,30 @@ export class DurableQueue {
     if(t){if(t.repo!==repo||t.description!==description||t.releaseRequired!==releaseRequired)fail('Idempotency collision');return t}
     return this.#record('create',id,{repo,description,releaseRequired:Boolean(releaseRequired)});
   }
+  // Single-writer lease fencing: caller-supplied availability is not authority.
+  #emptyHandoffs(worker){
+    let count=0;
+    for(const t of this.items.values()){
+      if(t.id.startsWith('seeker:'))continue;
+      let owner=null,submitted=false;
+      for(const e of t.history){
+        if(e.type==='claim'){owner=e.worker;submitted=false}
+        else if(e.type==='submit'&&owner===worker)submitted=true;
+        else if(e.type==='handoff'||e.type==='requeue'){
+          if(e.worker===worker&&!submitted)count++;
+          owner=null;submitted=false;
+        }
+      }
+    }
+    return count;
+  }
   claim(id,{worker,provider}){
     const t=this.get(id);if(!t||t.status!=='queued')fail('Ticket not queued');
     if(!valid(worker)||!valid(provider))fail('Real worker identity and provider required');
+    if([...this.items.values()].some(x=>x.worker===worker&&['assigned','running'].includes(x.status)))
+      fail('Worker already holds an active lease');
+    if(!id.startsWith('seeker:')&&this.#emptyHandoffs(worker)>=2)
+      fail('Worker restricted to bounded replacement-seeker after two handoffs');
     if(t.attempts>=this.maxAttempts)fail('Retry budget exhausted');
     return this.#record('claim',id,{worker,provider,leaseUntil:this.now()+this.leaseMs});
   }
@@ -83,7 +104,7 @@ export class DurableQueue {
       disposition,dead:t.attempts>=this.maxAttempts};
   }
   fail(id,{worker,reason,receipt=null}){const t=this.get(id);
-    if(!t||!['assigned','running'].includes(t.status)||t.worker!==worker||!valid(reason)||receipt!==null&&!valid(receipt))
+    if(!t||!['assigned','running'].includes(t.status)||t.worker!==worker||t.leaseUntil<=this.now()||!valid(reason)||receipt!==null&&!valid(receipt))
       fail('Active worker failure evidence required');
     return this.#record('handoff',id,this.#handoffFields(t,reason,receipt,'worker-failure'));
   }
