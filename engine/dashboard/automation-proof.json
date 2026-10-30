@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-30T21:13:30.967Z",
+  "observed_at": "2026-10-30T21:16:03.854Z",
   "publication_scope": "Authenticated scheduler metadata only. Run completions are not live productive-agent, GitHub CI, or Netlify deployment receipts; evidence_url is a recovery issue, not a direct scheduler execution link.",
   "refresh_policy": "Single Dashboard Worker writer; conditional GitHub blob SHA; browser polling is not a worker trigger.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
@@ -44,7 +44,7 @@
       "completed_at": "2026-10-30T20:33:28.660151Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
-      "receipt_source": "run_details.last_run"
+      "receipt_source": "run_details.latest_result"
     }
   ],
   "in_progress_runs": [
@@ -55,12 +55,20 @@
       "scheduled_for": "2026-10-30T20:45:58Z",
       "started_at": "2026-10-30T21:12:31.810085Z",
       "completed_at": null
+    },
+    {
+      "role": "ZOO Asset Restoration",
+      "run_id": "538fe38e-b3d4-8333-8633-b7e3bafe49d6",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-10-30T21:14:46.168402Z",
+      "started_at": "2026-10-30T21:15:03.792802Z",
+      "completed_at": null
     }
   ],
   "source_anomalies": [],
   "prior_snapshot": {
-    "observed_at": "2026-10-30T20:16:12.656Z",
+    "observed_at": "2026-10-30T21:13:30.967Z",
     "previously_quarantined_anomalies": 0,
-    "note": "Historical anomalies remain in Git commits; only latest authenticated reads populate current anomalies."
+    "note": "Prior snapshots retained in Git history; current data from authenticated reads."
   }
 }
