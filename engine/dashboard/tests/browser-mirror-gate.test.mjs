@@ -83,7 +83,7 @@ test('missing published automation proof must not promote a mirror link',async()
    };
    return mockResponse(url,assets[path]||'');
  };
- const check=vm.runInNewContext('let mirrorCheckInFlight=false;\\n'+source+'\\ncheckHostingMirrors',
+ const check=vm.runInNewContext('let mirrorCheckInFlight=false;\n'+source+'\ncheckHostingMirrors',
    {URL,AbortSignal,fetch:mock,Date,$:id=>id==='hostMirrorRows'?box:stamp,document:{createElement:element}});
  await check();
  const anchors=box.children.filter(x=>x.tag==='div').flatMap(x=>x.children.filter(y=>y.tag==='a'));
