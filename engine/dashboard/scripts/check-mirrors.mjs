@@ -62,11 +62,34 @@ export async function verifyFleet({config,fetcher=fetch, expectedSha=null}={}){
  const results=await Promise.all(targets.map((host,i)=>
    host?.url?inspectMirror(host.url,{fetcher,expectedSha,requireManifest:i!==0}):
    Promise.resolve({provider:host?.provider||'unknown',state:'NOT_CONFIGURED'})));
- return {checked_at:new Date().toISOString(),hosts:results.map((result,i)=>({
-   provider:targets[i]?.provider,...result})),
-   healthy:results.filter(x=>x.state==='STATIC_SOURCE_VERIFIED').length,
+ // A passing URL is not independent redundancy: require identical exact SHA,
+ // distinct configured provider identities and distinct origins. If the primary
+ // is down, matching healthy mirrors can still be evaluated against one another.
+ const firstGood=results.find(x=>x.state==='STATIC_SOURCE_VERIFIED');
+ const sourceSha=expectedSha||firstGood?.checks?.build_proof?.sha||null;
+ const providers=new Set(),origins=new Set();
+ let healthy=0;
+ const hosts=results.map((result,i)=>{
+   const host={provider:targets[i]?.provider||'unknown',...result};
+   if(host.state!=='STATIC_SOURCE_VERIFIED')return host;
+   const sha=host.checks?.build_proof?.sha;
+   if(!sourceSha||sha!==sourceSha){
+     return {...host,state:'SOURCE_MISMATCH',reason:'different_exact_source_sha'};
+   }
+   const provider=String(host.provider).trim().toLowerCase();
+   const origin=host.url?new URL(host.url).origin:null;
+   if(!provider||provider==='unknown'||!origin||providers.has(provider)||origins.has(origin)){
+     return {...host,state:'DUPLICATE_OR_UNVERIFIED_HOST',reason:'duplicate_provider_or_origin'};
+   }
+   providers.add(provider);origins.add(origin);healthy++;
+   return host;
+ });
+ return {checked_at:new Date().toISOString(),hosts,healthy,
+   common_source_sha:sourceSha,
+   source_matched_distinct_configured_providers:healthy,
+   independently_authenticated_provider_identities_verified:false,
    fully_automated_failover_verified:false,
-   note:'Static endpoint availability is not DNS routing, deployment equality across all hosts, or active agent execution.'};
+   note:'Same-SHA static endpoints on distinct configured providers are NOT authenticated provider ownership, DNS routing, full browser functionality or active agent execution.'};
 }
 if(process.argv[1] && import.meta.url===new URL('file://'+process.argv[1]).href) {
  const p=resolve(dirname(fileURLToPath(import.meta.url)),'../hosting-mirrors.json');
