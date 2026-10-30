@@ -18,3 +18,11 @@ test('page reload, fake active status and future timestamps do not refresh proof
  assert.equal(evaluateAutomationProof({...good,workers:[{...good.workers[0],recorded_status:'in_progress'}]},now).state,'UNKNOWN');
  assert.equal(evaluateAutomationProof({...good,observed_at:'2026-11-01T00:00:00Z'},now).state,'UNKNOWN');
 });
+
+test('scheduler anomaly: completed before scheduled cannot count as verified run',()=>{
+ const anomalous={...good.workers[0],scheduled_for:'2026-10-30T16:21:25Z',completed_at:'2026-10-30T16:06:05Z'};
+ const p=evaluateAutomationProof({...good,workers:[anomalous]},now);
+ assert.equal(p.state,'UNKNOWN');assert.equal(p.workerCount,0);
+ const mixed=evaluateAutomationProof({...good,workers:[good.workers[0],anomalous]},now);
+ assert.equal(mixed.state,'RECOVERY REQUIRED');assert.deepEqual(mixed.overdue,['ZOO Keeper']);
+});
