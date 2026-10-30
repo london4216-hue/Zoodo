@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "id": "ZOO-ISSUE-14",
+  "asset": "Zoodo",
+  "source_issue": "https://github.com/london4216-hue/Zoodo/issues/14",
+  "intent": "atomic lease fencing, bounded qualified substitute and no dead-end",
+  "source_title": "P0 two-handoff circuit breaker: bounded replacement-seeker and atomic alternative assignment",
+  "dependencies": [],
+  "priority": "P0",
+  "status": "ready",
+  "claim_lease": {
+    "holder": null,
+    "lease_id": null,
+    "acquired_at": null,
+    "expires_at": null
+  },
+  "assigned_agent": null,
+  "branch": null,
+  "pr": null,
+  "associated_prs": [
+    "https://github.com/london4216-hue/Zoodo/pull/15"
+  ],
+  "commit_sha": null,
+  "tests": {
+    "status": "UNKNOWN",
+    "receipts": []
+  },
+  "deployment": {
+    "status": "UNKNOWN",
+    "url": null,
+    "deploy_id": null,
+    "sha": null
+  },
+  "timestamps": {
+    "source_created_at": "2026-10-30T06:58:58Z",
+    "source_updated_at": "2026-10-30T10:48:56Z",
+    "claimed_at": null,
+    "first_commit_at": null,
+    "pr_opened_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_at": null
+  },
+  "evidence_receipts": [],
+  "next_action": "atomic lease fencing, bounded qualified substitute and no dead-end",
+  "source_snapshot_observed_at": "2026-10-30T23:30:37.622Z"
+}

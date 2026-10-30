@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "source": "authenticated_github_issue_pr_inventory",
+  "observed_at": "2026-10-30T23:30:37.622Z",
+  "control_plane_repo": "london4216-hue/Zoodo",
+  "privacy": "public issue/PR metadata only; no private TransendIQ payload, secrets, or user data",
+  "source_issue_count": 10,
+  "source_open_pr_count": 11,
+  "coverage": "complete for open Zoodo issues/PRs returned in this query; TransendIQ issue search is capped and excluded",
+  "ticket_ids": [
+    "ZOO-ISSUE-18",
+    "ZOO-ISSUE-17",
+    "ZOO-ISSUE-14",
+    "ZOO-ISSUE-13",
+    "ZOO-ISSUE-12",
+    "ZOO-ISSUE-11",
+    "ZOO-ISSUE-10",
+    "ZOO-ISSUE-9",
+    "ZOO-ISSUE-8",
+    "ZOO-ISSUE-7"
+  ],
+  "pr_inventory": [
+    {
+      "number": 21,
+      "title": "Hunter: bounded synthetic Netlify build execution probe (not runner qualification)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/21",
+      "state": "open",
+      "merged": false,
+      "hosted_execution": "UNKNOWN"
+    },
+    {
+      "number": 20,
+      "title": "Hunter: correct ZOO watchdog proof source ref",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/20",
+      "state": "open",
+      "merged": false,
+      "hosted_execution": "UNKNOWN"
+    },
+    {
+      "number": 19,
+      "title": "ZOO: independent scheduler-proof watchdog and bounded recovery (issue #18)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/19",
+      "state": "open",
+      "merged": false,
+      "hosted_execution": "UNKNOWN"
+    },
+    {
+      "number": 16,
+      "title": "fix(zoo): repair actual dashboard evidence banner and show accountable WIP up front",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "state": "open",
+      "merged": false,
+      "hosted_execution": "UNKNOWN"
+    },
+    {
+      "number": 15,
+      "title": "Builder/fixer failover: two-handoff lease fencing and bounded seeker (draft)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/15",
+      "state": "open",
+      "merged": false,
+      "hosted_execution": "UNKNOWN"
+    },
+    {
+      "number": 6,
+      "title": "ZOO engine and lab assets — My Block creator journey (draft, review required)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/6",
+      "state": "open",
+      "merged": false,
+      "hosted_execution": "UNKNOWN"
+    },
+    {
+      "number": 5,
+      "title": "Zoo: require exact-commit independent review proof and run engine CI",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/5",
+      "state": "open",
+      "merged": false,
+      "hosted_execution": "UNKNOWN"
+    },
+    {
+      "number": 4,
+      "title": "feat: integrate all 10 production systems — ambient music, premium voice, escalating celebrations, sensory activities, parent video playback",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/4",
+      "state": "open",
+      "merged": false,
+      "hosted_execution": "UNKNOWN"
+    },
+    {
+      "number": 3,
+      "title": "Zoodo: integrate all 10 engagement systems, fix lint, complete Dashboard and Layout wiring",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/3",
+      "state": "open",
+      "merged": false,
+      "hosted_execution": "UNKNOWN"
+    },
+    {
+      "number": 2,
+      "title": "Add premium voice personalization, persistent ambient music, and parent-cheer celebration flow",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/2",
+      "state": "open",
+      "merged": false,
+      "hosted_execution": "UNKNOWN"
+    },
+    {
+      "number": 1,
+      "title": "feat: production integration — ZoodoAvatar, child dev framework, sensory breaks, audit panel",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/1",
+      "state": "open",
+      "merged": false,
+      "hosted_execution": "UNKNOWN"
+    }
+  ],
+  "metrics": {
+    "ready": 8,
+    "blocked": 2,
+    "claimed": 0,
+    "in_progress": 0,
+    "fixed": 0,
+    "pr_open": 11,
+    "merged": 0,
+    "deployed": 0,
+    "verified": 0,
+    "verified_active_agents": null,
+    "qualified_alternative_hosts": null
+  },
+  "latency": {
+    "time_to_claim_median_seconds": null,
+    "time_to_claim_p90_seconds": null,
+    "claim_to_first_commit_seconds": null,
+    "claim_to_pr_seconds": null,
+    "pr_to_merge_seconds": null,
+    "merge_to_deploy_seconds": null,
+    "defect_detection_to_fix_seconds": null,
+    "completed_tickets_per_hour": null
+  },
+  "metric_policy": "Null means UNKNOWN; no fabricated durations, claims, worker heartbeat, or productive agents. PR inventory is not counted as ticket completion."
+}

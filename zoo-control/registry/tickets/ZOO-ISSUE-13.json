@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "ZOO-ISSUE-13",
+  "asset": "Zoodo",
+  "source_issue": "https://github.com/london4216-hue/Zoodo/issues/13",
+  "intent": "authenticated provider-native panel calls; unavailable providers remain NOT CONNECTED",
+  "source_title": "Panel kickoff: three anti-stall ideas from each reachable independent provider",
+  "dependencies": [],
+  "priority": "P1",
+  "status": "ready",
+  "claim_lease": {
+    "holder": null,
+    "lease_id": null,
+    "acquired_at": null,
+    "expires_at": null
+  },
+  "assigned_agent": null,
+  "branch": null,
+  "pr": null,
+  "associated_prs": [],
+  "commit_sha": null,
+  "tests": {
+    "status": "UNKNOWN",
+    "receipts": []
+  },
+  "deployment": {
+    "status": "UNKNOWN",
+    "url": null,
+    "deploy_id": null,
+    "sha": null
+  },
+  "timestamps": {
+    "source_created_at": "2026-10-30T06:55:12Z",
+    "source_updated_at": "2026-10-30T11:10:03Z",
+    "claimed_at": null,
+    "first_commit_at": null,
+    "pr_opened_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_at": null
+  },
+  "evidence_receipts": [],
+  "next_action": "authenticated provider-native panel calls; unavailable providers remain NOT CONNECTED",
+  "source_snapshot_observed_at": "2026-10-30T23:30:37.622Z"
+}

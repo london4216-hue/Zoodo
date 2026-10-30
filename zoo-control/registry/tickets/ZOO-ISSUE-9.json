@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "id": "ZOO-ISSUE-9",
+  "asset": "Zoodo",
+  "source_issue": "https://github.com/london4216-hue/Zoodo/issues/9",
+  "intent": "separate Wednesday review from event-driven worker execution",
+  "source_title": "Cutover gate: one hourly independent judge; real-time workers handle all execution",
+  "dependencies": [
+    "ZOO-ISSUE-8"
+  ],
+  "priority": "P1",
+  "status": "blocked",
+  "claim_lease": {
+    "holder": null,
+    "lease_id": null,
+    "acquired_at": null,
+    "expires_at": null
+  },
+  "assigned_agent": null,
+  "branch": null,
+  "pr": null,
+  "associated_prs": [],
+  "commit_sha": null,
+  "tests": {
+    "status": "UNKNOWN",
+    "receipts": []
+  },
+  "deployment": {
+    "status": "UNKNOWN",
+    "url": null,
+    "deploy_id": null,
+    "sha": null
+  },
+  "timestamps": {
+    "source_created_at": "2026-10-30T06:36:15Z",
+    "source_updated_at": "2026-10-30T06:38:48Z",
+    "claimed_at": null,
+    "first_commit_at": null,
+    "pr_opened_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_at": null
+  },
+  "evidence_receipts": [],
+  "next_action": "separate Wednesday review from event-driven worker execution",
+  "source_snapshot_observed_at": "2026-10-30T23:30:37.622Z"
+}
