@@ -40,4 +40,5 @@ jobs:
       - name: Inspect actual published scheduler proof and dedupe recovery issue
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROOF_REF: autonomous-engine-replacement-2026-10-29
         run: node engine/dashboard/scripts/watchdog.mjs
