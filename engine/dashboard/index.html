@@ -55,29 +55,56 @@ import {evaluateEvidence} from './evidence-clock.mjs';
 const owner='london4216-hue',repo='Zoodo',branch='autonomous-engine-replacement-2026-10-29';
 const root='https://api.github.com/repos/'+owner+'/'+repo;
 const $=id=>document.getElementById(id);let evidenceState=null;
-let linksClassified=false;
-// Unverified links stay reachable in repair list, never presented as verified live demos.
+let linkRefreshInFlight=false, directoryLinks=null;
+const repairRows=new Map();
+// Revalidate receipts on EVERY refresh. A previously fresh link must be demoted
+// after its receipt expires, and a newly verified link must be promoted without reload.
 async function classifyDemoLinks(){
- if(linksClassified)return;
- const nav=document.querySelector('.launchlinks'),repair=$('repair-links');
- if(!nav||!repair)return;
- let receipts=[];
- try{const r=await fetch('./verified-links.json',{cache:'no-store'});if(r.ok){const v=await r.json();receipts=Array.isArray(v.links)?v.links:[];}}catch{}
- const now=Date.now();
- for(const link of [...nav.querySelectorAll('a[href]')]){
-   const receipt=receipts.find(x=>x.url===link.href&&x.expectedLandingVerified===true&&x.independentCheck===true&&
+ if(linkRefreshInFlight)return;
+ linkRefreshInFlight=true;
+ try{
+  const nav=document.querySelector('.launchlinks'),repair=$('repair-links');
+  if(!nav||!repair)return;
+  if(!directoryLinks)directoryLinks=[...nav.querySelectorAll('a[href]')];
+  let receipts=[],ledgerError='verification ledger unavailable';
+  try{
+   const r=await fetch('./verified-links.json',{cache:'no-store'});
+   if(!r.ok)throw Error('HTTP '+r.status);
+   const v=await r.json();
+   if(!Array.isArray(v.links))throw Error('invalid links array');
+   receipts=v.links;ledgerError='';
+  }catch(e){ledgerError='verification ledger unavailable: '+e.message;}
+  const now=Date.now();
+  for(const link of directoryLinks){
+   const matching=receipts.filter(x=>x&&x.url===link.href);
+   const receipt=matching.find(x=>x.expectedLandingVerified===true&&x.independentCheck===true&&
      /^[a-f0-9]{40}$/.test(x.commitSha||'')&&typeof x.receiptUrl==='string'&&x.receiptUrl.startsWith('https://github.com/')&&
      Number.isFinite(Date.parse(x.checkedAt))&&now-Date.parse(x.checkedAt)>=0&&now-Date.parse(x.checkedAt)<3600000);
-   if(receipt){link.title='Independently checked '+receipt.checkedAt+' · '+receipt.receiptUrl;continue;}
-   const item=document.createElement('div');item.className='row';item.appendChild(link);
-   const note=document.createElement('div');note.className='time';
-   note.textContent='Not independently verified for demo · last successful check: not established · Owner: ZOO Dashboard Worker · Backup: ZOO Agent Hunter · Next: check endpoint, landing and owner access';
-   item.appendChild(note);repair.appendChild(item);
- }
- if(!nav.querySelector('a[href]')){
-   const home=document.createElement('a');home.href='/';home.textContent='ZOO dashboard home';nav.appendChild(home);
- }
- linksClassified=true;
+   if(receipt){
+    nav.appendChild(link);
+    link.title='Independently checked '+receipt.checkedAt+' · '+receipt.receiptUrl;
+    const row=repairRows.get(link);if(row)row.remove();
+   }else{
+    let row=repairRows.get(link);
+    if(!row){
+     row=document.createElement('div');row.className='row';
+     row.appendChild(link);
+     const note=document.createElement('div');note.className='time';row.appendChild(note);
+     repairRows.set(link,row);
+    }
+    const note=row.querySelector('.time');
+    const last=matching.find(x=>Number.isFinite(Date.parse(x.checkedAt)));
+    note.textContent='Not independently verified for demo · '+(last?'last recorded check: '+last.checkedAt:'last successful check: not established')+
+      (ledgerError?' · '+ledgerError:'')+
+      ' · Owner: ZOO Dashboard Worker · Backup: ZOO Agent Hunter · Next: check endpoint, expected landing and owner access';
+    repair.appendChild(row);
+   }
+  }
+  const home=nav.querySelector('a[data-zoo-home]');
+  if(!directoryLinks.some(link=>link.parentElement===nav)){
+   if(!home){const a=document.createElement('a');a.href='/';a.dataset.zooHome='true';a.textContent='ZOO dashboard home';nav.appendChild(a);}
+  }else if(home)home.remove();
+ }finally{linkRefreshInFlight=false;}
 }
 
 const fmt=t=>{const d=Math.max(0,Date.now()-Date.parse(t)),m=Math.floor(d/60000);return m<1?'just now':m<60?m+'m ago':Math.floor(m/60)+'h '+m%60+'m ago'};
