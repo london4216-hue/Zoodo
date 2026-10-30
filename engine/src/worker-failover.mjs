@@ -15,7 +15,7 @@ export function handoffCount(queue, worker) {
     for (const event of ticket.history) {
       if (event.type === 'claim') { assignedWorker = event.worker; submitted = false; }
       if (event.type === 'submit' && assignedWorker === worker) submitted = true;
-      if (event.type === 'requeue') {
+      if (event.type === 'handoff' || event.type === 'requeue') {
         if (event.worker === worker && !submitted) emptyHandoffs++;
         assignedWorker = null; submitted = false;
       }
@@ -63,9 +63,9 @@ export function handoffAndReassign(queue, id, {worker, reason, receipt}, workers
   if (!ticket || isSeeker(id) || ticket.worker !== worker || !['assigned','running'].includes(ticket.status))
     throw Error('Only active normal-ticket owner can hand off');
   if (handoffCount(queue, worker) >= 2) throw Error('Worker already in seeker mode');
-  const failure = `${reason.trim().slice(0,30)} | ${receipt}`;
-  if (failure.length > 256) throw Error('Failure evidence too long');
-  queue.fail(id,{worker,reason:failure});
+  // The durable queue records reason and receipt separately in one handoff event.
+  // Legacy test queues may ignore the optional receipt field.
+  queue.fail(id,{worker,reason:reason.trim().slice(0,256),receipt});
   return reassign(queue,id,workers,worker);
 }
 
