@@ -1,57 +1,74 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-30T18:08:49.737Z",
-  "publication_scope": "Authenticated scheduler metadata; historical completions are not live agent heartbeats, passing CI, or deployed evidence. GitHub issue links are recovery handoffs, not scheduler receipts.",
-  "refresh_policy": "Single Dashboard Worker writer, conditional blob SHA; dashboard polls at least once per minute.",
+  "observed_at": "2026-10-30T19:08:53.733Z",
+  "publication_scope": "Authenticated scheduler metadata; completion is not live productive-agent heartbeat, CI pass, or deployed evidence. Evidence URLs point to recovery handoff, not direct scheduler receipts.",
+  "refresh_policy": "Single Dashboard Worker writer; conditional blob SHA; browser polls at least once per minute.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
     {
       "role": "ZOO Keeper",
-      "run_id": "48e93969-0568-8329-8ffc-d44090b125b4",
+      "run_id": "c41c7913-ec80-8320-9695-724bcd435b70",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-30T17:45:30Z",
-      "completed_at": "2026-10-30T17:54:53.256440Z",
+      "scheduled_for": "2026-10-30T18:45:30Z",
+      "completed_at": "2026-10-30T18:44:59.677278Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     },
     {
       "role": "ZOO Agent Hunter",
-      "run_id": "978ec62d-f25c-8329-be80-1f04080b7d01",
+      "run_id": "d6c41fa8-0458-8330-afbb-00b2cd56eb3d",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-30T17:18:01.455817Z",
-      "completed_at": "2026-10-30T17:23:33.546502Z",
+      "scheduled_for": "2026-10-30T18:21:25Z",
+      "completed_at": "2026-10-30T18:42:01.233495Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     },
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "b80fd036-27b8-832a-82f8-bf4d6be7ac38",
+      "run_id": "8dde6192-e710-832e-bcff-8c70e8432389",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-30T17:19:36.622695Z",
-      "completed_at": "2026-10-30T17:22:13.650127Z",
+      "scheduled_for": "2026-10-30T17:45:58Z",
+      "completed_at": "2026-10-30T18:10:47.469895Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     },
     {
       "role": "ZOO Asset Restoration",
-      "run_id": "ed5c074f-f868-832f-a2b0-fe1335fe5034",
+      "run_id": "e03ba259-9164-8326-af2b-19297da22dc6",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-30T17:24:51Z",
-      "completed_at": "2026-10-30T17:31:37.648255Z",
+      "scheduled_for": "2026-10-30T18:24:51Z",
+      "completed_at": "2026-10-30T18:31:58.079523Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     }
   ],
   "in_progress_runs": [
     {
-      "role": "ZOO Dashboard Worker",
-      "run_id": "8dde6192-e710-832e-bcff-8c70e8432389",
+      "role": "ZOO Agent Hunter",
+      "run_id": "8c630284-bdac-8327-a78f-909752ed8748",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-30T17:45:58Z",
-      "started_at": "2026-10-30T18:07:46.280970Z",
+      "scheduled_for": "2026-10-30T19:21:25Z",
+      "started_at": "2026-10-30T19:06:55.833464Z",
+      "completed_at": null
+    },
+    {
+      "role": "ZOO Dashboard Worker",
+      "run_id": "a24b8734-2f48-8325-81e3-263969cdbe1a",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-10-30T18:45:58Z",
+      "started_at": "2026-10-30T19:08:09.849979Z",
       "completed_at": null
     }
   ],
-  "source_anomalies": []
+  "source_anomalies": [
+    {
+      "role": "ZOO Keeper",
+      "kind": "invalid_completion_timestamp",
+      "run_id": "c41c7913-ec80-8320-9695-724bcd435b70",
+      "scheduled_for": "2026-10-30T18:45:30Z",
+      "completed_at": "2026-10-30T18:44:59.677278Z",
+      "action": "RECOVERY REQUIRED: verify scheduler metadata; do not count as successful completion"
+    }
+  ]
 }
