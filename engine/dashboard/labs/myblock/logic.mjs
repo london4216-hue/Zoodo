@@ -30,7 +30,7 @@ export function normalizeState(raw) {
       const ids = new Set(accepted.map(p => p.id));
       for (const p of Array.isArray(raw.posts) ? raw.posts : []) {
         if (accepted.length >= 20) break;
-        if (!p || !/^post-[1-9]\\d*$/.test(p.id) || ids.has(p.id)) continue;
+        if (!p || !/^post-[1-9][0-9]*$/.test(p.id) || ids.has(p.id)) continue;
         if (typeof p.title !== 'string' || !p.title.trim() || p.title.length > 100) continue;
         if (typeof p.body !== 'string' || !p.body.trim() || p.body.length > 600) continue;
         if (typeof p.date !== 'string' || !Number.isFinite(Date.parse(p.date))) continue;
