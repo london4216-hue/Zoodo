@@ -1,82 +1,70 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-30T19:51:53.800Z",
-  "publication_scope": "Authenticated scheduler metadata; completion is not a live productive-agent heartbeat, CI pass, or deployed evidence. Evidence URLs point to recovery handoff, not direct scheduler receipts.",
-  "refresh_policy": "Single Dashboard Worker writer; conditional blob SHA; browser polls at least once per minute.",
+  "observed_at": "2026-10-30T20:06:41.301Z",
+  "publication_scope": "Authenticated scheduler metadata only; completed runs are not active productive-agent, CI, or deployed evidence. Evidence URLs are recovery handoffs, not direct scheduler receipts.",
+  "refresh_policy": "Single Dashboard Worker writer; GitHub conditional blob SHA; browser polls at least once per minute.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
     {
       "role": "ZOO Keeper",
-      "run_id": "c9cc76b2-4d84-832b-aa54-3c71dc055852",
+      "run_id": "4e99271f-b604-8323-8e1a-f4eb36b94d06",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-30T19:45:30Z",
-      "completed_at": "2026-10-30T19:51:08.424933Z",
+      "scheduled_for": "2026-10-30T20:01:41.124951Z",
+      "completed_at": "2026-10-30T20:04:22.038899Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     },
     {
       "role": "ZOO Agent Hunter",
-      "run_id": "d6c41fa8-0458-8330-afbb-00b2cd56eb3d",
+      "run_id": "e7b90eb3-957c-8331-b8d9-32e23de7a2ed",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-30T18:21:25Z",
-      "completed_at": "2026-10-30T18:42:01.233495Z",
+      "scheduled_for": "2026-10-30T19:50:06.764331Z",
+      "completed_at": "2026-10-30T19:53:04.626009Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     },
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "a24b8734-2f48-8325-81e3-263969cdbe1a",
+      "run_id": "fe07aa50-53f8-8321-b643-ab9a925d69f5",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-30T18:45:58Z",
-      "completed_at": "2026-10-30T19:13:06.966748Z",
+      "scheduled_for": "2026-10-30T19:50:07.735954Z",
+      "completed_at": "2026-10-30T19:53:48.882742Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     },
     {
       "role": "ZOO Asset Restoration",
-      "run_id": "ee91d226-3d28-8331-9bea-8f922062098b",
+      "run_id": "45b1777e-9c64-8332-bddc-5ed99df42fe5",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-30T19:24:51Z",
-      "completed_at": "2026-10-30T19:34:10.101284Z",
+      "scheduled_for": "2026-10-30T20:01:42.751229Z",
+      "completed_at": "2026-10-30T20:06:15.115521Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     }
   ],
   "in_progress_runs": [
     {
-      "role": "ZOO Agent Hunter",
-      "run_id": "e7b90eb3-957c-8331-b8d9-32e23de7a2ed",
+      "role": "ZOO Keeper",
+      "run_id": "89e8f513-d7c0-8332-b31c-b83356b150e0",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-30T19:50:06.764331Z",
-      "started_at": "2026-10-30T19:50:08.810753Z",
+      "scheduled_for": "2026-10-30T20:05:33.378253Z",
+      "started_at": "2026-10-30T20:05:36.210877Z",
       "completed_at": null
     },
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "fe07aa50-53f8-8321-b643-ab9a925d69f5",
+      "run_id": "81971d89-038c-832b-b0dd-b7c5c77215d0",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-30T19:50:07.735954Z",
-      "started_at": "2026-10-30T19:50:23.221718Z",
-      "completed_at": null
-    },
-    {
-      "role": "ZOO Asset Restoration",
-      "run_id": "521d7d37-7c58-8324-a19c-2cf0c35583a6",
-      "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-30T19:50:03.820286Z",
-      "started_at": "2026-10-30T19:50:04.824590Z",
+      "scheduled_for": "2026-10-30T20:05:36.807612Z",
+      "started_at": "2026-10-30T20:05:38.376365Z",
       "completed_at": null
     }
   ],
-  "source_anomalies": [
-    {
-      "role": "ZOO Agent Hunter",
-      "kind": "invalid_completion_timestamp",
-      "run_id": "8c630284-bdac-8327-a78f-909752ed8748",
-      "scheduled_for": "2026-10-30T19:21:25Z",
-      "completed_at": "2026-10-30T19:11:21.574585Z",
-      "action": "RECOVERY REQUIRED: verify scheduler timing semantics; not counted as completed"
-    }
-  ]
+  "source_anomalies": [],
+  "prior_snapshot": {
+    "observed_at": "2026-10-30T19:51:53.800Z",
+    "previously_quarantined_anomalies": 1,
+    "note": "Prior anomalies are not carried forward as current unless reproduced by this read."
+  }
 }
