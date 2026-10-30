@@ -143,7 +143,28 @@ BEGIN
  GET DIAGNOSTICS n=ROW_COUNT; RETURN n;
 END $$;
 
-DO $$ DECLARE signature text; BEGIN
+CREATE OR REPLACE FUNCTION public.zoo_ops_dispatch_recorded(p_id text,p_worker text,p_token uuid,p_receipt text)
+RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $
+BEGIN
+ IF p_receipt !~ '^https://[^ ]{1,1000}
+ FOR signature IN SELECT p.oid::regprocedure::text FROM pg_proc p
+ JOIN pg_namespace n ON n.oid=p.pronamespace
+ WHERE n.nspname='public' AND p.proname LIKE 'zoo_ops_%' LOOP
+  EXECUTE format('REVOKE ALL ON FUNCTION %s FROM PUBLIC,anon,authenticated',signature);
+  EXECUTE format('GRANT EXECUTE ON FUNCTION %s TO service_role',signature);
+ END LOOP;
+END $$;
+COMMIT;
+ THEN RAISE EXCEPTION 'native dispatch receipt required'; END IF;
+ UPDATE public.zoo_ops_tickets SET dispatch_receipt=p_receipt,updated_at=now()
+ WHERE id=p_id AND state='leased' AND lease_owner=p_worker AND lease_token=p_token;
+ IF NOT FOUND THEN RETURN false; END IF;
+ INSERT INTO public.zoo_ops_events(ticket_id,event,worker,receipt_url)
+ VALUES(p_id,'dispatch_accepted',p_worker,p_receipt);
+ RETURN true;
+END $;
+
+DO $ DECLARE signature text; BEGIN
  FOR signature IN SELECT p.oid::regprocedure::text FROM pg_proc p
  JOIN pg_namespace n ON n.oid=p.pronamespace
  WHERE n.nspname='public' AND p.proname LIKE 'zoo_ops_%' LOOP
