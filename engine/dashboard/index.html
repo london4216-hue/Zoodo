@@ -104,7 +104,7 @@ async function update(){
  if(commits.status==='fulfilled'){
   const data=commits.value;
   $('commitsHour').textContent=data.filter(c=>Date.now()-Date.parse(c.commit.committer.date)<3600000).length;
-  $('commits').innerHTML=data.slice(0,35).map(c=>'<div class="row"><div class="time">'+escapeHtml(new Date(c.commit.committer.date).toLocaleString())+' · '+escapeHtml(c.sha.slice(0,9))+'</div><a target="_blank" rel="noopener" href="'+escapeHtml(c.html_url)+'">'+escapeHtml(c.commit.message.split('\\n')[0])+'</a></div>').join('')||'No commits';
+  $('commits').innerHTML=data.slice(0,35).map(c=>'<div class="row"><div class="time">'+escapeHtml(new Date(c.commit.committer.date).toLocaleString())+' · '+escapeHtml(c.sha.slice(0,9))+'</div><a target="_blank" rel="noopener" href="'+escapeHtml(c.html_url)+'">'+escapeHtml(c.commit.message.split('\n')[0])+'</a></div>').join('')||'No commits';
  }else{errors.push('Commits: '+commits.reason.message);$('commitsHour').textContent='UNKNOWN';$('commits').textContent='Commit evidence unavailable'}
  if(runs.status==='fulfilled'){
   const pass=d.filter(x=>x.conclusion==='success').length;
