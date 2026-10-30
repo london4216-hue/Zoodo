@@ -22,10 +22,10 @@ export function normalizeState(raw) {
     ...base,
     features: { posts: raw.features?.posts === true, notes: raw.features?.notes === true },
     licences: { name: raw.licences?.name === true, image: raw.licences?.image === true, likeness: raw.licences?.likeness === true },
-    members: raw.members?.includes('sample-member') ? ['sample-member'] : [],
+    members: (Array.isArray(raw.members) && raw.members.includes('sample-member')) ? ['sample-member'] : [],
     stats: {
       visits: Number.isSafeInteger(raw.stats?.visits) && raw.stats.visits >= 0 ? Math.min(raw.stats.visits, 999999) : base.stats.visits,
-      joins: raw.members?.includes('sample-member') ? 1 : 0
+      joins: (Array.isArray(raw.members) && raw.members.includes('sample-member')) ? 1 : 0
     }
   };
 }
