@@ -62,6 +62,33 @@ test('matching SHA plus real dashboard and lab assets permits a static mirror li
 test('a green build receipt with wrong dashboard HTML never promotes a mirror',async()=>{
  assert.equal((await inspect({badHtml:true})).anchors.length,0);
 });
+test('missing published automation proof must not promote a mirror link',async()=>{
+ const sha='a'.repeat(40),box=element(),stamp=element();
+ const mock=async url=>{
+   const path=String(url).startsWith('.')?String(url):new URL(String(url)).pathname;
+   if(path==='./hosting-mirrors.json')return mockResponse('https://primary.example/hosting-mirrors.json',
+     {primary:{provider:'Netlify'},mirrors:[{provider:'Vercel',url:'https://mirror.example/'}]});
+   if(path==='./build-proof.json'||path==='/build-proof.json')return mockResponse('https://primary.example/build-proof.json',
+     {schema_version:1,build_tests:'PASSED',source_commit:sha});
+   if(path==='/mirror-manifest.json')return mockResponse(url,{schema_version:1,source_commit:sha});
+   const assets={
+    '/index.html':'<main id="accountability">ZOO</main>',
+    '/evidence-clock.mjs':'export function evaluateEvidence() {}',
+    '/automation-proof.mjs':'',
+    '/automation-proof.json':'{"source": "connected_automations_peek"}',
+    '/labs/myblock/index.html':'My Block · Creator-first lab',
+    '/labs/myblock/logic.mjs':'export function publishPost() {}',
+    '/labs/yearbook3/index.html':'Yearbook 3 · Student Lab',
+    '/labs/yearbook3/logic.mjs':'export function submitEntry() {}'
+   };
+   return mockResponse(url,assets[path]||'');
+ };
+ const check=vm.runInNewContext('let mirrorCheckInFlight=false;\\n'+source+'\\ncheckHostingMirrors',
+   {URL,AbortSignal,fetch:mock,Date,$:id=>id==='hostMirrorRows'?box:stamp,document:{createElement:element}});
+ await check();
+ const anchors=box.children.filter(x=>x.tag==='div').flatMap(x=>x.children.filter(y=>y.tag==='a'));
+ assert.equal(anchors.length,0);
+});
 test('a mismatched manifest SHA never promotes a mirror',async()=>{
  assert.equal((await inspect({manifestSha:'b'.repeat(40)})).anchors.length,0);
 });
