@@ -1,0 +1,29 @@
+# Alternate provider for owner-controlled ZOO dashboard. Creates a static mirror only when owner connects Render.
+# Root Zoodo Base44 app is NOT built, modified or published here.
+services:
+  - type: web
+    runtime: static
+    name: zoo-dashboard-mirror
+    buildCommand: cd engine/dashboard && node scripts/build-proof.mjs && node scripts/prepare-mirror.mjs
+    staticPublishPath: ./engine/dashboard/mirror-dist
+    buildFilter:
+      paths:
+        - engine/dashboard/**
+        - render.yaml
+    headers:
+      - path: /build-proof.json
+        name: Access-Control-Allow-Origin
+        value: "*"
+      - path: /build-proof.json
+        name: Cache-Control
+        value: no-store
+      - path: /mirror-manifest.json
+        name: Access-Control-Allow-Origin
+        value: "*"
+      - path: /mirror-manifest.json
+        name: Cache-Control
+        value: no-store
+    routes:
+      - type: rewrite
+        source: /dashboard
+        destination: /index.html
