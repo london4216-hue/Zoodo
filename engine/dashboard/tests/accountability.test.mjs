@@ -54,3 +54,8 @@ test('source refresh is distinguished from worker heartbeat and verification',()
  assert.match(script,/Automatic retry every 30 seconds/);
  assert.match(script,/setInterval\(update,30000\)/);
 });
+
+test('GitHub commit-source success is not inferred from an unrelated Actions response',()=>{
+ assert.match(script,/if\(commits\.status==='fulfilled'\)\{\s*\$\('sourceSuccess'\)/);
+ assert.match(script,/GitHub commit endpoint response/);
+});
