@@ -50,6 +50,21 @@ test('working static source is checked by actual routes and exact SHA',async()=>
  assert.equal(out.checks.static_assets,'PASSED');
  assert.equal(out.note.includes('Not proof'),true);
 });
+test('missing published automation proof is NOT a usable dashboard mirror',async()=>{
+ const fetcher=async url=>{
+   const r=mockSuccess(url);
+   if(new URL(url).pathname==='/automation-proof.mjs')r.text=async()=>'';
+   return r;
+ };
+ const out=await inspectMirror(base,{fetcher,expectedSha:sha});
+ assert.equal(out.state,'RECOVERING');
+ assert.equal(out.reason,'missing_or_stale_asset:automation-proof.mjs');
+});
+test('mirror build allowlist contains both automation proof assets',()=>{
+ const source=readFileSync(resolve(root,'scripts/prepare-mirror.mjs'),'utf8');
+ assert.match(source,/'automation-proof\\.mjs'/);
+ assert.match(source,/'automation-proof\\.json'/);
+});
 test('different SHA never counts as healthy redundancy',async()=>{
  const out=await inspectMirror(base,{fetcher:async url=>mockSuccess(url),expectedSha:'b'.repeat(40)});
  assert.equal(out.state,'RECOVERING');
