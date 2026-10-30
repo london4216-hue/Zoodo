@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "source_observed_at": "2026-10-30T23:37:11.533Z",
+  "source": "owner_priority_not_private_repo_feed",
+  "rows": [
+    {
+      "id": "PR-787",
+      "title": "P0 · School-admin PR #787",
+      "source_url": null,
+      "stage": "OPEN DRAFT (source snapshot)",
+      "worker": null,
+      "commit_sha": null,
+      "tests": "UNKNOWN — private exact-head test feed not connected",
+      "last_verified_meaningful_at": null,
+      "landing_verified_at": null,
+      "verified_live_url": null,
+      "next_action": "Reconcile the cohort import collision with PR #782, preserve separate date fix #788, run exact-head regression before protected merge."
+    },
+    {
+      "id": "SARA-UI",
+      "title": "P0 · Sara new UI/UX",
+      "source_url": null,
+      "stage": "LIVE URL UNVERIFIED",
+      "worker": null,
+      "commit_sha": null,
+      "tests": "UNKNOWN",
+      "last_verified_meaningful_at": null,
+      "landing_verified_at": null,
+      "verified_live_url": null,
+      "next_action": "Identify current intended UI from authorized BeautyPath source, then verify a deployed browser journey before publishing a live link."
+    }
+  ]
+}
