@@ -2,14 +2,14 @@
   "schema_version": 1,
   "source": {
     "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
-    "head_before_ledger": "389d2e95615f95945a133800ee275fc30ff2d1e0",
-    "proof_blob": "0fc79284b0e50452389313c9a6738327fb585afe",
-    "proof_observed_at": "2026-10-30T23:05:25.384Z",
-    "completed_scheduler_receipts": 2,
-    "in_progress_scheduler_receipts": 1,
+    "head_before_ledger": "4e73006e3d0fed5f6a1508761ebcc3a5138d9d70",
+    "proof_blob": "2df0511e98f305a7c6d82137542386db1a910c6d",
+    "proof_observed_at": "2026-10-30T23:31:18.383Z",
+    "completed_scheduler_receipts": 3,
+    "in_progress_scheduler_receipts": 2,
     "verified_productive_agents": null
   },
-  "observed_at": "2026-10-30T23:25:00Z",
+  "observed_at": "2026-10-30T23:32:22.266Z",
   "visibility": "sanitized_public_recovery_metadata",
   "state": "RECOVERING",
   "note": "Source-linked checkpoint only; not a deployed/live execution receipt or an independent panel vote.",
@@ -105,6 +105,23 @@
       "timestamp_utc": "2026-10-30T23:25:00Z",
       "next_trigger": "Implementation Lead next existing execution; Keeper integrates; Hunter probes external host/provider capability. No new automation created.",
       "receipt_scope": "Actual Dashboard Lead GitHub write/readback, not a hosted execution or downstream invocation"
+    },
+    {
+      "from": "Dashboard Lead",
+      "to": "Implementation Lead",
+      "task_id": "ZOO-REGISTRY-TWO-CLAIM-PROOF-20261030-2332",
+      "decision": "REVISE",
+      "proposed_fix": "Integrate Zoodo-only shared ticket registry PR #22 with an authorized event-driven host and atomic transactional lease store; prove two independent concurrent claims, lease expiry/recovery, completion-triggered NEXT, exact-SHA PR and hosted receipts. Do not route ZOO control plane into TransendIQ.",
+      "evidence": [
+        "https://github.com/london4216-hue/Zoodo/pull/22",
+        "https://github.com/london4216-hue/Zoodo/commit/9a15b4a02fd80cae34a0fc70b86ec008ea6a5f5a",
+        "https://github.com/london4216-hue/Zoodo/commit/4e73006e3d0fed5f6a1508761ebcc3a5138d9d70",
+        "https://github.com/london4216-hue/Zoodo/issues/8"
+      ],
+      "tests": "PASS source checks: 10 unique issue tickets, 11 preexisting PRs, valid dependency refs, null claims; 4/4 authenticated GitHub file readbacks; new PR #22 added to index (12 open). Hosted two-ticket claim and production UNKNOWN.",
+      "timestamp_utc": "2026-10-30T23:32:22.266Z",
+      "next_trigger": "Existing Implementation Lead execution or next enabled scheduled run; ZOO Keeper integrates PR #22 only after hosted lease/race test and production mapping. Agent Hunter qualifies host. No new automation created.",
+      "receipt_scope": "Actual GitHub registry commit and readback, NOT hosted two-worker execution"
     }
   ],
   "unresolved": [
@@ -147,6 +164,14 @@
       "owner": "ZOO Implementation Lead",
       "backup": "ZOO Agent Hunter",
       "next_action": "Use existing authorized provider connection to execute one bounded hosted relay intake probe; preserve idempotency/leases; then two-ticket completion-triggered dispatch and publish exact provider-native receipts. Keeper integrates source safely."
+    },
+    {
+      "id": "ZOO-REGISTRY-HOSTED-CLAIMS",
+      "state": "RECOVERING",
+      "root_cause": "Zoodo PR #22 contains source-only 10-ticket directory and CAS protocol; no authenticated hosted atomic two-worker claim or completion-triggered relay receipts. GitHub per-file SHA alone not independently qualified as distributed lease.",
+      "owner": "ZOO Implementation Lead",
+      "backup": "ZOO Agent Hunter",
+      "next_action": "Use authorized host+transactional store to run concurrent two-ticket claims, idempotent completion NEXT dispatch and failover drill; publish provider-native receipts and dashboard source link."
     }
   ],
   "safety": {
@@ -224,6 +249,19 @@
       "decision": "REVISE",
       "next_action": "Netlify actual site ID/deploy/source/rollback mapping, independent hosted browser and two-ticket relay test",
       "production_receipt": "UNKNOWN"
+    },
+    {
+      "agent_id": "ZOO Dashboard Lead",
+      "task_id": "ZOO-TICKET-REGISTRY-SEED-20261030T2330Z",
+      "source_commit_sha": "9a15b4a02fd80cae34a0fc70b86ec008ea6a5f5a",
+      "command_action": "GitHub authenticated issue/PR inventory, Git tree+commit+branch update, 4 file readbacks, attributable receipt commit",
+      "started_at_utc": "2026-10-30T23:30:37.622Z",
+      "completed_at_utc": "2026-10-30T23:31:40.163Z",
+      "test_api_result": "PASS structural 10 unique tickets/11 prior PRs, null claims, valid dependencies; PASS 4/4 GitHub readbacks. Hosted two-ticket claim UNKNOWN.",
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/blob/feat/zoo-independent-ticket-registry-20261030/zoo-control/registry/receipts/dashboard-lead-20261030T2330Z.json",
+      "decision": "REVISE",
+      "next_action": "Implementation Lead host two independent atomic claims and completion-triggered dispatch; Keeper integrate; dashboard production display UNKNOWN",
+      "production_receipt": "UNKNOWN"
     }
   ],
   "agent_proof_matrix": {
@@ -237,8 +275,8 @@
     "dashboard_lead": {
       "lane_execution": "PASS_SOURCE_READBACK_ONLY",
       "production_display": "UNKNOWN",
-      "evidence_url": "https://github.com/london4216-hue/Zoodo/commit/c6d7e73fc893b1b9cf9a7301777187ea1687c287",
-      "reason": "Authenticated scheduler read + GitHub conditional proof update/readback; production dashboard receipt not independently verified"
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/blob/feat/zoo-independent-ticket-registry-20261030/zoo-control/registry/receipts/dashboard-lead-20261030T2330Z.json",
+      "reason": "Authenticated GitHub source registry and proof snapshot writes/readbacks. No live Netlify receipt or hosted two-ticket relay."
     },
     "implementation_lead": {
       "lane_execution": "PASS_PRIVATE_SOURCE_ONLY",
@@ -270,6 +308,41 @@
       "hosted_browser": "UNKNOWN_DNS",
       "production": "UNKNOWN",
       "last_successful_scheduler_completion": "2026-10-30T23:21:33.599058Z"
+    },
+    {
+      "hour_et": "2026-10-30 19:00 EDT",
+      "hour_utc": "2026-10-30 23:00 UTC",
+      "repo_asset": "london4216-hue/Zoodo engine/dashboard",
+      "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "prior_status": "RECOVERING; proof observed 2026-10-30T23:24:19.146Z",
+      "new_status": "RECOVERING; proof observed 2026-10-30T23:31:18.383Z, 3 historical completions, 2 in-progress, 1 quarantined invalid completion",
+      "exact_commit_sha": "4e73006e3d0fed5f6a1508761ebcc3a5138d9d70",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/4e73006e3d0fed5f6a1508761ebcc3a5138d9d70",
+      "worker": "ZOO Dashboard Lead",
+      "proof_readback": "PASS conditional GitHub write; readback pending this ledger write",
+      "local_tests": "NOT_RERUN_THIS_EXECUTION",
+      "provider_preview": "PR16 prior exact-head status success only; new head provider status UNKNOWN",
+      "hosted_browser": "UNKNOWN_DNS",
+      "production": "UNKNOWN",
+      "last_successful_scheduler_completion": "2026-10-30T23:27:12.930384Z"
+    },
+    {
+      "hour_et": "2026-10-30 19:00 EDT",
+      "hour_utc": "2026-10-30 23:00 UTC",
+      "repo_asset": "london4216-hue/Zoodo zoo-control/registry",
+      "pr": "https://github.com/london4216-hue/Zoodo/pull/22",
+      "prior_status": "NO CENTRAL ZOODO TICKET REGISTRY CONFIRMED",
+      "new_status": "SOURCE COMMITTED; 10 open issue tickets, 12 open PRs including new draft; no real claims; hosted relay UNKNOWN",
+      "exact_commit_sha": "66aac4445abf54de3a9380605d74e289372f9491",
+      "initial_commit_sha": "9a15b4a02fd80cae34a0fc70b86ec008ea6a5f5a",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/66aac4445abf54de3a9380605d74e289372f9491",
+      "worker": "ZOO Dashboard Lead",
+      "proof_readback": "PASS 4/4 authenticated source file readbacks and execution receipt readback",
+      "local_tests": "SOURCE STRUCTURAL CHECKS ONLY; hosted tests UNKNOWN",
+      "provider_preview": "UNKNOWN",
+      "hosted_browser": "UNKNOWN",
+      "production": "UNKNOWN",
+      "verified_claims": 0
     }
   ],
   "pr_stage_timing": {
@@ -282,7 +355,7 @@
     "merge_at_utc": null,
     "deploy_at_utc": null,
     "verified_at_utc": null,
-    "opened_to_observation_seconds": 28239,
+    "opened_to_observation_seconds": 28681,
     "opened_to_review_seconds": null,
     "review_to_fix_seconds": null,
     "fix_to_tests_seconds": null,
@@ -293,12 +366,16 @@
   "gap_latency": {
     "issue": "https://github.com/london4216-hue/TransendIQ/issues/1023",
     "detected_at_utc": "2026-10-30T13:12:14Z",
-    "detection_to_observation_seconds": 36766,
+    "detection_to_observation_seconds": 37208,
     "detection_to_source_fix_seconds": null,
     "source_fix_to_hosted_verification_seconds": null,
     "hosted_verification_at_utc": null,
-    "oldest_unresolved_checkpoint_age": "UNKNOWN",
-    "proof_refresh_since_previous_observation_seconds": 1134
+    "oldest_unresolved_checkpoint_age": {
+      "issue": "https://github.com/london4216-hue/Zoodo/issues/7",
+      "created_at_utc": "2026-10-30T06:33:28Z",
+      "age_seconds_at_observation": 61134
+    },
+    "proof_refresh_since_previous_observation_seconds": 419
   },
   "cross_model_panel": {
     "scope": "Authenticated native model invocations only",
@@ -341,5 +418,25 @@
     "candidate_source": "Private Supabase transactional outbox/HTTPS adapter draft; source only",
     "two_ticket_test": "UNKNOWN",
     "next_action": "Hunter qualify existing provider-native model/API and host; Implementation run bounded relay test when actually callable"
-  }
+  },
+  "additional_pr_stage_timing": [
+    {
+      "pr": "https://github.com/london4216-hue/Zoodo/pull/22",
+      "opened_at_utc": "2026-10-30T23:31:02Z",
+      "review_at_utc": null,
+      "source_commit_at_utc": "2026-10-30T23:30:42Z",
+      "source_readback_at_utc": null,
+      "local_structural_checks_at_utc": "2026-10-30T23:30:37.622Z",
+      "hosted_tests_at_utc": null,
+      "merge_at_utc": null,
+      "deploy_at_utc": null,
+      "verified_at_utc": null,
+      "opened_to_review_seconds": null,
+      "review_to_fix_seconds": null,
+      "fix_to_tests_seconds": null,
+      "tests_to_merge_seconds": null,
+      "merge_to_deploy_seconds": null,
+      "deploy_to_verified_seconds": null
+    }
+  ]
 }
