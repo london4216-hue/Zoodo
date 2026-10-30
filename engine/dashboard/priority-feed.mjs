@@ -7,7 +7,7 @@ export function evaluatePriorityFeed(feed, now = Date.now(), staleMs = 3600000) 
  return {
   sourceAgeMs, sourceStale: sourceAgeMs === null || sourceAgeMs > staleMs,
   rows: feed.rows.map(r => {
-   if (!r.id || !https(r.source_url)) throw Error('Priority row needs a source URL');
+   if (!r.id || (r.source_url != null && !https(r.source_url))) throw Error('Priority row has invalid source URL');
    const meaningfulAgeMs = validTime(r.last_verified_meaningful_at)
     ? Math.max(0, now - Date.parse(r.last_verified_meaningful_at)) : null;
    const landingVerified = validTime(r.landing_verified_at) && https(r.verified_live_url);
@@ -37,9 +37,15 @@ export function renderPriorityFeed(target, feed, now = Date.now()) {
    ' · Exact SHA ' + (r.commit_sha || 'UNKNOWN') +
    ' · Tests ' + (r.tests || 'UNKNOWN');
   const next = document.createElement('div'); next.textContent = r.next_action;
-  const source = document.createElement('a'); source.href = r.source_url;
-  source.target = '_blank'; source.rel = 'noopener'; source.textContent = 'Source evidence';
-  row.append(strong,line,next,source);
+  row.append(strong,line,next);
+  if (r.source_url) {
+   const source = document.createElement('a'); source.href = r.source_url;
+   source.target = '_blank'; source.rel = 'noopener'; source.textContent = 'Source evidence';
+   row.append(source);
+  } else {
+   const unknown = document.createElement('span'); unknown.className = 'time';
+   unknown.textContent = ' · Private source receipt not published'; row.append(unknown);
+  }
   if (r.verified_live_url) {
    const live = document.createElement('a'); live.href = r.verified_live_url;
    live.target = '_blank'; live.rel = 'noopener'; live.textContent = ' · Verified live UI';
