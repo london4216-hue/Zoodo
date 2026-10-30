@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: '22'
       - name: Fail-first and recovery regression tests
-        run: node --test engine/dashboard/tests/watchdog.test.mjs
+        run: node --test engine/dashboard/tests/watchdog*.test.mjs
   inspect:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     needs: test
@@ -40,4 +40,5 @@ jobs:
       - name: Inspect actual published scheduler proof and dedupe recovery issue
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROOF_REF: autonomous-engine-replacement-2026-10-29
         run: node engine/dashboard/scripts/watchdog.mjs
