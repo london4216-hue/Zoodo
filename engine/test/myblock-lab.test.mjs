@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { freshState, normalizeState, toggleFeature, toggleLicence, joinBlock, memberAccess, chronologicalPosts, deedRecord, inviteUrl } from '../dashboard/labs/myblock/logic.mjs';
+import { freshState, normalizeState, toggleFeature, toggleLicence, joinBlock, memberAccess, chronologicalPosts, deedRecord, inviteUrl, publishPost } from '../dashboard/labs/myblock/logic.mjs';
 
 test('creator has unique slug, initial features and synthetic posts', () => {
   const s = freshState();
@@ -47,4 +47,42 @@ test('restored state accepts only known feature and licence keys', () => {
   assert.deepEqual(Object.keys(s.features), ['posts','notes']);
   assert.deepEqual(s.members, ['sample-member']);
   assert.equal(s.stats.joins, 1);
+});
+
+test('creator publishes local synthetic content and newest post appears first', () => {
+  const original = freshState();
+  const next = publishPost(original, {title:'  Community launch  ',body:'  Hello members  '}, '2026-10-30T04:30:00Z');
+  assert.equal(original.posts.length, 2);
+  assert.equal(next.posts.length, 3);
+  assert.equal(next.posts[2].title, 'Community launch');
+  assert.equal(next.posts[2].body, 'Hello members');
+  assert.equal(chronologicalPosts(next)[0].id, 'post-1');
+});
+test('published post survives validated local state restoration', () => {
+  const first = publishPost(freshState(), {title:'One',body:'A'}, '2026-10-30T04:30:00Z');
+  const restored = normalizeState(JSON.parse(JSON.stringify(first)));
+  assert.equal(restored.posts.length, 3);
+  const second = publishPost(restored, {title:'Two',body:'B'}, '2026-10-30T04:31:00Z');
+  assert.deepEqual(second.posts.slice(2).map(p=>p.id), ['post-1','post-2']);
+});
+test('invalid, oversized and blank posts cannot be published', () => {
+  for(const draft of [{title:' ',body:'Text'}, {title:'A',body:' '},{title:'X'.repeat(101),body:'A'},{title:'A',body:'B'.repeat(601)}]) {
+    assert.throws(()=>publishPost(freshState(),draft),/Post must/);
+  }
+  assert.throws(()=>publishPost(freshState(),{title:'Okay',body:'Text'},'not-a-date'),/Invalid publish time/);
+});
+test('restoration discards injected and malformed posts, preserves only synthetic allowed fields', () => {
+  const raw = publishPost(freshState(), {title:'Safe',body:'Content'}, '2026-10-30T04:30:00Z');
+  raw.posts.push({id:'foreign',title:'Attack',body:'bad',date:'2026-10-30T04:31:00Z'});
+  raw.posts.push({id:'post-2',title:'',body:'bad',date:'2026-10-30T04:31:00Z'});
+  raw.posts.push({id:'post-3',title:'Safe',body:'okay',date:'bad'});
+  const restored=normalizeState(raw);
+  assert.deepEqual(restored.posts.map(p=>p.id), ['p1','p2','post-1']);
+  assert.deepEqual(Object.keys(restored.posts[2]).sort(), ['body','date','id','title']);
+});
+test('synthetic lab refuses more than 20 posts', () => {
+  let s=freshState();
+  for(let i=0;i<18;i++)s=publishPost(s,{title:'Post '+i,body:'Sample'},'2026-10-30T04:30:00Z');
+  assert.equal(s.posts.length,20);
+  assert.throws(()=>publishPost(s,{title:'Overflow',body:'Sample'}),/limit reached/);
 });
