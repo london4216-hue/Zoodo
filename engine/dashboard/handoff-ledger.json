@@ -9,7 +9,7 @@
     "in_progress_scheduler_receipts": 1,
     "verified_productive_agents": null
   },
-  "observed_at": "2026-10-30T23:39:40.730Z",
+  "observed_at": "2026-10-30T23:40:06.078Z",
   "visibility": "sanitized_public_recovery_metadata",
   "state": "RECOVERING",
   "note": "Source-linked checkpoint only; not a deployed/live execution receipt or an independent panel vote.",
@@ -156,7 +156,18 @@
       "tests": "PASS index+2 ticket authenticated readbacks; 12 unique tickets, new leases unclaimed. Hosted two-ticket claims UNKNOWN.",
       "timestamp_utc": "2026-10-30T23:39:40.730Z",
       "next_trigger": "Implementation Lead next authorized execution; no new automation created; source-only registry cannot self-dispatch.",
-      "receipt_scope": "Actual GitHub source mutation, not authenticated hosted ticket execution."
+      "receipt_scope": "Actual GitHub source mutation, not authenticated hosted ticket execution.",
+      "follow_on_request": {
+        "automation": "TransendIQ asset restoration worker",
+        "requested_at_utc": "2026-10-30T23:39:59.863Z",
+        "request_status": "accepted_by_scheduler",
+        "previous_run_id": "c0915e15-bf14-8330-8a6b-d6f0b8a628d5",
+        "readback_run_id": "c0915e15-bf14-8330-8a6b-d6f0b8a628d5",
+        "readback_status": "in_progress",
+        "distinct_new_run_verified": false,
+        "productive_execution_verified": false,
+        "note": "A worker run was already in progress at the pre-request read. Accepted run_now did not prove a new run or task; do not count duplicate."
+      }
     }
   ],
   "unresolved": [
