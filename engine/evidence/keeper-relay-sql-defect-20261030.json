@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/23",
+  "status": "BLOCKED",
+  "finding": "SQL migration tail is syntactically invalid; PostgreSQL execution not attempted",
+  "next_action": "Repair function and add deterministic SQL contract test"
+}
