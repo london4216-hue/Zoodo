@@ -53,3 +53,12 @@ test('mobile page contains accessible role buttons, explicit disclaimers and no 
   assert.doesNotMatch(html,/<script[^>]+src="https?:/i);
   assert.match(html,/\.\/logic\.mjs/);
 });
+
+test('malformed stored members cannot forge membership or crash state recovery', () => {
+  const s=freshState();
+  for (const members of ['sample-member', {unexpected:true}, 123, true]) {
+    const restored=normalizeState({...s,members});
+    assert.deepEqual(restored.members,[]);
+    assert.equal(restored.stats.joins,0);
+  }
+});
