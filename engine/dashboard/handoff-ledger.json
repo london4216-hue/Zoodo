@@ -2,14 +2,14 @@
   "schema_version": 1,
   "source": {
     "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
-    "head_before_ledger": "1bdb8908e33f22cb37e63fd326560fd24730235d",
-    "proof_blob": "2b855df699003260b92f865aac76174067d29d37",
-    "proof_observed_at": "2026-10-30T20:16:12.656Z",
+    "head_before_ledger": "80a61aa937de1c96cef3108676a21f19162bbdd4",
+    "proof_blob": "2ec1e3401a776d74bbdea195ed5609eb699e98c4",
+    "proof_observed_at": "2026-10-30T21:13:30.967Z",
     "completed_scheduler_receipts": 4,
-    "in_progress_scheduler_receipts": 3,
+    "in_progress_scheduler_receipts": 1,
     "verified_productive_agents": null
   },
-  "observed_at": "2026-10-30T20:16:59.502Z",
+  "observed_at": "2026-10-30T21:14:00.979Z",
   "visibility": "sanitized_public_recovery_metadata",
   "state": "RECOVERING",
   "note": "Source-linked checkpoint only; not a deployed/live execution receipt or an independent panel vote.",
@@ -29,6 +29,22 @@
       "timestamp_utc": "2026-10-30T20:16:59.502Z",
       "next_trigger": "Implementation Lead next authenticated execution or durable issue assignment; Keeper integrates when independently tested.",
       "receipt_scope": "Handoff requested, not authenticated downstream execution"
+    },
+    {
+      "from": "Dashboard Lead",
+      "to": "Implementation Lead",
+      "task_id": "ZOODO-18-PROOF-REFRESH-20261030-2113",
+      "decision": "REVISE",
+      "proposed_fix": "Repair or replace zero-step GitHub Actions runner via independently qualified hosted exact-SHA Node test; verify PR preview actual HTML and map existing Netlify production deploy before any publication.",
+      "evidence": [
+        "https://github.com/london4216-hue/Zoodo/commit/80a61aa937de1c96cef3108676a21f19162bbdd4",
+        "https://github.com/london4216-hue/Zoodo/actions/runs/41121933830",
+        "https://github.com/london4216-hue/Zoodo/issues/18"
+      ],
+      "tests": "11/11 authenticated GitHub readback/source integrity assertions passed; base 26 href occurrences, candidate 34, none removed. GitHub Actions run 41121933830 failed with zero recorded steps; log endpoint 404 BlobNotFound. Hosted tests NOT passed.",
+      "timestamp_utc": "2026-10-30T21:14:00.979Z",
+      "next_trigger": "Implementation Lead next authenticated scheduled or event-driven execution; owner Keeper integrates after evidence-backed hosted test and production mapping.",
+      "receipt_scope": "Durable handoff request only, not downstream agent invocation"
     }
   ],
   "unresolved": [
@@ -43,15 +59,15 @@
     {
       "id": "ZOO-CI-STARTUP",
       "state": "RECOVERING",
-      "root_cause": "GitHub Actions run 41120682733 dashboard-contract job failed with zero recorded steps; job logs returned BlobNotFound; newer run 41121221295 queued at check",
+      "root_cause": "GitHub Actions PR run 41121933830 completed failure, dashboard-contract job 124289836123 had zero recorded steps; logs returned 404 BlobNotFound",
       "owner": "Implementation Lead",
       "backup": "ZOO Agent Hunter",
-      "next_action": "Inspect Actions runner provisioning/repository policy and obtain an independently qualified hosted Node test receipt."
+      "next_action": "Inspect repository Actions runner provisioning/policy; run exact SHA Node test on independent authorized host and attach executable log."
     },
     {
       "id": "ZOO-LIVE-PROOF",
       "state": "UNKNOWN",
-      "root_cause": "Published GitHub PR proof snapshot readback verified; actual Netlify live file and browser refresh unverified",
+      "root_cause": "Authenticated GitHub PR proof refreshed at 21:13:30.967Z (SHA 80a61aa9); actual production HTML/proof and browser refresh still unverified due DNS/tool access",
       "owner": "ZOO Dashboard Worker",
       "backup": "ZOO Agent Hunter",
       "next_action": "After source mapping, verify exact deployed proof file, manual and 30-second auto refresh, stale recovery state, mobile and private access."
@@ -70,5 +86,44 @@
     "demo_ready_email_sent": false,
     "external_provider_invocations_verified": false,
     "public_product_publication_owner_only": true
+  },
+  "execution_receipts": [
+    {
+      "agent_id": "ZOO Dashboard Lead",
+      "task_id": "ZOODO-18-PROOF-REFRESH-20261030-2113",
+      "source_commit_sha": "80a61aa937de1c96cef3108676a21f19162bbdd4",
+      "command_action": "Authenticated connected_automations_peek for four roles; GitHub update_file with conditional previous blob SHA; GitHub fetch_file readback and 11 source assertions",
+      "started_at_utc": "2026-10-30T21:12:32Z",
+      "completed_at_utc": "2026-10-30T21:14:00.979Z",
+      "test_api_result": "PASS: 4 historical completions (1 from latest_result), 1 distinct in-progress; 11/11 structural and navigation checks; 0 removed hrefs. This proves source execution only, not live deployment.",
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/commit/80a61aa937de1c96cef3108676a21f19162bbdd4",
+      "decision": "REVISE",
+      "next_action": "Prove actual Netlify production source/deploy and live browser refresh, plus independent CI/host tests",
+      "production_receipt": "UNKNOWN"
+    }
+  ],
+  "agent_proof_matrix": {
+    "scope": "actual lane execution and production evidence; scheduler completions are insufficient",
+    "agent_hunter": {
+      "lane_execution": "UNKNOWN",
+      "production_display": "UNKNOWN",
+      "reason": "No authenticated external capability invocation receipt verified in this execution"
+    },
+    "dashboard_lead": {
+      "lane_execution": "PASS",
+      "production_display": "UNKNOWN",
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/commit/80a61aa937de1c96cef3108676a21f19162bbdd4",
+      "reason": "GitHub write/readback verified; live Netlify rendering not verified"
+    },
+    "implementation_lead": {
+      "lane_execution": "UNKNOWN",
+      "production_display": "UNKNOWN",
+      "reason": "Completed scheduler record exists but no authenticated productive execution or recovery drill receipt verified in this execution"
+    },
+    "zoo_keeper": {
+      "lane_execution": "UNKNOWN",
+      "production_display": "UNKNOWN",
+      "reason": "Completed scheduler record exists but NEXT dispatch/handoff proof not independently verified in this execution"
+    }
   }
 }
