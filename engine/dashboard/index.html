@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ZOO | Execution Proof</title>
+<style>
+:root{font-family:Inter,system-ui,sans-serif;color:#e6edf7;background:#090e17}*{box-sizing:border-box}body{margin:0;padding:24px;max-width:1600px;margin:auto}header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}h1{font-size:32px;letter-spacing:.12em;margin:0}h2{font-size:15px;color:#a9b9d0;margin:0 0 12px}small,.muted{color:#92a3bd}.status{padding:9px 15px;border-radius:99px;background:#292f3b;font-weight:700}.good{color:#6ee7b7}.bad{color:#ff8585}.warn{color:#ffd47c}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:24px 0}.card,.panel{background:#121b2a;border:1px solid #273448;border-radius:14px;padding:18px}.metric{font-size:35px;font-weight:800;margin:8px 0}.panels{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:850px){.panels{grid-template-columns:1fr}}.row{padding:12px 0;border-bottom:1px solid #283548;overflow-wrap:anywhere}.row:last-child{border:0}.time{font-size:12px;color:#93a7c2}a{color:#8cc6ff}#errors{margin:14px 0;color:#ff8585}.bar{height:6px;background:#263246;border-radius:8px;overflow:hidden;margin-top:10px}.bar>div{height:100%;background:#4fd1a5;width:0;transition:width .3s}button{background:#263b56;color:#fff;border:0;padding:10px 16px;border-radius:8px;cursor:pointer}footer{margin-top:20px;color:#a2b2ca;font-size:13px}
+</style></head><body>
+<header><div><h1>ZOO <span style="color:#69e2b2">/ EXECUTION PROOF</span></h1><small>GitHub-backed evidence, never simulated activity</small></div><div><span id="state" class="status warn">CONNECTING</span> <button id="refresh">Refresh now</button><div class="time" id="checked"></div></div></header>
+<div id="errors" role="alert"></div>
+<div class="grid">
+<div class="card"><h2>Last verified code change</h2><div class="metric" id="lastAge">—</div><div class="muted" id="lastSha">No evidence loaded</div></div>
+<div class="card"><h2>Commits in last 60 minutes</h2><div class="metric" id="commitsHour">—</div><div class="muted">Actual GitHub commits</div></div>
+<div class="card"><h2>CI runs / passing</h2><div class="metric" id="ci">—</div><div class="muted">Branch workflow runs</div></div>
+<div class="card"><h2>Live verified product demos</h2><div class="metric" id="demos">UNKNOWN</div><div class="muted">Not inferred from commits</div></div>
+<div class="card"><h2>AI spend</h2><div class="metric" id="cost">UNKNOWN</div><div class="muted">Awaiting actual provider receipts</div></div>
+<div class="card"><h2>Independent agent verdicts</h2><div class="metric" id="judges">UNKNOWN</div><div class="muted">Awaiting independently signed evidence</div></div>
+</div>
+<div class="panels"><section class="panel"><h2>Rolling commit evidence</h2><div id="commits" aria-live="polite">Connecting…</div></section><section class="panel"><h2>Workflow executions</h2><div id="runs" aria-live="polite">Connecting…</div></section></div>
+<footer>Polls public GitHub every 30 seconds. STALLED = no code commits for 60 minutes; it does not imply an agent is currently running. GitHub API limits or outages are reported as UNKNOWN, never zero. Read-only. No credentials stored.</footer>
+<script>
+const owner='london4216-hue',repo='Zoodo',branch='autonomous-engine-replacement-2026-10-29';
+const root='https://api.github.com/repos/'+owner+'/'+repo;
+const $=id=>document.getElementById(id);
+const fmt=t=>{const d=Math.max(0,Date.now()-Date.parse(t)),m=Math.floor(d/60000);return m<1?'just now':m<60?m+'m ago':Math.floor(m/60)+'h '+m%60+'m ago'};
+const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(path){const r=await fetch(root+path,{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});if(!r.ok)throw Error('GitHub API '+r.status);return r.json()}
+async function update(){
+ $('checked').textContent='Last checked '+new Date().toLocaleTimeString();
+ const [commits,runs]=await Promise.allSettled([api('/commits?sha='+encodeURIComponent(branch)+'&per_page=100'),api('/actions/runs?branch='+encodeURIComponent(branch)+'&per_page=30')]);
+ const errors=[];
+ if(commits.status==='fulfilled'){
+  const data=commits.value,latest=data[0],age=latest?Date.now()-Date.parse(latest.commit.committer.date):Infinity;
+  $('lastAge').textContent=latest?fmt(latest.commit.committer.date):'UNKNOWN';
+  $('lastSha').textContent=latest?latest.sha.slice(0,9):'No commits found';
+  $('commitsHour').textContent=data.filter(c=>Date.now()-Date.parse(c.commit.committer.date)<3600000).length;
+  $('state').textContent=age<3600000?'RECENT CODE MOVEMENT':'STALLED / NO RECENT COMMIT';
+  $('state').className='status '+(age<3600000?'good':'bad');
+  $('commits').innerHTML=data.slice(0,35).map(c=>'<div class="row"><div class="time">'+escapeHtml(new Date(c.commit.committer.date).toLocaleString())+' · '+escapeHtml(c.sha.slice(0,9))+'</div><a target="_blank" rel="noopener" href="'+escapeHtml(c.html_url)+'">'+escapeHtml(c.commit.message.split('\n')[0])+'</a></div>').join('')||'No commits';
+ }else{errors.push('Commits: '+commits.reason.message);$('lastAge').textContent='UNKNOWN';$('commitsHour').textContent='UNKNOWN';$('state').textContent='EVIDENCE UNAVAILABLE';$('state').className='status warn'}
+ if(runs.status==='fulfilled'){
+  const d=runs.value.workflow_runs||[],pass=d.filter(x=>x.conclusion==='success').length;
+  $('ci').textContent=d.length+' / '+pass;
+  $('runs').innerHTML=d.slice(0,30).map(x=>'<div class="row"><div class="time">'+escapeHtml(new Date(x.created_at).toLocaleString())+'</div><a target="_blank" rel="noopener" href="'+escapeHtml(x.html_url)+'">'+escapeHtml(x.name)+'</a> — '+escapeHtml(x.status)+' / '+escapeHtml(x.conclusion??'pending')+'</div>').join('')||'<div class="bad">NO WORKFLOW RUNS RECORDED</div>';
+ }else{errors.push('Actions: '+runs.reason.message);$('ci').textContent='UNKNOWN';$('runs').textContent='CI evidence unavailable'}
+ $('errors').textContent=errors.join(' | ');
+}
+$('refresh').addEventListener('click',update);
+update();setInterval(update,30000);
+</script></body></html>
