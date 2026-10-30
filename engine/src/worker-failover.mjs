@@ -26,8 +26,13 @@ export function handoffCount(queue, worker) {
 
 export function eligibleReplacement(queue, ticket, workers, formerWorker) {
   if (!Array.isArray(workers)) throw Error('Worker inventory required');
+  // A worker may hold only one active build lease. A caller-supplied 'available'
+  // flag is insufficient when the durable journal shows another active ticket.
+  const busy = new Set(queue.list()
+    .filter(t => ['assigned','running'].includes(t.status) && t.worker)
+    .map(t => t.worker));
   return workers.find(w => w && valid(w.id) && valid(w.provider) && w.id !== formerWorker &&
-    w.available === true && w.verified === true && evidence(w.invocationReceipt) &&
+    !busy.has(w.id) && w.available === true && w.verified === true && evidence(w.invocationReceipt) &&
     Array.isArray(w.repos) && w.repos.includes(ticket.repo) &&
     handoffCount(queue, w.id) < 2 && !isSeeker(ticket.id)) ?? null;
 }
@@ -36,7 +41,9 @@ function createSeekerIfDue(queue, worker, repo) {
   const count = handoffCount(queue, worker);
   if (count < 2) return null;
   const id = seekerId(worker);
-  queue.create({id, repo, description: seekerDescription(worker)});
+  // A seeker belongs to the worker across repositories. Replayed recovery
+  // for another repository must not collide with the existing seeker ticket.
+  if (!queue.get(id)) queue.create({id, repo, description: seekerDescription(worker)});
   return id; // queued, NOT running or assigned; actual availability must be checked separately
 }
 
