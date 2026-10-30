@@ -25,6 +25,20 @@ export function normalizeState(raw) {
     features: Object.fromEntries(Object.entries(base.features).map(([key, fallback]) => [key, flag(raw.features, key, fallback)])),
     licences: Object.fromEntries(Object.entries(base.licences).map(([key, fallback]) => [key, flag(raw.licences, key, fallback)])),
     members,
+    posts: (() => {
+      const accepted = base.posts.slice();
+      const ids = new Set(accepted.map(p => p.id));
+      for (const p of Array.isArray(raw.posts) ? raw.posts : []) {
+        if (accepted.length >= 20) break;
+        if (!p || !/^post-[1-9]\\d*$/.test(p.id) || ids.has(p.id)) continue;
+        if (typeof p.title !== 'string' || !p.title.trim() || p.title.length > 100) continue;
+        if (typeof p.body !== 'string' || !p.body.trim() || p.body.length > 600) continue;
+        if (typeof p.date !== 'string' || !Number.isFinite(Date.parse(p.date))) continue;
+        accepted.push({ id: p.id, title: p.title.trim(), body: p.body.trim(), date: new Date(p.date).toISOString() });
+        ids.add(p.id);
+      }
+      return accepted;
+    })(),
     stats: {
       visits: Number.isSafeInteger(raw.stats?.visits) && raw.stats.visits >= 0 ? Math.min(raw.stats.visits, 999999) : base.stats.visits,
       joins: members.length
@@ -66,4 +80,16 @@ export function inviteUrl(locationLike) {
   u.searchParams.set('invite', INVITE_CODE);
   u.searchParams.set('mode', 'visitor');
   return u.toString();
+}
+
+// Local-only creator publishing. No uploads, external requests, accounts or payment flows.
+export function publishPost(state, draft, now = new Date().toISOString()) {
+  const title = typeof draft?.title === 'string' ? draft.title.trim() : '';
+  const body = typeof draft?.body === 'string' ? draft.body.trim() : '';
+  if (!title || title.length > 100 || !body || body.length > 600) throw Error('Post must have a title (1–100) and body (1–600)');
+  if (!Number.isFinite(Date.parse(now))) throw Error('Invalid publish time');
+  if (state.posts.length >= 20) throw Error('Synthetic lab post limit reached');
+  const ids = state.posts.map(p => /^post-(\d+)$/.exec(p.id)).filter(Boolean).map(m => Number(m[1]));
+  const id = 'post-' + (Math.max(0, ...ids) + 1);
+  return { ...state, posts: [...state.posts, { id, title, body, date: new Date(now).toISOString() }] };
 }
