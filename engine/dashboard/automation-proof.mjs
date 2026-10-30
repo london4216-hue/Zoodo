@@ -24,8 +24,14 @@ export function evaluateAutomationProof(feed, now=Date.now(), dueMs=75*60000){
   Date.parse(w.completed_at)<=observed+60000&&Date.parse(w.completed_at)<=now+60000);
  const last=valid.reduce((a,w)=>!a||Date.parse(w.completed_at)>Date.parse(a.completed_at)?w:a,null);
  if(!last)return unknown('No completed automation execution receipts in published feed');
- const overdue=feed.workers.filter(w=>!valid.includes(w)||now-Date.parse(w.completed_at)>dueMs)
-  .map(w=>String(w?.role||'Unknown worker'));
+ // Publisher-side anomalies are separate evidence; never discard them merely
+ // because an older completion for that worker remains valid.
+ const anomalies=Array.isArray(feed.source_anomalies)?feed.source_anomalies:[];
+ const overdue=[...new Set([
+  ...feed.workers.filter(w=>!valid.includes(w)||now-Date.parse(w.completed_at)>dueMs)
+   .map(w=>String(w?.role||'Unknown worker')),
+  ...anomalies.map(a=>typeof a?.role==='string'&&a.role.trim()?a.role:'Unknown anomaly')
+ ])];
  const sourceStale=now-observed>dueMs;
  const status=sourceStale||overdue.length?'RECOVERY REQUIRED':'RECORDED RUNS CURRENT';
  return {state:status,reason:sourceStale?'Published proof source overdue':overdue.length?
