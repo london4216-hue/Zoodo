@@ -73,3 +73,14 @@ test('panel rejects fabricated, fewer than three or duplicate proposals',()=>{
  assert.throws(()=>acceptPanelResponse({...payload,proposals:payload.proposals.slice(0,2)}),/Exactly three/);
  assert.throws(()=>acceptPanelResponse({...payload,proposals:[proposal(1),proposal(1),proposal(3)]}),/distinct/);
 });
+
+test('substantive code submission and independent NO-GO do not count as empty handoff',()=>fixture(({make})=>{
+ const q=make();makeTicket(q,'A');
+ handoffAndReassign(q,'A',{worker:'w1',reason:'first empty',receipt},workers);
+ makeTicket(q,'B','w1','provider1');
+ q.submit('B','w1',{commit:'a'.repeat(40),evidence:receipt});
+ q.approve('B',{reviewer:'independent',provider:'provider2',commit:'a'.repeat(40),evidence:receipt,approved:false});
+ assert.equal(q.get('B').status,'queued');
+ assert.equal(handoffCount(q,'w1'),1);
+ assert.equal(q.get('seeker:w1'),null);
+}));
