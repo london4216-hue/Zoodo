@@ -26,3 +26,19 @@ test('scheduler anomaly: completed before scheduled cannot count as verified run
  const mixed=evaluateAutomationProof({...good,workers:[good.workers[0],anomalous]},now);
  assert.equal(mixed.state,'RECOVERY REQUIRED');assert.deepEqual(mixed.overdue,['ZOO Keeper']);
 });
+
+test('duplicate worker roles cannot inflate scheduler proof',()=>{
+ const duplicate={...good.workers[0],run_id:'33333333-aaaa-4bbb-8ccc-aaaaaaaaaaaa'};
+ const p=evaluateAutomationProof({...good,workers:[good.workers[0],duplicate]},now);
+ assert.equal(p.state,'UNKNOWN');assert.equal(p.workerCount,0);
+});
+test('replayed run IDs across roles cannot inflate scheduler proof',()=>{
+ const replay={...good.workers[0],role:'ZOO Agent Hunter'};
+ const p=evaluateAutomationProof({...good,workers:[good.workers[0],replay]},now);
+ assert.equal(p.state,'UNKNOWN');assert.equal(p.workerCount,0);
+});
+test('malformed worker identity is not accepted as a scheduler receipt',()=>{
+ const malformed={...good.workers[0],role:'  '};
+ const p=evaluateAutomationProof({...good,workers:[malformed]},now);
+ assert.equal(p.state,'UNKNOWN');
+});
