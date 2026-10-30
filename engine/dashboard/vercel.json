@@ -15,7 +15,7 @@
   ],
   "headers": [
     {
-      "source": "/build-proof.json",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
@@ -24,19 +24,10 @@
         {
           "key": "Cache-Control",
           "value": "no-store"
-        }
-      ]
-    },
-    {
-      "source": "/mirror-manifest.json",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
         },
         {
-          "key": "Cache-Control",
-          "value": "no-store"
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
         }
       ]
     }
