@@ -9,7 +9,7 @@
     "in_progress_scheduler_receipts": 2,
     "verified_productive_agents": null
   },
-  "observed_at": "2026-10-30T23:32:22.266Z",
+  "observed_at": "2026-10-30T23:33:00.645Z",
   "visibility": "sanitized_public_recovery_metadata",
   "state": "RECOVERING",
   "note": "Source-linked checkpoint only; not a deployed/live execution receipt or an independent panel vote.",
@@ -136,10 +136,10 @@
     {
       "id": "ZOO-CI-STARTUP",
       "state": "RECOVERING",
-      "root_cause": "Actions run 41134618657 dashboard-contract job 124333872890 failed with zero recorded steps; logs returned 404 BlobNotFound at 2026-10-30T23:05:41Z. Netlify preview status success is not hosted Node test proof.",
+      "root_cause": "Authenticated GitHub Actions run 41144366595 job 124365857156 failed before recording any steps (steps=[]); job logs 404 BlobNotFound at 2026-10-30T23:32:55Z. This does not identify the underlying runner provisioning/policy cause.",
       "owner": "Implementation Lead",
       "backup": "ZOO Agent Hunter",
-      "next_action": "Implementation Lead inspect GitHub runner provisioning/policy and Netlify provider build logs; run exact-SHA Node tests on an authorized independent host and link logs."
+      "next_action": "Implementation Lead: inspect Actions runner provisioning/policy and exact workflow YAML; independently run exact-SHA Node tests via an authorized hosted provider, capture native build logs and link SHA. Do not repeat identical blind retry."
     },
     {
       "id": "ZOO-LIVE-PROOF",
