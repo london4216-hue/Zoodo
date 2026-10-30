@@ -18,17 +18,29 @@ if (result.error || result.status !== 0) {
   console.error('ZOO BUILD BLOCKED: contract tests failed, timed out, or could not run');
   process.exit(1);
 }
-const raw = process.env.COMMIT_REF || '';
-const sha = /^[a-f0-9]{40}$/.test(raw) ? raw : null;
+const candidates = [
+  process.env.COMMIT_REF,             // Netlify
+  process.env.VERCEL_GIT_COMMIT_SHA, // Vercel
+  process.env.RENDER_GIT_COMMIT,     // Render
+  process.env.CF_PAGES_COMMIT_SHA   // Cloudflare Pages
+].filter(x=>/^[a-f0-9]{40}$/.test(x||''));
+const distinct = [...new Set(candidates)];
+if(distinct.length>1){
+  console.error('ZOO BUILD BLOCKED: conflicting provider git commit SHA values');
+  process.exit(1);
+}
+const sha = distinct[0] || null;
 const context = ['production', 'deploy-preview', 'branch-deploy'].includes(process.env.CONTEXT)
-  ? process.env.CONTEXT : 'unknown';
+  ? process.env.CONTEXT :
+    process.env.VERCEL_ENV || (process.env.RENDER ? 'render' : process.env.CF_PAGES ? 'cloudflare-pages' : 'unknown');
 const verified = {
   schema_version: 1,
   build_tests: 'PASSED',
   test_suite: testFiles,
   source_commit: sha,
   deployment_context: context,
-  branch: String(process.env.BRANCH || 'unknown').slice(0, 130),
+  branch: String(process.env.BRANCH || process.env.VERCEL_GIT_COMMIT_REF ||
+       process.env.RENDER_GIT_BRANCH || process.env.CF_PAGES_BRANCH || 'unknown').slice(0, 130),
   verified_at: new Date().toISOString(),
   verified_scope: 'Netlify build-time source contract tests only',
   browser_functionality_verified: false,
