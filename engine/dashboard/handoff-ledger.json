@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "source": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+    "head_before_ledger": "1bdb8908e33f22cb37e63fd326560fd24730235d",
+    "proof_blob": "2b855df699003260b92f865aac76174067d29d37",
+    "proof_observed_at": "2026-10-30T20:16:12.656Z",
+    "completed_scheduler_receipts": 4,
+    "in_progress_scheduler_receipts": 3,
+    "verified_productive_agents": null
+  },
+  "observed_at": "2026-10-30T20:16:59.502Z",
+  "visibility": "sanitized_public_recovery_metadata",
+  "state": "RECOVERING",
+  "note": "Source-linked checkpoint only; not a deployed/live execution receipt or an independent panel vote.",
+  "handoffs": [
+    {
+      "from": "Dashboard Lead",
+      "to": "Implementation Lead",
+      "task_id": "ZOODO-18-PROOF-RUNNER-20261030-2016",
+      "decision": "REVISE",
+      "proposed_fix": "Qualify independent hosted exact-SHA build execution and a real out-of-browser stale-to-recovery drill; diagnose Actions runner startup failure without identical blind retries.",
+      "evidence": [
+        "https://github.com/london4216-hue/Zoodo/pull/16",
+        "https://github.com/london4216-hue/Zoodo/issues/18",
+        "https://github.com/london4216-hue/Zoodo/actions/runs/41120682733"
+      ],
+      "tests": "Source link-parity verified; 26 base href occurrences and 32 candidate, zero removed. Hosted CI not passed.",
+      "timestamp_utc": "2026-10-30T20:16:59.502Z",
+      "next_trigger": "Implementation Lead next authenticated execution or durable issue assignment; Keeper integrates when independently tested.",
+      "receipt_scope": "Handoff requested, not authenticated downstream execution"
+    }
+  ],
+  "unresolved": [
+    {
+      "id": "ZOO-NETLIFY-MAPPING",
+      "state": "UNKNOWN",
+      "root_cause": "No authenticated production site ID/deploy/source/rollback mapping; DNS request to production and preview failed in this environment",
+      "owner": "ZOO Keeper",
+      "backup": "ZOO Agent Hunter",
+      "next_action": "Read actual Netlify published deploy and source settings via authorized account; record site/deploy IDs, exact SHA, rollback and provider build receipt."
+    },
+    {
+      "id": "ZOO-CI-STARTUP",
+      "state": "RECOVERING",
+      "root_cause": "GitHub Actions run 41120682733 dashboard-contract job failed with zero recorded steps; job logs returned BlobNotFound; newer run 41121221295 queued at check",
+      "owner": "Implementation Lead",
+      "backup": "ZOO Agent Hunter",
+      "next_action": "Inspect Actions runner provisioning/repository policy and obtain an independently qualified hosted Node test receipt."
+    },
+    {
+      "id": "ZOO-LIVE-PROOF",
+      "state": "UNKNOWN",
+      "root_cause": "Published GitHub PR proof snapshot readback verified; actual Netlify live file and browser refresh unverified",
+      "owner": "ZOO Dashboard Worker",
+      "backup": "ZOO Agent Hunter",
+      "next_action": "After source mapping, verify exact deployed proof file, manual and 30-second auto refresh, stale recovery state, mobile and private access."
+    },
+    {
+      "id": "ZOO-DEMO-LINKS",
+      "state": "UNKNOWN",
+      "root_cause": "Source href parity passed; external demo endpoints including Prestige Engage and owner auth not browser verified",
+      "owner": "ZOO Dashboard Worker",
+      "backup": "ZOO Agent Hunter",
+      "next_action": "Verify each expected landing and redirect; keep unverified entries in repair section without deleting links."
+    }
+  ],
+  "safety": {
+    "production_published": false,
+    "demo_ready_email_sent": false,
+    "external_provider_invocations_verified": false,
+    "public_product_publication_owner_only": true
+  }
+}
