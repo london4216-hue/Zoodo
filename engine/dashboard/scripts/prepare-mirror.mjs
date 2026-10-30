@@ -11,6 +11,7 @@ const allowedFiles = [
   'index.html',
   'evidence-clock.mjs',
   'verified-links.json',
+  'hosting-mirrors.json',
   'build-proof.json',
   'labs/myblock/index.html',
   'labs/myblock/logic.mjs',
@@ -49,4 +50,16 @@ const manifest={
   agent_heartbeat_verified:false
 };
 writeFileSync(join(out,'mirror-manifest.json'),JSON.stringify(manifest,null,2)+'\n');
+writeFileSync(join(out,'_headers'),[
+  '/build-proof.json',
+  '  Access-Control-Allow-Origin: *',
+  '  Cache-Control: no-store',
+  '/mirror-manifest.json',
+  '  Access-Control-Allow-Origin: *',
+  '  Cache-Control: no-store',
+  '/hosting-mirrors.json',
+  '  Access-Control-Allow-Origin: *',
+  '  Cache-Control: no-store',
+  ''
+].join('\n'));
 console.log('ZOO MIRROR ARTIFACT '+JSON.stringify(manifest));
