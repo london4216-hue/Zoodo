@@ -1,3 +1,6 @@
+# STATUS CORRECTION — 2026-10-29
+This document is an **aspirational measurement and planning baseline only**, NOT an enforceable build, merge, deployment, or release gate. The owner explicitly deferred imposing the live-demo → B → Gold sequence as a rule because premature enforcement causes friction. Continue engine and asset tickets in parallel. Record grades and readiness as evidence, but do not block work, PRs, testing, or progress on the basis of these aspirational thresholds. Existing original-repository governance and security protections remain unchanged. Any future promotion of these targets into enforceable gates requires separate explicit owner approval.
+
 # ZOO — Owner Product Readiness KPI Contract
 Recorded 2026-10-29. Mandatory priority before shipping TranscendIQ.
 
