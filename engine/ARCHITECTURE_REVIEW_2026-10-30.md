@@ -59,3 +59,9 @@
 - **Other owned projects:** record real test commands and actual CI runs one repo at a time. Excluded secret repos remain excluded.
 
 **Costs, per-agent idle time, speed, real failover latency, deployment health and all product readiness percentages remain UNKNOWN until measured.**
+
+## Subsequent asset-first increment (same run)
+- Added `engine/dashboard/labs/yearbook3/logic.test.mjs`: eight deterministic synthetic YB3 student-journey cases (consent required, input limits, immutable submission, safe restoration and no forged identity). Local Node v22.16.0: **8/8 YB3 + 9/9 durable queue = 17/17 new tests passed**. Existing project-wide CI remains unverified.
+- Updated `.github/workflows/zoo-lab-tests.yml` to execute YB3 tests and trigger on engine source changes.
+- At exact commit `d87574851878d24cc8627b62c33b28dac4ecd63a`, three further Actions runs failed: [41015118983](https://github.com/london4216-hue/Zoodo/actions/runs/41015118983), [41015119069](https://github.com/london4216-hue/Zoodo/actions/runs/41015119069), [41015119049](https://github.com/london4216-hue/Zoodo/actions/runs/41015119049). All returned null step summaries and BlobNotFound on log retrieval; **cause unknown**. GitHub combined status showed a successful Netlify deploy-preview status, but HTTP/functional health remained unverified.
+- **No** independent provider judged the new YB3 tests or the queue implementation. No product readiness percentage or live YB3 URL is claimed.
