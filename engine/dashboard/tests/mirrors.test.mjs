@@ -65,3 +65,42 @@ test('unconfigured failovers are not silently counted as green',async()=>{
  assert.equal(out.fully_automated_failover_verified,false);
  assert.equal(out.hosts.length,3);
 });
+
+test('two green static hosts on different commits are NOT redundant',async()=>{
+ const cfg={primary:{provider:'Netlify',url:'https://primary.example/'},
+   mirrors:[{provider:'Vercel',url:'https://mirror.example/'}]};
+ const fetcher=async url=>{
+   const host=new URL(url).hostname;
+   const r=mockSuccess(url);
+   if(new URL(url).pathname==='/build-proof.json' && host==='mirror.example')
+     r.json=async()=>({schema_version:1,build_tests:'PASSED',source_commit:'b'.repeat(40),verified_at:'2026-10-30T16:00:00Z'});
+   if(new URL(url).pathname==='/mirror-manifest.json' && host==='mirror.example')
+     r.json=async()=>({schema_version:1,source_commit:'b'.repeat(40)});
+   return r;
+ };
+ const out=await verifyFleet({config:cfg,fetcher});
+ assert.equal(out.healthy,1);
+ assert.equal(out.hosts[1].state,'SOURCE_MISMATCH');
+ assert.equal(out.fully_automated_failover_verified,false);
+});
+test('duplicate provider or duplicate origin cannot inflate static redundancy',async()=>{
+ const cfg={primary:{provider:'Netlify',url:'https://primary.example/'},
+   mirrors:[
+     {provider:'Netlify',url:'https://mirror.example/'},
+     {provider:'Vercel',url:'https://primary.example/'}
+   ]};
+ const out=await verifyFleet({config:cfg,fetcher:async url=>mockSuccess(url)});
+ assert.equal(out.healthy,1);
+ assert.equal(out.hosts[1].state,'DUPLICATE_OR_UNVERIFIED_HOST');
+ assert.equal(out.hosts[2].state,'DUPLICATE_OR_UNVERIFIED_HOST');
+ assert.equal(out.independently_authenticated_provider_identities_verified,false);
+});
+test('two distinct configured providers with same source SHA pass static checks, not DNS failover',async()=>{
+ const cfg={primary:{provider:'Netlify',url:'https://primary.example/'},
+   mirrors:[{provider:'Vercel',url:'https://mirror.example/'}]};
+ const out=await verifyFleet({config:cfg,fetcher:async url=>mockSuccess(url)});
+ assert.equal(out.healthy,2);
+ assert.equal(out.common_source_sha,sha);
+ assert.equal(out.source_matched_distinct_configured_providers,2);
+ assert.equal(out.fully_automated_failover_verified,false);
+});
