@@ -1,0 +1,86 @@
+{
+  "schema_version": "zoo-ops-execution-receipt-v1",
+  "agent_id": "Implementation Lead (ChatGPT GitHub connector)",
+  "task_id": "ZOO-P0-SQL-PARSE-20261030",
+  "source_repo": "london4216-hue/Zoodo",
+  "source_commit_sha": "060eaaca4ada28d752fc6ad46b578bae512b81af",
+  "pull_request": "https://github.com/london4216-hue/Zoodo/pull/28",
+  "action": "Authenticated GitHub source readback and 12 source-contract assertions; repair SQL migration on isolated branch",
+  "start_utc": "2026-10-30T23:41:22.703Z",
+  "end_utc": "2026-10-30T23:41:23.210Z",
+  "checks": {
+    "single_transaction": true,
+    "balanced_dollar_quotes": true,
+    "no_broken_as_quote": true,
+    "no_broken_end_quote": true,
+    "dispatch_function": true,
+    "dispatch_receipt_regex": true,
+    "dispatch_lease_fence": true,
+    "dispatch_event": true,
+    "privilege_block": true,
+    "public_revoke": true,
+    "service_role_grant": true,
+    "regression_test_readback": true
+  },
+  "checks_passed": 12,
+  "checks_total": 12,
+  "source_blobs": {
+    "sql": "c76707cdcb785e22fa14e0758e511ec19af2a0e0",
+    "regression_test": "39f4bebe655d6e0802b57af01374280e7807491f"
+  },
+  "evidence_url": "https://github.com/london4216-hue/Zoodo/pull/28",
+  "verification_scope": "STATIC_SOURCE_CHECK_ONLY",
+  "postgresql_migration": "UNKNOWN_NOT_EXECUTED",
+  "node_test_run": "UNKNOWN_NOT_EXECUTED",
+  "netlify_function_invocation": "UNKNOWN_NOT_EXECUTED",
+  "hosted_two_ticket_failover": "UNKNOWN_NOT_EXECUTED",
+  "dashboard_production_render": "UNKNOWN_NOT_VERIFIED",
+  "decision": "REVISE",
+  "reason": "Malformed SQL repaired and source contracts pass; runtime migration and hosted recovery still lack native execution receipts",
+  "next_action": "ZOO Keeper: integrate stacked PR #28 after #23; execute Node tests and disposable private Supabase migration, then authenticated two-ticket recovery with provider-native receipts",
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "trigger": "PR #28 source repair ready; next existing Keeper reconciliation or authenticated relay event",
+    "utc": "2026-10-30T23:41:23.210Z"
+  },
+  "hourly_movement": [
+    {
+      "hour_utc": "2026-10-30T23:00:00Z",
+      "hour_et": "2026-10-30 19:00 EDT",
+      "asset": "Zoodo relay",
+      "pr": 28,
+      "prior": "SQL migration malformed; hosted UNKNOWN",
+      "new": "SQL source fixed and 12/12 static checks PASS; hosted UNKNOWN",
+      "commit": "060eaaca4ada28d752fc6ad46b578bae512b81af",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/060eaaca4ada28d752fc6ad46b578bae512b81af"
+    }
+  ],
+  "pr_stages": {
+    "opened_utc": "2026-10-30T23:41:03Z",
+    "review_utc": null,
+    "fix_utc": null,
+    "tests_utc": "2026-10-30T23:41:23.210Z",
+    "merge_utc": null,
+    "deploy_utc": null,
+    "verified_utc": null,
+    "elapsed_ms": {
+      "open_to_review": null,
+      "review_to_fix": null,
+      "fix_to_tests": null,
+      "tests_to_merge": null,
+      "merge_to_deploy": null,
+      "deploy_to_verified": null
+    }
+  },
+  "gap_age": "UNKNOWN",
+  "gap_detection_to_fix_ms": null,
+  "gap_fix_to_hosted_verification_ms": null,
+  "four_agent_proof": {
+    "agent_hunter": "UNKNOWN",
+    "dashboard_lead": "UNKNOWN",
+    "implementation_lead": "UNKNOWN_HOSTED",
+    "zoo_keeper": "UNKNOWN"
+  },
+  "public_repository_warning": "Zoodo is PUBLIC; no private ticket contents or credentials included"
+}
