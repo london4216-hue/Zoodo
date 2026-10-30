@@ -27,7 +27,13 @@ export function evaluateAutomationProof(feed, now=Date.now(), dueMs=75*60000){
  // Publisher-side anomalies are separate evidence; never discard them merely
  // because an older completion for that worker remains valid.
  const anomalies=Array.isArray(feed.source_anomalies)?feed.source_anomalies:[];
+ // The publisher declares the expected worker roster. Missing roles cannot
+ // turn a partial scheduler feed into a misleading all-clear.
+ const expected=feed.expected_roles===undefined?[]:feed.expected_roles;
+ if(!Array.isArray(expected)||expected.some(r=>typeof r!=='string'||!r.trim())||
+    new Set(expected).size!==expected.length)return unknown('Invalid expected scheduler roster');
  const overdue=[...new Set([
+  ...expected.filter(role=>!valid.some(w=>w.role===role)),
   ...feed.workers.filter(w=>!valid.includes(w)||now-Date.parse(w.completed_at)>dueMs)
    .map(w=>String(w?.role||'Unknown worker')),
   ...anomalies.map(a=>typeof a?.role==='string'&&a.role.trim()?a.role:'Unknown anomaly')
