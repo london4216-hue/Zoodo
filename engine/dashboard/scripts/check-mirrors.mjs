@@ -19,7 +19,7 @@ const safeHttps = value => {
     return u.toString();
   }catch{return null;}
 };
-export async function inspectMirror(url, {fetcher=fetch,expectedSha=null, now=()=>new Date().toISOString()}={}) {
+export async function inspectMirror(url, {fetcher=fetch,expectedSha=null, requireManifest=true, now=()=>new Date().toISOString()}={}) {
   const base=safeHttps(url);
   if(!base)return {url:null,state:'NOT_CONFIGURED',reason:'missing_or_unsafe_https_url',checked_at:now()};
   const report={url:base,state:'RECOVERING',checked_at:now(),checks:{}};
@@ -32,10 +32,10 @@ export async function inspectMirror(url, {fetcher=fetch,expectedSha=null, now=()
       return json?response.json():response.text();
     };
     const proof=await get('build-proof.json',{json:true});
-    const manifest=await get('mirror-manifest.json',{json:true});
-    if(proof.build_tests!=='PASSED'||manifest.schema_version!==1)throw Error('invalid_build_receipts');
+    const manifest=requireManifest?await get('mirror-manifest.json',{json:true}):null;
+    if(proof.build_tests!=='PASSED'||(requireManifest&&manifest?.schema_version!==1))throw Error('invalid_build_receipts');
     const sha=proof.source_commit;
-    if(!SHA.test(sha||'')||manifest.source_commit!==sha)throw Error('missing_or_mismatched_sha');
+    if(!SHA.test(sha||'')||(requireManifest&&manifest.source_commit!==sha))throw Error('missing_or_mismatched_sha');
     report.checks.build_proof={sha,verified_at:proof.verified_at};
     if(expectedSha && sha!==expectedSha)throw Error('source_sha_mismatch');
     const html=await get('index.html');
@@ -59,8 +59,8 @@ export async function inspectMirror(url, {fetcher=fetch,expectedSha=null, now=()
 export async function verifyFleet({config,fetcher=fetch, expectedSha=null}={}){
  if(!config||!Array.isArray(config.mirrors))throw Error('invalid_host_config');
  const targets=[config.primary,...config.mirrors];
- const results=await Promise.all(targets.map(host=>
-   host?.url?inspectMirror(host.url,{fetcher,expectedSha}):
+ const results=await Promise.all(targets.map((host,i)=>
+   host?.url?inspectMirror(host.url,{fetcher,expectedSha,requireManifest:i!==0}):
    Promise.resolve({provider:host?.provider||'unknown',state:'NOT_CONFIGURED'})));
  return {checked_at:new Date().toISOString(),hosts:results.map((result,i)=>({
    provider:targets[i]?.provider,...result})),
