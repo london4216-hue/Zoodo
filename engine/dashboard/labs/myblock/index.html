@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Block · Creator-first lab</title>
+<meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
+<style>
+:root{font:16px/1.5 system-ui,-apple-system,sans-serif;color:#f5f1ec;background:#0e1219}*{box-sizing:border-box}body{margin:0}button,a{font:inherit}button{cursor:pointer}.shell{max-width:1080px;margin:auto;padding:22px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.brand{font-weight:900;letter-spacing:-.06em;font-size:27px}.brand span{color:#ffba79}.chip{border:1px solid #42505f;border-radius:50px;padding:6px 12px;color:#b8c7d6;font-size:12px}.hero{margin:28px 0;padding:32px;border-radius:26px;background:linear-gradient(125deg,#4e2d4d,#182d42 65%,#102027);border:1px solid #625269}.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:12px;color:#ffcb9e;font-weight:700}.hero h1{font-size:clamp(36px,7vw,66px);line-height:1.05;margin:14px 0;letter-spacing:-.05em}.hero p{max-width:620px;color:#e2dbe1}.hero .url{overflow-wrap:anywhere;color:#d2e8f8;font-size:13px}.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(270px,1fr);gap:18px}.panel{background:#19212d;border:1px solid #354457;border-radius:19px;padding:22px;margin-bottom:18px}.panel h2{margin:0 0 10px;font-size:20px}.muted{color:#b1bfd0;font-size:14px}.rolebar{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.rolebar button,.action{border:1px solid #4d6073;background:#26374b;color:#fff;padding:10px 15px;border-radius:11px}.rolebar button[aria-pressed=true],.primary{background:#ffc48a;color:#19202b;border-color:#ffc48a;font-weight:800}.action:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #a7ddff;outline-offset:3px}.post{border-top:1px solid #364354;padding:15px 0}.post h3{margin:4px 0}.post time{font-size:12px;color:#adbacb}.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid #364354}.toggle button{min-width:64px}.notice{padding:14px;border:1px solid #c59661;border-radius:12px;background:#3b3027;color:#ffe4c4}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{padding:15px;background:#253344;border-radius:12px}.stat strong{display:block;font-size:27px}.stat small{color:#b5c3d2}.actions{display:flex;gap:10px;flex-wrap:wrap}.hidden{display:none!important}footer{color:#9fb0c4;font-size:12px;padding:30px 0}.success{color:#9aeac5}.message{min-height:1.6em;color:#ffdbab;font-size:14px}.panel a{color:#9fd2ff}@media(max-width:720px){.shell{padding:14px}.layout{grid-template-columns:1fr}.hero{padding:23px}.panel{padding:18px}}
+</style></head><body>
+<div class="shell"><header class="top"><div class="brand">my<span>block.</span></div><span class="chip">SYNTHETIC LAB · NOT PRODUCTION</span></header>
+<main><section class="hero" aria-labelledby="creator-name"><div class="eyebrow">Your brand. Your community.</div><h1 id="creator-name">Nova Vale</h1><p id="tagline">A place to make things together.</p><div class="url" id="creator-url"></div><div class="rolebar" aria-label="Preview role"><button type="button" data-role="creator" aria-pressed="true">Creator</button><button type="button" data-role="visitor" aria-pressed="false">Visitor</button><button type="button" data-role="member" aria-pressed="false">Member</button></div><p class="muted">Role switching is a demonstration, not authentication. No real accounts or personal data.</p></section>
+<div class="layout"><div>
+<section class="panel" id="join-panel"><h2>Join Nova's block</h2><p class="muted">Use the demo invite to join this creator's community.</p><p id="join-status"></p><button class="action primary" id="join" type="button">Join with demo invite</button></section>
+<section class="panel"><h2>From Nova</h2><p class="muted">Newest first, by publish time. No ranking algorithm.</p><div id="feed"></div><div id="feed-off" class="notice hidden">The creator has turned posts off for members.</div></section>
+<section class="panel" id="notes-panel"><h2>Community notes</h2><p class="muted">A simple, creator-controlled community feature. No messages are transmitted.</p><div id="notes-state"></div></section>
+</div><aside>
+<section class="panel" id="creator-controls"><h2>Creator controls</h2><p class="muted">Choose what members can access. Changes take effect in this browser's next view.</p><div id="features"></div><div class="actions"><button class="action primary" id="copy-invite" type="button">Copy invite</button></div><p class="message" id="invite-message" role="status"></p><input id="invite-fallback" class="hidden" readonly aria-label="Invite link" style="width:100%;padding:10px;background:#101722;color:white;border:1px solid #607086;border-radius:8px"></section>
+<section class="panel"><h2>NIL Deed · lab record</h2><p class="muted">Name, image and likeness permissions. This is an unsigned exportable demo record, not a blockchain transaction or legal instrument.</p><div id="licences"></div><button class="action" id="export-deed" type="button">Export demo record (.json)</button></section>
+<section class="panel"><h2>Engagement · sample</h2><div class="stats"><div class="stat"><strong id="visits">24</strong><small>Seeded visits</small></div><div class="stat"><strong id="joins">0</strong><small>Demo joins</small></div></div><p class="muted">Local synthetic counters, not live analytics.</p></section>
+<section class="panel"><h2>Six commitments</h2><p class="muted">No ads · no shadow bans · no data sales · no feed algorithms · transparent controls · creator feature control.</p><p class="muted">This prototype demonstrates selected behaviors; it is not an independent compliance certification.</p><button class="action" id="reset" type="button">Reset synthetic demo</button></section>
+</aside></div></main><footer>My Block lab based on the product introduction and draft system intent. Figma comparison, actual signing, production identity, persistence, moderation and payments are not implemented. No external API calls.</footer></div>
+<script type="module">
+import {freshState,normalizeState,toggleFeature,toggleLicence,joinBlock,memberAccess,chronologicalPosts,deedRecord,inviteUrl,INVITE_CODE} from './logic.mjs';
+const key='zoo-myblock-synthetic-v1', $=id=>document.getElementById(id);
+let state;try{state=normalizeState(JSON.parse(localStorage.getItem(key)))}catch{state=freshState()}
+const query=new URLSearchParams(location.search);
+let role=['creator','visitor','member'].includes(query.get('mode'))?query.get('mode'):'creator';
+const invite=query.get('invite')===INVITE_CODE?INVITE_CODE:null;
+function save(){try{localStorage.setItem(key,JSON.stringify(state))}catch{/* demo still works without storage */}}
+function node(tag,text,cls){const n=document.createElement(tag);n.textContent=text;if(cls)n.className=cls;return n}
+function controls(root,entries,handler){root.replaceChildren();for(const [name,on] of Object.entries(entries)){const row=node('div','', 'toggle');const label=node('span',name[0].toUpperCase()+name.slice(1));const btn=node('button',on?'On':'Off','action');btn.type='button';btn.setAttribute('aria-label',name+' '+(on?'on':'off'));btn.setAttribute('aria-pressed',String(on));btn.addEventListener('click',()=>{if(role!=='creator')return;state=handler(state,name);save();render()});row.append(label,btn);root.append(row)}}
+function render(){
+ $('creator-name').textContent=state.creator.name;$('tagline').textContent=state.creator.tagline;
+ const u=new URL(location.href);u.search='';u.searchParams.set('block',state.creator.slug);$('creator-url').textContent=u.toString();
+ document.querySelectorAll('[data-role]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.role===role)));
+ const access=memberAccess(state),canRead=role==='creator'||state.features.posts;
+ $('join-panel').classList.toggle('hidden',role==='creator');
+ $('join-status').textContent=access.joined?'Sample member joined this block.':invite?'Valid demo invite detected.':'No invite in this view; switch to Creator and copy one.';
+ $('join').disabled=access.joined||!invite;
+ $('join').textContent=access.joined?'Joined':'Join with demo invite';
+ $('feed').replaceChildren();$('feed-off').classList.toggle('hidden',canRead);
+ if(canRead)for(const p of chronologicalPosts(state)){const article=node('article','', 'post');const date=node('time',new Date(p.date).toLocaleDateString());date.dateTime=p.date;article.append(date,node('h3',p.title),node('p',p.body));$('feed').append(article)}
+ $('notes-state').textContent=role==='creator'||state.features.notes?'Notes are enabled in this synthetic demo.':'The creator has turned notes off for members.';
+ $('creator-controls').classList.toggle('hidden',role!=='creator');
+ controls($('features'),state.features,toggleFeature);
+ controls($('licences'),state.licences,toggleLicence);
+ $('licences').querySelectorAll('button').forEach(b=>b.disabled=role!=='creator');
+ $('export-deed').disabled=role!=='creator';
+ $('visits').textContent=state.stats.visits;$('joins').textContent=state.stats.joins;
+}
+document.querySelectorAll('[data-role]').forEach(b=>b.addEventListener('click',()=>{role=b.dataset.role;render()}));
+$('join').addEventListener('click',()=>{if(!invite)return;state=joinBlock(state,invite);save();role='member';render()});
+$('copy-invite').addEventListener('click',async()=>{const link=inviteUrl(location);try{await navigator.clipboard.writeText(link);$('invite-message').textContent='Invite copied.';$('invite-fallback').classList.add('hidden')}catch{$('invite-message').textContent='Copy the link below:';$('invite-fallback').value=link;$('invite-fallback').classList.remove('hidden');$('invite-fallback').select()}});
+$('export-deed').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(deedRecord(state),null,2)],{type:'application/json'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='myblock-demo-deed.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)});
+$('reset').addEventListener('click',()=>{state=freshState();save();render()});
+render();
+</script></body></html>
