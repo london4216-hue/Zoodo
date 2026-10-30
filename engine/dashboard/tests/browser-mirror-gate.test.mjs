@@ -21,7 +21,7 @@ function mockResponse(url,body,{redirect=null}={}){
  return {ok:true,status:200,url:redirect||String(url),
    json:async()=>body,text:async()=>String(body)};
 }
-async function inspect({manifestSha='a'.repeat(40),badHtml=false,redirect=false}={}){
+async function inspect({manifestSha='a'.repeat(40),badHtml=false,redirect=false,mirrorUrl='https://mirror.example/'}={}){
  const sha='a'.repeat(40), box=element(), stamp=element();
  const fixtures={
   '/build-proof.json':{schema_version:1,build_tests:'PASSED',source_commit:sha},
@@ -36,7 +36,7 @@ async function inspect({manifestSha='a'.repeat(40),badHtml=false,redirect=false}
  const fetcher=async url=>{
   if(String(url)==='./hosting-mirrors.json')
    return mockResponse('https://primary.example/hosting-mirrors.json',
-    {primary:{provider:'Netlify'},mirrors:[{provider:'Vercel',url:'https://mirror.example/'}]});
+    {primary:{provider:'Netlify'},mirrors:[{provider:'Vercel',url:mirrorUrl}]});
   if(String(url)==='./build-proof.json')
    return mockResponse('https://primary.example/build-proof.json',fixtures['/build-proof.json']);
   const path=new URL(String(url)).pathname;
@@ -73,4 +73,10 @@ test('public mirror configs permit cross-origin verification of HTML and lab JS'
  assert.match(prep,/'\/\*'/);
  assert.ok(vercel.headers.some(x=>x.source==='/(.*)'&&x.headers.some(h=>h.key==='Access-Control-Allow-Origin'&&h.value==='*')));
  assert.match(render,/path: \/\*/);
+});
+
+test('private network addresses are rejected before any mirror asset fetch',async()=>{
+ const r=await inspect({mirrorUrl:'https://127.0.0.1/'});
+ assert.equal(r.anchors.length,0);
+ assert.match(r.rows[0].children.find(x=>x.className==='time').textContent,/Untrusted host address/);
 });
