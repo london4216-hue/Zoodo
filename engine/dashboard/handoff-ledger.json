@@ -25,7 +25,7 @@
         "https://github.com/london4216-hue/Zoodo/issues/18",
         "https://github.com/london4216-hue/Zoodo/actions/runs/41120682733"
       ],
-      "tests": "Source link-parity verified; 26 base href occurrences and 32 candidate, zero removed. Hosted CI not passed. Local exact-blob Node tests 9/9 passed; hosted CI remains failed.",
+      "tests": "Source link-parity verified; 26 base href occurrences and 32 candidate, zero removed. Hosted CI not passed.",
       "timestamp_utc": "2026-10-30T20:16:59.502Z",
       "next_trigger": "Implementation Lead next authenticated execution or durable issue assignment; Keeper integrates when independently tested.",
       "receipt_scope": "Handoff requested, not authenticated downstream execution"
@@ -41,7 +41,7 @@
         "https://github.com/london4216-hue/Zoodo/actions/runs/41121933830",
         "https://github.com/london4216-hue/Zoodo/issues/18"
       ],
-      "tests": "11/11 authenticated GitHub readback/source integrity assertions passed; base 26 href occurrences, candidate 34, none removed. GitHub Actions run 41121933830 failed with zero recorded steps; log endpoint 404 BlobNotFound. Hosted tests NOT passed.",
+      "tests": "11/11 authenticated GitHub readback/source integrity assertions passed; base 26 href occurrences, candidate 34, none removed. GitHub Actions run 41121933830 failed with zero recorded steps; log endpoint 404 BlobNotFound. Hosted tests NOT passed. Local exact-blob Node tests 9/9 passed; hosted CI remains failed.",
       "timestamp_utc": "2026-10-30T21:14:00.979Z",
       "next_trigger": "Implementation Lead requested now; verify a distinct run_id and actual task receipt before crediting execution. Scheduled continuation remains enabled.",
       "receipt_scope": "Durable handoff request only, not downstream agent invocation",
