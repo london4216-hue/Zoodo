@@ -295,8 +295,12 @@ async function update(){
  const errors=[];
  const latest=commits.status==='fulfilled'?commits.value[0]:null;
  if(commits.status==='fulfilled'||runs.status==='fulfilled'){
-   $('dashboardEvidenceRefresh').textContent='Dashboard evidence refresh: '+new Date().toISOString()+' · browser source response';
-   $('sourceSuccess').textContent='Last successful GitHub API source response: '+new Date().toLocaleString()+
+   $('dashboardEvidenceRefresh').textContent='Dashboard evidence refresh: '+new Date().toISOString()+
+     ' · GitHub API response (commits '+(commits.status==='fulfilled'?'OK':'UNAVAILABLE')+
+     ', Actions '+(runs.status==='fulfilled'?'OK':'UNAVAILABLE')+')';
+ }
+ if(commits.status==='fulfilled'){
+   $('sourceSuccess').textContent='Last successful GitHub commit endpoint response: '+new Date().toLocaleString()+
      ' · source receipt is not proof of active worker or live deployment';
  }
 
