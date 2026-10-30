@@ -143,14 +143,40 @@ async function checkHostingMirrors(){
     detail.textContent='Untrusted host address';box.append(row);continue;
    }
    try{
-    const proofURL=new URL('/build-proof.json',u.origin);
-    const response=await fetch(proofURL,{cache:'no-store',signal:AbortSignal.timeout(8000)});
-    if(!response.ok)throw Error('mirror HTTP '+response.status);
-    const proof=await response.json();
-    if(proof.build_tests!=='PASSED'||!expected||proof.source_commit!==expected)throw Error('unverified or differing source SHA');
-    const a=document.createElement('a');a.href=u.origin+'/';a.target='_blank';a.rel='noopener noreferrer';a.textContent='Open source-matched mirror';
+    // A green provider build receipt alone must never promote a stale or wrong mirror.
+    // Verify the exact SHA, the independently prepared manifest and real public assets.
+    const getMirrorAsset=async(path,json=false)=>{
+      const requested=new URL(path,u.origin);
+      const response=await fetch(requested,{cache:'no-store',redirect:'follow',signal:AbortSignal.timeout(8000)});
+      if(!response.ok)throw Error(path+' HTTP '+response.status);
+      const landed=new URL(response.url||requested.href);
+      if(landed.origin!==u.origin)throw Error(path+' redirected to a different host');
+      return json?response.json():response.text();
+    };
+    const [proof,manifest]=await Promise.all([
+      getMirrorAsset('/build-proof.json',true),
+      getMirrorAsset('/mirror-manifest.json',true)
+    ]);
+    if(proof.schema_version!==1||proof.build_tests!=='PASSED'||!expected||proof.source_commit!==expected)
+      throw Error('unverified or differing source SHA');
+    if(manifest.schema_version!==1||manifest.source_commit!==expected||manifest.browser_verified===true)
+      throw Error('missing, mismatched or misleading mirror manifest');
+    const html=await getMirrorAsset('/index.html');
+    if(!html.includes('id="accountability"')||html.includes('EVIDENCE UNKNOWN · ESCALATION REQUIRED'))
+      throw Error('wrong dashboard HTML on mirror');
+    const requiredAssets=[
+      ['/evidence-clock.mjs','export function evaluateEvidence'],
+      ['/labs/myblock/index.html','My Block · Creator-first lab'],
+      ['/labs/myblock/logic.mjs','export function publishPost'],
+      ['/labs/yearbook3/index.html','Yearbook 3 · Student Lab'],
+      ['/labs/yearbook3/logic.mjs','export function submitEntry']
+    ];
+    for(const [path,needle] of requiredAssets){
+      if(!(await getMirrorAsset(path)).includes(needle))throw Error('missing or stale mirror asset: '+path);
+    }
+    const a=document.createElement('a');a.href=u.origin+'/';a.target='_blank';a.rel='noopener noreferrer';a.textContent='Open static-source-verified mirror';
     row.append(a);
-    detail.textContent='SOURCE BUILD MATCHED · '+expected.slice(0,12)+' · browser journey/DNS failover not verified';
+    detail.textContent='SOURCE BUILD MATCHED · STATIC ASSETS CHECKED · '+expected.slice(0,12)+' · browser journey/DNS failover not verified';
    }catch(e){detail.textContent='RECOVERING · '+String(e.message||'host check failed').slice(0,100);}
    box.append(row);
   }
