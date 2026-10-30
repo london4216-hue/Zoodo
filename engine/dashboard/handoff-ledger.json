@@ -25,7 +25,7 @@
         "https://github.com/london4216-hue/Zoodo/issues/18",
         "https://github.com/london4216-hue/Zoodo/actions/runs/41120682733"
       ],
-      "tests": "Source link-parity verified; 26 base href occurrences and 32 candidate, zero removed. Hosted CI not passed.",
+      "tests": "Source link-parity verified; 26 base href occurrences and 32 candidate, zero removed. Hosted CI not passed. Local exact-blob Node tests 9/9 passed; hosted CI remains failed.",
       "timestamp_utc": "2026-10-30T20:16:59.502Z",
       "next_trigger": "Implementation Lead next authenticated execution or durable issue assignment; Keeper integrates when independently tested.",
       "receipt_scope": "Handoff requested, not authenticated downstream execution"
@@ -99,11 +99,20 @@
       "command_action": "Authenticated connected_automations_peek for four roles; GitHub update_file with conditional previous blob SHA; GitHub fetch_file readback and 11 source assertions",
       "started_at_utc": "2026-10-30T21:12:32Z",
       "completed_at_utc": "2026-10-30T21:14:00.979Z",
-      "test_api_result": "PASS: 4 historical completions (1 from latest_result), 1 distinct in-progress; 11/11 structural and navigation checks; 0 removed hrefs. This proves source execution only, not live deployment.",
+      "test_api_result": "PASS: 4 historical completions (1 from latest_result), 1 distinct in-progress; 11/11 structural and navigation checks; 0 removed hrefs. This proves source execution only, not live deployment.; PASS: 9/9 local Node v22.16.0 tests of exact GitHub blob source 276add6c21c08efe64b5fc6b426517c005a12db8 and test blob bfdec046f74d219b28f19cf344880159a7bea2c4 (git hash-object matched both).",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/commit/80a61aa937de1c96cef3108676a21f19162bbdd4",
       "decision": "REVISE",
       "next_action": "Prove actual Netlify production source/deploy and live browser refresh, plus independent CI/host tests",
-      "production_receipt": "UNKNOWN"
+      "production_receipt": "UNKNOWN",
+      "local_test": {
+        "runtime": "Node v22.16.0",
+        "command": "node --test tests/automation-proof.test.mjs",
+        "passed": 9,
+        "failed": 0,
+        "source_blob": "276add6c21c08efe64b5fc6b426517c005a12db8",
+        "test_blob": "bfdec046f74d219b28f19cf344880159a7bea2c4",
+        "scope": "isolated local exact-blob tests, NOT hosted CI or production browser"
+      }
     }
   ],
   "agent_proof_matrix": {
