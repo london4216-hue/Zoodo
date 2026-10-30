@@ -9,8 +9,19 @@ const isSeeker = id => id.startsWith('seeker:');
 
 export function handoffCount(queue, worker) {
   if (!valid(worker)) throw Error('Worker required');
-  return queue.list().filter(t => !isSeeker(t.id)).flatMap(t => t.history)
-    .filter(e => e.type === 'requeue' && e.worker === worker).length;
+  let emptyHandoffs = 0;
+  for (const ticket of queue.list().filter(t => !isSeeker(t.id))) {
+    let assignedWorker = null, submitted = false;
+    for (const event of ticket.history) {
+      if (event.type === 'claim') { assignedWorker = event.worker; submitted = false; }
+      if (event.type === 'submit' && assignedWorker === worker) submitted = true;
+      if (event.type === 'requeue') {
+        if (event.worker === worker && !submitted) emptyHandoffs++;
+        assignedWorker = null; submitted = false;
+      }
+    }
+  }
+  return emptyHandoffs;
 }
 
 export function eligibleReplacement(queue, ticket, workers, formerWorker) {
