@@ -1,0 +1,24 @@
+name: Zoo My Block lab regression
+on:
+  push:
+    branches: [autonomous-engine-replacement-2026-10-29]
+    paths:
+      - 'engine/dashboard/labs/myblock/**'
+      - '.github/workflows/zoo-myblock-lab.yml'
+  pull_request:
+    paths:
+      - 'engine/dashboard/labs/myblock/**'
+      - '.github/workflows/zoo-myblock-lab.yml'
+permissions:
+  contents: read
+jobs:
+  myblock-lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run My Block synthetic lab regression
+        run: node --test engine/dashboard/labs/myblock/lab.test.mjs
