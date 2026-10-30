@@ -10,8 +10,13 @@ export async function runTask({task,builders,reviewers,emit=()=>{}}) {
   log('review_started',reviewer,{commit:built.result.commit});
   try{
    const verdict=await reviewer.review({task,commit:built.result.commit});
-   log('reviewed',reviewer,{commit:built.result.commit,approved:verdict?.approved===true,costUsd:verdict?.costUsd??null});
-   return {status:verdict?.approved===true?'agreed':'rejected',commit:built.result.commit,events};
+   if(typeof verdict?.approved!=='boolean')throw Error('Reviewer returned no explicit verdict');
+   // Approval must bind to the exact built commit. Mismatch is a negative
+   // verdict, not permission to shop for a more permissive reviewer.
+   const exactCommit=verdict.commit===built.result.commit;
+   const approved=verdict.approved===true&&exactCommit;
+   log('reviewed',reviewer,{commit:built.result.commit,reviewedCommit:verdict.commit??null,approved,costUsd:verdict.costUsd??null,...(verdict.approved&&!exactCommit?{reason:'Approval lacks exact-commit evidence'}:{})});
+   return {status:approved?'agreed':'rejected',commit:built.result.commit,events};
   }catch(e){log('review_failed',reviewer,{reason:String(e)})}
  }
  log('blocked',null,{reason:'All independent reviewers unavailable'});
