@@ -9,7 +9,7 @@
     "in_progress_scheduler_receipts": 1,
     "verified_productive_agents": null
   },
-  "observed_at": "2026-10-30T23:38:18.267Z",
+  "observed_at": "2026-10-30T23:39:40.730Z",
   "visibility": "sanitized_public_recovery_metadata",
   "state": "RECOVERING",
   "note": "Source-linked checkpoint only; not a deployed/live execution receipt or an independent panel vote.",
@@ -140,6 +140,23 @@
       "timestamp_utc": "2026-10-30T23:38:18.267Z",
       "next_trigger": "Implementation Lead next authorized run or event-driven eligible ticket; Hunter issue #24; Keeper Netlify source mapping. Do not equate request with execution.",
       "receipt_scope": "Real Dashboard Lead GitHub commits and source checks; NOT production or downstream invocation."
+    },
+    {
+      "from": "Dashboard Lead",
+      "to": "Implementation Lead",
+      "task_id": "ZOO-REGISTRY-ISSUES-24-25-20261030-2340",
+      "decision": "GO_SOURCE_ONLY",
+      "proposed_fix": "Registry PR #22 now includes two newly opened P0 issues with individual unclaimed lease records. Implementation Lead qualifies transactional claim/relay; Hunter owns Sara URL discovery, Keeper integrates only after real hosted two-ticket test.",
+      "evidence": [
+        "https://github.com/london4216-hue/Zoodo/commit/8fe7f756bc94866c690ef919618b932850c975d3",
+        "https://github.com/london4216-hue/Zoodo/issues/24",
+        "https://github.com/london4216-hue/Zoodo/issues/25",
+        "https://github.com/london4216-hue/Zoodo/pull/22"
+      ],
+      "tests": "PASS index+2 ticket authenticated readbacks; 12 unique tickets, new leases unclaimed. Hosted two-ticket claims UNKNOWN.",
+      "timestamp_utc": "2026-10-30T23:39:40.730Z",
+      "next_trigger": "Implementation Lead next authorized execution; no new automation created; source-only registry cannot self-dispatch.",
+      "receipt_scope": "Actual GitHub source mutation, not authenticated hosted ticket execution."
     }
   ],
   "unresolved": [
@@ -417,6 +434,22 @@
       "gap_detected_at": "2026-10-30T23:34:16Z",
       "gap_source_fixed_at": "2026-10-30T23:38:18.267Z",
       "gap_live_verified_at": null
+    },
+    {
+      "hour_et": "2026-10-30 19:00 EDT",
+      "hour_utc": "2026-10-30 23:00 UTC",
+      "repo_asset": "london4216-hue/Zoodo zoo-control/registry",
+      "pr": "https://github.com/london4216-hue/Zoodo/pull/22",
+      "prior_status": "10 issue tickets / 12 PRs at prior snapshot",
+      "new_status": "12 issue tickets, including #24 Sara and #25 Prestige; 10 ready / 2 blocked, 0 authenticated hosted claims",
+      "exact_commit_sha": "8fe7f756bc94866c690ef919618b932850c975d3",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/8fe7f756bc94866c690ef919618b932850c975d3",
+      "worker": "ZOO Dashboard Lead",
+      "source_tests": "Authenticated index and two new ticket readbacks PASS; null leases verified; hosted claim test UNKNOWN",
+      "provider_preview": "UNKNOWN",
+      "hosted_browser": "UNKNOWN",
+      "production": "UNKNOWN",
+      "verified_claims": 0
     }
   ],
   "pr_stage_timing": {
