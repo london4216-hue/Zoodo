@@ -3,7 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test engine/test/*.test.mjs",
-    "demo": "node engine/src/demo.mjs"
+    "test": "node --test test/*.test.mjs"
   }
 }
