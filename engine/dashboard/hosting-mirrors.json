@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "primary": {
+    "provider": "Netlify",
+    "url": "https://zoo-live-dashboard.netlify.app/",
+    "state": "RECORDED_PRODUCTION_URL_NOT_VERIFIED"
+  },
+  "mirrors": [
+    {
+      "provider": "Vercel",
+      "url": null,
+      "state": "NOT_CONNECTED"
+    },
+    {
+      "provider": "Render",
+      "url": null,
+      "state": "NOT_CONNECTED"
+    },
+    {
+      "provider": "Cloudflare Pages",
+      "url": null,
+      "state": "NOT_CONNECTED"
+    }
+  ],
+  "rules": {
+    "no_fake_green": true,
+    "compare_release_shas": true,
+    "browser_test_separate": true,
+    "no_auto_dns_cutover_without_external_provider_health_routing": true
+  },
+  "note": "Host URL is set only after service creation and independently observed deployment and static asset check. A Netlify preview is not a mirror."
+}
