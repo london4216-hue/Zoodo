@@ -42,3 +42,14 @@ test('malformed worker identity is not accepted as a scheduler receipt',()=>{
  const p=evaluateAutomationProof({...good,workers:[malformed]},now);
  assert.equal(p.state,'UNKNOWN');
 });
+
+test('a separately reported scheduler anomaly prevents false healthy status',()=>{
+ const p=evaluateAutomationProof({...good,source_anomalies:[{role:'ZOO Agent Hunter',kind:'invalid_completion_timestamp',run_id:'33333333-aaaa-4bbb-8ccc-aaaaaaaaaaaa'}]},now);
+ assert.equal(p.state,'RECOVERY REQUIRED');
+ assert.deepEqual(p.overdue,['ZOO Agent Hunter']);
+});
+test('a newer in-progress run is not treated as completed or a live heartbeat',()=>{
+ const p=evaluateAutomationProof({...good,in_progress_runs:[{role:'ZOO Keeper',run_id:'33333333-aaaa-4bbb-8ccc-aaaaaaaaaaaa',recorded_status:'in_progress',scheduled_for:'2026-10-30T16:20:00Z',started_at:'2026-10-30T16:21:00Z',completed_at:null}]},now);
+ assert.equal(p.state,'RECORDED RUNS CURRENT');
+ assert.equal(p.activeWorkersVerified,false);
+});
