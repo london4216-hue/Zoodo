@@ -8,6 +8,16 @@ export function evaluateAutomationProof(feed, now=Date.now(), dueMs=75*60000){
     !Array.isArray(feed.workers)||!feed.workers.length)return unknown('No valid published automation-run proof');
  const observed=Date.parse(feed.observed_at);
  if(observed>now+60000)return unknown('Evidence publication timestamp is in the future');
+ // A public snapshot is not a signature. Reject duplicate role identities or
+ // replayed run IDs instead of inflating the count of recorded executions.
+ const roles=new Set(),runIds=new Set();
+ for(const w of feed.workers){
+  if(!w||typeof w.role!=='string'||!w.role.trim()||!RUN.test(w.run_id??''))
+   return unknown('Malformed worker identity in published scheduler proof');
+  if(roles.has(w.role)||runIds.has(w.run_id))
+   return unknown('Duplicate worker role or replayed run ID in scheduler proof');
+  roles.add(w.role);runIds.add(w.run_id);
+ }
  const valid=feed.workers.filter(w=>w&&typeof w.role==='string'&&RUN.test(w.run_id??'')&&
   w.recorded_status==='completed'&&DATE(w.completed_at)&&DATE(w.scheduled_for)&&
   Date.parse(w.completed_at)>=Date.parse(w.scheduled_for)&&
