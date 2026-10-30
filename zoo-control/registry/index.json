@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "source": "authenticated_github_issue_pr_inventory",
-  "observed_at": "2026-10-30T23:30:37.622Z",
+  "observed_at": "2026-10-30T23:31:58.273Z",
   "control_plane_repo": "london4216-hue/Zoodo",
   "privacy": "public issue/PR metadata only; no private TransendIQ payload, secrets, or user data",
   "source_issue_count": 10,
-  "source_open_pr_count": 11,
-  "coverage": "complete for open Zoodo issues/PRs returned in this query; TransendIQ issue search is capped and excluded",
+  "source_open_pr_count": 12,
+  "coverage": "10 open Zoodo issues and 11 prior open PRs from authenticated search, plus newly created draft PR #22 confirmed by GitHub API. TransendIQ inventory excluded due cap.",
   "ticket_ids": [
     "ZOO-ISSUE-18",
     "ZOO-ISSUE-17",
@@ -20,6 +20,14 @@
     "ZOO-ISSUE-7"
   ],
   "pr_inventory": [
+    {
+      "number": 22,
+      "title": "feat(zoo): independent shared ticket directory (10 issues, 11 prior PRs; no product repo control plane)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/22",
+      "state": "open",
+      "merged": false,
+      "hosted_execution": "UNKNOWN"
+    },
     {
       "number": 21,
       "title": "Hunter: bounded synthetic Netlify build execution probe (not runner qualification)",
@@ -115,7 +123,7 @@
     "claimed": 0,
     "in_progress": 0,
     "fixed": 0,
-    "pr_open": 11,
+    "pr_open": 12,
     "merged": 0,
     "deployed": 0,
     "verified": 0,
