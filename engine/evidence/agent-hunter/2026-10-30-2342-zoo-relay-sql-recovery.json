@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "scope": "PUBLIC SOURCE CONTRACT ONLY; no private model requests, ticket rows or credentials",
+  "agent_id": "ZOO Agent Hunter",
+  "task_id": "ZOO-ISSUE-18 / PR-23-SQL-REPAIR",
+  "decision": "GO_SOURCE_FIX_ONLY",
+  "not_production_go": true,
+  "action": "Authenticated GitHub fetch_file of exact branch SQL/test; execute 10 bounded source-contract assertions; commit isolated correction",
+  "started_at_utc": "2026-10-30T23:42:31.562Z",
+  "ended_at_utc": "2026-10-30T23:42:31.902Z",
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "original_pr": "https://github.com/london4216-hue/Zoodo/pull/23",
+    "original_commit": "cdc0f8964355cf7a71c278497d022f5eb7245206",
+    "original_sql_blob": "08824651df36d9ca4267e69de18e295883c7b3a9",
+    "repair_pr": "https://github.com/london4216-hue/Zoodo/pull/29",
+    "repair_code_commit": "320109c2223b2738651174f4f2c1ec4e8a34ff64",
+    "sql_blob": "c76707cdcb785e22fa14e0758e511ec19af2a0e0",
+    "test_blob": "faacf2a4319e19330bbb846990042d650f70d0f6"
+  },
+  "test": {
+    "type": "authenticated_source_contract_checks",
+    "pass": 10,
+    "total": 10,
+    "assertions": {
+      "one_transaction_begin": true,
+      "one_transaction_commit": true,
+      "no_malformed_single_dollar_AS": true,
+      "balanced_dollar_delimiters": true,
+      "exactly_one_dispatch_RPC": true,
+      "HTTPS_receipt_predicate": true,
+      "lease_token_fencing": true,
+      "service_role_grants": true,
+      "regression_test_word_boundary": true,
+      "regression_test_fixture": true
+    },
+    "local_node_tests": "UNKNOWN_not_executed_against_committed_tree",
+    "postgresql_migration": "UNKNOWN_not_applied",
+    "hosted_execution": "UNKNOWN_not_invoked"
+  },
+  "hosting": {
+    "netlify": {
+      "pr23_preview_status": "success_reported_by_GitHub",
+      "native_worker_execution": "UNKNOWN"
+    },
+    "vercel": {
+      "native_worker_execution": "UNKNOWN"
+    },
+    "render": {
+      "native_worker_execution": "UNKNOWN"
+    },
+    "cloudflare": {
+      "native_worker_execution": "UNKNOWN"
+    },
+    "supabase": {
+      "migration_applied": "UNKNOWN"
+    }
+  },
+  "external_panel": {
+    "DeepSeek": {
+      "invocation": "NOT_CONNECTED_IN_CURRENT_TOOLS",
+      "vote": "NONE",
+      "native_request_id": null
+    },
+    "Copilot": {
+      "invocation": "NOT_CONNECTED_IN_CURRENT_TOOLS",
+      "vote": "NONE",
+      "native_request_id": null
+    },
+    "Claude": {
+      "invocation": "NOT_CONNECTED_IN_CURRENT_TOOLS",
+      "vote": "NONE",
+      "native_request_id": null
+    },
+    "Gemini": {
+      "invocation": "NOT_CONNECTED_IN_CURRENT_TOOLS",
+      "vote": "NONE",
+      "native_request_id": null
+    },
+    "Pro/Codex": {
+      "invocation": "NOT_CONNECTED_IN_CURRENT_TOOLS",
+      "vote": "NONE",
+      "native_request_id": null
+    }
+  },
+  "four_agent_proof": {
+    "hunter": "UNKNOWN_external_capability_invocation",
+    "dashboard": "UNKNOWN_production_receipt",
+    "implementation": "UNKNOWN_hosted_task_and_recovery",
+    "keeper": "UNKNOWN_next_dispatch"
+  },
+  "hourly_movement": [
+    {
+      "hour_et": "2026-10-30 19",
+      "hour_utc": "2026-10-30 23",
+      "asset": "Zoodo PR #23 relay SQL",
+      "prior_status": "draft, invalid SQL migration",
+      "new_status": "stacked draft PR #29 with SQL source correction",
+      "commit": "320109c2223b2738651174f4f2c1ec4e8a34ff64",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/29",
+      "worker": "ZOO Agent Hunter",
+      "evidence": "10/10 exact-source structural checks, not PostgreSQL"
+    }
+  ],
+  "pr_stage_times": {
+    "pr23_opened_at": "2026-10-30T23:32:27Z",
+    "pr29_opened_at": "2026-10-30T23:41:55Z",
+    "review_at": null,
+    "fix_commit_at": null,
+    "source_verification_at": "2026-10-30T23:42:31.902Z",
+    "merge_at": null,
+    "deploy_at": null,
+    "hosted_verified_at": null,
+    "elapsed_cycle_ms": null
+  },
+  "unresolved": {
+    "relay_host": "No authenticated provider-native worker execution or durable queue transaction",
+    "oldest_checkpoint_age_ms": null,
+    "latency_gap_detection_to_fix_ms": null,
+    "latency_fix_to_hosted_verification_ms": null
+  },
+  "handoff": {
+    "from": "ZOO Agent Hunter",
+    "to": "Dashboard Lead",
+    "next": "Implementation Lead → ZOO Keeper → Agent Hunter",
+    "task_id": "ZOO-ISSUE-18",
+    "decision": "REVISE",
+    "next_action": "Read PR #29 source receipt; Implementation Lead executes committed Node tests and disposable PostgreSQL migration, integrates into PR #23, then qualifies provider-native Netlify function two-ticket chain. Dashboard Lead remains single proof-feed writer.",
+    "trigger": "PR #29 source verification + next eligible hosted integration event"
+  }
+}
