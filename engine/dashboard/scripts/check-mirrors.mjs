@@ -42,6 +42,8 @@ export async function inspectMirror(url, {fetcher=fetch,expectedSha=null, requir
     if(!html.includes('id="accountability"')||html.includes('EVIDENCE UNKNOWN · ESCALATION REQUIRED'))throw Error('wrong_dashboard_build');
     for(const [file,needle] of [
       ['evidence-clock.mjs','export function evaluateEvidence'],
+      ['automation-proof.mjs','export function evaluateAutomationProof'],
+      ['automation-proof.json','"source": "connected_automations_peek"'],
       ['labs/myblock/index.html','My Block · Creator-first lab'],
       ['labs/myblock/logic.mjs','export function publishPost'],
       ['labs/yearbook3/index.html','Yearbook 3 · Student Lab'],
