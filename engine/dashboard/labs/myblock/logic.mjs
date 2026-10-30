@@ -16,16 +16,18 @@ export function freshState() {
   };
 }
 export function normalizeState(raw) {
-  if (!raw || raw.version !== VERSION || raw.creator?.slug !== 'nova-vale') return freshState();
   const base = freshState();
+  if (!raw || raw.version !== VERSION || raw.creator?.slug !== base.creator.slug) return base;
+  const members = Array.isArray(raw.members) && raw.members.includes('sample-member') ? ['sample-member'] : [];
+  const flag = (record, key, fallback) => typeof record?.[key] === 'boolean' ? record[key] : fallback;
   return {
     ...base,
-    features: { posts: raw.features?.posts === true, notes: raw.features?.notes === true },
-    licences: { name: raw.licences?.name === true, image: raw.licences?.image === true, likeness: raw.licences?.likeness === true },
-    members: (Array.isArray(raw.members) && raw.members.includes('sample-member')) ? ['sample-member'] : [],
+    features: Object.fromEntries(Object.entries(base.features).map(([key, fallback]) => [key, flag(raw.features, key, fallback)])),
+    licences: Object.fromEntries(Object.entries(base.licences).map(([key, fallback]) => [key, flag(raw.licences, key, fallback)])),
+    members,
     stats: {
       visits: Number.isSafeInteger(raw.stats?.visits) && raw.stats.visits >= 0 ? Math.min(raw.stats.visits, 999999) : base.stats.visits,
-      joins: (Array.isArray(raw.members) && raw.members.includes('sample-member')) ? 1 : 0
+      joins: members.length
     }
   };
 }
