@@ -1,0 +1,27 @@
+name: Zoo isolated lab regression tests
+on:
+  push:
+    branches: [autonomous-engine-replacement-2026-10-29]
+    paths:
+      - 'engine/dashboard/labs/**'
+      - 'engine/test/**'
+      - '.github/workflows/zoo-lab-tests.yml'
+  pull_request:
+    paths:
+      - 'engine/dashboard/labs/**'
+      - 'engine/test/**'
+permissions:
+  contents: read
+jobs:
+  lab-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run isolated engine and lab regression tests
+        run: npm --prefix engine test
