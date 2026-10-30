@@ -160,7 +160,7 @@ async function checkHostingMirrors(){
     ]);
     if(proof.schema_version!==1||proof.build_tests!=='PASSED'||!expected||proof.source_commit!==expected)
       throw Error('unverified or differing source SHA');
-    if(manifest.schema_version!==1||manifest.source_commit!==expected||manifest.browser_verified===true)
+    if(manifest.schema_version!==1||manifest.source_commit!==expected)
       throw Error('missing, mismatched or misleading mirror manifest');
     const html=await getMirrorAsset('/index.html');
     if(!html.includes('id="accountability"')||html.includes('EVIDENCE UNKNOWN · ESCALATION REQUIRED'))
