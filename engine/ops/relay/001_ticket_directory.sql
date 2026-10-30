@@ -34,7 +34,7 @@ ALTER TABLE public.zoo_ops_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.zoo_ops_outbox ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.zoo_ops_tickets,public.zoo_ops_events,public.zoo_ops_outbox FROM PUBLIC,anon,authenticated;
 GRANT SELECT,INSERT,UPDATE ON public.zoo_ops_tickets,public.zoo_ops_events,public.zoo_ops_outbox TO service_role;
-GRANT USAGE,SELECT ON ALL SEQUENCES IN SCHEMA public TO service_role;
+GRANT USAGE,SELECT ON SEQUENCE public.zoo_ops_events_id_seq,public.zoo_ops_outbox_id_seq TO service_role;
 
 CREATE OR REPLACE FUNCTION public.zoo_ops_enqueue(p_id text,p_asset text,p_intent text,p_dependencies text[] DEFAULT '{}')
 RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $$
