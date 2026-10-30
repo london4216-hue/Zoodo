@@ -10,19 +10,18 @@ services:
       paths:
         - engine/dashboard/**
         - render.yaml
+    # Public allowlisted mirror files must be readable by the primary dashboard
+    # for actual HTML/JS parity checks. No credentials or private files are published.
     headers:
-      - path: /build-proof.json
+      - path: /*
         name: Access-Control-Allow-Origin
         value: "*"
-      - path: /build-proof.json
+      - path: /*
         name: Cache-Control
         value: no-store
-      - path: /mirror-manifest.json
-        name: Access-Control-Allow-Origin
-        value: "*"
-      - path: /mirror-manifest.json
-        name: Cache-Control
-        value: no-store
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
     routes:
       - type: rewrite
         source: /dashboard
