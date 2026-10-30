@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-30T16:38:02.684Z",
-  "publication_scope": "Authenticated scheduler records read from connected Automations; GitHub issue evidence_url is a handoff, not a direct scheduler receipt; not proof of live agents, browser tests, or deployed production",
-  "refresh_policy": "Single Dashboard Worker writer; browser fetch at least once per minute",
+  "observed_at": "2026-10-30T16:56:21.993Z",
+  "publication_scope": "Authenticated scheduler metadata read from connected Automations; GitHub issue evidence_url is a handoff, not a direct scheduler receipt. Completed historical executions do not establish live agent activity, passing tests, or production deployment.",
+  "refresh_policy": "Single Dashboard Worker writer; browser fetch at least once per minute; source must be updated by an actual authenticated scheduler read.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
     {
       "role": "ZOO Keeper",
-      "run_id": "934eadc0-d66c-8323-ba39-0c1a224534bf",
+      "run_id": "294c3c95-14fc-8332-bac8-ec1217556e26",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-30T15:59:42.996986Z",
-      "completed_at": "2026-10-30T16:03:53.039427Z",
+      "scheduled_for": "2026-10-30T16:45:30Z",
+      "completed_at": "2026-10-30T16:53:21.492365Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     },
@@ -31,7 +31,7 @@
       "scheduled_for": "2026-10-30T16:30:03.024048Z",
       "completed_at": "2026-10-30T16:33:17.161005Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
-      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
+      "evidence_url_scope": "previously_published_authenticated_snapshot_not_current_in_progress_run"
     },
     {
       "role": "ZOO Asset Restoration",
@@ -46,14 +46,15 @@
   "in_progress_runs": [
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "a317c079-dd18-8323-acc4-73c07c3538ea",
+      "run_id": "781601da-0f3c-8333-8cb6-ca205c4864d5",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-30T16:45:58Z",
-      "started_at": "2026-10-30T16:37:09.361326Z",
+      "scheduled_for": "2026-10-30T16:56:05.471286Z",
+      "started_at": "2026-10-30T16:56:06.727292Z",
       "completed_at": null
     }
   ],
   "source_anomalies": [
-    "ZOO Dashboard Worker: in-progress run scheduled_for is future relative to tool observation; not credited as completed"
+    "ZOO Dashboard Worker latest_result a317c079-dd18-8323-acc4-73c07c3538ea reports completed_at 2026-10-30T16:41:47.166464Z before scheduled_for 2026-10-30T16:45:58Z; excluded from completed proof.",
+    "ZOO Dashboard Worker current run is in progress; earlier valid completed receipt retained from prior authenticated snapshot, not represented as current completion."
   ]
 }
