@@ -23,3 +23,6 @@
 - Open PR #6 remains draft; independent exact-commit review: **not recorded**. No merge or production deployment.
 - Provider heartbeat, runtime, cost, actual recovery duration, My Block/YB3 demo readiness percentages, Figma comparison and independent grade: **unknown**.
 - Next unblocked ticket: wire durable issue/PR-driven worker dispatch and provider receipts into this tested lifecycle without weakening original repo governance. CI zero-step failure and host verification remain actionable; keep #999 as the host owner.
+
+## Subsequent same-run asset work
+- `1bbda35c16d9f6a6c3fa6315a82ab55144aa985b`: YB3 dashboard card now probes same-host `/labs/yearbook3/index.html` and `/labs/yearbook3/logic.mjs` for expected assets before exposing a direct lab link. A successful asset probe is **not** a functional browser smoke, and the UI explicitly says so. On failure the card retains its source-only link. Host availability remains unverified from this run.
