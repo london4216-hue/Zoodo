@@ -50,16 +50,13 @@ const manifest={
   agent_heartbeat_verified:false
 };
 writeFileSync(join(out,'mirror-manifest.json'),JSON.stringify(manifest,null,2)+'\n');
+// The primary dashboard checks public mirror HTML/JS from another origin before
+// showing a link. Only explicitly allowlisted PUBLIC static files reach this folder.
 writeFileSync(join(out,'_headers'),[
-  '/build-proof.json',
+  '/*',
   '  Access-Control-Allow-Origin: *',
   '  Cache-Control: no-store',
-  '/mirror-manifest.json',
-  '  Access-Control-Allow-Origin: *',
-  '  Cache-Control: no-store',
-  '/hosting-mirrors.json',
-  '  Access-Control-Allow-Origin: *',
-  '  Cache-Control: no-store',
+  '  X-Content-Type-Options: nosniff',
   ''
 ].join('\n'));
 console.log('ZOO MIRROR ARTIFACT '+JSON.stringify(manifest));
