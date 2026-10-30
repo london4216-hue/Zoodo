@@ -5,11 +5,13 @@ on:
     paths:
       - 'engine/dashboard/labs/**'
       - 'engine/test/**'
+      - 'engine/src/**'
       - '.github/workflows/zoo-lab-tests.yml'
   pull_request:
     paths:
       - 'engine/dashboard/labs/**'
       - 'engine/test/**'
+      - 'engine/src/**'
 permissions:
   contents: read
 jobs:
