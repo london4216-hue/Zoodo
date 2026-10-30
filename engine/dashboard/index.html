@@ -11,7 +11,7 @@
 <section class="panel" id="queue-panel" aria-label="Evidence-based work queue"><h2>WORK QUEUE / AGENT HEARTBEAT</h2><p class="muted">Read-only GitHub issue and PR evidence. A PR is not proof that an AI worker is running. No invented worker assignments, review verdicts or cost.</p><div class="queue-meta"><div class="queue-pill">Open issues: <strong id="queue-issues">UNKNOWN</strong></div><div class="queue-pill">Open PRs: <strong id="queue-prs">UNKNOWN</strong></div><div class="queue-pill">Worker heartbeat: <strong id="queue-heartbeat">UNKNOWN · NO WORKER FEED</strong></div><div class="queue-pill">Last verified work: <strong id="queue-verified">UNKNOWN · CHECK CI</strong></div></div><div class="queue-list"><div><h2>Actionable issues</h2><div id="queue-issue-list">Checking GitHub…</div></div><div><h2>Review and test queue</h2><div id="queue-pr-list">Checking GitHub…</div></div></div><p class="muted">Cross-repository recovery: <a href="https://github.com/london4216-hue/TransendIQ/issues/999" target="_blank" rel="noopener">TransendIQ #999 — hosted apps and dashboard</a>. Owner approval and independent exact-commit review remain required where governed.</p></section>
 <div id="errors" role="alert"></div>
 <div class="grid">
-<div class="card"><h2>Progress clock / escalation at 5 minutes</h2><div class="metric" id="lastAge">—</div><div class="muted" id="lastSha">No evidence loaded</div></div>
+<div class="card"><h2>Verified movement / 5-minute escalation</h2><div class="metric" id="lastAge">UNKNOWN</div><div class="muted" id="lastSha">Exact-head evidence pending</div></div><div class="card"><h2>Evidence provenance</h2><div class="muted" id="proof-details">Last commit: UNKNOWN; code diff: UNKNOWN; exact-head CI: UNKNOWN; independent review: UNKNOWN; deployment: UNKNOWN; heartbeat: UNKNOWN</div></div>
 <div class="card"><h2>Commits in last 60 minutes</h2><div class="metric" id="commitsHour">—</div><div class="muted">Actual GitHub commits</div></div>
 <div class="card"><h2>CI runs / passing</h2><div class="metric" id="ci">—</div><div class="muted">Branch workflow runs</div></div>
 <div class="card"><h2>Live verified product demos</h2><div class="metric" id="demos">UNKNOWN</div><div class="muted">Not inferred from commits</div></div>
@@ -19,11 +19,12 @@
 <div class="card"><h2>Independent agent verdicts</h2><div class="metric" id="judges">UNKNOWN</div><div class="muted">Awaiting independently signed evidence</div></div>
 </div>
 <div class="panels"><section class="panel"><h2>Rolling commit evidence</h2><div id="commits" aria-live="polite">Connecting…</div></section><section class="panel"><h2>Workflow executions</h2><div id="runs" aria-live="polite">Connecting…</div></section></div>
-<footer>Polls public GitHub every 30 seconds. ESCALATION DUE = no code commits for 5 minutes. This display does not itself dispatch agents; it does not imply an agent is currently running. GitHub API limits or outages are reported as UNKNOWN, never zero. Read-only. No credentials stored.</footer>
-<script>
+<footer>Polls GitHub every 30 seconds. Verified movement requires a substantive code diff, linked ticket, exact-head CI and authenticated independent-provider review. Commits and green CI alone never reset the clock. Independent reviewer, deployed host and worker heartbeat feeds are not connected; show UNKNOWN. Read-only, no worker dispatch or stored credentials.</footer>
+<script type="module">
+import {evaluateEvidence} from './evidence-clock.mjs';
 const owner='london4216-hue',repo='Zoodo',branch='autonomous-engine-replacement-2026-10-29';
 const root='https://api.github.com/repos/'+owner+'/'+repo;
-const $=id=>document.getElementById(id);let lastCommitTime=null;const ESCALATE_MINUTES=5;
+const $=id=>document.getElementById(id);let evidenceState=null;
 const fmt=t=>{const d=Math.max(0,Date.now()-Date.parse(t)),m=Math.floor(d/60000);return m<1?'just now':m<60?m+'m ago':Math.floor(m/60)+'h '+m%60+'m ago'};
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(path){const r=await fetch(root+path,{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});if(!r.ok)throw Error('GitHub API '+r.status);return r.json()}
@@ -86,24 +87,40 @@ async function update(){
  loadQueue().catch(()=>{$('queue-heartbeat').textContent='UNKNOWN';});
  const [commits,runs]=await Promise.allSettled([api('/commits?sha='+encodeURIComponent(branch)+'&per_page=100'),api('/actions/runs?branch='+encodeURIComponent(branch)+'&per_page=30')]);
  const errors=[];
+ const latest=commits.status==='fulfilled'?commits.value[0]:null;
+ let detail=null;
+ if(latest)try{detail=await api('/commits/'+encodeURIComponent(latest.sha))}catch(e){errors.push('Exact commit diff: '+e.message)}
+ const d=runs.status==='fulfilled'?(runs.value.workflow_runs||[]):null;
+ // No authenticated provider review/heartbeat or deployment receipt is currently connected.
+ evidenceState=evaluateEvidence({head:latest,detail,runs:d,review:null,deployment:null,heartbeat:null});
+ tickClock();
+ $('lastSha').textContent=latest?'Latest commit '+latest.sha.slice(0,9):'Latest commit UNKNOWN';
+ $('proof-details').textContent='Last commit: '+(evidenceState.lastCommitAt??'UNKNOWN')+
+ ' · latest head code diff: '+(evidenceState.lastCodeAt??'UNKNOWN')+
+ ' · exact-head CI: '+(evidenceState.exactHeadCiAt??'UNKNOWN')+
+ ' · independent review: '+(evidenceState.independentReviewAt??'UNKNOWN')+
+ ' · verified deployment: '+(evidenceState.lastVerifiedDeploymentAt??'UNKNOWN')+
+ ' · authenticated heartbeat: '+(evidenceState.lastAuthenticatedHeartbeatAt??'UNKNOWN');
  if(commits.status==='fulfilled'){
-  const data=commits.value,latest=data[0],age=latest?Date.now()-Date.parse(latest.commit.committer.date):Infinity;
-  lastCommitTime=latest?.commit.committer.date??null; tickClock();
-  $('lastSha').textContent=latest?latest.sha.slice(0,9):'No commits found';
+  const data=commits.value;
   $('commitsHour').textContent=data.filter(c=>Date.now()-Date.parse(c.commit.committer.date)<3600000).length;
-  tickClock();
-  $('commits').innerHTML=data.slice(0,35).map(c=>'<div class="row"><div class="time">'+escapeHtml(new Date(c.commit.committer.date).toLocaleString())+' · '+escapeHtml(c.sha.slice(0,9))+'</div><a target="_blank" rel="noopener" href="'+escapeHtml(c.html_url)+'">'+escapeHtml(c.commit.message.split('\n')[0])+'</a></div>').join('')||'No commits';
- }else{lastCommitTime=null;errors.push('Commits: '+commits.reason.message);$('lastAge').textContent='UNKNOWN';$('commitsHour').textContent='UNKNOWN';$('state').textContent='EVIDENCE UNAVAILABLE';$('state').className='status warn'}
+  $('commits').innerHTML=data.slice(0,35).map(c=>'<div class="row"><div class="time">'+escapeHtml(new Date(c.commit.committer.date).toLocaleString())+' · '+escapeHtml(c.sha.slice(0,9))+'</div><a target="_blank" rel="noopener" href="'+escapeHtml(c.html_url)+'">'+escapeHtml(c.commit.message.split('\\n')[0])+'</a></div>').join('')||'No commits';
+ }else{errors.push('Commits: '+commits.reason.message);$('commitsHour').textContent='UNKNOWN';$('commits').textContent='Commit evidence unavailable'}
  if(runs.status==='fulfilled'){
-  const d=runs.value.workflow_runs||[],pass=d.filter(x=>x.conclusion==='success').length;
+  const pass=d.filter(x=>x.conclusion==='success').length;
   $('ci').textContent=d.length+' / '+pass;
-  const verified=d.find(x=>x.conclusion==='success'&&x.head_sha);
-  $('queue-verified').textContent=verified?verified.head_sha.slice(0,9)+' · CI PASS '+new Date(verified.updated_at).toLocaleString():'UNKNOWN · NO PASS IN RECENT RUNS';
+  $('queue-verified').textContent=evidenceState.exactHeadCiAt?'EXACT-HEAD CI PASS · REVIEW UNKNOWN':'UNKNOWN · NO EXACT-HEAD PASS';
   $('runs').innerHTML=d.slice(0,30).map(x=>'<div class="row"><div class="time">'+escapeHtml(new Date(x.created_at).toLocaleString())+'</div><a target="_blank" rel="noopener" href="'+escapeHtml(x.html_url)+'">'+escapeHtml(x.name)+'</a> — '+escapeHtml(x.status)+' / '+escapeHtml(x.conclusion??'pending')+'</div>').join('')||'<div class="bad">NO WORKFLOW RUNS RECORDED</div>';
  }else{errors.push('Actions: '+runs.reason.message);$('ci').textContent='UNKNOWN';$('queue-verified').textContent='UNKNOWN · CI UNAVAILABLE';$('runs').textContent='CI evidence unavailable'}
  $('errors').textContent=errors.join(' | ');
 }
-function tickClock(){if(!lastCommitTime)return;const mins=(Date.now()-Date.parse(lastCommitTime))/60000;$('lastAge').textContent=fmt(lastCommitTime);$('state').textContent=mins>=ESCALATE_MINUTES?'ESCALATION DUE — NO VERIFIED CODE MOVEMENT':'WITHIN 5-MINUTE WINDOW';$('state').className='status '+(mins>=ESCALATE_MINUTES?'bad':'good')}
+function tickClock(){
+ if(!evidenceState?.lastVerifiedCodeAt){$('lastAge').textContent='UNKNOWN';$('state').textContent='EVIDENCE UNKNOWN · ESCALATION REQUIRED';$('state').className='status warn';return}
+ const at=evidenceState.lastVerifiedCodeAt,mins=(Date.now()-Date.parse(at))/60000;
+ $('lastAge').textContent=fmt(at);
+ $('state').textContent=mins>=5?'ESCALATION DUE — VERIFIED WORK STALE':'VERIFIED WITHIN 5 MINUTES';
+ $('state').className='status '+(mins>=5?'bad':'good');
+}
 $('refresh').addEventListener('click',update);
 update();setInterval(update,30000);setInterval(tickClock,1000);
 </script></body></html>
