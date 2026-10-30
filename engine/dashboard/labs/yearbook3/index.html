@@ -18,8 +18,8 @@ import {freshState,normalizeState,updateProfile,previewEntry,progress,submitEntr
 const key='zoo-yb3-synthetic-v1',$=id=>document.getElementById(id);let state;
 try{state=normalizeState(JSON.parse(localStorage.getItem(key)))}catch{state=freshState()}
 function save(){try{localStorage.setItem(key,JSON.stringify(state))}catch{/* local-only fallback */}}
-function draw(){const p=previewEntry(state),pr=progress(state),locked=state.status==='submitted';
-$('quote').value=state.profile.quote;$('memory').value=state.profile.memory;$('consent').checked=state.profile.consent;
+function draw(syncInputs=true){const p=previewEntry(state),pr=progress(state),locked=state.status==='submitted';
+if(syncInputs){$('quote').value=state.profile.quote;$('memory').value=state.profile.memory;}$('consent').checked=state.profile.consent;
 for(const id of ['quote','memory','consent'])$(''+id).disabled=locked;
 $('quote-count').textContent=state.profile.quote.length+' / '+MAX_QUOTE;$('memory-count').textContent=state.profile.memory.length+' / '+MAX_MEMORY;
 $('step-quote').classList.toggle('done',Boolean(p.quote));$('step-memory').classList.toggle('done',Boolean(p.memory));$('step-consent').classList.toggle('done',p.consent);
@@ -28,7 +28,7 @@ $('preview-quote').classList.toggle('empty',!p.quote);$('preview-memory').classL
 $('submit').hidden=locked;$('submit').disabled=!pr.ready;$('reopen').hidden=!locked;
 $('preview-status').textContent=locked?'Demo submitted locally · '+new Date(state.submittedAt).toLocaleString():pr.completed+' of 3 steps complete · draft only';
 }
-for(const id of ['quote','memory'])$(id).addEventListener('input',event=>{try{state=updateProfile(state,{[id]:event.target.value});save();draw()}catch(error){$('status').textContent=error.message}});
+for(const id of ['quote','memory'])$(id).addEventListener('input',event=>{try{state=updateProfile(state,{[id]:event.target.value});save();draw(false)}catch(error){$('status').textContent=error.message}});
 $('consent').addEventListener('change',event=>{state=updateProfile(state,{consent:event.target.checked});save();draw()});
 $('submit').addEventListener('click',()=>{try{state=submitEntry(state);save();draw();$('status').textContent='Demo submission recorded in this browser only.'}catch(error){$('status').textContent=error.message}});
 $('reopen').addEventListener('click',()=>{state=reopenDraft(state);save();draw();$('status').textContent='Draft reopened. Submit again after editing.'});
