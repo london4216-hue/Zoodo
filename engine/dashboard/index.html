@@ -25,7 +25,10 @@
   <div class="next" id="accountabilityNext">Next automatic step: retry GitHub evidence fetch; diagnose failed CI and link the actual Netlify deployment to this source.</div>
   <div class="time" id="sourceSuccess">Last successful GitHub source response: not established</div>
   <div class="time" id="dashboardEvidenceRefresh">Dashboard evidence refresh: not established (distinct from page load)</div>
-  <div class="time" id="lastAutomationRun">Last successful automation run: UNKNOWN · authenticated run receipt not connected</div>
+  <div class="time" id="lastAutomationRun">Last successful automation run: checking recorded execution…</div>
+  <div class="time" id="proofChecked">Last automation proof fetch: not attempted</div>
+  <div class="receipt" id="proofStatus" role="status" aria-live="polite">WORK IN PROGRESS · loading recorded worker executions, not simulating heartbeats</div>
+  <div class="next" id="proofRecovery">If overdue: owner ZOO Dashboard Worker · backup ZOO Agent Hunter · Keeper coordinates recovery. <a href="https://github.com/london4216-hue/Zoodo/issues/17" target="_blank" rel="noopener">Open durable recovery ticket</a></div>
   <div class="kpi-grid" aria-label="Four live KPI checks">
     <div class="kpi"><div class="caption">Agents doing verified work now</div><strong id="kpiActive">Not measured</strong><a href="#queue-panel">See agent heartbeat evidence</a></div>
     <div class="kpi"><div class="caption">Unfinished projects</div><strong id="kpiProjects">Not established</strong><a href="#labs">See tracked labs and builds</a></div>
@@ -55,13 +58,47 @@
 <div class="card"><h2>Independent agent verdicts</h2><div class="metric" id="judges">UNKNOWN</div><div class="muted">Awaiting independently signed evidence</div></div>
 </div>
 <div class="panels"><section class="panel"><h2>Rolling commit evidence</h2><div id="commits" aria-live="polite">Connecting…</div></section><section class="panel"><h2>Workflow executions</h2><div id="runs" aria-live="polite">Connecting…</div></section></div>
-<footer>Polls GitHub every 30 seconds. Verified movement requires a substantive code diff, linked ticket, exact-head CI and authenticated independent-provider review. Commits and green CI alone never reset the clock. Independent reviewer, deployed host and worker heartbeat feeds are not connected; show UNKNOWN. Read-only, no worker dispatch or stored credentials.</footer>
+<footer>Polls GitHub and actual published automation-run receipts every 30 seconds while this page is open; retains truthful timestamps and reports missing proof. The browser cannot directly wake ChatGPT workers: the scheduled ZOO recovery worker monitors overdue receipts. Polls GitHub every 30 seconds. Verified movement requires a substantive code diff, linked ticket, exact-head CI and authenticated independent-provider review. Commits and green CI alone never reset the clock. Independent reviewer, deployed host and worker heartbeat feeds are not connected; show UNKNOWN. Read-only, no worker dispatch or stored credentials.</footer>
 <script type="module">
 import {evaluateEvidence} from './evidence-clock.mjs';
+import {evaluateAutomationProof} from './automation-proof.mjs';
 const owner='london4216-hue',repo='Zoodo',branch='autonomous-engine-replacement-2026-10-29';
 const root='https://api.github.com/repos/'+owner+'/'+repo;
 const $=id=>document.getElementById(id);let evidenceState=null;
 let linkRefreshInFlight=false, directoryLinks=null;
+let lastRunFeed=null, runFeedFetchError=null;
+function paintAutomationProof(){
+ const proof=evaluateAutomationProof(lastRunFeed);
+ const status=runFeedFetchError?'RECOVERY REQUIRED':proof.state;
+ $('lastAutomationRun').textContent=proof.lastRunAt?
+  'Last RECORDED automation execution: '+new Date(proof.lastRunAt).toLocaleString()+
+  ' · scheduler receipt only; functional work and active worker heartbeat NOT established':
+  'Last RECORDED automation execution: UNKNOWN · no valid completed run proof';
+ $('proofStatus').textContent=status+' · '+(runFeedFetchError||proof.reason)+
+  (proof.observedAt?' · feed published '+new Date(proof.observedAt).toLocaleString():'')+
+  (proof.overdue.length?' · overdue: '+proof.overdue.join(', '):'')+
+  ' · worker-active KPI remains unverified';
+ $('proofStatus').className='receipt '+(status==='RECORDED RUNS CURRENT'?'good':'warn');
+ $('proofRecovery').style.display=status==='RECORDED RUNS CURRENT'?'none':'block';
+}
+async function refreshAutomationProof(){
+ $('proofChecked').textContent='Last automation proof fetch attempted: '+new Date().toISOString();
+ try{
+  const res=await fetch('./automation-proof.json',{cache:'no-store'});
+  if(!res.ok)throw Error('HTTP '+res.status);
+  const next=await res.json();
+  const tested=evaluateAutomationProof(next);
+  if(tested.state==='UNKNOWN')throw Error(tested.reason);
+  lastRunFeed=next;runFeedFetchError=null;
+  $('proofChecked').textContent='Last successful automation proof fetch: '+new Date().toISOString()+
+   ' · GitHub-published snapshot, not an always-on worker connection';
+ }catch(e){
+  runFeedFetchError='Run proof feed inaccessible or invalid: '+String(e.message||e);
+  $('proofChecked').textContent='Last automation proof fetch FAILED: '+new Date().toISOString()+
+   ' · keeping last known recorded receipt if present';
+ }
+ paintAutomationProof();
+}
 const repairRows=new Map();
 // Revalidate receipts on EVERY refresh. A previously fresh link must be demoted
 // after its receipt expires, and a newly verified link must be promoted without reload.
@@ -245,6 +282,7 @@ async function loadQueue(){
 async function update(){
  $('checked').textContent='Last attempted source check '+new Date().toLocaleTimeString();
  classifyDemoLinks().catch(()=>{});
+ refreshAutomationProof().catch(()=>{runFeedFetchError='Unexpected proof refresh error';paintAutomationProof()});
  checkHostingMirrors().catch(()=>{});
  checkMyBlockLab();
  checkYB3Lab();
@@ -288,6 +326,7 @@ async function update(){
 
 }
 function tickClock(){
+ paintAutomationProof();
   // A missing independent reviewer must not erase authentic GitHub source observations.
   // Also never recast a commit or CI success as authenticated autonomous worker movement.
   if(!evidenceState?.lastVerifiedCodeAt){
