@@ -10,6 +10,8 @@ const out = resolve(root, 'mirror-dist');
 const allowedFiles = [
   'index.html',
   'evidence-clock.mjs',
+  'automation-proof.mjs',
+  'automation-proof.json',
   'verified-links.json',
   'hosting-mirrors.json',
   'build-proof.json',
