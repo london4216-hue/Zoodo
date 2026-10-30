@@ -6,7 +6,7 @@
 <header><div><h1>ZOO <span style="color:#69e2b2">/ EXECUTION PROOF</span></h1><small>GitHub-backed evidence, never simulated activity</small></div><div><span id="state" class="status warn">CONNECTING</span> <button id="refresh">Refresh now</button><div class="time" id="checked"></div></div></header>
 <div id="errors" role="alert"></div>
 <div class="grid">
-<div class="card"><h2>Last verified code change</h2><div class="metric" id="lastAge">—</div><div class="muted" id="lastSha">No evidence loaded</div></div>
+<div class="card"><h2>Progress clock / escalation at 5 minutes</h2><div class="metric" id="lastAge">—</div><div class="muted" id="lastSha">No evidence loaded</div></div>
 <div class="card"><h2>Commits in last 60 minutes</h2><div class="metric" id="commitsHour">—</div><div class="muted">Actual GitHub commits</div></div>
 <div class="card"><h2>CI runs / passing</h2><div class="metric" id="ci">—</div><div class="muted">Branch workflow runs</div></div>
 <div class="card"><h2>Live verified product demos</h2><div class="metric" id="demos">UNKNOWN</div><div class="muted">Not inferred from commits</div></div>
@@ -14,11 +14,11 @@
 <div class="card"><h2>Independent agent verdicts</h2><div class="metric" id="judges">UNKNOWN</div><div class="muted">Awaiting independently signed evidence</div></div>
 </div>
 <div class="panels"><section class="panel"><h2>Rolling commit evidence</h2><div id="commits" aria-live="polite">Connecting…</div></section><section class="panel"><h2>Workflow executions</h2><div id="runs" aria-live="polite">Connecting…</div></section></div>
-<footer>Polls public GitHub every 30 seconds. STALLED = no code commits for 60 minutes; it does not imply an agent is currently running. GitHub API limits or outages are reported as UNKNOWN, never zero. Read-only. No credentials stored.</footer>
+<footer>Polls public GitHub every 30 seconds. ESCALATION DUE = no code commits for 5 minutes. This display does not itself dispatch agents; it does not imply an agent is currently running. GitHub API limits or outages are reported as UNKNOWN, never zero. Read-only. No credentials stored.</footer>
 <script>
 const owner='london4216-hue',repo='Zoodo',branch='autonomous-engine-replacement-2026-10-29';
 const root='https://api.github.com/repos/'+owner+'/'+repo;
-const $=id=>document.getElementById(id);
+const $=id=>document.getElementById(id);let lastCommitTime=null;const ESCALATE_MINUTES=5;
 const fmt=t=>{const d=Math.max(0,Date.now()-Date.parse(t)),m=Math.floor(d/60000);return m<1?'just now':m<60?m+'m ago':Math.floor(m/60)+'h '+m%60+'m ago'};
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(path){const r=await fetch(root+path,{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});if(!r.ok)throw Error('GitHub API '+r.status);return r.json()}
@@ -28,13 +28,12 @@ async function update(){
  const errors=[];
  if(commits.status==='fulfilled'){
   const data=commits.value,latest=data[0],age=latest?Date.now()-Date.parse(latest.commit.committer.date):Infinity;
-  $('lastAge').textContent=latest?fmt(latest.commit.committer.date):'UNKNOWN';
+  lastCommitTime=latest?.commit.committer.date??null; tickClock();
   $('lastSha').textContent=latest?latest.sha.slice(0,9):'No commits found';
   $('commitsHour').textContent=data.filter(c=>Date.now()-Date.parse(c.commit.committer.date)<3600000).length;
-  $('state').textContent=age<3600000?'RECENT CODE MOVEMENT':'STALLED / NO RECENT COMMIT';
-  $('state').className='status '+(age<3600000?'good':'bad');
+  tickClock();
   $('commits').innerHTML=data.slice(0,35).map(c=>'<div class="row"><div class="time">'+escapeHtml(new Date(c.commit.committer.date).toLocaleString())+' · '+escapeHtml(c.sha.slice(0,9))+'</div><a target="_blank" rel="noopener" href="'+escapeHtml(c.html_url)+'">'+escapeHtml(c.commit.message.split('\n')[0])+'</a></div>').join('')||'No commits';
- }else{errors.push('Commits: '+commits.reason.message);$('lastAge').textContent='UNKNOWN';$('commitsHour').textContent='UNKNOWN';$('state').textContent='EVIDENCE UNAVAILABLE';$('state').className='status warn'}
+ }else{lastCommitTime=null;errors.push('Commits: '+commits.reason.message);$('lastAge').textContent='UNKNOWN';$('commitsHour').textContent='UNKNOWN';$('state').textContent='EVIDENCE UNAVAILABLE';$('state').className='status warn'}
  if(runs.status==='fulfilled'){
   const d=runs.value.workflow_runs||[],pass=d.filter(x=>x.conclusion==='success').length;
   $('ci').textContent=d.length+' / '+pass;
@@ -42,6 +41,7 @@ async function update(){
  }else{errors.push('Actions: '+runs.reason.message);$('ci').textContent='UNKNOWN';$('runs').textContent='CI evidence unavailable'}
  $('errors').textContent=errors.join(' | ');
 }
+function tickClock(){if(!lastCommitTime)return;const mins=(Date.now()-Date.parse(lastCommitTime))/60000;$('lastAge').textContent=fmt(lastCommitTime);$('state').textContent=mins>=ESCALATE_MINUTES?'ESCALATION DUE — NO VERIFIED CODE MOVEMENT':'WITHIN 5-MINUTE WINDOW';$('state').className='status '+(mins>=ESCALATE_MINUTES?'bad':'good')}
 $('refresh').addEventListener('click',update);
-update();setInterval(update,30000);
+update();setInterval(update,30000);setInterval(tickClock,1000);
 </script></body></html>
