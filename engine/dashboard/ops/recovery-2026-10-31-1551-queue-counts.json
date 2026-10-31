@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "kind": "zoo_dashboard_recovery_checkpoint",
+  "recorded_at": "2026-10-31T15:51:18.863Z",
+  "status": "RECOVERING",
+  "decision": "REVISE",
+  "agent": "ZOO Dashboard Lead",
+  "task": "Zoodo #18 / private TransendIQ #1023",
+  "scope": "Public Zoodo dashboard source; no production publication",
+  "branch": "fix/zoo-proof-poll-cadence-20261031-1510",
+  "source_code_commit": "fe00d7abcf5c804077aa99fb63d69714470ba60f",
+  "source_url": "https://github.com/london4216-hue/Zoodo/commit/fe00d7abcf5c804077aa99fb63d69714470ba60f",
+  "change": "Replace misleading first-page open issue and PR counts with complete GitHub Search total_count; incomplete or inaccessible results show UNKNOWN, while sample lists remain intact.",
+  "test_receipt": {
+    "action": "node --test /mnt/data/zoo-queue-test/tests/queue-counts.test.mjs",
+    "node_version": "v22.16.0",
+    "local_result": "PASS",
+    "passed": 3,
+    "failed": 0,
+    "module_blob_sha": "36dd8b5a1e66e0eb7c9d532fef9ce9380351391b",
+    "test_blob_sha": "89a6526d14933f8c5436509abfcad4f02e086e5e",
+    "exact_blob_match": true,
+    "additional_v8_source_assertions": 14,
+    "baseline_link_attributes": 46,
+    "candidate_link_attributes": 48,
+    "removed_existing_links": 0,
+    "inline_script_syntax": "PARSED",
+    "source_readback": "VERIFIED"
+  },
+  "live_search_observation": {
+    "observed_during_cycle_utc": "2026-10-31T15:50:00Z",
+    "repository": "london4216-hue/Zoodo",
+    "open_issues": 24,
+    "open_prs": 54,
+    "incomplete_results": false,
+    "issue_search_url": "https://github.com/london4216-hue/Zoodo/issues?q=is%3Aissue%20is%3Aopen",
+    "pr_search_url": "https://github.com/london4216-hue/Zoodo/pulls?q=is%3Apr%20is%3Aopen",
+    "scope": "GitHub Search results, NOT verified rendered on Netlify production"
+  },
+  "workflow": {
+    "prior_run_id": 41215588292,
+    "prior_run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41215588292",
+    "prior_conclusion": "failure",
+    "prior_job_steps": null,
+    "new_source_commit_runs_observed": 0,
+    "exact_head_ci": "UNKNOWN",
+    "root_cause": "Zero-step runner startup; separate Implementation Lead recovery"
+  },
+  "provider": {
+    "preview_url": "https://deploy-preview-94--zoo-live-dashboard.netlify.app/",
+    "provider_deploy_status_for_new_commit": "UNKNOWN",
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "deployed_sha": "UNKNOWN",
+    "netlify_site_id": "UNKNOWN",
+    "browser_readback": "UNVERIFIED",
+    "direct_http_result": "DNS resolution failed from available runtime",
+    "owner_auth_and_rollback": "UNVERIFIED",
+    "production_published": false
+  },
+  "scheduler": {
+    "source": "authenticated connected Automations peek",
+    "observed_during_cycle_utc": "2026-10-31T15:49:00Z",
+    "roles_in_progress": [
+      "ZOO Keeper",
+      "ZOO Agent Hunter",
+      "ZOO Dashboard Worker",
+      "ZOO Asset Restoration"
+    ],
+    "completed_current_runs": 0,
+    "last_valid_public_snapshot": "2026-10-31T15:34:49.619Z",
+    "note": "In-progress scheduler records do not prove productive agent execution; no fake heartbeat."
+  },
+  "handoff": {
+    "from": "ZOO Dashboard Lead",
+    "to": "Implementation Lead",
+    "backup": "ZOO Agent Hunter",
+    "integration_authority": "Sole ZOO Keeper",
+    "next_action": "Implementation Lead: diagnose GitHub Actions zero-step startup and run exact-head tests or independent authorized provider build; Hunter: authenticate Netlify site/deploy/source mapping and verify preview/live with rollback; Keeper: reconcile draft PR #90/#94 into canonical source only after gates.",
+    "trigger": "Next scheduled watchdog or verified event-driven worker handoff",
+    "unresolved": true,
+    "private_incident": "https://github.com/london4216-hue/TransendIQ/issues/1023",
+    "public_issue": "https://github.com/london4216-hue/Zoodo/issues/18",
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/94"
+  },
+  "reporting": {
+    "source_commit_at": "UNKNOWN",
+    "pr_opened_at": "2026-10-31T15:12:00Z",
+    "review_at": "UNKNOWN",
+    "merge_at": "UNKNOWN",
+    "deploy_at": "UNKNOWN",
+    "live_verified_at": "UNKNOWN",
+    "issue_detection_to_fix_ms": "UNKNOWN",
+    "code_to_live_ms": "UNKNOWN",
+    "note": "No cycle latency invented from absent timestamps"
+  }
+}
