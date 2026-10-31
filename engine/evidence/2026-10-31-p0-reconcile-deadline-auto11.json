@@ -32,6 +32,30 @@
       "engine/ops/relay/outbox-replay.mjs": "d7443e8d1f5a64c90087449ba05e8846e458fd25",
       "engine/test/reconcile-bounded.test.mjs": "6e39f1d2fba7f188f2ca693ecfb73c4b98969e0a",
       "engine/test/outbox-external-abort.test.mjs": "987c153ea2c17d8807751f57c28d46b67cfed77a"
+    },
+    "final_local_suite": {
+      "kind": "Node.js real localhost HTTP synthetic two-ticket and failover",
+      "command": "node --test engine/test/*.test.mjs",
+      "started_at_utc": "2026-10-31T06:35:22Z",
+      "ended_at_utc": "2026-10-31T06:35:22Z",
+      "passed": 12,
+      "failed": 0,
+      "exit_code": 0,
+      "tap_sha256": "8a9e98a6ac05ee7585abe20883528a13a265a2495762d89d32453a8c7c8649e9",
+      "tap_url": "https://github.com/london4216-hue/Zoodo/blob/worker/p0-reconcile-deadline-20261031-0630/engine/evidence/2026-10-31-p0-reconcile-deadline-12cases.tap",
+      "source_blob": "92a29229202e821c4762441ee55c1fcea04ce1a0",
+      "test_blob": "850a6b86b3d52b165b549d29cc3cc3f9fa9b1e3a",
+      "ticket_ids": [
+        "T1",
+        "T2"
+      ],
+      "completion_to_next_worker_accept_ms": 3.409,
+      "completion_to_next_callback_ms": 4.588,
+      "failed_worker": "dead",
+      "replacement_worker": "backup",
+      "failed_ticket_status": "leased/uncertain, not duplicated",
+      "replacement_ticket": "T2",
+      "execution_environment": "localhost synthetic worker, in-memory test store, NOT Supabase/Netlify"
     }
   },
   "github_ci": {
@@ -60,7 +84,7 @@
   },
   "decision": {
     "stamp": "REVISE",
-    "reason": "Code and local tests verified, hosted runner and dashboard evidence not verified",
+    "reason": "Exact-source local 12/12 including real localhost HTTP NEXT/failover; no provider-native hosted execution or dashboard verification",
     "next_action": "ZOO Keeper integrates stacked PR #52 after full-suite and exact-head checks; Agent Hunter qualifies authenticated Netlify/Supabase runtime; Dashboard Lead publishes only provider-native receipts"
   },
   "handoff": {
@@ -81,6 +105,16 @@
       "new_status": "bounded code on draft PR, local tests pass, hosted unverified",
       "commit_sha": "2f5e51f2ecd316f05093fd34ad3127d47cc92f9b",
       "commit_url": "https://github.com/london4216-hue/Zoodo/commit/2f5e51f2ecd316f05093fd34ad3127d47cc92f9b"
+    },
+    {
+      "hour_utc": "2026-10-31T06:00:00Z",
+      "repo": "london4216-hue/Zoodo",
+      "asset": "ZOO synthetic local HTTP two-ticket failover",
+      "pr": 52,
+      "prior_status": "unit tests only",
+      "new_status": "12/12 local tests, 3.409ms local completion-to-worker-accept, hosted UNKNOWN",
+      "commit_sha": "88df7c14e90905eac3cb4e61f3ee76a42f8a79f5",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/88df7c14e90905eac3cb4e61f3ee76a42f8a79f5"
     }
   ],
   "pr_stages": {
@@ -96,5 +130,6 @@
     "source": "TransendIQ #1023 opened 2026-10-30T13:12:14Z",
     "verified_resolution_at_utc": null,
     "age": "UNKNOWN until independent hosted verification"
-  }
+  },
+  "receipt_updated_at_utc": "2026-10-31T06:35:51.568Z"
 }
