@@ -65,7 +65,16 @@
     "conclusion": "failure",
     "reported_steps": 0,
     "logs": "404 BlobNotFound",
-    "interpretation": "No hosted test execution proven; startup cause not available"
+    "interpretation": "No hosted test execution proven; startup cause not available",
+    "latest_head_run": {
+      "run_id": 41177273740,
+      "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41177273740",
+      "conclusion": "failure",
+      "job_id": 124467318846,
+      "reported_steps": null,
+      "logs_url": null,
+      "interpretation": "No evidence any steps ran; provider startup failure suspected but root cause unavailable"
+    }
   },
   "provider_deployment": {
     "status": "UNKNOWN",
@@ -121,15 +130,24 @@
     "opened_at_utc": "2026-10-31T06:33:34Z",
     "reviewed_at_utc": null,
     "fix_completed_at_utc": "2026-10-31T06:33:28Z",
-    "local_tests_at_utc": "2026-10-31T06:33:28Z",
+    "local_tests_at_utc": "2026-10-31T06:35:22Z",
     "merged_at_utc": null,
     "deployed_at_utc": null,
-    "verified_at_utc": null
+    "verified_at_utc": null,
+    "tests_after_pr_open_elapsed_seconds": 108
   },
   "unresolved_gap_age": {
     "source": "TransendIQ #1023 opened 2026-10-30T13:12:14Z",
     "verified_resolution_at_utc": null,
     "age": "UNKNOWN until independent hosted verification"
   },
-  "receipt_updated_at_utc": "2026-10-31T06:35:51.568Z"
+  "receipt_updated_at_utc": "2026-10-31T06:36:23.420Z",
+  "provider_capability_probe": {
+    "netlify_management_connector": "NOT EXPOSED TO THIS RUN",
+    "vercel_management_connector": "NOT EXPOSED TO THIS RUN",
+    "supabase_runtime_connector": "NOT EXPOSED TO THIS RUN",
+    "local_relevant_environment_variable_names": [],
+    "public_site_http_probe": "Tool could not access URL; not evidence the site is down",
+    "missing_for_hosted_acceptance": "Authorized existing-host deployment invocation, runtime environment validation, durable Supabase migration/readback, and provider-native two-ticket failover receipt"
+  }
 }
