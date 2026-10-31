@@ -13,25 +13,27 @@
     "code_commit": "a904b81ca9945c6cf223a761086389f555c69570",
     "code_url": "https://github.com/london4216-hue/Zoodo/commit/a904b81ca9945c6cf223a761086389f555c69570",
     "module_blob": "150cd96fcc9b1eee795c8c3423dc5c3dd35d3c25",
-    "test_blob": "20b56ccd5050581a91d82a48daca2917359ce911",
+    "test_blob": "2a4c4305ec779938bc4b05ca92187f168f07719f",
     "relay_blob": "025427dd48df8d0032a867d65a40b379276d7740",
     "latest_integration_commit": "1c1087f7110be9454c39b80224abfeb7f90ef24b",
     "latest_integration_url": "https://github.com/london4216-hue/Zoodo/commit/1c1087f7110be9454c39b80224abfeb7f90ef24b",
-    "portable_relay_test_blob": "9bc0015ba8cead99957d3280d285af2eca60aeda"
+    "portable_relay_test_blob": "9bc0015ba8cead99957d3280d285af2eca60aeda",
+    "latest_test_commit": "6df901a9e61130d1d77a88d28217b16b59c6a9dd"
   },
   "execution": {
     "kind": "local-node-unit-tests",
     "command": "node --test engine/test/outbox-replay.test.mjs",
     "node_version": "v22.16.0",
-    "started_at_utc": "2026-10-31T00:46:57Z",
-    "ended_at_utc": "2026-10-31T00:46:57Z",
-    "tests": 6,
-    "passed": 6,
+    "started_at_utc": "2026-10-31T00:49:09Z",
+    "ended_at_utc": "2026-10-31T00:49:09Z",
+    "tests": 7,
+    "passed": 7,
     "failed": 0,
-    "tap_sha256": "9ee614b7a5719601be0ff73f9812c200becd3c29725afbff8adb359ab3b7c694",
+    "tap_sha256": "9b6c243f4afffc674b22c4095599a3a07fc2bd7d05083544d8b69194caf4d916",
     "tap_path": "engine/evidence/2026-10-31-p0-outbox-replay-auto11.tap",
-    "limitations": "Simulated store and worker. Exact committed module and test blob SHAs match locally executed files. Existing complete portable-relay suite and PostgreSQL migration were not executed in this run.",
-    "additional_unexecuted_tests": "Three portable-relay integration regression tests committed after the six executed outbox module tests; complete Node suite NOT executed."
+    "limitations": "New module and test source exact Git blob SHAs matched locally executed Node 22 files. Store/worker state simulated, HTTP server local. Three added portable-relay integration regressions and complete suite NOT executed; PostgreSQL migration NOT applied.",
+    "additional_unexecuted_tests": "Three portable-relay integration regression tests committed after the six executed outbox module tests; complete Node suite NOT executed.",
+    "local_two_ticket_http": "Two distinct synthetic ticket IDs T1/T2 accepted over real localhost HTTP; NOT a hosted worker or independent provider receipt"
   },
   "fail_first": {
     "base_commit": "f04581db20e33e5a3eb1da329ae29feaa3e44803",
@@ -53,7 +55,7 @@
       "new": "Outbox consumer, authenticated replay and reconciliation committed",
       "pr": 35,
       "code_commit": "a904b81ca9945c6cf223a761086389f555c69570",
-      "tests": "6/6 local Node",
+      "tests": "7/7 local Node including two-ticket localhost HTTP",
       "provider_deploy": "UNKNOWN",
       "hosted_execution": "UNKNOWN",
       "latest_integration_commit": "1c1087f7110be9454c39b80224abfeb7f90ef24b"
@@ -90,7 +92,7 @@
     "to": "ZOO Keeper",
     "task_id": "P0-OUTBOX-REPLAY-HOSTED",
     "decision": "REVISE",
-    "next_action": "Integrate stacked PRs only after private PostgreSQL migration and authenticated Netlify replay/reconcile endpoint probe; execute two distinct tickets with failure recovery and publish provider-native receipts. Hunter should probe available host credentials; Dashboard Lead must keep hosted status UNKNOWN.",
+    "next_action": "Keeper integrate conflict-free PR #34/#35, execute full Node suite, private PostgreSQL migration and authenticated Netlify replay/reconcile, then real hosted two-ticket failover and dashboard proof; Hunter probe actual existing provider credentials.",
     "next_trigger": "Existing scheduled Keeper reconciliation or authenticated durable relay event; not claimed invoked."
   },
   "security": {
