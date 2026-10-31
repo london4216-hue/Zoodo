@@ -96,6 +96,7 @@ export function makeHandler({relay,callbackSecret}){
   if(!equal(headers.authorization??headers.Authorization??'','Bearer '+callbackSecret))return send(401,{error:'unauthorized'});
   if(typeof body!=='string'||Buffer.byteLength(body)>8192)return send(413,{error:'invalid payload'});
   let x;try{x=JSON.parse(body)}catch{return send(400,{error:'invalid JSON'})}
+  if(!x || typeof x!=='object' || Array.isArray(x) || typeof x.type!=='string' || !x.type.trim()) return send(400,{error:'invalid callback envelope'});
   try{
    if(x.type==='kick')return send(200,await relay.next(x.worker));
    if(x.type==='completed')return send(200,await relay.completed(x));
