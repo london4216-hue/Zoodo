@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "role": "Agent Hunter",
+  "ticket": "Zoodo#18 / PR#23 durable relay lease fixture parity",
+  "decision": "REVISE",
+  "evidence_scope": "authenticated GitHub source repair and static assertions only; NOT external worker invocation, Netlify function invocation, Supabase transaction, or full Node test",
+  "source_commit": "dbebd4ecdc6dee82e209c27acc119a2c5939e355",
+  "source_url": "https://github.com/london4216-hue/Zoodo/commit/dbebd4ecdc6dee82e209c27acc119a2c5939e355",
+  "pr_url": "https://github.com/london4216-hue/Zoodo/pull/31",
+  "original_test_blob": "10f2b0c2a2489a905010fcd25f0dcfaf890cdc1a",
+  "corrected_test_blob": "31156510601ae87818a67efcbcd6575b4248d7dd",
+  "sql_blob": "08824651df36d9ca4267e69de18e295883c7b3a9",
+  "checks": {
+    "type": "exact_source_contract_assertions",
+    "passed": 5,
+    "total": 5,
+    "executed_via": "authenticated GitHub readback and JS assertions",
+    "node_suite": "UNKNOWN",
+    "postgresql_migration": "UNKNOWN"
+  },
+  "defect": "SQL prevents a second active lease for the same worker; prior in-memory fixture incorrectly allowed it and expected ticket T2 to be dispatched while T1 was leased.",
+  "change": "Fixture now enforces one active lease per worker; timeout test expects idle and T2 queued until T1 is explicitly released.",
+  "host_qualification": {
+    "netlify": "preview deployment status only; function invocation UNKNOWN",
+    "vercel": "deployment status only; worker invocation UNKNOWN",
+    "render": "UNKNOWN",
+    "cloudflare": "UNKNOWN",
+    "supabase_queue": "migration not verified",
+    "independent_24_7_runner": "NOT VERIFIED"
+  },
+  "external_panel": {
+    "deepseek": "NO NEW PROVIDER-NATIVE INVOCATION",
+    "copilot": "NO NEW PROVIDER-NATIVE INVOCATION",
+    "claude": "NO NEW PROVIDER-NATIVE INVOCATION",
+    "gemini": "NO NEW PROVIDER-NATIVE INVOCATION",
+    "codex": "NO NEW PROVIDER-NATIVE INVOCATION"
+  },
+  "hourly_movement": [
+    {
+      "hour_utc": "2026-10-31T00:00:00Z",
+      "hour_et": "2026-10-30 20:00 EDT",
+      "repo": "london4216-hue/Zoodo",
+      "asset": "relay test fixture",
+      "pr": 31,
+      "prior": "fixture allowed concurrent same-worker leases",
+      "new": "fixture matches SQL single active lease invariant",
+      "commit": "dbebd4ecdc6dee82e209c27acc119a2c5939e355",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/31",
+      "worker": "Agent Hunter",
+      "opened_at": "2026-10-31T00:13:01Z",
+      "review_at": null,
+      "fix_at": null,
+      "tests_at": null,
+      "merge_at": null,
+      "deploy_at": null,
+      "verified_hosted_at": null,
+      "latency_seconds": null
+    }
+  ],
+  "handoff": {
+    "from": "Agent Hunter",
+    "to": "Dashboard Lead",
+    "next": "Implementation Lead -> ZOO Keeper -> Agent Hunter",
+    "next_action": "Run exact Node 22 suite with corrected fixture; integrate one SQL fix (#28 OR #29, not both); verify disposable PostgreSQL migration and authenticated provider-native Netlify function; then two-ticket hosted lease/recovery drill",
+    "next_trigger": "PR #31 implementation readback and test execution",
+    "keeper_comment_status": "Issue #18 comment blocked by safety controls; alternative comment on PR #31 succeeded."
+  },
+  "no_publication": true,
+  "no_purchase": true,
+  "probes": {
+    "github": {
+      "authenticated": true,
+      "source_readback": true,
+      "commit_write": true,
+      "comment_write": true
+    },
+    "netlify_preview": {
+      "url": "https://deploy-preview-23--zoo-live-dashboard.netlify.app/.netlify/functions/zoo-relay",
+      "method": "GET read-only",
+      "result": "DNS resolution failed from sandbox; hosted endpoint response UNKNOWN",
+      "native_execution_receipt": null
+    },
+    "netlify_production": {
+      "url": "https://zoo-live-dashboard.netlify.app/.netlify/functions/zoo-relay",
+      "method": "GET read-only",
+      "result": "DNS resolution failed from sandbox; production health UNKNOWN",
+      "native_execution_receipt": null
+    },
+    "external_ai": {
+      "available_direct_authenticated_provider_adapter": false,
+      "reason": "Available connected tools expose GitHub repository operations, not DeepSeek/Copilot/Claude/Gemini model-inference invocations; repo workflow references are not callable provider adapters."
+    }
+  },
+  "kpi": {
+    "authenticated_external_runner_hosts": 0,
+    "qualified_alternatives": 0,
+    "verified_external_ai_votes": 0,
+    "active_hosted_ticket_assignments": "UNKNOWN",
+    "recovered_hosted_jobs": "UNKNOWN",
+    "oldest_checkpoint_age_seconds": "UNKNOWN",
+    "hosted_execution_proof": "UNKNOWN"
+  }
+}
