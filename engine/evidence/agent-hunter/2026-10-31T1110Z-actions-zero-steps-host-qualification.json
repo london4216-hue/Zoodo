@@ -1,0 +1,138 @@
+{
+  "schema": "zoo.ops.hunter.host-qualification-checkpoint.v1",
+  "observed_at_utc": "2026-10-31T11:10:33Z",
+  "agent_id": "ZOO Agent Hunter",
+  "task_ids": [
+    "Zoodo#18",
+    "Zoodo#67",
+    "ZoodoPR#70"
+  ],
+  "decision": "REVISE",
+  "status": "RECOVERING",
+  "scope": "Zoodo independent control plane; no TransendIQ product code changed",
+  "source_control": {
+    "provider": "GitHub",
+    "authenticated_read": true,
+    "repository": "london4216-hue/Zoodo",
+    "branch": "hunter/provider-native-receipt-gate-20261031",
+    "inspected_head_sha": "111dd31df6c2fdd999127473a5f34c462188242b",
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/70",
+    "productive_worker_host": false
+  },
+  "latest_actions_failure": {
+    "evidence_type": "authenticated GitHub API run/job/steps readback; NOT a worker execution receipt",
+    "runs": [
+      {
+        "run_id": 41194732751,
+        "job_id": 124518506374,
+        "job_count": 1,
+        "job_steps": 0,
+        "conclusion": "failure",
+        "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41194732751"
+      },
+      {
+        "run_id": 41194690551,
+        "job_id": 124518384299,
+        "job_count": 1,
+        "job_steps": 0,
+        "conclusion": "failure",
+        "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41194690551"
+      },
+      {
+        "run_id": 41194585440,
+        "job_id": 124518079691,
+        "job_count": 1,
+        "job_steps": 0,
+        "conclusion": "failure",
+        "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41194585440"
+      },
+      {
+        "run_id": 41195724946,
+        "job_id": 124521371850,
+        "job_count": 1,
+        "job_steps": 0,
+        "conclusion": "failure",
+        "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41195724946"
+      }
+    ],
+    "log_fetch": "GitHub job logs returned HTTP 404 BlobNotFound for three inspected jobs; no step logs available",
+    "interpretation": "Jobs were created but no steps were recorded. Exact runner startup failure cause UNKNOWN. Do not repeat same Actions retry without new evidence."
+  },
+  "host_probe": {
+    "provider": "Netlify",
+    "source_head_sha": "2ff4d5c84466a46be6e3c5f49020354b71ac3c73",
+    "candidate_pr": "https://github.com/london4216-hue/Zoodo/pull/57",
+    "native_github_status_context": "netlify/zoo-live-dashboard/deploy-preview",
+    "native_github_status": "success",
+    "status_observed_at_utc": "2026-10-31T09:19:38Z",
+    "status_target": "https://deploy-preview-57--zoo-live-dashboard.netlify.app",
+    "endpoint": "https://deploy-preview-57--zoo-live-dashboard.netlify.app/.netlify/functions/zoo-host-probe",
+    "endpoint_http_attempt": "Public read attempt; inaccessible via available HTTP client. No bearer token sent.",
+    "authenticated_function_invocation": false,
+    "provider_native_function_request_id": null,
+    "runtime_sha": null,
+    "latency_ms": "UNKNOWN",
+    "cost_usd": "UNKNOWN",
+    "classification": "candidate; build-preview status only; NOT qualified worker host"
+  },
+  "authenticated_provider_adapter_discovery": {
+    "Github": "callable for repo/API read-write; source control only",
+    "Netlify": "no authenticated runtime adapter exposed",
+    "Vercel": "no authenticated runtime adapter exposed",
+    "Trigger_dev": "no authenticated task adapter exposed",
+    "Supabase": "no authenticated RPC adapter exposed",
+    "DeepSeek": "no authenticated direct model invocation adapter exposed",
+    "Claude": "no authenticated external invocation adapter exposed",
+    "Gemini": "no authenticated direct model invocation adapter exposed",
+    "GitHub_Copilot": "no authenticated productive agent invocation adapter exposed"
+  },
+  "native_external_model_votes": {
+    "DeepSeek": "UNKNOWN",
+    "Claude": "UNKNOWN",
+    "Gemini": "UNKNOWN",
+    "GitHub_Copilot": "UNKNOWN"
+  },
+  "verified_two_ticket_chain": {
+    "first_claim": "UNKNOWN",
+    "second_claim": "UNKNOWN",
+    "failed_worker_recovery": "UNKNOWN",
+    "hosted_callback": "UNKNOWN",
+    "dashboard_readback": "UNKNOWN"
+  },
+  "movement_ledger": {
+    "hour_utc": "2026-10-31T11:00:00Z",
+    "hour_et": "2026-10-31T07:00:00-04:00",
+    "repo": "london4216-hue/Zoodo",
+    "pr": 70,
+    "prior_status": "RECOVERING",
+    "new_status": "RECOVERING",
+    "new_hosted_worker_execution": 0,
+    "new_verified_productive_provider": 0,
+    "observed_failure": "Actions one job, zero steps, no job logs; Netlify preview not runtime",
+    "code_committed": false,
+    "local_tests_executed": false,
+    "provider_deployed": false,
+    "hosted_execution_verified": false,
+    "pr_stage_latencies": "UNKNOWN",
+    "gap_detection_to_verification_latency": "UNKNOWN",
+    "unresolved_gap_age": "UNKNOWN"
+  },
+  "next_executable_action": "Implementation Lead: from an actually authorized Netlify runtime channel, POST bounded synthetic nonce to existing PR #57 host probe using existing secret; capture provider-native request ID and exact runtime SHA. If inaccessible, use already authorized Trigger.dev+Supabase runtime, test atomic durable two-ticket NEXT→CLAIM→worker failure→replacement→NEXT. Do not use Actions as task runner. Dashboard Lead reads actual provider receipt only; Keeper integrates after tested source.",
+  "handoff": {
+    "from": "ZOO Agent Hunter",
+    "to": "ZOO Dashboard Lead",
+    "then": [
+      "Implementation Lead",
+      "ZOO Keeper",
+      "ZOO Agent Hunter"
+    ],
+    "decision": "REVISE",
+    "next_trigger": "existing authenticated host adapter becomes callable, or next independent qualification"
+  },
+  "safeguards": {
+    "new_paid_signup": false,
+    "production_publication": false,
+    "secrets_disclosed": false,
+    "private_ip_disclosed": false
+  }
+}
