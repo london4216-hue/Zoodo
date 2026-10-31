@@ -1,23 +1,31 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {drainOne} from '../ops/relay/outbox-drainer.mjs';
-const lease={id:7,lease_token:'12345678-1234-4234-8234-123456789012'};
-function fixture({result={state:'dispatched'},ack=true}={}){
+const lease={id:7,ticket_id:'T1',lease_token:'12345678-1234-4234-8234-123456789012'};
+function fixture({result={state:'dispatched'},ack=true,settle=true}={}){
  const calls=[];
- const store={outboxClaim:async()=>{calls.push('claim');return lease},outboxAck:async(...x)=>{calls.push(['ack',...x]);return ack}};
+ const store={claimOutbox:async()=>{calls.push('claim');return lease},
+   ackOutbox:async(...x)=>{calls.push(['ack',...x]);return ack},
+   settleIdleOutbox:async(...x)=>{calls.push(['settle',...x]);return settle}};
  const relay={next:async w=>{calls.push(['next',w]);return typeof result==='function'?result(w):result}};
  return {store,relay,calls};
 }
 test('empty durable queue performs no dispatch',async()=>{
- const f=fixture();f.store.outboxClaim=async()=>null;
+ const f=fixture();f.store.claimOutbox=async()=>null;
  assert.deepEqual(await drainOne({...f,workerIds:['workerA']}),{state:'empty'});assert.deepEqual(f.calls,[]);
 });
 test('ack follows authenticated dispatch, never precedes it',async()=>{
  const f=fixture();const r=await drainOne({...f,workerIds:['workerA']});
  assert.equal(r.state,'acknowledged');assert.deepEqual(f.calls,['claim',['next','workerA'],['ack',7,lease.lease_token]]);
 });
-test('idle with no eligible ticket safely acknowledges wake event',async()=>{
- const f=fixture({result:{state:'idle'}});assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'acknowledged');
+test('idle settles only after transactional empty-queue confirmation',async()=>{
+ const f=fixture({result:{state:'idle'}});assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'idle-settled');
+ assert.deepEqual(f.calls,['claim',['next','workerA'],['settle',7,lease.lease_token]]);
+});
+test('idle with queued work or missing settle RPC never ACKs',async()=>{
+ const f=fixture({result:{state:'idle'},settle:false});assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'recovery_required');
+ assert.equal(f.calls.some(x=>Array.isArray(x)&&x[0]==='ack'),false);
+ delete f.store.settleIdleOutbox;assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'recovery_required');
 });
 test('failed worker tries qualified alternative without acking failure',async()=>{
  const f=fixture({result:w=>w==='workerA'?{state:'recovery_required'}:{state:'dispatched',worker:w}});
@@ -37,8 +45,14 @@ test('independent alternate dispatch does not certify original uncertain job',as
 test('failed durable ack does not report acknowledged',async()=>{
  const f=fixture({ack:false});assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'recovery_required');
 });
-test('rejects unqualified workers and malformed lease',async()=>{
+test('rejects unqualified workers, malformed token and missing ticket',async()=>{
  const f=fixture();await assert.rejects(drainOne({...f,workerIds:['bad worker']}));
- f.store.outboxClaim=async()=>({id:7,lease_token:'bad'});
- await assert.rejects(drainOne({...f,workerIds:['workerA']}));
+ f.store.claimOutbox=async()=>({id:7,ticket_id:'T1',lease_token:'-'.repeat(36)});
+ await assert.rejects(drainOne({...f,workerIds:['workerA']}),/Invalid durable outbox lease/);
+ f.store.claimOutbox=async()=>({id:7,lease_token:lease.lease_token});
+ await assert.rejects(drainOne({...f,workerIds:['workerA']}),/Invalid durable outbox lease/);
+});
+test('does not claim success for undefined worker result',async()=>{
+ const f=fixture({result:undefined});f.relay.next=async()=>undefined;
+ assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'recovery_required');
 });
