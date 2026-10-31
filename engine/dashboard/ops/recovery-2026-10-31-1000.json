@@ -37,7 +37,11 @@
       "job_steps": 0,
       "logs": "not_verified",
       "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41191091035",
-      "classification": "startup_failure_recovery_event"
+      "classification": "startup_failure_recovery_event",
+      "followup_run_id": 41191129195,
+      "followup_job_id": 124507971351,
+      "followup_conclusion": "failure",
+      "followup_steps": "job step data absent; earlier run 41191091035 had zero steps"
     },
     "netlify": {
       "source": "GitHub combined commit status",
@@ -56,6 +60,17 @@
       "gemini": "NO_AUTHENTICATED_INVOCATION_RECEIPT",
       "copilot": "NO_AUTHENTICATED_INVOCATION_RECEIPT",
       "pro_codex": "NO_AUTHENTICATED_INVOCATION_RECEIPT"
+    },
+    "source_href_parity": {
+      "base_blob": "1b149db56e670dec02cb5ba02a2aef51676c16fe",
+      "candidate_blob": "9bbc74b34f13663d234852f0e10ab1ea9f80fb6e",
+      "base_href_count": 24,
+      "candidate_href_count": 42,
+      "base_unique": 23,
+      "candidate_unique": 37,
+      "missing": 0,
+      "known_dead_beautypaths_primary_anchor_present": false,
+      "scope": "source HTML only; no live endpoint or owner auth verification"
     }
   },
   "attempted_repairs": [
@@ -64,7 +79,9 @@
     "Quarantine newly observed pre-schedule completions and preserve prior valid runs",
     "Inspect exact-head GitHub Actions job and confirm zero steps",
     "Read GitHub Netlify deploy-preview status for exact commit",
-    "Probe production dashboard and proof feed HTTP from independent runtime; DNS unavailable"
+    "Probe production dashboard and proof feed HTTP from independent runtime; DNS unavailable",
+    "Rechecked current base-vs-PR HTML link parity: all 23 unique base hrefs retained in 37 unique PR hrefs; no known dead Beautypaths owner link in PR anchors",
+    "Confirmed consecutive exact-head GitHub Actions startup failures; no evidence of executed test steps"
   ],
   "next_executable_steps": [
     "Implementation Lead: diagnose zero-step GitHub Actions startup failure 41191091035, qualify independent authorized test runner and post exact-head test receipt",
@@ -76,7 +93,7 @@
   "release_gates": {
     "production_publication": "NOT_PERFORMED",
     "owner_demo_email": "NOT_SENT",
-    "link_parity": "PRIOR_CHECK_26_OF_26_RETAINED_NOT_RECHECKED_THIS_RUN",
+    "link_parity": "SOURCE_BASELINE_PRESERVED_23_UNIQUE_LINKS; LIVE_UNVERIFIED",
     "mobile_viewport": "UNKNOWN",
     "auth_gate": "UNKNOWN",
     "production_live_refresh": "UNKNOWN"
@@ -91,6 +108,17 @@
       "new_status": "freshly published scheduler metadata; hosted production still UNKNOWN",
       "commit": "7da4a42148062a80c97569c58206d537735078b9",
       "commit_url": "https://github.com/london4216-hue/Zoodo/commit/7da4a42148062a80c97569c58206d537735078b9",
+      "worker": "ZOO Dashboard Worker"
+    },
+    {
+      "hour_utc": "2026-10-31T10:00:00Z",
+      "repo": "london4216-hue/Zoodo",
+      "asset": "ZOO dashboard recovery handoff",
+      "pr": 16,
+      "prior_status": "unpublished run checkpoint",
+      "new_status": "durable issue comments and source parity verified; production still UNKNOWN",
+      "commit": "9aac2ced0caaa22c8b79ac60c2e09d29138ed22a",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/9aac2ced0caaa22c8b79ac60c2e09d29138ed22a",
       "worker": "ZOO Dashboard Worker"
     }
   ],
@@ -115,5 +143,6 @@
     "dashboard": "UNKNOWN_NOT_PRODUCTION_VERIFIED",
     "implementation": "UNKNOWN_NOT_PRODUCTION_VERIFIED",
     "keeper": "UNKNOWN_NOT_PRODUCTION_VERIFIED"
-  }
+  },
+  "last_reconciled_at": "2026-10-31T10:03:29.323Z"
 }
