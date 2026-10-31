@@ -1,6 +1,7 @@
 /** Bounded Netlify runtime qualification only. No real tickets or credentials leave this function.
  * A provider-native HTTP receipt is required before claiming this host is operational. */
 import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
+import { BUILD_COMMIT_SHA } from './zoo-build-meta.mjs';
 
 const SHA = /^[a-f0-9]{40}$/;
 const NONCE = /^[A-Za-z0-9_-]{16,64}$/;
@@ -41,4 +42,4 @@ export function makeHostProbe({ token, commitRef = null, clock = () => new Date(
   };
 }
 
-export const handler = makeHostProbe({ token: process.env.ZOO_HOST_PROBE_TOKEN, commitRef: process.env.COMMIT_REF });
+export const handler = makeHostProbe({ token: process.env.ZOO_HOST_PROBE_TOKEN, commitRef: BUILD_COMMIT_SHA });
