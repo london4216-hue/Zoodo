@@ -221,9 +221,10 @@
         "https://github.com/london4216-hue/Zoodo/pull/16",
         "https://github.com/london4216-hue/Zoodo/actions/runs/41155281186",
         "https://github.com/london4216-hue/Zoodo/issues/18",
-        "https://github.com/london4216-hue/TransendIQ/issues/1023"
+        "https://github.com/london4216-hue/TransendIQ/issues/1023",
+        "https://github.com/london4216-hue/Zoodo/actions/runs/41161711747"
       ],
-      "tests": "PASS 11/11 authenticated source/readback assertions (26 baseline href occurrences preserved, 45 candidate); PASS 3 valid scheduler completions read from connected Automations. FAIL Actions job 124400596869: 0 steps, logs 404 BlobNotFound. FAIL live Netlify DNS/HTTP retrieval in web and container; hosted Node, preview, production mapping and browser tests UNKNOWN.",
+      "tests": "PASS 11/11 authenticated source/readback assertions (26 baseline href occurrences preserved, 45 candidate); PASS 3 valid scheduler completions read from connected Automations. FAIL Actions job 124400596869: 0 steps, logs 404 BlobNotFound. FAIL live Netlify DNS/HTTP retrieval in web and container; hosted Node, preview, production mapping and browser tests UNKNOWN. NEW exact-head CI run 41161711747 also FAIL, job 124420478689 zero steps, logs 404 BlobNotFound; Netlify preview status success at latest head, not an independently verified browser/deploy receipt.",
       "timestamp_utc": "2026-10-31T02:49:33.932Z",
       "next_trigger": "Existing Implementation Lead/Hunter next scheduled or authenticated event-driven execution; Dashboard Lead next scheduled snapshot publication. Handoff is durable, not an invoked worker.",
       "receipt_scope": "Real authenticated GitHub write and scheduler metadata readback; not productive agent invocation, CI pass, Netlify deploy, or live browser proof.",
@@ -274,7 +275,7 @@
           "code": "GITHUB_ACTIONS_ZERO_STEP_STARTUP_FAILURE",
           "owner": "Implementation Lead",
           "backup": "ZOO Agent Hunter",
-          "next_action": "Inspect runner startup and obtain independent provider exact-SHA Node test; job 124400596869 has no steps and log download 404."
+          "next_action": "Inspect new run 41161711747 job 124420478689 (zero steps; log 404); use qualified independent hosted exact-SHA test, avoid blind rerun."
         },
         {
           "code": "DASHBOARD_SCHEDULER_COMPLETION_CHRONOLOGY_ANOMALY",
