@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "task_id": "Zoodo#18/kick-http-ack-fence",
+  "agent_id": "ZOO Keeper",
+  "repository": "london4216-hue/Zoodo",
+  "branch": "keeper/p0-kick-http-ack-fence-20261031",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/61",
+  "code_commit_sha": "8224c957e587748a7c05348d0ed5c4f543b87c1b",
+  "files": [
+    {
+      "path": "engine/ops/relay/kick-http-status.mjs",
+      "blob_sha": "8b98c6e7776a24fe640f5dede7a1b29d52242c80"
+    },
+    {
+      "path": "engine/test/kick-http-status.test.mjs",
+      "blob_sha": "24df1e62c9a72e983a4a7cb193d031bd40ecbdc2"
+    },
+    {
+      "path": "engine/ops/relay/portable-relay.mjs",
+      "blob_sha": "98d84a00ef993e00fac0d889ed51bb28f96ae835"
+    }
+  ],
+  "observed_at_utc": "2026-10-31T07:51:56Z",
+  "decision": "GO_FOR_PRIVATE_DRAFT_ONLY",
+  "defect": "kick returned HTTP 200 for unconfirmed/uncertain dispatch, causing false acknowledgement",
+  "change": "classify authenticated kick response: 200 only for dispatched/delegated/idle, otherwise 503",
+  "test_command": "node --test engine/test/kick-http-status.test.mjs",
+  "test_result": {
+    "local_node22": "PASS",
+    "passed": 4,
+    "failed": 0,
+    "scope": "classifier unit tests, not hosted integration"
+  },
+  "source_readback": "PASS",
+  "provider_invocation": {
+    "name": "GitHub connected connector",
+    "kind": "authenticated_repository_write",
+    "status": "VERIFIED",
+    "external_ai_worker": "NOT_INVOKED"
+  },
+  "deployment": {
+    "netlify": "UNKNOWN",
+    "hosted_ci": "UNKNOWN",
+    "live_two_ticket_chain": "UNKNOWN"
+  },
+  "resource_stewardship": "Reversible branch; preserve independent worker ownership, keep queue outside TransendIQ, no added spend, no confidential source.",
+  "blockers": [
+    "No verified hosted Netlify relay runtime or Supabase RPC execution receipt",
+    "PR #58/#59/#60 stack not merged"
+  ],
+  "next_executable_task": "Integrate with current relay stack after branch conflict checks; run handler-level regression on exact SHA, then authorized authenticated hosted kick->worker->receipt test.",
+  "handoff": {
+    "from": "ZOO Keeper",
+    "to": "Agent Hunter",
+    "state": "REVISE",
+    "next_trigger": "next authenticated capability/host qualification run",
+    "evidence_url": "https://github.com/london4216-hue/Zoodo/pull/61"
+  }
+}
