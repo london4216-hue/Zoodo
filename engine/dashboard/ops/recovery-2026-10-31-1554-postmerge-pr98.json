@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "kind": "zoo_dashboard_recovery_checkpoint",
+  "recorded_at": "2026-10-31T15:54:32.921Z",
+  "status": "RECOVERING",
+  "decision": "REVISE",
+  "agent": "ZOO Dashboard Lead",
+  "task": "Zoodo #18 / private TransendIQ #1023",
+  "source_repository": "london4216-hue/Zoodo",
+  "base_branch": "autonomous-engine-replacement-2026-10-29",
+  "canonical_base_sha": "b7c3de36658f78d1fd673655f0d460f49819612a",
+  "branch": "fix/zoo-accurate-queue-counts-mirror-20261031-1554",
+  "pr_url": "https://github.com/london4216-hue/Zoodo/pull/98",
+  "source_code_commit": "ac368e6c61bba3333643c4c053361886957d28da",
+  "mirror_fix_commit": "8509521bee73b15b597d6e84a9c266acd7f795a8",
+  "pr_head_sha_at_creation": "8509521bee73b15b597d6e84a9c266acd7f795a8",
+  "integration_reconciliation": {
+    "pr16": "merged at 2026-10-31T12:56:11Z",
+    "pr71": "merged into old PR16 feature branch, not directly canonical",
+    "pr94": "merged canonical at 2026-10-31T15:49:49Z with head 9714c42aa94e7c3a49ef8c31f0e811a247ad54d4",
+    "finding": "PR94 merged before later repair commits; those changes are isolated in new draft PR98 based on canonical post-merge commit.",
+    "compare": "ahead 5 commits, behind 0, exactly 5 changed files relative to canonical at PR creation"
+  },
+  "changes": [
+    "Complete GitHub Search issue/PR total_count; incomplete/failed search remains UNKNOWN; first-page lists remain sample only.",
+    "Add explicit source links for counts without deleting old navigation.",
+    "Include five previously omitted static dependencies in portable mirror allowlist."
+  ],
+  "tests": {
+    "node22_exact_blob_match": {
+      "passed": 3,
+      "failed": 0,
+      "module_blob": "36dd8b5a1e66e0eb7c9d532fef9ce9380351391b",
+      "test_blob": "89a6526d14933f8c5436509abfcad4f02e086e5e"
+    },
+    "v8_source_assertions": {
+      "passed": 14,
+      "failed": 0
+    },
+    "mirror_dependency_assertions": {
+      "passed": 2,
+      "failed": 0
+    },
+    "original_link_attributes": 46,
+    "candidate_link_attributes": 48,
+    "removed_links": 0,
+    "html_inline_module_syntax": "parsed",
+    "provider_build_tests": "UNKNOWN"
+  },
+  "live_github_search": {
+    "source": "GitHub Search API, complete results at time of read",
+    "open_issues": 24,
+    "open_prs": 54,
+    "incomplete_results": false,
+    "issue_source": "https://github.com/london4216-hue/Zoodo/issues?q=is%3Aissue%20is%3Aopen",
+    "pr_source": "https://github.com/london4216-hue/Zoodo/pulls?q=is%3Apr%20is%3Aopen",
+    "note": "Not yet displayed or verified on Netlify production."
+  },
+  "ci": {
+    "exact_head_run_id": 41217079030,
+    "exact_head_run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41217079030",
+    "status": "failure",
+    "job_id": 124583751083,
+    "job_steps": null,
+    "job_logs": "404 BlobNotFound",
+    "classification": "RECOVERY EVENT: runner startup failed before any test steps",
+    "owner": "Implementation Lead"
+  },
+  "provider": {
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "preview_url": "https://deploy-preview-98--zoo-live-dashboard.netlify.app/",
+    "github_status_context": "netlify/zoo-live-dashboard/deploy-preview",
+    "github_status_at_check": "pending",
+    "provider_status_target": "https://app.netlify.com/projects/zoo-live-dashboard/deploys/6ae60f3904b56d1fcfbbb5fa",
+    "provider_deploy_id_claim": "6ae60f3904b56d1fcfbbb5fa (status target only, not authenticated deployment receipt)",
+    "production_deployed_sha": "UNKNOWN",
+    "preview_browser_readback": "UNVERIFIED",
+    "production_browser_readback": "UNVERIFIED",
+    "runtime_http": "DNS resolution failed",
+    "owner_authentication": "UNVERIFIED",
+    "rollback_mapping": "UNVERIFIED",
+    "production_publication": false
+  },
+  "scheduler": {
+    "source": "authenticated connected Automations peek",
+    "roles_currently_in_progress": [
+      "ZOO Keeper",
+      "ZOO Agent Hunter",
+      "ZOO Dashboard Worker",
+      "ZOO Asset Restoration"
+    ],
+    "completed_current_runs": 0,
+    "last_published_snapshot_at": "2026-10-31T15:34:49.619Z",
+    "caveat": "Scheduler in-progress records do not establish productive agent execution."
+  },
+  "movement": {
+    "hour_utc": "2026-10-31T15:00:00Z",
+    "repo": "london4216-hue/Zoodo",
+    "asset": "ZOO live dashboard",
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/98",
+    "prior": "PR94 merged earlier without later fixes",
+    "new": "PR98 DRAFT, source committed and locally tested; CI failed zero steps; Netlify pending; live unverified",
+    "source_commit_at": "2026-10-31T15:50:39Z",
+    "pr94_opened_at": "2026-10-31T15:12:00Z",
+    "pr98_opened_at": "UNKNOWN (query GitHub PR metadata)",
+    "review_at": "UNKNOWN",
+    "merge_at": "UNKNOWN",
+    "deploy_at": "UNKNOWN",
+    "verified_at": "UNKNOWN",
+    "defect_detection_to_fix": "UNKNOWN",
+    "pr_to_merge": "UNKNOWN",
+    "merge_to_deploy": "UNKNOWN"
+  },
+  "handoff": {
+    "from": "ZOO Dashboard Lead",
+    "to": "Implementation Lead",
+    "backup": "ZOO Agent Hunter",
+    "integration_authority": "Sole ZOO Keeper",
+    "next": "Implementation Lead diagnose zero-step run 41217079030 and execute exact-head tests or independent authorized provider build; Hunter verify authenticated Netlify deploy record and actual preview/live readback; Keeper integrate draft PR98 only after safe release gates, preserve rollback.",
+    "next_trigger": "Next scheduled reconciliation or authenticated event-driven handoff",
+    "unresolved": true,
+    "issue": "https://github.com/london4216-hue/Zoodo/issues/18",
+    "private_issue": "https://github.com/london4216-hue/TransendIQ/issues/1023"
+  }
+}
