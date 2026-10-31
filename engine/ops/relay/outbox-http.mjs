@@ -21,7 +21,8 @@ export function makeOutboxHttpHandler({callbackSecret,drain}){
    return response(400,{error:'unsupported event'});
   try{
    const result=await drain();
-   if(!result||typeof result.state!=='string')throw Error('invalid drain result');
+   if(!result||!['acknowledged','idle-settled','empty'].includes(result.state))
+    throw Error('drain incomplete');
    return response(200,result);
   }catch{return response(503,{error:'outbox drain not confirmed'})}
  };
