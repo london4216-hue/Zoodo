@@ -4,7 +4,19 @@ export const REVIEW_STALE_MS=35*60000;
 // Account for small device/server clock differences, never future scheduled work.
 export const REVIEW_CLOCK_SKEW_MS=60000;
 export const REVIEW_FEED_URL='https://srqlfqnykkzxewwxsxvy.supabase.co/functions/v1/zoo-review-feed';
-const TIME=x=>typeof x==='string'&&Number.isFinite(Date.parse(x));
+// Strict RFC3339 calendar validation: Date.parse alone normalizes February 30
+// and accepts non-timestamp strings such as "0" as genuine review evidence.
+const TIME=x=>{
+ if(typeof x!=='string')return false;
+ const m=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,9}))?(Z|[+-]\d{2}:\d{2})$/.exec(x);
+ if(!m)return false;
+ const year=+m[1],month=+m[2],day=+m[3],hour=+m[4],minute=+m[5],second=+m[6];
+ const leap=year%4===0&&(year%100!==0||year%400===0);
+ const days=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
+ if(month<1||month>12||day<1||day>days[month-1]||hour>23||minute>59||second>59)return false;
+ if(m[8]!=='Z'&&(+m[8].slice(1,3)>23||+m[8].slice(4,6)>59))return false;
+ return Number.isFinite(Date.parse(x));
+};
 const ID=x=>typeof x==='string'&&/^[a-zA-Z0-9_.:-]{1,160}$/.test(x);
 const COUNTS=['intent_passed','intent_failed','intent_skipped','live_passed','live_failed','live_skipped'];
 const PAIRS={COMPLETED:['passed','needs_attention'],FAILED:['execution_failed'],SKIPPED:['skipped_active_review']};
