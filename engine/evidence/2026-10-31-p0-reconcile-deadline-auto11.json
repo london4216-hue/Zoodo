@@ -102,7 +102,14 @@
     "task_id": "ZOO-P0-RECONCILE-DEADLINE-20261031-0630",
     "timestamp_utc": "2026-10-31T06:34:07.001Z",
     "next_trigger": "PR #52 source review and provider-native relay probe",
-    "decision": "REVISE"
+    "decision": "REVISE",
+    "keeper_immediate_run_request": {
+      "requested_at_utc": "2026-10-31T06:37:08.781Z",
+      "existing_automation_id": "6ae3da9a4b048191be5c34ef8a19b1b7",
+      "request_result": "accepted",
+      "execution_result": "UNKNOWN",
+      "note": "Run requested through existing automation; request is not evidence the Keeper executed or integrated"
+    }
   },
   "movement_ledger": [
     {
