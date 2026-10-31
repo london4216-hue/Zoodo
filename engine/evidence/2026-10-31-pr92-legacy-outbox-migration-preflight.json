@@ -32,10 +32,11 @@
     },
     "postgresql_runtime_available": false,
     "postgresql_migration_or_concurrency_tested": false,
-    "github_actions_status": "UNKNOWN: no commit-associated workflow runs and no combined status checks returned; earlier zero-step startup failures are infrastructure UNKNOWN",
+    "github_actions_status": "INFRASTRUCTURE UNKNOWN: run 41245543507 concluded failure, but lab-tests job 124668090314 returned steps=null; no test steps executed",
     "branch_protection_verified": false,
     "native_external_model_invoked": false,
-    "hosted_autonomous_handoff_verified": false
+    "hosted_autonomous_handoff_verified": false,
+    "github_actions_run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41245543507"
   },
   "limitations": [
     "Not applied to any database",
