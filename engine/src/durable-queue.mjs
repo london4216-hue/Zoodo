@@ -31,7 +31,7 @@ export class DurableQueue {
     if(e.type==='heartbeat')t.leaseUntil=e.leaseUntil;
     if(e.type==='submit'){t.status='review';t.commit=e.commit;t.leaseUntil=null}
     if(e.type==='approve'){t.status='test';t.reviewer=e.reviewer;t.reviewProvider=e.reviewProvider}
-    if(e.type==='tested'){t.tests={passed:e.passed,evidence:e.evidence};if(!e.passed)t.status='queued';}
+    if(e.type==='tested'){t.tests={passed:e.passed,evidence:e.evidence};if(!e.passed){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;}}
     if(e.type==='release')t.releaseProof=e.evidence;
     if(e.type==='verify')t.status='verified';
     if(e.type==='done')t.status='done';
@@ -72,7 +72,7 @@ export class DurableQueue {
     if(approved!==true)return this.#record('requeue',id,{reason:'Independent reviewer rejected',reviewer,reviewProvider:provider,evidence,dead:t.attempts>=this.maxAttempts});
     return this.#record('approve',id,{reviewer,reviewProvider:provider,commit,evidence});
   }
-  tested(id,{passed,evidence}){const t=this.get(id);if(!t||t.status!=='test')fail('Not awaiting tests');if(typeof passed!=='boolean'||!valid(evidence))fail('Test verdict and evidence required');return this.#record('tested',id,{passed,evidence})}
+  tested(id,{passed,evidence}){const t=this.get(id);if(!t||t.status!=='test')fail('Not awaiting tests');if(typeof passed!=='boolean'||!valid(evidence))fail('Test verdict and evidence required');return this.#record('tested',id,{passed,evidence,dead:!passed&&t.attempts>=this.maxAttempts})}
   release(id,{authorized,evidence}){const t=this.get(id);if(!t||t.status!=='test'||!t.tests?.passed||!t.releaseRequired)fail('Release not eligible');if(authorized!==true||!valid(evidence))fail('Explicit release authorization and proof required');return this.#record('release',id,{evidence})}
   verify(id,{evidence}){const t=this.get(id);if(!t||t.status!=='test'||!t.tests?.passed||!valid(evidence)||t.releaseRequired&&!t.releaseProof)fail('Tests and authorized release evidence required');return this.#record('verify',id,{evidence})}
   done(id){const t=this.get(id);if(!t||t.status!=='verified')fail('Not verified');return this.#record('done',id)}
