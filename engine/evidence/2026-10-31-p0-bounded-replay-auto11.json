@@ -105,7 +105,32 @@
     "decision": "REVISE",
     "next_action": "Integrate PR #49 after exact branch full-suite tests; Hunter qualify authorized Netlify function and private Supabase DB; run native two-ticket failover and publish provider-native receipts through Dashboard Lead.",
     "next_trigger": "GitHub PR #49 event + existing Keeper reconciliation; execution not claimed",
-    "status": "PERSISTED_CHECKPOINT_REQUESTED"
+    "status": "PERSISTED_CHECKPOINT_REQUESTED",
+    "github_comments": [
+      {
+        "target": "Zoodo PR #45",
+        "url": "https://github.com/london4216-hue/Zoodo/pull/45#issuecomment-6539589142"
+      },
+      {
+        "target": "Zoodo PR #47",
+        "url": "https://github.com/london4216-hue/Zoodo/pull/47#issuecomment-6539589729"
+      },
+      {
+        "target": "TransendIQ #1048",
+        "url": "https://github.com/london4216-hue/TransendIQ/issues/1048#issuecomment-6539590053"
+      },
+      {
+        "target": "TransendIQ #1023",
+        "url": "https://github.com/london4216-hue/TransendIQ/issues/1023#issuecomment-6539590470"
+      }
+    ],
+    "keeper_continuation": {
+      "requested": true,
+      "request_accepted": true,
+      "new_run_started": "UNKNOWN",
+      "completed": "UNKNOWN"
+    },
+    "utc_timestamp": "2026-10-31T05:32:00Z"
   },
   "figma_originals": "UNCHANGED",
   "production_merge": false,
