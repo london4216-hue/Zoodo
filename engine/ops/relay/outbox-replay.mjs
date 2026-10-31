@@ -11,11 +11,22 @@ export function makeOutboxReplay({store, dispatch, worker, timeoutMs = 8000}) {
   if (!Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 30000) {
     throw Error('Bounded replay deadline required');
   }
-  return async function replayOne() {
+  return async function replayOne(externalSignal) {
+    if (externalSignal?.aborted) return {state:'replay-unconfirmed', reason:'External deadline before outbox claim'};
     let expired = false;
     const controller = new AbortController();
-    let timer;
+    let timer, onExternalAbort;
+    const externalDeadline = externalSignal ? new Promise(resolve => {
+      onExternalAbort = () => {
+        expired = true;
+        controller.abort();
+        resolve({state:'replay-unconfirmed', reason:'External deadline; fenced outbox recovery required'});
+      };
+      externalSignal.addEventListener('abort', onExternalAbort, {once:true});
+      if (externalSignal.aborted) onExternalAbort();
+    }) : null;
     const attempt = async () => {
+      if (expired) return {state:'replay-unconfirmed'};
       const event = await store.claimOutbox();
       // A late claim may have acquired a lease after the HTTP response deadline.
       // Do not start a new worker invocation after that deadline.
@@ -64,10 +75,12 @@ export function makeOutboxReplay({store, dispatch, worker, timeoutMs = 8000}) {
             controller.abort();
             resolve({state: 'replay-unconfirmed', reason: 'Replay deadline; fenced outbox recovery required'});
           }, timeoutMs);
-        })
+        }),
+        ...(externalDeadline ? [externalDeadline] : [])
       ]);
     } finally {
       clearTimeout(timer);
+      if (onExternalAbort) externalSignal.removeEventListener('abort', onExternalAbort);
     }
   };
 }
