@@ -45,14 +45,21 @@
     },
     "github_workflow": {
       "run_id": 41192506935,
-      "status_at_read": "queued",
-      "conclusion": null,
-      "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41192506935"
+      "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41192506935",
+      "job_id": 124511966456,
+      "status": "completed",
+      "conclusion": "failure",
+      "job_started_at_utc": "2026-10-31T10:22:43Z",
+      "job_completed_at_utc": "2026-10-31T10:22:46Z",
+      "steps": 0,
+      "job_log": "NOT_AVAILABLE: GitHub job log endpoint returned BlobNotFound 404",
+      "interpretation": "GitHub Actions CI did not execute test steps; cannot count as a test pass; exact failure cause unproven"
     },
-    "provider_deployment": "UNKNOWN",
+    "provider_deployment": "UNKNOWN: no authorized Netlify/Vercel/Supabase deployment action available in this execution environment",
     "external_worker_invocation": "UNKNOWN",
     "hosted_two_ticket_failover": "UNKNOWN",
-    "deepseek_request_id": null
+    "deepseek_request_id": null,
+    "live_dashboard_refresh": "UNKNOWN: public site and function endpoint could not be fetched through available browser source"
   },
   "movement": {
     "hour_et": "2026-10-31T06:00:00-04:00",
@@ -85,5 +92,5 @@
     "next_trigger": "next authorized Keeper integration execution or actual hosted completion event",
     "evidence_url": "https://github.com/london4216-hue/Zoodo/pull/69"
   },
-  "observed_at_utc": "2026-10-31T10:22:40Z"
+  "observed_at_utc": "2026-10-31T10:23:11Z"
 }
