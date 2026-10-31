@@ -45,7 +45,8 @@ BEGIN
   ORDER BY q.priority DESC,q.created_at,q.id FOR UPDATE OF q SKIP LOCKED LIMIT 1;
   IF NOT FOUND THEN RETURN; END IF;
   UPDATE public.zoo_ops_tickets q SET state='leased',lease_owner=p_worker,
-    lease_token=gen_random_uuid(),lease_until=now()+interval '45 seconds',
+    -- now() is fixed at transaction start; a delayed claim can receive an already-expired lease.
+    lease_token=gen_random_uuid(),lease_until=clock_timestamp()+interval '45 seconds',
     attempts=q.attempts+1,updated_at=now() WHERE q.id=t.id RETURNING q.* INTO t;
   INSERT INTO public.zoo_ops_events(ticket_id,event,worker) VALUES(t.id,'claimed',p_worker);
   RETURN QUERY SELECT t.id,t.asset,t.intent,t.lease_owner,t.lease_token;
