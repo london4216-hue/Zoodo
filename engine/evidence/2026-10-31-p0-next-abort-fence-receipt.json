@@ -16,25 +16,25 @@
       "engine/ops/relay/next-deadline.mjs": "1c550c02523888f0be49b72ddca1012e28893816",
       "engine/ops/relay/portable-relay.mjs": "a0d9b7cec124a55f673dec9da4d25d5cce326b00",
       "engine/ops/relay/outbox-replay.mjs": "560d00dbbfb9b18eef1763c45bc98367ed6bcb08",
-      "engine/test/next-abort-fence.test.mjs": "7d01c15d3a4c36c1e844c73f07e26b8a2b968cfc"
+      "engine/test/next-abort-fence.test.mjs": "a302e3a505ba8d9d1890dcd1b288131b9673c2f9"
     }
   },
   "execution": {
     "environment": "local Node.js 22.16.0 container; synthetic durable-store stub and real 127.0.0.1 HTTP server; NOT hosted",
     "command": "node --test engine/test/next-deadline.test.mjs engine/test/next-abort-fence.test.mjs",
-    "started_utc": "2026-10-31T06:24:45Z",
-    "ended_utc": "2026-10-31T06:24:45Z",
+    "started_utc": "2026-10-31T06:25:50Z",
+    "ended_utc": "2026-10-31T06:25:51Z",
     "exit_code": 0,
-    "tests": 11,
-    "passed": 11,
+    "tests": 12,
+    "passed": 12,
     "failed": 0,
     "red_first": {
       "before_patch": "2/4 passed; late NEXT worker and backup claim tests failed",
       "before_replay_patch": "4/5 passed; outbox abort propagation test failed"
     },
-    "tap_sha256": "7d90569dff2a1b2f7e602daddd0fbe90a200e0466e70a7dca9e7b999fcfe3f13",
-    "tap_git_blob": "28cddebaee223fcce5e589bbe396bff8f2c6232f",
-    "tap_url": "https://github.com/london4216-hue/Zoodo/blob/worker/p0-next-abort-fence-20261031-0623/engine/evidence/2026-10-31-p0-next-abort-fence-final.tap",
+    "tap_sha256": "a7e73f92d216d0681beb544b0028bfec3623a00d5506890c412153c9d06ab89a",
+    "tap_git_blob": "349da1474e646f9833a80a79382db9788af8ccac",
+    "tap_url": "https://github.com/london4216-hue/Zoodo/blob/worker/p0-next-abort-fence-20261031-0623/engine/evidence/2026-10-31-p0-next-abort-fence-12cases.tap",
     "two_ticket_local_http": {
       "ticket_ids": [
         "T1",
@@ -52,7 +52,17 @@
       "provider_request_ids": [],
       "actual_latency_ms": null,
       "latency_note": "No instrumented timestamp receipt; only bounded test assertion under 2000ms",
-      "hosted": false
+      "hosted": false,
+      "failover": {
+        "primary_worker": "dead",
+        "primary_ticket": "T1",
+        "primary_state": "uncertain leased",
+        "replacement_worker": "backup",
+        "replacement_ticket": "T2",
+        "replacement_accepted": true,
+        "duplicate_T1": false,
+        "scope": "local HTTP with synthetic database"
+      }
     },
     "recovery_drill": {
       "kind": "late claim after timeout",
@@ -90,7 +100,7 @@
     "opened_at": "2026-10-31T06:24:22Z",
     "review_at": null,
     "fix_at": null,
-    "local_tests_ended_at": "2026-10-31T06:24:45Z",
+    "local_tests_ended_at": "2026-10-31T06:25:51Z",
     "merged_at": null,
     "deployed_at": null,
     "independently_verified_at": null,
@@ -122,7 +132,7 @@
     "task_id": "ZOO-P0-NEXT-DEADLINE-FENCE-20261031-0623",
     "proposed_fix": "Integrate PR #50 after stacked #49, run full suite, test private Supabase lease/outbox and authenticated Netlify/Vercel invocation, then provider-native two-ticket recovery and dashboard readback",
     "decision": "REVISE",
-    "timestamp_utc": "2026-10-31T06:24:59Z",
+    "timestamp_utc": "2026-10-31T06:25:51Z",
     "next_trigger": "GitHub PR #50 comment/stack integration; existing hourly Keeper/Hunter watchdogs if no event-driven provider available"
   },
   "safety": {
