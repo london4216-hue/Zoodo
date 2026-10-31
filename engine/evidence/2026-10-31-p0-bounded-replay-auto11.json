@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "agent_id": "Implementation Lead (ChatGPT)",
+  "task_id": "ZOODO-P0-OUTBOX-REPLAY-DEADLINE-20261031-0529",
+  "decision": "REVISE",
+  "reason": "Local event-driven outbox replay now bounded and tested; no authenticated hosted worker/DB failover proof.",
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "repository_visibility": "public",
+    "branch": "worker/p0-outbox-bounded-serverless-20261031-auto11",
+    "pr_url": "https://github.com/london4216-hue/Zoodo/pull/49",
+    "base_pr_url": "https://github.com/london4216-hue/Zoodo/pull/45",
+    "code_commit_sha": "f5f4f9b72aa8fd79becd0e2dd5d56149efe34053",
+    "test_commit_sha": "80d4d798885ceb3062f680c730dfdf5b32580db5",
+    "tap_commit_sha": "06d5a959ffee155b57118164d0abca90573b7665",
+    "source_blobs": {
+      "engine/ops/relay/outbox-replay.mjs": "d8a936319d24d5df22eb1e4b3b2f161a298dc6df",
+      "engine/test/outbox-replay-bounded.test.mjs": "d1bf6b8e777c9b5a60b1401851288315718db6a2",
+      "engine/evidence/2026-10-31-p0-bounded-replay-auto11.tap": "9bc01b8ef212197fa19ce53d2c95fa77651baab3"
+    }
+  },
+  "execution": {
+    "environment": "local Node.js v22.16.0 container, synthetic store plus real localhost HTTP",
+    "command": "node --test engine/test/outbox-replay-bounded.test.mjs",
+    "started_utc": "2026-10-31T05:30:09Z",
+    "ended_utc": "2026-10-31T05:30:10Z",
+    "exit_code": 0,
+    "tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "red_tests": "1/5 passed; 4/5 failed before patch",
+    "red_tap_sha256": "31b212e580683fd3a76a04e388c71f6c49d7bfe42d7576db4c669917382bbe68",
+    "green_tap_sha256": "ccf233705f35e4c4bd2356e72e26e5d6385a3c0cd63b7aab9a75f2176ad3fc4f",
+    "tap_url": "https://github.com/london4216-hue/Zoodo/blob/06d5a959ffee155b57118164d0abca90573b7665/engine/evidence/2026-10-31-p0-bounded-replay-auto11.tap",
+    "two_ticket_drill": {
+      "ticket_ids": [
+        "T1",
+        "T2"
+      ],
+      "scope": "local HTTP synthetic",
+      "t1": "uncertain, outbox not acknowledged",
+      "t2": "HTTP 202, outbox acknowledged",
+      "provider_request_ids": [],
+      "next_dispatch_latency_ms": null,
+      "lease_state": "mock only, not private DB",
+      "hosted": false
+    }
+  },
+  "hourly_movement": [
+    {
+      "hour_et": "2026-10-31 01 EDT",
+      "hour_utc": "2026-10-31 05 UTC",
+      "repo": "london4216-hue/Zoodo",
+      "asset": "ZOO independent outbox relay",
+      "pr": 49,
+      "prior_status": "unbounded replay on hung DB claim or worker dispatch",
+      "new_status": "bounded 8-second replay, no late dispatch or ack, 7 local tests passed",
+      "commit": "80d4d798885ceb3062f680c730dfdf5b32580db5",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/80d4d798885ceb3062f680c730dfdf5b32580db5",
+      "worker": "Implementation Lead",
+      "provider_deploy": "UNKNOWN",
+      "hosted_execution": "UNKNOWN"
+    }
+  ],
+  "pr_stages": {
+    "opened_utc": "2026-10-31T05:30:24Z",
+    "reviewed_utc": null,
+    "fix_committed_utc": null,
+    "tests_completed_utc": "2026-10-31T05:30:10Z",
+    "merged_utc": null,
+    "deployed_utc": null,
+    "hosted_verified_utc": null,
+    "opened_to_review_seconds": null,
+    "review_to_fix_seconds": null,
+    "fix_to_tests_seconds": null,
+    "pr_to_merge_seconds": null,
+    "merge_to_deploy_seconds": null,
+    "deploy_to_verified_seconds": null,
+    "gap_detected_utc": "2026-10-31T05:29:06Z",
+    "gap_detection_to_fix_seconds": null,
+    "unresolved_hosted_gap_age_seconds": null
+  },
+  "provider_evidence": {
+    "github_connector_write": "PASS",
+    "git_source_readback": "PASS",
+    "github_commit_statuses": 0,
+    "github_workflow_runs": 0,
+    "netlify_authenticated_invocation": "UNKNOWN",
+    "supabase_private_migration": "NOT_EXECUTED",
+    "hosted_two_ticket_failover": "UNKNOWN",
+    "dashboard_production_readback": "UNKNOWN_INACCESSIBLE_TO_WEB_TOOL",
+    "deepseek_native_judge": "NOT_INVOKED",
+    "external_panel": "NOT_INVOKED",
+    "provider_deploy_credentials": "NOT_EXPOSED_IN_CURRENT_RUNTIME"
+  },
+  "proof_matrix": {
+    "Agent Hunter": "UNKNOWN",
+    "Dashboard Lead": "UNKNOWN",
+    "Implementation Lead": "LOCAL_PASS_HOSTED_UNKNOWN",
+    "ZOO Keeper": "UNKNOWN"
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "decision": "REVISE",
+    "next_action": "Integrate PR #49 after exact branch full-suite tests; Hunter qualify authorized Netlify function and private Supabase DB; run native two-ticket failover and publish provider-native receipts through Dashboard Lead.",
+    "next_trigger": "GitHub PR #49 event + existing Keeper reconciliation; execution not claimed",
+    "status": "PERSISTED_CHECKPOINT_REQUESTED"
+  },
+  "figma_originals": "UNCHANGED",
+  "production_merge": false,
+  "new_spending": false
+}
