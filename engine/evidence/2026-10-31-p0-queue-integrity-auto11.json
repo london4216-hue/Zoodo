@@ -89,7 +89,34 @@
     "test_evidence": "https://github.com/london4216-hue/Zoodo/blob/77cecb36595bf3309123e21d5518b9f1c22a9dd2/engine/evidence/2026-10-31-p0-queue-integrity-auto11.tap",
     "utc_timestamp": "2026-10-31T02:29:37Z",
     "next_action": "Integrate PR #39 after private PostgreSQL preflight and migration tests of 001-004; Hunter qualify authenticated Netlify/Supabase invocation; then execute two distinct hosted tickets with intentional failure, recover safely and publish dashboard proof.",
-    "next_trigger": "Existing Keeper continuation or authenticated hosted event; no execution claimed"
+    "next_trigger": "Existing Keeper continuation or authenticated hosted event; no execution claimed",
+    "github_comments": [
+      {
+        "repo": "london4216-hue/TransendIQ",
+        "issue": 1048,
+        "url": "https://github.com/london4216-hue/TransendIQ/issues/1048#issuecomment-6537817347"
+      },
+      {
+        "repo": "london4216-hue/TransendIQ",
+        "issue": 1023,
+        "url": "https://github.com/london4216-hue/TransendIQ/issues/1023#issuecomment-6537817666"
+      },
+      {
+        "repo": "london4216-hue/Zoodo",
+        "pr": 38,
+        "url": "https://github.com/london4216-hue/Zoodo/pull/38#issuecomment-6537818031"
+      }
+    ],
+    "keeper_continuation": {
+      "requested": true,
+      "request_accepted": true,
+      "execution_confirmed": false
+    },
+    "hunter_continuation": {
+      "requested": true,
+      "request_accepted": true,
+      "execution_confirmed": false
+    }
   },
   "original_figma_lanes": "UNCHANGED"
 }
