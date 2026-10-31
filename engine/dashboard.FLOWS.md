@@ -71,3 +71,5 @@ Canonical source before edits: public london4216-hue/Zoodo branch autonomous-eng
 - All legacy infrastructure evidence remains collapsible; the removed obsolete provider URL is absent from the current tracked directory source.
 - Full Netlify build source gate: 79/79 passed, mirror artifact preparation passed, no diff whitespace errors.
 - No horizontal overflow at 375 or 1440, no new page errors; desktop/mobile final screenshots are outside deploy directory under /tmp/r/zoo-redesign-*.
+- Independent root visual review requested above-fold mobile access. Compact mobile-only title/intro and first-card description now put BeautyPath primary action at y645.78–690.78 in a 375x812 viewport without scrolling. Search/filter and all other card body text remain readable 16px; standard note moved after cards.
+- Native GitHub check at the first PR head did not start any steps because the account is locked due to a billing issue. This is not reported as a passing check. Netlify preview succeeded, but native source-build proof and final production identity still need provider verification.

@@ -2,6 +2,7 @@
 export const ASSETS=[
  {id:'beautypath',name:'BeautyPath',type:'demo',initials:'BP',tone:'sage',category:'Career pathways',references:true,
   description:'Choose a student, graduate, school, salon or owner demo. Your selected BeautyPath layout, ready to open.',
+  mobileDescription:'Choose your demo journey.',
   status:'Owner-selected demo',links:[
    ['Open demo','https://beautypath-grad.netlify.app/?v=f5603ca0-mvtxsvfj'],
    ['Workspace','https://beautypaths.io/app'],['Admin workspace','https://beautypaths.io/super'],
@@ -71,8 +72,11 @@ if(typeof document!=='undefined'){
     const card=node('article','asset-card '+asset.tone);card.dataset.asset=asset.id;
     const top=node('div','asset-card-top');
     top.append(node('span','asset-initials',asset.initials),node('span','asset-status',asset.status));
+    const description=node('p','asset-description');
+    if(asset.mobileDescription)description.append(node('span','desktop-only',asset.description),node('span','mobile-only',asset.mobileDescription));
+    else description.textContent=asset.description;
     card.append(top,node('p','asset-category',asset.category),node('h3','',asset.name),
-     node('p','asset-host',assetHost(asset)),node('p','asset-description',asset.description));
+     node('p','asset-host',assetHost(asset)),description);
     if(asset.type==='demo'&&asset.id!=='beautypath')
      card.append(node('p','asset-standard','Demo journey standard: not yet verified'));
     const links=node('div','asset-actions');
