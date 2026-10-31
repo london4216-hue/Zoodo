@@ -8,14 +8,18 @@ const verifiedObjects=new WeakSet();
 const https=x=>{try{const u=new URL(x);return u.protocol==='https:'&&!u.username&&!u.password&&!u.hash&&u.hostname.includes('.')&&!/^(localhost|127\.|10\.|192\.168\.|169\.254\.|172\.(?:1[6-9]|2\d|3[01])\.)/i.test(u.hostname)}catch{return false}};
 const time=x=>typeof x==='string'&&/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z$/.test(x)?Date.parse(x):NaN;
 const reject=(reason,state='INVALID')=>({state,qualified:false,reason});
-export async function assessProviderReceipt(r,{now=new Date().toISOString(),expectedTaskId,expectedSourceSha,verifyProvider,maxAgeMs=3600000}={}){
+export async function assessProviderReceipt(r,{now=new Date().toISOString(),expectedTaskId,expectedAgentId,expectedRole,expectedSourceSha,verifyProvider,maxAgeMs=3600000}={}){
  if(!r||typeof r!=='object'||Array.isArray(r))return reject('invalid_envelope');
  if(r.schema!=='zoo.provider-invocation.v1'||!NAME.test(r.provider||'')||!['model','execution_host'].includes(r.provider_kind)||
     !ID.test(r.provider_request_id||'')||!ID.test(r.agent_id||'')||!ID.test(r.task_id||'')||!NAME.test(r.role||'')||
     (r.provider_kind==='model'&&!ID.test(r.model_id||''))||!SHA.test(r.source_sha||'')||!SHA.test(r.artifact_sha||'')||
     r.status!=='completed'||!https(r.evidence_url))return reject('invalid_or_nonproductive_receipt');
- if(expectedTaskId!==undefined&&r.task_id!==expectedTaskId)return reject('assignment_mismatch');
- if(expectedSourceSha!==undefined&&r.source_sha!==expectedSourceSha)return reject('source_mismatch');
+ // Provider readback authenticates execution, not its assignment to a ZOO task or role.
+ // The scheduler must supply its own trusted, exact assignment before KPI credit.
+ if(!ID.test(expectedTaskId||'')||!ID.test(expectedAgentId||'')||!NAME.test(expectedRole||'')||!SHA.test(expectedSourceSha||''))
+   return reject('trusted_assignment_required','UNVERIFIED');
+ if(r.task_id!==expectedTaskId||r.agent_id!==expectedAgentId||r.role!==expectedRole)return reject('assignment_mismatch');
+ if(r.source_sha!==expectedSourceSha)return reject('source_mismatch');
  const start=time(r.started_at),end=time(r.finished_at),clock=time(now);
  if(!Number.isFinite(start)||!Number.isFinite(end)||!Number.isFinite(clock)||end<start||end>clock+30000||clock-end>maxAgeMs||start>clock+30000)return reject('invalid_or_stale_clock');
  if(r.cost_usd!==null&&r.cost_usd!==undefined&&(!Number.isFinite(r.cost_usd)||r.cost_usd<0))return reject('invalid_cost');
