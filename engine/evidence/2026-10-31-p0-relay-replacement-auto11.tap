@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: real local HTTP two-ticket chain dispatches NEXT on completion event, not polling
+ok 1 - real local HTTP two-ticket chain dispatches NEXT on completion event, not polling
+  ---
+  duration_ms: 35.881034
+  type: 'test'
+  ...
+# Subtest: timeout is uncertain, not automatically duplicated; native non-execution can requeue
+ok 2 - timeout is uncertain, not automatically duplicated; native non-execution can requeue
+  ---
+  duration_ms: 0.704742
+  type: 'test'
+  ...
+# Subtest: forged callback, invalid SHA and missing private credentials fail closed
+ok 3 - forged callback, invalid SHA and missing private credentials fail closed
+  ---
+  duration_ms: 0.61689
+  type: 'test'
+  ...
+# Subtest: worker acceptance without durable record is UNKNOWN, never reported dispatched
+ok 4 - worker acceptance without durable record is UNKNOWN, never reported dispatched
+  ---
+  duration_ms: 0.726785
+  type: 'test'
+  ...
+# Subtest: uncertain primary worker does not duplicate its task and dispatches independent next ticket to replacement
+ok 5 - uncertain primary worker does not duplicate its task and dispatches independent next ticket to replacement
+  ---
+  duration_ms: 10.068647
+  type: 'test'
+  ...
+# Subtest: busy worker kick delegates next eligible ticket to idle authorized worker
+ok 6 - busy worker kick delegates next eligible ticket to idle authorized worker
+  ---
+  duration_ms: 0.907127
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 186.683281
