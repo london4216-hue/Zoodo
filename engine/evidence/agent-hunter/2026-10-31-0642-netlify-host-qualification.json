@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "agent_id": "ZOO Agent Hunter (ChatGPT automation)",
+  "task_id": "Zoodo #18 / TransendIQ #1045 / #1039",
+  "observed_at_utc": "2026-10-31T06:42:34Z",
+  "hour_utc": "2026-10-31T06:00:00Z",
+  "hour_et": "2026-10-31T02:00:00-04:00",
+  "decision": "REVISE",
+  "state": "RECOVERING",
+  "repo": "london4216-hue/Zoodo",
+  "branch": "hunter/strict-netlify-host-receipt-20261031",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/54",
+  "base_pr": "https://github.com/london4216-hue/Zoodo/pull/38",
+  "source_code_commit": "76382762376af7e9be0d3329a3bf16a9bb77fa63",
+  "test_commit": "5810a74af28253649294d8b9022a0cdb098e1263",
+  "source_blob_sha": "2b36de3a40c0118a1909ae97149bab3448933dd7",
+  "test_blob_sha": "8fdc470fa913285434d7c792876885863dcf9637",
+  "tests": {
+    "environment": "local Node.js v22.16.0",
+    "command": "node --test tests/qualify-host-probe.test.mjs && node --check scripts/qualify-host-probe.mjs",
+    "passed": 10,
+    "failed": 0,
+    "github_blob_matches_local": true,
+    "hosted_tests": false
+  },
+  "host_probe": {
+    "expected_sha": "5d391c807e7c71fa2803a83f6ca08e3dfacdd44b",
+    "started_at": "2026-10-31T06:42:34.865Z",
+    "completed_at": "2026-10-31T06:42:34.866Z",
+    "status": "BLOCKED",
+    "reason": "credential_unavailable",
+    "network_request_sent": false,
+    "provider_native_request_id": null,
+    "hosted_execution_verified": false,
+    "runner_qualified": false,
+    "durable_queue_verified": false
+  },
+  "provider_matrix": [
+    {
+      "name": "Netlify",
+      "source_probe": "PR #38 open; PR #54 verifier draft",
+      "provider_native_execution": "UNKNOWN",
+      "access": "no callable management/host adapter or probe token in this run"
+    },
+    {
+      "name": "Vercel",
+      "provider_native_execution": "UNKNOWN",
+      "access": "no callable adapter"
+    },
+    {
+      "name": "Render",
+      "provider_native_execution": "UNKNOWN",
+      "access": "no callable adapter",
+      "note": "existing render.yaml is static dashboard mirror, not a worker"
+    },
+    {
+      "name": "Cloudflare",
+      "provider_native_execution": "UNKNOWN",
+      "access": "no callable adapter"
+    },
+    {
+      "name": "Supabase",
+      "provider_native_execution": "UNKNOWN",
+      "access": "no callable adapter"
+    }
+  ],
+  "external_panel": [
+    {
+      "name": "DeepSeek",
+      "invocation_id": null,
+      "verified_current_capability": false,
+      "vote": null,
+      "reason": "no authenticated provider invocation adapter in this runtime"
+    },
+    {
+      "name": "GitHub Copilot",
+      "invocation_id": null,
+      "verified_current_capability": false,
+      "vote": null,
+      "reason": "no authenticated provider invocation adapter in this runtime"
+    },
+    {
+      "name": "Claude",
+      "invocation_id": null,
+      "verified_current_capability": false,
+      "vote": null,
+      "reason": "no authenticated provider invocation adapter in this runtime"
+    },
+    {
+      "name": "Gemini",
+      "invocation_id": null,
+      "verified_current_capability": false,
+      "vote": null,
+      "reason": "no authenticated provider invocation adapter in this runtime"
+    },
+    {
+      "name": "Codex",
+      "invocation_id": null,
+      "verified_current_capability": false,
+      "vote": null,
+      "reason": "no authenticated provider invocation adapter in this runtime"
+    }
+  ],
+  "kpi": {
+    "currently_verified_productive_external_agents": 0,
+    "newly_qualified_external_capacity": 0,
+    "verified_hosted_recoveries": 0,
+    "active_hosted_assignments": "UNKNOWN",
+    "oldest_checkpoint_age_seconds": "UNKNOWN"
+  },
+  "handoff": {
+    "from": "Agent Hunter",
+    "to": "Dashboard Lead",
+    "then": "Implementation Lead",
+    "then_after": "ZOO Keeper",
+    "decision": "REVISE",
+    "next": "Qualify authenticated Netlify Function at exact source SHA and native x-nf-request-id, then prove durable two-ticket automatic NEXT handoff. Dashboard Lead single writer; Keeper integrates; no production publication."
+  },
+  "pr_stages": {
+    "opened": "2026-10-31T06:42:27Z",
+    "review": null,
+    "merge": null,
+    "deploy": null,
+    "verified": null
+  },
+  "latencies": {
+    "gap_to_fix": "UNKNOWN",
+    "fix_to_hosted_verification": "UNKNOWN",
+    "pr_to_merge": "UNKNOWN",
+    "merge_to_deploy": "UNKNOWN"
+  }
+}
