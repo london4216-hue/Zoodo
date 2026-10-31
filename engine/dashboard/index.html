@@ -78,17 +78,32 @@
 <div class="card"><h2>Independent agent verdicts</h2><div class="metric" id="judges">UNKNOWN</div><div class="muted">Awaiting independently signed evidence</div></div>
 </div>
 <div class="panels"><section class="panel"><h2>Rolling commit evidence</h2><div id="commits" aria-live="polite">Connecting…</div></section><section class="panel"><h2>Workflow executions</h2><div id="runs" aria-live="polite">Connecting…</div></section></div>
-<footer>Polls GitHub and actual published automation-run receipts every 30 seconds while this page is open; retains truthful timestamps and reports missing proof. The browser cannot directly wake ChatGPT workers: the scheduled ZOO recovery worker monitors overdue receipts. Polls GitHub every 30 seconds. Verified movement requires a substantive code diff, linked ticket, exact-head CI and authenticated independent-provider review. Commits and green CI alone never reset the clock. Independent reviewer, deployed host and worker heartbeat feeds are not connected; show UNKNOWN. Read-only, no worker dispatch or stored credentials.</footer>
+<footer>Polls published scheduler-run proof every 30 seconds and GitHub REST source evidence every 10 minutes while this page is open; retains truthful timestamps and reports missing proof. The browser cannot directly wake ChatGPT workers: the scheduled ZOO recovery worker monitors overdue receipts. Manual refresh still rechecks GitHub immediately. Verified movement requires a substantive code diff, linked ticket, exact-head CI and authenticated independent-provider review. Commits and green CI alone never reset the clock. Independent reviewer, deployed host and worker heartbeat feeds are not connected; show UNKNOWN. Read-only, no worker dispatch or stored credentials.</footer>
 <script type="module">
 import {evaluateEvidence} from './evidence-clock.mjs';
 import {evaluateAutomationProof} from './automation-proof.mjs';
-const owner='london4216-hue',repo='Zoodo',branch='autonomous-engine-replacement-2026-10-29';
+import {selectSourceIdentity} from './source-identity.mjs';
+import {GITHUB_SOURCE_POLL_MS,AUTOMATION_PROOF_POLL_MS} from './refresh-policy.mjs';
+const owner='london4216-hue',repo='Zoodo',fallbackBranch='autonomous-engine-replacement-2026-10-29';
+let sourceIdentity=selectSourceIdentity(null,fallbackBranch),sourceIdentityError='build receipt not read';
 const root='https://api.github.com/repos/'+owner+'/'+repo;
 const $=id=>document.getElementById(id);let evidenceState=null;
 let linkRefreshInFlight=false, directoryLinks=null;
 let lastRunFeed=null, runFeedFetchError=null;
 let proofRefreshInFlight=false; // serialize manual and scheduled proof fetches
 let updateInFlight=false; // prevent stale overlapping GitHub API responses
+async function refreshSourceIdentity(){
+ try{
+  const res=await fetch('./build-proof.json?source_read='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(8000)});
+  if(!res.ok)throw Error('HTTP '+res.status);
+  sourceIdentity=selectSourceIdentity(await res.json(),fallbackBranch);
+  sourceIdentityError=sourceIdentity.providerBuildClaim?null:'build receipt missing exact SHA or passing tests';
+ }catch(e){
+  sourceIdentity=selectSourceIdentity(null,fallbackBranch);
+  sourceIdentityError='build source mapping unavailable: '+String(e.message||e);
+ }
+}
+
 function paintAutomationProof(){
  const proof=evaluateAutomationProof(lastRunFeed);
  const status=runFeedFetchError?'RECOVERY REQUIRED':proof.state;
@@ -312,6 +327,7 @@ async function update(){
  if(updateInFlight)return; // manual and interval refresh share one bounded source check
  updateInFlight=true;
  try{
+ await refreshSourceIdentity();
  $('checked').textContent='Last attempted source check '+new Date().toLocaleTimeString();
  classifyDemoLinks().catch(()=>{});
  refreshAutomationProof().catch(()=>{runFeedFetchError='Unexpected proof refresh error';paintAutomationProof()});
@@ -319,7 +335,7 @@ async function update(){
  checkMyBlockLab();
  checkYB3Lab();
  loadQueue().catch(()=>{$('queue-heartbeat').textContent='UNKNOWN';});
- const [commits,runs]=await Promise.allSettled([api('/commits?sha='+encodeURIComponent(branch)+'&per_page=100'),api('/actions/runs?branch='+encodeURIComponent(branch)+'&per_page=30')]);
+ const [commits,runs]=await Promise.allSettled([api('/commits?sha='+encodeURIComponent(sourceIdentity.ref)+'&per_page=100'),api('/actions/runs?branch='+encodeURIComponent(sourceIdentity.branch)+'&per_page=30')]);
  const errors=[];
  const latest=commits.status==='fulfilled'?commits.value[0]:null;
  if(commits.status==='fulfilled'||runs.status==='fulfilled'){
@@ -329,6 +345,7 @@ async function update(){
  }
  if(commits.status==='fulfilled'){
    $('sourceSuccess').textContent='Last successful GitHub commit endpoint response: '+new Date().toLocaleString()+
+     (sourceIdentity.providerBuildClaim?' · provider build receipt SHA '+sourceIdentity.sourceCommit+' (NOT live deploy proof)':' · deployed SHA UNKNOWN; '+sourceIdentityError)+
      ' · source receipt is not proof of active worker or live deployment';
  }
 
@@ -338,7 +355,9 @@ async function update(){
  // No authenticated provider review/heartbeat or deployment receipt is currently connected.
  evidenceState=evaluateEvidence({head:latest,detail,runs:d,review:null,deployment:null,heartbeat:null});
  tickClock();
- $('lastSha').textContent=latest?'Latest commit '+latest.sha.slice(0,9):'Latest commit UNKNOWN';
+ $('lastSha').textContent=sourceIdentity.providerBuildClaim?
+  'Provider build SHA '+sourceIdentity.sourceCommit.slice(0,9)+' · actual deployed SHA UNKNOWN':
+  (latest?'Latest fallback-branch commit '+latest.sha.slice(0,9)+' · deployed SHA UNKNOWN':'Latest commit UNKNOWN · deployed SHA UNKNOWN');
  $('proof-details').textContent='Last commit: '+(evidenceState.lastCommitAt??'UNKNOWN')+
  ' · latest head code diff: '+(evidenceState.lastCodeAt??'UNKNOWN')+
  ' · exact-head CI: '+(evidenceState.exactHeadCiAt??'UNKNOWN')+
@@ -375,7 +394,7 @@ function tickClock(){
     $('accountabilityProof').textContent=observed
       ?'Most recent GitHub code/commit receipt: '+new Date(observed).toLocaleString()+' · independent review / active worker heartbeat NOT established'
       :'GitHub source receipt unavailable. Existing assignments continue; do not infer zero agents or fabricated progress.';
-    $('accountabilityNext').textContent='Automatic retry every 30 seconds; Dashboard Worker investigates actual source, Agent Hunter is backup, Keeper owns deployment integration.';
+    $('accountabilityNext').textContent='GitHub source retry every '+(GITHUB_SOURCE_POLL_MS/60000)+' minutes; recorded scheduler-proof fetch every '+(AUTOMATION_PROOF_POLL_MS/1000)+' seconds. Dashboard Worker investigates actual source; Agent Hunter is backup; Keeper owns deployment integration.';
     return;
   }
   const at=evidenceState.lastVerifiedCodeAt,mins=Math.max(0,(Date.now()-Date.parse(at))/60000);
@@ -387,5 +406,8 @@ function tickClock(){
   $('accountabilityNext').textContent='Keep builders active; refresh source evidence and verify actual deployed host independently.';
 }
 $('refresh').addEventListener('click',update);
-update();setInterval(update,30000);setInterval(tickClock,1000);
+update();
+setInterval(update,GITHUB_SOURCE_POLL_MS);
+setInterval(()=>refreshAutomationProof().catch(()=>{runFeedFetchError='Unexpected proof refresh error';paintAutomationProof()}),AUTOMATION_PROOF_POLL_MS);
+setInterval(tickClock,1000);
 </script><script type="module" src="./priority-watch.mjs"></script></body></html>

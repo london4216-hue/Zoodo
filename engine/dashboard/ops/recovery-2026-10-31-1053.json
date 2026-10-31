@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "task_id": "ZOO-DASHBOARD-CI-STACKED-TRIGGER-20261031-1053",
+  "status": "RECOVERING",
+  "observed_at": "2026-10-31T10:53:30.362Z",
+  "from": "Dashboard Lead",
+  "to": "Implementation Lead",
+  "next_handoff": "Sole ZOO Keeper",
+  "owner": "ZOO Dashboard Worker",
+  "backup": "ZOO Agent Hunter",
+  "integration_authority": "Sole ZOO Keeper",
+  "decision": "REVISE",
+  "repo": "london4216-hue/Zoodo",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+  "stacked_pr": "https://github.com/london4216-hue/Zoodo/pull/71",
+  "code_commit": "7c6010a173cecde8e7a869eb727ff9f46e929e11",
+  "test_commit": "4880569b510413e6a1ed5ecbb9882c58990068ff",
+  "scheduler_snapshot_commit": "54ba38f2d8e93f54b48f84e34911f200d952afec",
+  "root_cause": "PR #71 targets fix/zoo-live-dashboard-accountability-20261030, but dashboard-contract workflow previously accepted only pull_request base autonomous-engine-replacement-2026-10-29; no matching stacked-PR contract trigger. After adding the missing base, Actions creates a workflow run but fails before any job step, so separate CI startup defect remains.",
+  "attempted_repair": "Added stacked PR base to .github/workflows/zoo-dashboard-contract.yml without changing canonical base or read-only permissions; committed fail-first workflow-targets.test.mjs; checked exact GitHub readback.",
+  "local_test": {
+    "command": "node --test engine/dashboard/tests/workflow-targets.test.mjs",
+    "node": "v22.16.0",
+    "before": {
+      "passed": 2,
+      "failed": 1
+    },
+    "after": {
+      "passed": 3,
+      "failed": 0
+    },
+    "full_repository_suite": "NOT_RUN",
+    "source_readback": "PASS"
+  },
+  "github_actions": {
+    "new_run_id": 41194512099,
+    "new_run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41194512099",
+    "job_id": 124517861569,
+    "status": "completed",
+    "conclusion": "failure",
+    "steps": 0,
+    "job_logs": "HTTP_404_BlobNotFound",
+    "classification": "ZERO_STEP_STARTUP_RECOVERY_EVENT",
+    "exact_head": "4880569b510413e6a1ed5ecbb9882c58990068ff"
+  },
+  "source_link_parity": {
+    "baseline_unique_anchor_hrefs": 23,
+    "pr16_unique_anchor_hrefs": 37,
+    "pr71_unique_anchor_hrefs": 37,
+    "removed_baseline_hrefs": [],
+    "removed_pr16_hrefs": [],
+    "dead_beautypaths_primary_link": false,
+    "production_navigation_verified": false
+  },
+  "scheduler": {
+    "source": "authenticated_connected_automations_peek",
+    "observed_at": "2026-10-31T10:52:52.714Z",
+    "valid_completed_roles": 4,
+    "currently_running_at_snapshot": [
+      "ZOO Keeper",
+      "ZOO Dashboard Worker",
+      "ZOO Asset Restoration"
+    ],
+    "verified_productive_agents": "UNKNOWN",
+    "note": "Recorded scheduler completions do not prove productive worker execution; in-progress runs not counted as completions."
+  },
+  "deployment": {
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "site_id": null,
+    "deploy_id": null,
+    "deployed_sha": null,
+    "preview_readback": null,
+    "production_browser_readback": null,
+    "netlify_dns_from_container": "UNRESOLVED",
+    "web_readback": "UNAVAILABLE",
+    "owner_auth": null,
+    "rollback_mapping": null
+  },
+  "hourly_movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T10:00:00Z",
+      "asset": "Zoodo dashboard",
+      "pr": 71,
+      "prior_status": "CI_STACKED_PR_TRIGGER_MISSING",
+      "new_status": "TRIGGER_FIXED_LOCAL_PASS__CI_ZERO_STEP_FAILURE",
+      "code_sha": "7c6010a173cecde8e7a869eb727ff9f46e929e11",
+      "test_sha": "4880569b510413e6a1ed5ecbb9882c58990068ff",
+      "source_committed": true,
+      "local_tests": "3/3 targeted pass",
+      "ci_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41194512099",
+      "ci": "FAILURE_ZERO_STEPS",
+      "provider_deploy": "UNKNOWN",
+      "independent_live": "UNKNOWN",
+      "worker": "Dashboard Lead",
+      "pr_opened_at": "2026-10-31T10:41:47Z",
+      "review_at": null,
+      "merge_at": null,
+      "deploy_at": null,
+      "verified_at": null,
+      "claim_to_commit_minutes": null,
+      "merge_to_deploy_minutes": null,
+      "unresolved_gap_age_minutes": null
+    }
+  ],
+  "next_executable_steps": [
+    "Implementation Lead: diagnose GitHub Actions job provisioning/startup failure on run 41194512099 (zero steps, 404 log); try distinct qualified runner or independent read-only provider build test, preserve original failing run.",
+    "Agent Hunter: authenticated Netlify site ID, deploy ID, source branch and exact SHA mapping; verify preview and production endpoints, mobile link parity, auth and rollback without production changes.",
+    "Sole ZOO Keeper: reconcile stacked draft #71 into #16 only after source tests and safe integration; no production publish without owner release gates.",
+    "Dashboard Lead: continue sanitized single-writer scheduler snapshots and real GitHub evidence refresh; show source and scheduler clocks separately, keep productive-agent KPI UNKNOWN until native task receipts."
+  ],
+  "next_trigger": "New authenticated provider/CI execution receipt or next scheduled dashboard repair cycle",
+  "release": {
+    "production_published": false,
+    "demo_ready": false,
+    "email_sent": false
+  }
+}
