@@ -1,0 +1,30 @@
+{
+  "schema": "zoo.public.integration-receipt.v1",
+  "task": "Zoodo-P0-relay-dashboard-proof-build",
+  "agent": "ZOO Keeper",
+  "branch": "keeper/relay-42-proof-build-integration-20261031",
+  "sourceCommit": "a6ddc9947e3193f4709ae4c633cca0703375ca85",
+  "sourceBlobs": {
+    "engine/dashboard/netlify.toml": "aa2e3b7e6069298c8f9a448dda5d72d3dae38fa2",
+    "engine/test/relay-dashboard-config.test.mjs": "798697076a1e92532644cdeb6ad9f8c99f1b6a8a"
+  },
+  "upstream": [
+    "https://github.com/london4216-hue/Zoodo/pull/42",
+    "https://github.com/london4216-hue/Zoodo/pull/41"
+  ],
+  "test": {
+    "command": "node --test /mnt/data/zoo_relay_gate/engine/test/relay-dashboard-config.test.mjs",
+    "runtime": "Node.js local container",
+    "passed": 3,
+    "failed": 0,
+    "scope": "config contract, function discovery, redirects, security headers",
+    "exactGitBlobsMatched": true
+  },
+  "hostedCI": "UNKNOWN",
+  "netlifyDeployment": "UNKNOWN",
+  "supabaseMigration": "UNKNOWN",
+  "twoTicketHostedRecovery": "UNKNOWN",
+  "next": "Integrate source-only PR stack after independent host qualification; preserve canonical dashboard proof builder; run authenticated Netlify function probe and Supabase migration in private ops DB",
+  "timestampUtc": "2026-10-31T03:52:01.316Z",
+  "decision": "GO_FOR_DRAFT_ONLY"
+}
