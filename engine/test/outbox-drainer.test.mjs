@@ -80,3 +80,28 @@ test('ambiguous durable ACK exception never triggers second worker dispatch',asy
  assert.equal(r.state,'recovery_required');
  assert.deepEqual(f.calls.filter(x=>Array.isArray(x)&&x[0]==='next'),[['next','workerA']]);
 });
+test('uncertain worker response never dispatches another worker without native non-started proof',async()=>{
+ const f=fixture({result:w=>w==='workerA'?{state:'uncertain',ticket:'T1'}:{state:'dispatched',ticket:'T2',worker:w,receipt_url:'https://runner.example/receipt/T2'}});
+ const r=await drainOne({...f,workerIds:['workerA','workerB']});
+ assert.equal(r.state,'recovery_required');
+ assert.deepEqual(f.calls.filter(x=>Array.isArray(x)&&x[0]==='next'),[['next','workerA']]);
+ assert.equal(f.calls.some(x=>Array.isArray(x)&&x[0]==='ack'),false);
+});
+test('thrown worker invocation is uncertain, not evidence that a replacement is safe',async()=>{
+ const f=fixture();f.relay.next=async w=>{f.calls.push(['next',w]);throw Error('network timeout')};
+ const r=await drainOne({...f,workerIds:['workerA','workerB']});
+ assert.equal(r.state,'recovery_required');
+ assert.deepEqual(f.calls.filter(x=>Array.isArray(x)&&x[0]==='next'),[['next','workerA']]);
+});
+test('rejects receipt for another worker and embedded credentials',async()=>{
+ for(const result of [
+  {state:'dispatched',ticket:'T1',worker:'workerB',receipt_url:'https://runner.example/r'},
+  {state:'dispatched',ticket:'T1',worker:'workerA',receipt_url:'https://user:secret@runner.example/r'},
+  {state:'dispatched',ticket:'T1',worker:'workerA',receipt_url:'https://runner.example/r#fragment'},
+  {state:'delegated',worker:'workerA',replacement:{state:'dispatched',ticket:'T2',worker:'workerA',receipt_url:'https://runner.example/r'}}
+ ]) {
+  const f=fixture({result});const r=await drainOne({...f,workerIds:['workerA','workerB']});
+  assert.equal(r.state,'recovery_required');
+  assert.equal(f.calls.some(x=>Array.isArray(x)&&x[0]==='ack'),false);
+ }
+});
