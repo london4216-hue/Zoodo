@@ -63,19 +63,20 @@
   "pr_stages": {
     "opened_utc": "2026-10-31T03:30:56Z",
     "reviewed_utc": null,
-    "fix_committed_utc": null,
+    "fix_committed_utc": "2026-10-31T03:29:54Z",
     "tests_completed_utc": "2026-10-31T03:30:45Z",
     "merged_utc": null,
     "deployed_utc": null,
     "verified_hosted_utc": null,
     "opened_to_review_ms": null,
     "review_to_fix_ms": null,
-    "fix_to_tests_ms": null,
+    "fix_to_tests_ms": 51000,
     "pr_to_merge_ms": null,
     "merge_to_deploy_ms": null,
     "deploy_to_verified_ms": null,
     "gap_detection_to_fix_ms": null,
-    "unresolved_hosted_gap_age_ms": null
+    "unresolved_hosted_gap_age_ms": null,
+    "tests_to_pr_open_ms": 11000
   },
   "provider_proof": {
     "netlify_runtime_invocation": "UNKNOWN",
@@ -102,7 +103,30 @@
     "utc_timestamp": "2026-10-31T03:31:21Z",
     "proposed_fix": "Integrate bounded completion callback after private SQL/Netlify qualification; preserve original dashboard, inspect outstanding #1023/#1048 and Hunter probe #38.",
     "next_action": "Keeper coordinate conflict-free integration of PR #42 on top of #39 and earlier stacked branches, run full exact-SHA tests, apply private migrations with authorization, then hosted T1 failure→T2 dispatch and dashboard readback.",
-    "next_trigger": "Existing Keeper automation requested after durable GitHub checkpoint; request acceptance is not execution proof."
+    "next_trigger": "Existing Keeper automation requested after durable GitHub checkpoint; request acceptance is not execution proof.",
+    "github_comments": [
+      {
+        "repo": "london4216-hue/TransendIQ",
+        "issue": 1048,
+        "id": 6538444853
+      },
+      {
+        "repo": "london4216-hue/TransendIQ",
+        "issue": 1023,
+        "id": 6538445215
+      },
+      {
+        "repo": "london4216-hue/Zoodo",
+        "pr": 39,
+        "id": 6538445469
+      }
+    ],
+    "keeper_continuation": {
+      "requested": true,
+      "request_accepted": true,
+      "execution_confirmed": false,
+      "automation_id": "6ae3da9a4b048191be5c34ef8a19b1b7"
+    }
   },
   "security": {
     "production_merge": false,
