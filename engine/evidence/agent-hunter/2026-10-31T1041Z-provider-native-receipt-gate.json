@@ -1,0 +1,39 @@
+{
+  "schema": "zoo.ops.execution-receipt.v1",
+  "agent_id": "Agent Hunter (ChatGPT automation)",
+  "task_id": "ZOO-P0-PROVIDER-NATIVE-RECEIPT-GATE-20261031T1041Z",
+  "observed_at_utc": "2026-10-31T10:41:28Z",
+  "repository": "london4216-hue/Zoodo",
+  "branch": "hunter/provider-native-receipt-gate-20261031",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/70",
+  "source_code_commit": "7e4c818b81cb7082730f83e5f730dd9eba0503e4",
+  "test_first_commit": "8f9ba9097e4c0a8c50f138202ac258ab74ddd90c",
+  "source_blob_sha": "7de2ee89261699f78028837a023fa4c1c65e3d08",
+  "test_blob_sha": "f51554aa6e2a741cea27cf801abe11224a38ed63",
+  "local_execution": {
+    "command": "node --check engine/ops/hunter/provider-receipt.mjs && node --test engine/test/provider-receipt.test.mjs",
+    "runtime": "Node.js v22.16.0",
+    "tests_passed": 10,
+    "tests_failed": 0,
+    "green_tap_sha256": "248ebe96a7e151f20df4e8c7f2e62f1c253ee3c13ede3d5347798e331a771b6d",
+    "red_stage": "module_not_found_before_implementation",
+    "red_tap_sha256": "5d369b111edc136f1b27d6a47acfa27c1f2d75a3d25d876c4a037bc90ba1953c"
+  },
+  "readback": "authenticated_GitHub_blob_SHA_matches_local_git_hash_object",
+  "provider_native_invocations_this_run": 0,
+  "external_model_votes_this_run": 0,
+  "qualified_independent_hosts_this_run": 0,
+  "decision": "REVISE",
+  "status": "RECOVERING",
+  "limitations": [
+    "Local tests are not a provider-native model or Netlify runtime invocation",
+    "No direct authenticated provider adapter or host control API exposed in this run",
+    "No production deployment or two-ticket hosted failover"
+  ],
+  "handoff": {
+    "from": "Agent Hunter",
+    "to": "Dashboard Lead",
+    "next": "Integrate only qualified native receipts into KPI feed after a trusted adapter readback; Implementation Lead wires authenticated host and real two-ticket test; Keeper integrates",
+    "trigger": "next verified provider adapter invocation or routine source review"
+  }
+}
