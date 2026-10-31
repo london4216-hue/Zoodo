@@ -47,3 +47,35 @@ test('invalid lease fails closed before worker invocation', async () => {
   await assert.rejects(replay(), /Invalid durable outbox lease/);
   assert.equal(calls, 0);
 });
+
+test('two durable wake-ups dispatch two distinct tickets over real localhost HTTP', async () => {
+  const {createServer} = await import('node:http');
+  const {once} = await import('node:events');
+  const seen = [], acked = [];
+  const server = createServer(async (req, res) => {
+    let body = ''; for await (const chunk of req) body += chunk;
+    const task = JSON.parse(body); seen.push(task.ticket_id);
+    res.writeHead(202, {'content-type': 'application/json'});
+    res.end(JSON.stringify({accepted: true, ticket_id: task.ticket_id}));
+  });
+  server.listen(0, '127.0.0.1'); await once(server, 'listening');
+  try {
+    const pending = [{id: 41, ticket_id: 'T1', lease_token: token}, {id: 42, ticket_id: 'T2', lease_token: token}];
+    const replay = makeOutboxReplay({
+      store: {claimOutbox: async () => pending.shift() ?? null, ackOutbox: async (id) => {acked.push(id); return true;}},
+      worker: 'worker-1',
+      dispatch: async () => {
+        const ticket = seen.length === 0 ? 'T1' : 'T2';
+        const res = await fetch(`http://127.0.0.1:${server.address().port}/execute`, {
+          method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({ticket_id: ticket})
+        });
+        assert.equal(res.status, 202);
+        assert.equal((await res.json()).ticket_id, ticket);
+        return {state: 'dispatched', ticket};
+      }
+    });
+    const first = await replay(), second = await replay();
+    assert.equal(first.state, 'acked'); assert.equal(second.state, 'acked');
+    assert.deepEqual(seen, ['T1', 'T2']); assert.deepEqual(acked, [41, 42]);
+  } finally {await new Promise(resolve => server.close(resolve));}
+});
