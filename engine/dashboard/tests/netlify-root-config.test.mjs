@@ -1,0 +1,22 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+test('repository-root Netlify config discovers exact dashboard base and fail-closed source gate',()=>{
+ const config=readFileSync(new URL('../../../netlify.toml',import.meta.url),'utf8');
+ const build=config.match(/\[build\]([\s\S]*?)(?=\n\[)/)?.[1]||'';
+ const functions=config.match(/\[functions\]([\s\S]*?)(?=\n\[)/)?.[1]||'';
+ assert.match(build,/^\s*base = "engine\/dashboard"\s*$/m);
+ assert.match(build,/^\s*publish = "\."\s*$/m);
+ assert.match(build,/^\s*command = "node scripts\/build-proof\.mjs"\s*$/m);
+ assert.match(functions,/^\s*directory = "netlify\/functions"\s*$/m);
+ assert.match(functions,/^\s*node_bundler = "esbuild"\s*$/m);
+ assert.match(config,/for = "\/build-proof\.json"[\s\S]*?Cache-Control = "no-store"/);
+ assert.match(config,/X-Content-Type-Options = "nosniff"/);
+ assert.match(config,/Referrer-Policy = "no-referrer"/);
+ for(const route of ['/dashboard','/dashboard/*'])assert.ok(config.includes('from = "'+route+'"'));
+ const gate=readFileSync(new URL('../scripts/build-proof.mjs',import.meta.url),'utf8');
+ assert.match(gate,/readdirSync\('tests'\)/);
+ assert.match(gate,/result\.error \|\| result\.status !== 0/);
+ assert.match(gate,/process\.exit\(1\)/);
+ assert.match(gate,/process\.env\.COMMIT_REF/);
+});
