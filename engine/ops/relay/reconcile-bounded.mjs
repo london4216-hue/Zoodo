@@ -24,7 +24,7 @@ export async function reconcileWithDeadline({quarantine, recover, replay, timeou
       if (controller.signal.aborted) return unconfirmed(phase, 'Reconcile deadline after outbox recovery');
       phase = 'replay';
       const wakeup = await replay(controller.signal);
-      if (controller.signal.aborted || wakeup?.state === 'replay-unconfirmed')
+      if (controller.signal.aborted || !['acked', 'empty', 'idle-settled'].includes(wakeup?.state))
         return unconfirmed(phase, 'Outbox replay requires durable reconciliation');
       return {state:'reconciled', quarantined, recovered, wakeup};
     } catch {
