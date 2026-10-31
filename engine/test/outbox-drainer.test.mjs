@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {drainOne} from '../ops/relay/outbox-drainer.mjs';
 const lease={id:7,ticket_id:'T1',lease_token:'12345678-1234-4234-8234-123456789012'};
-function fixture({result={state:'dispatched'},ack=true,settle=true}={}){
+function fixture({result={state:'dispatched',ticket:'T1',worker:'workerA',receipt_url:'https://runner.example/receipts/T1'},ack=true,settle=true}={}){
  const calls=[];
  const store={claimOutbox:async()=>{calls.push('claim');return lease},
    ackOutbox:async(...x)=>{calls.push(['ack',...x]);return ack},
@@ -28,7 +28,7 @@ test('idle with queued work or missing settle RPC never ACKs',async()=>{
  delete f.store.settleIdleOutbox;assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'recovery_required');
 });
 test('failed worker tries qualified alternative without acking failure',async()=>{
- const f=fixture({result:w=>w==='workerA'?{state:'recovery_required'}:{state:'dispatched',worker:w}});
+ const f=fixture({result:w=>w==='workerA'?{state:'recovery_required'}:{state:'dispatched',ticket:'T2',worker:w,receipt_url:'https://runner.example/receipts/T2'}});
  const r=await drainOne({...f,workerIds:['workerA','workerB']});assert.equal(r.state,'acknowledged');
  assert.deepEqual(r.attempts,[{worker:'workerA',state:'recovery_required'},{worker:'workerB',state:'dispatched'}]);
 });
@@ -55,4 +55,28 @@ test('rejects unqualified workers, malformed token and missing ticket',async()=>
 test('does not claim success for undefined worker result',async()=>{
  const f=fixture({result:undefined});f.relay.next=async()=>undefined;
  assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'recovery_required');
+});
+
+test('rejects unsubstantiated dispatch/delegation without ACK',async()=>{
+ for(const result of [
+  {state:'dispatched'},
+  {state:'dispatched',ticket:'T1',worker:'workerA',receipt_url:'http://insecure.example/receipt'},
+  {state:'delegated',worker:'workerA'},
+  {state:'delegated',worker:'workerA',replacement:{state:'dispatched'}}
+ ]){
+  const f=fixture({result});const r=await drainOne({...f,workerIds:['workerA']});
+  assert.equal(r.state,'recovery_required');
+  assert.equal(f.calls.some(x=>Array.isArray(x)&&x[0]==='ack'),false);
+ }
+});
+test('delegated dispatch ACK requires complete alternate receipt',async()=>{
+ const f=fixture({result:{state:'delegated',worker:'workerA',replacement:{state:'dispatched',ticket:'T2',worker:'workerB',receipt_url:'https://runner.example/receipts/T2'}}});
+ assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'acknowledged');
+});
+test('ambiguous durable ACK exception never triggers second worker dispatch',async()=>{
+ const f=fixture({result:w=>({state:'dispatched',ticket:'T1',worker:w,receipt_url:'https://runner.example/receipts/T1'})});
+ f.store.ackOutbox=async()=>{throw Error('ACK timeout')};
+ const r=await drainOne({...f,workerIds:['workerA','workerB']});
+ assert.equal(r.state,'recovery_required');
+ assert.deepEqual(f.calls.filter(x=>Array.isArray(x)&&x[0]==='next'),[['next','workerA']]);
 });
