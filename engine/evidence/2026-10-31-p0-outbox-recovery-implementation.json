@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "agent_id": "Implementation Lead",
+  "task_id": "ZOO-P0-OUTBOX-NO-DEADLETTER-20261031-0824",
+  "repository": "london4216-hue/Zoodo",
+  "asset": "Independent ZOO operations outbox recovery",
+  "issues": [
+    "https://github.com/london4216-hue/Zoodo/issues/18",
+    "https://github.com/london4216-hue/TransendIQ/issues/1023",
+    "https://github.com/london4216-hue/TransendIQ/issues/1048"
+  ],
+  "branch": "worker/p0-outbox-recovery-no-deadletter-20261031-0824",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/64",
+  "pr_state": "OPEN_DRAFT_STACKED_ON_PR63",
+  "source_commit_sha": "cbe532f05c51050cba7fd75088f509fbeb5a6978",
+  "source_commit_url": "https://github.com/london4216-hue/Zoodo/commit/cbe532f05c51050cba7fd75088f509fbeb5a6978",
+  "test_first_commit_sha": "6c0b4cc1526503dc839467515ea39f07c6fe7b5a",
+  "test_log_commit_sha": "98819bb669edd549ac8c3d02964b09231f632993",
+  "test_log_url": "https://github.com/london4216-hue/Zoodo/blob/worker/p0-outbox-recovery-no-deadletter-20261031-0824/engine/evidence/2026-10-31-p0-outbox-recovery-contract-local.tap",
+  "change": "Override SQL outbox recovery to requeue expired and legacy dead wakeups with capped 30-3600 second backoff and durable retry-budget audit events; no provider deployment.",
+  "execution": {
+    "kind": "LOCAL_NODE_STATIC_SQL_CONTRACT_NOT_POSTGRES_EXECUTION",
+    "command": "node --test engine/test/outbox-recovery-no-deadletter.test.mjs",
+    "node_version": "v22.16.0",
+    "started_at_utc": "2026-10-31T08:24:56.158Z",
+    "ended_at_utc": "2026-10-31T08:24:56.252Z",
+    "exit_code": 0,
+    "passed": 2,
+    "failed": 0,
+    "stdout_sha256": "e0f503f25055b3f7af88439722da2f43f063fee28e5564203ae96c63e07ddca2",
+    "test_first": {
+      "red": "2/2 failed because target migration file did not exist; not a PostgreSQL behavioral failure",
+      "green": "2/2 static contract tests passed"
+    },
+    "source_blob_sha": "696cf71f3b6039fd2842c6b5251ad18b57c988c1",
+    "test_blob_sha": "ba455dd90d8ffb418efec0d5762f631e656eebcb",
+    "source_blob_readback_verified": true,
+    "postgresql_migration_executed": false,
+    "full_relay_suite": "NOT_EXECUTED",
+    "hosted_two_ticket_failover": "UNKNOWN"
+  },
+  "provider": {
+    "netlify_preview": "https://deploy-preview-57--zoo-live-dashboard.netlify.app",
+    "netlify_provider_status": "PR57 PREVIEW STATUS FROM PREVIOUS RECEIPT; NATIVE INVOCATION UNKNOWN",
+    "netlify_credentials": "NOT_AVAILABLE_IN_THIS_RUNTIME",
+    "vercel_credentials": "NOT_AVAILABLE_IN_THIS_RUNTIME",
+    "supabase_service_role": "NOT_AVAILABLE_IN_THIS_RUNTIME",
+    "deepseek_request_id": null,
+    "github_actions_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41183294712",
+    "github_actions_steps": 0,
+    "dashboard_production_refresh": "UNKNOWN"
+  },
+  "decision": {
+    "stamp": "REVISE",
+    "reason": "Reversible SQL recovery migration and local static contract tests passed; database execution, actual external event source, provider-native worker invocation and hosted failover unverified.",
+    "next_action": "ZOO Keeper integrate PR #64 after #63/overlapping #61–62 and execute isolated PostgreSQL migration/lease recovery; Agent Hunter validate authenticated Netlify and durable Supabase connectivity; Dashboard Lead publish source-linked only; no production merge without required checks."
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "task_id": "ZOO-P0-OUTBOX-NO-DEADLETTER-20261031-0824",
+    "timestamp_utc": "2026-10-31T08:24:56.252Z",
+    "next_trigger": "GitHub PR #64 and Zoodo #18; next authorized Keeper execution",
+    "next_agent_execution_confirmed": false
+  },
+  "four_agent_proof_matrix": {
+    "hunter": {
+      "status": "UNKNOWN",
+      "reason": "No provider-native host invocation"
+    },
+    "dashboard": {
+      "status": "UNKNOWN",
+      "reason": "No production proof refresh readback"
+    },
+    "implementation": {
+      "status": "LOCAL_CONTRACT_PASS_HOSTED_UNKNOWN",
+      "evidence": "https://github.com/london4216-hue/Zoodo/pull/64"
+    },
+    "keeper": {
+      "status": "UNKNOWN",
+      "reason": "No current hosted NEXT dispatch and handoff receipt"
+    }
+  },
+  "hourly_movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T08:00:00Z",
+      "hour_et": "2026-10-31T04:00:00-04:00",
+      "repository": "london4216-hue/Zoodo",
+      "asset": "outbox recovery",
+      "pr": 64,
+      "prior_status": "SQL 001 permanently marks outbox wakeups dead after four attempts",
+      "new_status": "Draft SQL 005 requeues expired/dead wakeups with capped backoff; 2 local static contract tests PASS; PostgreSQL/hosted UNKNOWN",
+      "commit_sha": "cbe532f05c51050cba7fd75088f509fbeb5a6978",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/64",
+      "worker": "Implementation Lead"
+    }
+  ],
+  "pr_stage_timing": {
+    "opened_at_utc": "2026-10-31T08:24:47Z",
+    "local_tests_verified_at_utc": "2026-10-31T08:24:56.252Z",
+    "opened_to_local_test_seconds": 9.252,
+    "review_at_utc": null,
+    "merge_at_utc": null,
+    "deploy_at_utc": null,
+    "hosted_verified_at_utc": null,
+    "opened_to_review_seconds": null,
+    "pr_to_merge_seconds": null,
+    "merge_to_deploy_seconds": null,
+    "gap_detected_at_utc": null,
+    "gap_detection_to_fix_seconds": null,
+    "gap_detection_to_verification_seconds": null,
+    "unresolved_hosted_gap_age": "UNKNOWN"
+  },
+  "safeguards": "Public Zoodo generic migration only; private ticket rows and secrets remain in private backing store; no migration applied, no merge or deployment claimed."
+}
