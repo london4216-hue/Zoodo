@@ -8,6 +8,7 @@ import {confirmDispatchReceipt} from './dispatch-receipt-fence.mjs';
 import {kickWithDeadline} from './bounded-kick.mjs';
 import {confirmTransitionWithinDeadline} from './transition-fence.mjs';
 import {classifyRelayError} from './relay-error-status.mjs';
+import {relayResponseStatus} from './relay-response-status.mjs';
 const ID=/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const SHA=/^[a-f0-9]{40}$/;
 const UUID=/^[a-f0-9-]{36}$/i;
@@ -132,7 +133,7 @@ export function makeHandler({relay,callbackSecret,kickDeadlineMs=7500}){
   if(typeof body!=='string'||Buffer.byteLength(body)>8192)return send(413,{error:'invalid payload'});
   let x;try{x=JSON.parse(body)}catch{return send(400,{error:'invalid JSON'})}
   try{
-   if(x.type==='kick')return send(200,await kickWithDeadline(relay,x.worker,{timeoutMs:kickDeadlineMs}));
+   if(x.type==='kick'){const result=await kickWithDeadline(relay,x.worker,{timeoutMs:kickDeadlineMs});return send(relayResponseStatus('kick',result),result);}
    if(x.type==='completed'){
     const result=await relay.completed(x);
     return send(result?.state==='completion-unconfirmed'?503:200,result);
@@ -141,8 +142,8 @@ export function makeHandler({relay,callbackSecret,kickDeadlineMs=7500}){
     const result=await relay.notStarted(x);
     return send(result?.state==='requeue-unconfirmed'?503:200,result);
    }
-   if(x.type==='replay')return send(200,await relay.replay());
-   if(x.type==='reconcile')return send(200,await relay.reconcile());
+   if(x.type==='replay'){const result=await relay.replay();return send(relayResponseStatus('replay',result),result);}
+   if(x.type==='reconcile'){const result=await relay.reconcile();return send(relayResponseStatus('reconcile',result),result);}
    return send(422,{error:'unsupported event'});
   }catch(e){const {statusCode,message}=classifyRelayError(e);return send(statusCode,{error:message})}
  };
