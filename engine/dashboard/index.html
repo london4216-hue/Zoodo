@@ -267,7 +267,15 @@ async function checkHostingMirrors(){
   stamp.textContent='Next step: recover host registry and exact SHA · '+String(e.message||'error').slice(0,110);
  }finally{mirrorCheckInFlight=false;}
 }
-const fmt=t=>{const d=Math.max(0,Date.now()-Date.parse(t)),m=Math.floor(d/60000);return m<1?'just now':m<60?m+'m ago':Math.floor(m/60)+'h '+m%60+'m ago'};
+// Never convert a future-dated or invalid source timestamp into "just now".
+const fmt=(t,now=Date.now())=>{
+ const at=typeof t==='string'?Date.parse(t):NaN;
+ if(!Number.isFinite(at))return 'UNKNOWN · invalid source timestamp';
+ if(at>now+60000)return 'INVALID FUTURE TIMESTAMP';
+ if(at>now)return 'CLOCK SKEW · source timestamp ahead';
+ const m=Math.floor((now-at)/60000);
+ return m<1?'under 1m old':m<60?m+'m ago':Math.floor(m/60)+'h '+m%60+'m ago';
+};
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(path){const r=await fetch(root+path,{headers:{Accept:'application/vnd.github+json'},cache:'no-store',signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('GitHub API '+r.status);return r.json()}
 // Never advertise a lab as live from a GitHub file alone. Confirm both deployed HTML and JS on this exact host.

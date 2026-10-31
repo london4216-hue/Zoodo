@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "kind": "dashboard_bounded_repair_receipt",
+  "observed_at": "2026-10-31T19:48:12.689Z",
+  "canonical_repo": "london4216-hue/Zoodo",
+  "canonical_branch": "autonomous-engine-replacement-2026-10-29",
+  "source_file": "engine/dashboard/index.html",
+  "source_blob_sha": "34ee5ee3823638439998e351e9fac6fabfbdb85f",
+  "regression_file": "engine/dashboard/tests/source-age.test.mjs",
+  "regression_blob_sha": "9d73774ba9d454ef64dfa2e6f020926f3439360d",
+  "code_commit": "627200369f81d2576c4264dd121d1d6fd3d01d74",
+  "regression_commit": "386fb481f592a3572fc6f6e4acbb48079d91bf15",
+  "bounded_fix": "Future-dated source timestamps no longer display just now; invalid timestamps show UNKNOWN and small positive skew is explicitly labeled. No links/auth/deployment changes.",
+  "test_receipts": {
+    "source_readback_assertions": {
+      "passed": 7,
+      "total": 7
+    },
+    "local_node_fixture_regressions": {
+      "passed": 4,
+      "total": 4,
+      "scope": "equivalent formatter fixture; not full canonical HTML"
+    },
+    "original_href_attributes_preserved": 49,
+    "github_actions_exact_head": "NOT_RUN"
+  },
+  "scheduler": {
+    "canonical_snapshot_commit": "95f74d5a9873517ddb3b21544a69847a7357daf1",
+    "observed_at": "2026-10-31T19:47:50.331Z",
+    "classification": "RECOVERY REQUIRED",
+    "overdue": [
+      "ZOO Agent Hunter"
+    ],
+    "disabled": [
+      "ZOO Agent Hunter"
+    ],
+    "active_workers_verified": false
+  },
+  "github": {
+    "open_issues": 24,
+    "open_prs_before_new_pr": 60,
+    "source": "GitHub Search total_count",
+    "counts_live_browser_verified": false,
+    "latest_lab_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41233303389",
+    "latest_lab_run_conclusion": "failure",
+    "latest_lab_run_executed_steps": 0
+  },
+  "integration": {
+    "pr16": {
+      "merged": true,
+      "target": "autonomous-engine-replacement-2026-10-29"
+    },
+    "pr71": {
+      "merged": true,
+      "target": "fix/zoo-live-dashboard-accountability-20261030"
+    },
+    "other_pending_drafts": [
+      90,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103
+    ],
+    "safe_integration_owner": "Sole ZOO Keeper"
+  },
+  "deployment": {
+    "provider": "Netlify",
+    "preview_status": "UNKNOWN_PENDING_PR",
+    "production_deploy_id": null,
+    "production_sha": null,
+    "live_browser_readback": "UNAVAILABLE_DNS",
+    "owner_authentication": "UNKNOWN",
+    "rollback_mapping": "UNKNOWN",
+    "merge_latency": "NOT_APPLICABLE_UNMERGED",
+    "deploy_latency": "UNKNOWN",
+    "test_latency": "UNKNOWN"
+  },
+  "handoff": {
+    "hunter": "Disabled; Keeper to coordinate qualified host probe",
+    "implementation": "GitHub Actions zero-step startup",
+    "keeper": "Safe integration and production release authority"
+  },
+  "grade": "DEFERRED_UNTIL_WEDNESDAY",
+  "owner_email_sent": false
+}
