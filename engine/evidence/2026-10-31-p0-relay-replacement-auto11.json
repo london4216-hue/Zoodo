@@ -1,0 +1,112 @@
+{
+  "schema": "zoo.ops.execution-receipt.v1",
+  "agent_id": "Implementation Lead",
+  "task_id": "P0-ZOODO-RELAY-ALT-20261031-AUTO11",
+  "decision": "GO_PRIVATE_DRAFT_ONLY",
+  "decision_reason": "Two fail-first regressions repaired and six exact-source local Node tests passed; hosted worker and durable DB execution remain unverified.",
+  "source_repository": "london4216-hue/Zoodo",
+  "source_commit_sha": "7300522eaca5bec2e36285ca4aca8411858393a2",
+  "source_blobs": {
+    "engine/ops/relay/portable-relay.mjs": "8ce62710c474969a09e5be67af3eccc522d57895",
+    "engine/test/portable-relay.test.mjs": "63bd5fc59bf332310d408678e02d1493c7e296d8"
+  },
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/32",
+  "base_pr": "https://github.com/london4216-hue/Zoodo/pull/28",
+  "hunter_fixture_pr": "https://github.com/london4216-hue/Zoodo/pull/31",
+  "execution": {
+    "command": "node --test engine/test/portable-relay.test.mjs",
+    "node_version": "v22.16.0",
+    "started_at_utc": "2026-10-31T00:24:23Z",
+    "ended_at_utc": "2026-10-31T00:24:24Z",
+    "exit_code": 0,
+    "passed": 6,
+    "failed": 0,
+    "environment": "isolated local Node process with localhost HTTP test worker and synthetic in-memory store; not a hosted worker",
+    "test_log_url": "https://github.com/london4216-hue/Zoodo/blob/worker/p0-relay-bounded-replacement-20261031-auto11/engine/evidence/2026-10-31-p0-relay-replacement-auto11.tap",
+    "test_log_blob": "19d5453e463aa005810c18ecc21bb2e7891bbde9",
+    "test_log_sha256": "cf55f47aadf760c20416b3e9ce94a1feeee24b76e1bb58358f0932d8446f46fb"
+  },
+  "fail_first": {
+    "failure_1": "Uncertain worker T1 returned without dispatching independent T2 to alternate worker",
+    "failure_2": "Busy primary worker returned idle despite eligible T2 and idle alternate",
+    "repaired": "Bounded single pass through configured alternatives; original uncertain task remains leased; replacement only claims another eligible task"
+  },
+  "hourly_movement": [
+    {
+      "hour_utc": "2026-10-31T00:00:00Z",
+      "hour_et": "2026-10-30T20:00:00-04:00",
+      "asset": "Zoodo operations relay",
+      "prior_status": "No alternate dispatch on uncertainty or busy worker",
+      "new_status": "Private draft PR with 6/6 local tests; hosted UNKNOWN",
+      "pr": 32,
+      "code_commit": "7a07329a51d0199df347ff50302faca0ff5ff430",
+      "test_commit": "7300522eaca5bec2e36285ca4aca8411858393a2",
+      "log_commit": "4d3911ca60ade48ed5b5ae5cda5c0e0fc8a6d2a3"
+    }
+  ],
+  "pr_stage_timestamps": {
+    "opened_utc": "2026-10-31T00:24:31Z",
+    "review_utc": null,
+    "fix_committed_utc": null,
+    "tests_started_utc": "2026-10-31T00:24:23Z",
+    "tests_ended_utc": "2026-10-31T00:24:24Z",
+    "merge_utc": null,
+    "deploy_utc": null,
+    "hosted_verified_utc": null,
+    "opened_to_review_seconds": null,
+    "review_to_fix_seconds": null,
+    "fix_to_tests_seconds": null,
+    "pr_to_merge_seconds": null,
+    "merge_to_deploy_seconds": null,
+    "deploy_to_verified_seconds": null,
+    "gap_detection_to_fix_seconds": null,
+    "gap_age_seconds": null
+  },
+  "hosted": {
+    "postgres_migration": "UNKNOWN_NOT_APPLIED",
+    "netlify_relay_invocation": "UNKNOWN",
+    "external_two_ticket_failover": "UNKNOWN",
+    "production_dashboard_receipt": "UNKNOWN",
+    "deepseek_native_judge": "NOT_INVOKED",
+    "public_dashboard_readback": "UNAVAILABLE_FROM_WEB_TOOL"
+  },
+  "four_agent_proof": {
+    "Agent_Hunter": "UNKNOWN",
+    "Dashboard_Lead": "UNKNOWN",
+    "Implementation_Lead": "UNKNOWN_HOSTED_LOCAL_TESTS_PASS",
+    "ZOO_Keeper": "UNKNOWN"
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "task_id": "P0-ZOODO-RELAY-ALT-20261031-AUTO11",
+    "next_action": "Reconcile #28/#29 SQL repair and #31 fixture parity with #32; run disposable PostgreSQL migration, authenticate Netlify relay and two-ticket worker failover, then publish source-linked production proof. Do not merge protected branch without required checks.",
+    "next_trigger": "Keeper's existing scheduled reconciliation or genuine hosted event when available; no new execution claimed",
+    "github_comments": [
+      {
+        "repo": "london4216-hue/Zoodo",
+        "issue_or_pr": 23,
+        "comment_id": 6536461450
+      },
+      {
+        "repo": "london4216-hue/TransendIQ",
+        "issue_or_pr": 1048,
+        "comment_id": 6536461900
+      }
+    ],
+    "keeper_immediate_run": "requested_and_accepted_not_execution_proof"
+  },
+  "figma_preservation_issue": "https://github.com/london4216-hue/Zoodo/issues/27",
+  "privacy": "Zoodo is public. This receipt contains no private ticket payloads or secrets.",
+  "github_ci": {
+    "run_id": 41150042242,
+    "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41150042242",
+    "status": "completed",
+    "conclusion": "failure",
+    "job_id": 124384149419,
+    "job_steps": 0,
+    "logs_available": false,
+    "classification": "runner/startup failure or pre-step failure; no job steps executed; exact root cause UNKNOWN",
+    "not_code_test_evidence": true
+  }
+}
