@@ -73,18 +73,24 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now()}){
   // The uncertain task stays leased/quarantined; only independent tickets may advance.
   return delegate(worker,allowReplacement,result);
  }
+ // A durable completion/requeue must not turn into a false HTTP failure when NEXT fails.
+ // The SQL transition writes an outbox event; a qualified host must drain it.
+ async function nextAfterTransition(worker){
+  try{return await next(worker)}
+  catch{return {state:'recovery_required',reason:'NEXT dispatch unavailable; durable outbox retry required'}}
+ }
  async function completed(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
      !SHA.test(x?.commit_sha??'')||!https(x?.test_url)||!pool.has(x.worker))throw Error('Invalid completion');
   if(await store.complete(x)!==true)throw Error('Completion not durably confirmed');
   // NEXT is triggered by the authenticated completion callback, not an hourly tick.
-  return {state:'completed',ticket:x.ticket_id,next:await next(x.worker),completed_at:new Date(now()).toISOString()};
+  return {state:'completed',ticket:x.ticket_id,next:await nextAfterTransition(x.worker),completed_at:new Date(now()).toISOString()};
  }
  async function notStarted(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
      !https(x?.evidence_url)||!pool.has(x.worker))throw Error('Native non-execution receipt required');
   if(await store.notStarted(x)!==true)throw Error('Non-execution not durably confirmed');
-  return {state:'requeued',ticket:x.ticket_id,next:await next(x.worker)};
+  return {state:'requeued',ticket:x.ticket_id,next:await nextAfterTransition(x.worker)};
  }
  return {next,completed,notStarted,quarantine:()=>store.quarantine()};
 }
