@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "agent_id": "ZOO Agent Hunter",
+  "task_id": "ZOO-HOST-QUALIFICATION-20261031-0157",
+  "repo": "london4216-hue/Zoodo",
+  "branch": "hunter/zoo-netlify-authenticated-host-probe-20261030",
+  "pr_url": "https://github.com/london4216-hue/Zoodo/pull/38",
+  "source_commit_sha": "313a1c2feadb8930930106ff9813249b65148d97",
+  "observed_at_utc": "2026-10-31T01:57:00Z",
+  "hour_et": "2026-10-30T21:00:00-04:00",
+  "decision": "REVISE",
+  "status": "SOURCE_TESTED_HOST_NOT_VERIFIED",
+  "action": "Built a fail-closed, token-authenticated, bounded synthetic Netlify Function probe and executed local Node tests",
+  "execution": {
+    "environment": "local Node 22 (not Netlify)",
+    "command": "node --test tests/host-probe.test.mjs && node --check netlify/functions/zoo-host-probe.mjs",
+    "tests_passed": 7,
+    "tests_failed": 0,
+    "source_blob_sha": "dd386e9004d722ee8d129f17c6fd02b4b7321040",
+    "test_blob_sha": "840292f7a5aa4db13fc42ab200447eff23c1dcb5",
+    "authenticated_git_readback": true,
+    "provider_native_invocation_id": null,
+    "provider_native_http_receipt_url": null,
+    "external_ai_invoked": false,
+    "durable_store_verified": false,
+    "two_ticket_hosted_chain_verified": false
+  },
+  "provider_candidates": [
+    {
+      "provider": "Netlify",
+      "source_build_status": "previous PR #16 deploy-preview success",
+      "runtime_probe": "UNKNOWN",
+      "secret_access": "UNKNOWN",
+      "queue_state": "requires independent private durable store"
+    },
+    {
+      "provider": "Supabase",
+      "runtime_probe": "UNKNOWN",
+      "secret_access": "UNKNOWN",
+      "queue_state": "private project existence/access not verified in this run"
+    },
+    {
+      "provider": "Vercel",
+      "runtime_probe": "UNKNOWN",
+      "connection": "NOT_VERIFIED"
+    },
+    {
+      "provider": "Render",
+      "runtime_probe": "UNKNOWN",
+      "connection": "NOT_VERIFIED"
+    },
+    {
+      "provider": "Cloudflare Pages",
+      "runtime_probe": "UNKNOWN",
+      "connection": "NOT_VERIFIED"
+    }
+  ],
+  "external_panel": [
+    {
+      "provider": "DeepSeek",
+      "native_invocation_id": null,
+      "status": "UNKNOWN_NO_AUTHENTICATED_CALLABLE_ADAPTER_IN_THIS_RUNTIME",
+      "vote": null
+    },
+    {
+      "provider": "GitHub Copilot",
+      "native_invocation_id": null,
+      "status": "UNKNOWN_NO_AUTHENTICATED_CALLABLE_ADAPTER_IN_THIS_RUNTIME",
+      "vote": null
+    },
+    {
+      "provider": "Claude",
+      "native_invocation_id": null,
+      "status": "UNKNOWN_NO_AUTHENTICATED_CALLABLE_ADAPTER_IN_THIS_RUNTIME",
+      "vote": null
+    },
+    {
+      "provider": "Gemini",
+      "native_invocation_id": null,
+      "status": "UNKNOWN_NO_AUTHENTICATED_CALLABLE_ADAPTER_IN_THIS_RUNTIME",
+      "vote": null
+    }
+  ],
+  "handoff": {
+    "from": "Agent Hunter",
+    "to": "Dashboard Lead",
+    "task_id": "ZOO-HOST-QUALIFICATION-20261031-0157",
+    "decision": "REVISE",
+    "next_trigger": "GitHub PR #38 exact-head provider preview status; authenticated Netlify Function invocation if existing private token is available",
+    "implementation_lead": "Qualify private Supabase RPC/lease store, provider-native HTTP probe and two-ticket event-driven dispatch",
+    "keeper": "Integrate only after authenticated host execution, no production merge from source tests alone"
+  },
+  "stage_timestamps": {
+    "source_code_committed_at": "UNKNOWN",
+    "pr_opened_at": "2026-10-31T01:56:56Z",
+    "local_test_at": "2026-10-31T01:56:00Z",
+    "provider_deployed_at": null,
+    "hosted_verified_at": null
+  },
+  "latency_seconds": {
+    "pr_to_merge": null,
+    "merge_to_deploy": null,
+    "gap_to_verified": null
+  },
+  "unresolved": "Authenticated Netlify/Supabase control-plane credentials, native function HTTP execution, durable store migration, provider external AI invocation",
+  "four_agent_hosted_proof_matrix": [
+    {
+      "agent": "Agent Hunter",
+      "requirement": "provider-native external capability invocation",
+      "status": "UNKNOWN",
+      "evidence_url": null
+    },
+    {
+      "agent": "Dashboard Lead",
+      "requirement": "production hosted evidence retrieval/rendering",
+      "status": "UNKNOWN",
+      "evidence_url": null
+    },
+    {
+      "agent": "Implementation Lead",
+      "requirement": "real hosted worker execution and failure recovery",
+      "status": "UNKNOWN",
+      "evidence_url": null
+    },
+    {
+      "agent": "ZOO Keeper",
+      "requirement": "actual NEXT dispatch and handoff",
+      "status": "UNKNOWN",
+      "evidence_url": null
+    }
+  ],
+  "pr_stage_elapsed_seconds": {
+    "opened_to_review": null,
+    "review_to_fix": null,
+    "fix_to_tests": null,
+    "tests_to_merge": null,
+    "merge_to_deploy": null,
+    "deploy_to_verified": null
+  },
+  "current_verified_metrics": {
+    "authenticated_productive_external_agents": 0,
+    "newly_qualified_external_providers": 0,
+    "qualified_independent_fallbacks": 0,
+    "verified_hosted_recoveries": 0,
+    "active_hosted_assignments": "UNKNOWN",
+    "oldest_checkpoint_age_seconds": "UNKNOWN"
+  }
+}
