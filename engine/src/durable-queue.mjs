@@ -4,7 +4,7 @@ import {appendFileSync,existsSync,readFileSync,mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {randomUUID} from 'node:crypto';
 
-const valid = s => typeof s === 'string' && s.length > 0 && s.length <= 256;
+const valid = s => typeof s === 'string' && s.trim().length > 0 && s.length <= 256;
 const fail = message => {throw new Error(message)};
 const snapshot = x => structuredClone(x);
 export class DurableQueue {
