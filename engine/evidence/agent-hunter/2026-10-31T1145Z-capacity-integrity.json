@@ -1,0 +1,35 @@
+{
+  "schema": "zoo.hunter.checkpoint.v1",
+  "observed_at_utc": "2026-10-31T11:45:57.443Z",
+  "status": "RECOVERING",
+  "decision": "REVISE",
+  "task": "Zoodo#18",
+  "pr": 70,
+  "source_fix_commit": "25e7b227c6698880df56ecf74010d02ebc511ad0",
+  "test_first_commit": "53ce2aed2a42e29b1502f6e4c17ce5e4c29e59da",
+  "source_blob": "31a27d458489305dadf62e894d8eaa47bf07bebf",
+  "test_blob": "c28bb8eaff756bfe2a67f5f997768db2f9c58dfb",
+  "regression": "verified attribution was mutable; now frozen before KPI counting",
+  "synthetic_tests": {
+    "passed": 11,
+    "failed": 0,
+    "environment": "V8 exact-source harness with URL shim"
+  },
+  "netlify": {
+    "preview_status": "previously successful build",
+    "hosted_invocation": "UNKNOWN",
+    "native_request_id": null,
+    "reason": "No authenticated Netlify execution adapter in this environment"
+  },
+  "alternates": {
+    "vercel": "UNQUALIFIED",
+    "trigger_dev": "UNQUALIFIED",
+    "supabase": "UNQUALIFIED"
+  },
+  "two_ticket_hosted_chain": "UNKNOWN",
+  "failed_worker_recovery": "UNKNOWN",
+  "dashboard_live_readback": "UNKNOWN",
+  "measured_cadence": "UNKNOWN",
+  "next_action": "Implementation Lead qualify an authorized hosted invocation and transactional two-ticket relay; Keeper integrate PR #70; Dashboard Lead verify deployed source mapping.",
+  "production_deployment": false
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "zoo.hunter.host-qualification.v1",
+  "recorded_at_utc": "2026-10-31T13:07:01.880Z",
+  "agent": "Agent Hunter (ChatGPT authenticated GitHub connector)",
+  "scope": "Existing Zoodo control-plane host qualification; no public private IP or secrets",
+  "reconciled_issues": [
+    78,
+    77,
+    76,
+    74,
+    67,
+    80
+  ],
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "main_outbox_drainer_blob": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+    "main_outbox_store_blob": "dcdb842d021d98eaba8ff4f18f2d1136f8c25f58",
+    "main_sql_001_blob": "c76707cdcb785e22fa14e0758e511ec19af2a0e0",
+    "main_sql_002_blob": "82db86bc110e8b44ef98d67f5fa399f5ac159805",
+    "pr_81_receipt_blob": "3068702ec6f4b59c8d5fbcc617898c3eace35c0a",
+    "pr_stack": {
+      "68": "merged into its configured base, not independently proven on main",
+      "71": "merged into dashboard source branch",
+      "72": "merged into its configured base",
+      "73": "open draft, unmerged",
+      "81": "merged into #73 branch at 2026-10-31T12:50:36Z"
+    }
+  },
+  "observations": {
+    "authenticated_github_repo_permission": "admin/push/read verified via GitHub get_repo",
+    "private_transendiq_roster_routes_helpers_sockets": "read successfully; configured/historical references are not current model-native execution",
+    "private_transendiq_mcp": "only testsprite command declared; no Trigger.dev/Netlify/Supabase authenticated runtime adapter declared",
+    "trigger_dev": "Existing project and Oct 30 tests reported by owner in Zoodo #80; no native run ID/deployment log/project credential available through connected tools in this run",
+    "netlify": "Public dashboard HTTP retrieval unsuccessful; no authenticated Netlify management/function adapter or native runtime request ID",
+    "supabase": "SQL and JS RPC adapter exist in GitHub; no authorized Supabase runtime/database connector or service-role secret accessible to this run",
+    "other_hosts": "Vercel/other host management adapters not exposed in available tools",
+    "local_files": "No mounted Trigger.dev project or relevant host environment variables found in local execution container"
+  },
+  "native_host_probe": {
+    "attempted": false,
+    "reason": "No authenticated host API adapter or runtime credential accessible; unauthorized HTTP invocation would not qualify and must not be attempted",
+    "provider_request_id": null,
+    "provider_runtime_sha": null,
+    "provider_execution_result": "UNKNOWN",
+    "latency_ms": null,
+    "cost_usd": null
+  },
+  "verified_handoff_counts": {
+    "hosted_ticket_next": 0,
+    "forced_failure_recovered": 0,
+    "external_model_native_calls": 0
+  },
+  "capacity": {
+    "github_connector": "CURRENT authenticated source-control writer, NOT a 24/7 task runner",
+    "trigger_dev": "HISTORICAL owner-reported tests; current execution UNKNOWN",
+    "netlify": "CONFIGURED hosting source; current authenticated runtime UNKNOWN",
+    "supabase": "SOURCE_CONFIGURED durable queue; applied DB state UNKNOWN",
+    "claude_deepseek_gemini_copilot": "HISTORICAL/configured routes; current provider-native callability UNKNOWN",
+    "verified_alternate_workers": 0,
+    "measured_native_cadence": "UNKNOWN",
+    "concurrency": "UNKNOWN",
+    "cost": "UNKNOWN"
+  },
+  "decision": "BLOCKED_HOSTED_TRIGGERDEV_ACCESS; RECOVERING; no runtime qualification or production readiness claimed",
+  "next_executable_action": {
+    "owner": "existing Trigger.dev implementation lane, not human owner",
+    "task": "Recover Oct 30 Trigger.dev native run IDs/deployment/task route from existing authorized project; identify first failing boundary; connect existing #81 outbox-store entrypoint to authenticated Trigger event, apply SQL 001/002 only to isolated authorized ZOO ops DB after verification, execute one bounded synthetic hosted task and collect native run ID/source SHA, then two NEXT handoffs and forced non-started recovery; hand receipts to Dashboard Lead for production source readback",
+    "fallback": "If Trigger.dev runtime permissions truly absent, qualify existing Netlify function via authenticated management/API route; do not count preview build as execution",
+    "safety": "No paid signup, no secret exposure, no unsafe merge, no owner email"
+  }
+}

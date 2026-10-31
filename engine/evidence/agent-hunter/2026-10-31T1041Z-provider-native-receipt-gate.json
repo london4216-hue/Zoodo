@@ -1,0 +1,40 @@
+{
+  "schema": "zoo.ops.execution-receipt.v1",
+  "agent_id": "Agent Hunter (ChatGPT automation)",
+  "task_id": "ZOO-P0-PROVIDER-NATIVE-RECEIPT-GATE-20261031T1041Z",
+  "observed_at_utc": "2026-10-31T10:41:28Z",
+  "repository": "london4216-hue/Zoodo",
+  "branch": "hunter/provider-native-receipt-gate-20261031",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/70",
+  "source_code_commit": "a80c53e29bc6518cb73e079609494b5001a063da",
+  "test_first_commit": "39caac126dcb7e82b45961e1f09b89438635b785",
+  "source_blob_sha": "a2feef38d30fbc031577972c5224a1e064a356cb",
+  "test_blob_sha": "466838234bdb5c0781a60b7cdea73ca15adcab68",
+  "local_execution": {
+    "command": "node --check engine/ops/hunter/provider-receipt.mjs && node --test engine/test/provider-receipt.test.mjs",
+    "runtime": "Node.js v22.16.0",
+    "tests_passed": 10,
+    "tests_failed": 0,
+    "green_tap_sha256": "afd2f7dca6cf3f22c793cfb246393f3fd0cef827ce3e9989d18effa23a4feffd",
+    "red_stage": "regression reproduced: forged qualified:true counted 3 instead of 2",
+    "red_tap_sha256": "89038bc4e56a8d256b01729f5b6f00f91b0ae3e5ec1cddb4e143cb901c1a031e",
+    "regression": "module-private WeakSet only counts objects returned by authenticated verifier in same process; persisted JSON must be reverified"
+  },
+  "readback": "authenticated_GitHub_blob_SHA_matches_local_git_hash_object",
+  "provider_native_invocations_this_run": 0,
+  "external_model_votes_this_run": 0,
+  "qualified_independent_hosts_this_run": 0,
+  "decision": "REVISE",
+  "status": "RECOVERING",
+  "limitations": [
+    "Local tests are not a provider-native model or Netlify runtime invocation",
+    "No direct authenticated provider adapter or host control API exposed in this run",
+    "No production deployment or two-ticket hosted failover"
+  ],
+  "handoff": {
+    "from": "Agent Hunter",
+    "to": "Dashboard Lead",
+    "next": "Integrate only qualified native receipts into KPI feed after a trusted adapter readback; Implementation Lead wires authenticated host and real two-ticket test; Keeper integrates",
+    "trigger": "next verified provider adapter invocation or routine source review"
+  }
+}
