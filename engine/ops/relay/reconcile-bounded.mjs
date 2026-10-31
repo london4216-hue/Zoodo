@@ -9,6 +9,9 @@ export async function reconcileWithDeadline({quarantine, recover, replay, timeou
   const controller = new AbortController();
   let timer, phase = 'quarantine';
   const unconfirmed = (where, reason) => ({state:'reconcile-unconfirmed', phase:where, reason});
+  // Both database RPCs return nonnegative integer counts; a null, false or
+  // malformed response must never be mistaken for a successful recovery.
+  const validCount = value => Number.isSafeInteger(value) && value >= 0;
   const deadline = new Promise(resolve => {
     timer = setTimeout(() => {
       controller.abort();
@@ -19,9 +22,11 @@ export async function reconcileWithDeadline({quarantine, recover, replay, timeou
     try {
       const quarantined = await quarantine();
       if (controller.signal.aborted) return unconfirmed(phase, 'Reconcile deadline after quarantine');
+      if (!validCount(quarantined)) return unconfirmed(phase, 'Invalid quarantine RPC receipt; retry required');
       phase = 'recover';
       const recovered = await recover();
       if (controller.signal.aborted) return unconfirmed(phase, 'Reconcile deadline after outbox recovery');
+      if (!validCount(recovered)) return unconfirmed(phase, 'Invalid outbox recovery RPC receipt; retry required');
       phase = 'replay';
       const wakeup = await replay(controller.signal);
       if (controller.signal.aborted || !['acked', 'empty', 'idle-settled'].includes(wakeup?.state))

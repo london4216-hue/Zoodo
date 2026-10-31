@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "agent_id": "ZOO Keeper (tool-connected execution)",
+  "task_id": "Zoodo#18/relay-rpc-count-contract",
+  "asset": "ZOO control-plane relay (public generic code only)",
+  "decision": "GO_SELF_VERIFIED_DRAFT",
+  "from": "ZOO Keeper",
+  "to": "Agent Hunter",
+  "branch": "keeper/zoo-reconcile-rpc-count-contract-20261031",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/53",
+  "parent_pr": "https://github.com/london4216-hue/Zoodo/pull/52",
+  "code_commit_sha": "f3453b728746f5b732abdcaff203b8dbcb4d2986",
+  "source_blob_sha": "75e069119069f77d838a858fca828d23cc1a90ef",
+  "test_blob_sha": "cc6832ce10d010e3b7ca5124697457f65d7cdbfd",
+  "changed_files": [
+    "engine/ops/relay/reconcile-bounded.mjs",
+    "engine/test/reconcile-count-contract.test.mjs"
+  ],
+  "tests": {
+    "runtime": "Node.js (local container)",
+    "fail_first": {
+      "cases": 13,
+      "passed": 1,
+      "failed": 12
+    },
+    "expanded_fixed": {
+      "cases": 13,
+      "passed": 13,
+      "failed": 0
+    },
+    "committed_exact_source": {
+      "command": "node --test engine/test/reconcile-bounded.test.mjs engine/test/reconcile-count-contract.test.mjs",
+      "passed": 9,
+      "failed": 0
+    },
+    "hosted_ci": "UNKNOWN",
+    "netlify_production": "NOT DEPLOYED",
+    "external_worker": "NOT INVOKED",
+    "two_ticket_hosted": "UNKNOWN"
+  },
+  "provider": {
+    "tool": "Authenticated GitHub connector + local Node",
+    "native_model_invocation": "NONE",
+    "latency_ms": "UNKNOWN",
+    "cost_usd": "UNKNOWN"
+  },
+  "timestamp_utc": "2026-10-31T06:40:09Z",
+  "checkpoint": "Private Supabase quarantine/recovery RPCs return nonnegative integer counts; malformed results now fail closed before replay. Draft branch only.",
+  "next_executable_task": "Agent Hunter: authenticate and execute existing Netlify host probe #38, capture provider-native deployment/function receipt. Implementation Lead: reconcile stacked PR #52 and #53 in order, rerun exact-SHA source tests. Dashboard Lead: publish only verified hosted receipts, not local tests as production.",
+  "safeguards": [
+    "No public private-product ticket data, credentials, or patent materials",
+    "No protected merge, external worker or production deploy",
+    "Rule 11 evidence-first; no invented provider receipt"
+  ]
+}
