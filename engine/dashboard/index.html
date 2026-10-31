@@ -104,14 +104,15 @@ function paintAutomationProof(){
 async function refreshAutomationProof(){
  $('proofChecked').textContent='Last automation proof fetch attempted: '+new Date().toISOString();
  try{
-  const res=await fetch('./automation-proof.json',{cache:'no-store'});
+  const res=await fetch('./automation-proof.json?proof_read='+Date.now(),{cache:'no-store'});
   if(!res.ok)throw Error('HTTP '+res.status);
   const next=await res.json();
   const tested=evaluateAutomationProof(next);
+  if(lastRunFeed&&Date.parse(next.observed_at)<Date.parse(lastRunFeed.observed_at))throw Error('Published proof snapshot regressed');
   if(tested.state==='UNKNOWN')throw Error(tested.reason);
   lastRunFeed=next;runFeedFetchError=null;
-  $('proofChecked').textContent='Last successful automation proof fetch: '+new Date().toISOString()+
-   ' · GitHub-published snapshot, not an always-on worker connection';
+  $('proofChecked').textContent='Last FETCH: '+new Date().toISOString()+' · last published scheduler snapshot: '+next.observed_at+
+   ' · not an always-on worker connection';
  }catch(e){
   runFeedFetchError='Run proof feed inaccessible or invalid: '+String(e.message||e);
   $('proofChecked').textContent='Last automation proof fetch FAILED: '+new Date().toISOString()+
@@ -222,7 +223,7 @@ async function checkHostingMirrors(){
     if(manifest.schema_version!==1||manifest.source_commit!==expected)
       throw Error('missing, mismatched or misleading mirror manifest');
     const html=await getMirrorAsset('/index.html');
-    if(!html.includes('id="accountability"')||html.includes('EVIDENCE UNKNOWN · ESCALATION REQUIRED'))
+    if(!html.includes('id="accountability"')||(html.includes('EVIDENCE UNKNOWN')&&html.includes('ESCALATION REQUIRED')))
       throw Error('wrong dashboard HTML on mirror');
     const requiredAssets=[
       ['/evidence-clock.mjs','export function evaluateEvidence'],
