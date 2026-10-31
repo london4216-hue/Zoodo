@@ -1,0 +1,96 @@
+{
+  "schema": "zoo.ops.execution-receipt.v1",
+  "agent_id": "Implementation Lead (ChatGPT)",
+  "task_id": "ZOO-P0-CANONICAL-LEASE-20261031T1039Z",
+  "repository": "london4216-hue/Zoodo",
+  "asset": "independent ZOO relay",
+  "decision": "REVISE",
+  "reason": "Reversible malformed lease validation fix committed and local helper tests pass; full import graph, hosted worker and two-ticket failover not yet verified.",
+  "issues": [
+    "https://github.com/london4216-hue/Zoodo/issues/18",
+    "https://github.com/london4216-hue/TransendIQ/issues/1023",
+    "https://github.com/london4216-hue/TransendIQ/issues/1048"
+  ],
+  "branch": "worker/p0-canonical-lease-validation-20261031-1039",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/72",
+  "base_pr": "https://github.com/london4216-hue/Zoodo/pull/69",
+  "test_first_commit": "048088bad15a1fb82ba6adc65620407e1f013747",
+  "source_commit": "55b7dbb174c29b39a5b15367013ba566a6f4ecce",
+  "regression_commit": "066b380f9f2d410dd1534e19cce74ccb3ca9aae5",
+  "source_blobs": {
+    "engine/ops/relay/lease-token.mjs": "4fbc36d976c75882871bb86ee048c5bdc9a0a05b",
+    "engine/test/lease-token.test.mjs": "2cca2ff81914d025547abcd658962cb3aa5e3335",
+    "engine/ops/relay/portable-relay.mjs": "7378105e57c96ee7fb25d531dc2a3ead01c24c36",
+    "engine/test/portable-relay.test.mjs": "1daa7c222813a3f04285b2a9e582ed6b080b7a27"
+  },
+  "execution": {
+    "command": "node --test engine/test/lease-token.test.mjs",
+    "runtime": "local Node v22.16.0",
+    "scope": "exact Git blob matched helper and test; not full relay imports",
+    "started_utc": null,
+    "ended_utc": "2026-10-31T10:42:17Z",
+    "baseline": {
+      "passed": 1,
+      "failed": 1,
+      "exit_code": 1,
+      "tap_sha256": "b7521affea874c142e5d5643eea4e69e44086c114f3533e92c02ccab052cce03"
+    },
+    "patched": {
+      "passed": 2,
+      "failed": 0,
+      "exit_code": 0,
+      "tap_sha256": "232327736e33acdbf548ce2154b35d33bdcb747f6ce8fc6bac5ed4d9d12001b4"
+    }
+  },
+  "github_ci": {
+    "run_id": 41193822660,
+    "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41193822660",
+    "job_id": 124515855469,
+    "conclusion": "failure",
+    "steps": null,
+    "job_log": "BlobNotFound 404",
+    "interpretation": "No step evidence; GitHub Actions cannot be counted as test execution"
+  },
+  "host_probe": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/57",
+    "head_sha": "2ff4d5c84466a46be6e3c5f49020354b71ac3c73",
+    "status": "Netlify deploy-preview success GitHub status only",
+    "preview": "https://deploy-preview-57--zoo-live-dashboard.netlify.app",
+    "authenticated_function_invocation": "UNKNOWN"
+  },
+  "provider_deployment": "UNKNOWN",
+  "external_worker_invocation": "UNKNOWN",
+  "hosted_two_ticket_failover": "UNKNOWN",
+  "deepseek_request_id": null,
+  "production_dashboard_refresh": "UNKNOWN",
+  "movement": {
+    "hour_et": "2026-10-31T06:00:00-04:00",
+    "hour_utc": "2026-10-31T10:00:00Z",
+    "previous": "permissive 36-character lease regex",
+    "new": "canonical UUID helper wired and draft PR #72 opened",
+    "pr_opened_at_utc": "2026-10-31T10:42:09Z",
+    "reviewed_at_utc": null,
+    "merged_at_utc": null,
+    "deployed_at_utc": null,
+    "verified_at_utc": null,
+    "pr_to_merge_latency_ms": null,
+    "gap_to_fix_latency_ms": null,
+    "unresolved_gap_age_ms": null
+  },
+  "proof_matrix": {
+    "Agent Hunter": "UNKNOWN",
+    "Dashboard Lead": "UNKNOWN",
+    "Implementation Lead": "PARTIAL_LOCAL_ONLY",
+    "ZOO Keeper": "UNKNOWN"
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "decision": "REVISE",
+    "task_id": "ZOO-P0-CANONICAL-LEASE-20261031T1039Z",
+    "proposed_fix": "Integrate PR #72 after #69/#65 and run full relay tests; independently qualify Netlify/Supabase authenticated invocation and two-ticket recovery; publish only verified receipts.",
+    "evidence_commit": "066b380f9f2d410dd1534e19cce74ccb3ca9aae5",
+    "utc": "2026-10-31T10:42:26Z",
+    "next_trigger": "PR review/integration event or existing Keeper watchdog"
+  }
+}

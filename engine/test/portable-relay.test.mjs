@@ -130,3 +130,14 @@ test('authenticated outbox replay consumes wake-up only after successful NEXT di
  assert.equal(acked,1);
  assert.equal(f.tickets[0].state,'leased');
 });
+
+test('malformed 36-character lease cannot reach a worker or be marked complete',async()=>{
+ const f=fixture();let invocations=0;
+ f.store.claim=async worker=>({id:'T1',asset:'lab',intent:'synthetic',lease_owner:worker,lease_token:'-'.repeat(36)});
+ const relay=makeRelay({store:f.store,workers:[{id:'w',url:'https://example.org/worker',token:WSECRET}],
+  fetchImpl:async()=>{invocations++;throw Error('must not invoke worker')}});
+ await assert.rejects(()=>relay.next('w'),/Invalid atomic lease/);
+ await assert.rejects(()=>relay.completed({ticket_id:'T1',worker:'w',lease_token:'-'.repeat(36),commit_sha:SHA,test_url:'https://example.org/test'}),/Invalid completion/);
+ await assert.rejects(()=>relay.notStarted({ticket_id:'T1',worker:'w',lease_token:'-'.repeat(36),evidence_url:'https://example.org/not-started'}),/Native non-execution receipt required/);
+ assert.equal(invocations,0);
+});

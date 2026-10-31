@@ -10,9 +10,9 @@ import {confirmTransitionWithinDeadline} from './transition-fence.mjs';
 import {classifyRelayError} from './relay-error-status.mjs';
 import {relayResponseStatus} from './relay-response-status.mjs';
 import {decodeCallbackEnvelope} from './callback-envelope.mjs';
+import {validLeaseToken} from './lease-token.mjs';
 const ID=/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const SHA=/^[a-f0-9]{40}$/;
-const UUID=/^[a-f0-9-]{36}$/i;
 const WORKER=/^[A-Za-z0-9_-]{1,64}$/;
 const https=x=>{try{const u=new URL(x);return u.protocol==='https:'&&!u.username&&!u.password&&!u.hash}catch{return false}};
 const equal=(a,b)=>{if(typeof a!=='string'||typeof b!=='string'||!a||!b)return false;const x=Buffer.from(a),y=Buffer.from(b);return x.length===y.length&&timingSafeEqual(x,y)};
@@ -68,7 +68,7 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),next
   // A late atomic claim may own a durable lease; never launch a worker after the HTTP deadline.
   if(signal?.aborted)return {state:'next-unconfirmed',ticket:t?.id??null,reason:'NEXT deadline elapsed after claim; lease reconciliation required'};
   if(!t)return delegate(worker,allowReplacement,{state:'idle'},signal);
-  if(!ID.test(t.id??'')||!UUID.test(t.lease_token??'')||t.lease_owner!==worker)throw Error('Invalid atomic lease');
+  if(!ID.test(t.id??'')||!validLeaseToken(t.lease_token??'')||t.lease_owner!==worker)throw Error('Invalid atomic lease');
   const key='zoo:'+t.id+':'+t.lease_token;
   let result;
   try{
@@ -100,7 +100,7 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),next
   return nextWithDeadline(signal=>next(worker,true,signal),{timeoutMs:nextDeadlineMs});
  }
  async function completed(x){
-  if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
+  if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!validLeaseToken(x?.lease_token??'')||
      !SHA.test(x?.commit_sha??'')||!https(x?.test_url)||!pool.has(x.worker))throw Error('Invalid completion');
   const transition=await confirmTransitionWithinDeadline(()=>store.complete(x),{timeoutMs:transitionDeadlineMs});
   if(!transition.confirmed)return {state:'completion-unconfirmed',ticket:x.ticket_id,reason:transition.reason};
@@ -108,7 +108,7 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),next
   return {state:'completed',ticket:x.ticket_id,next:await nextAfterTransition(x.worker),completed_at:new Date(now()).toISOString()};
  }
  async function notStarted(x){
-  if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
+  if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!validLeaseToken(x?.lease_token??'')||
      !https(x?.evidence_url)||!pool.has(x.worker))throw Error('Native non-execution receipt required');
   const transition=await confirmTransitionWithinDeadline(()=>store.notStarted(x),{timeoutMs:transitionDeadlineMs});
   if(!transition.confirmed)return {state:'requeue-unconfirmed',ticket:x.ticket_id,reason:transition.reason};
