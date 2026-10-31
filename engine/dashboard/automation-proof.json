@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-31T05:04:32.101Z",
+  "observed_at": "2026-10-31T05:54:25.926Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Agent Hunter",
@@ -14,30 +14,30 @@
   "workers": [
     {
       "role": "ZOO Keeper",
-      "run_id": "bb44a81f-be90-832a-99a3-af47b0801433",
+      "run_id": "0ee4371b-1064-8321-9b53-8a9150a05512",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T04:45:30Z",
-      "completed_at": "2026-10-31T04:48:41.156250Z",
+      "scheduled_for": "2026-10-31T05:45:30Z",
+      "completed_at": "2026-10-31T05:51:10.912891Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
       "receipt_source": "run_details.last_run"
     },
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "68975351-d554-8324-8c62-65ccd810b251",
+      "run_id": "ba36cb39-8a70-832f-a83c-05803df09a25",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T03:45:58Z",
-      "completed_at": "2026-10-31T04:10:54.387296Z",
+      "scheduled_for": "2026-10-31T04:45:58Z",
+      "completed_at": "2026-10-31T05:06:48.742062Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
-      "receipt_source": "run_details.latest_result + prior recorded scheduled_for"
+      "receipt_source": "run_details.latest_result_previous_completed"
     },
     {
       "role": "ZOO Asset Restoration",
-      "run_id": "9c2bb5f3-3cf0-8325-b778-851e3045d294",
+      "run_id": "964c7714-73fc-8327-a37a-c46d964d1db6",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T03:24:51Z",
-      "completed_at": "2026-10-31T03:32:34.283377Z",
+      "scheduled_for": "2026-10-31T05:24:51Z",
+      "completed_at": "2026-10-31T05:32:02.514006Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
       "receipt_source": "run_details.last_run"
@@ -46,34 +46,26 @@
   "in_progress_runs": [
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "ba36cb39-8a70-832f-a83c-05803df09a25",
+      "run_id": "0083525b-2208-8326-87bc-25d57f50520b",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-31T04:45:58Z",
-      "started_at": "2026-10-31T05:02:40.900177Z",
+      "scheduled_for": "2026-10-31T05:45:58Z",
+      "started_at": "2026-10-31T05:52:48.468511Z",
       "completed_at": null
     }
   ],
   "source_anomalies": [
     {
       "role": "ZOO Agent Hunter",
-      "kind": "completion_before_scheduled_for",
+      "kind": "completion_before_scheduled_for_or_invalid",
       "run_id": "0bde120d-c504-8331-9f02-bef37d4a6473",
       "scheduled_for": "2026-10-31T05:21:25Z",
       "completed_at": "2026-10-31T04:55:01.790809Z",
       "action": "quarantined_not_counted_as_verified_scheduler_completion"
-    },
-    {
-      "role": "ZOO Asset Restoration",
-      "kind": "completion_before_scheduled_for",
-      "run_id": "8fdfdf60-e050-8330-8c7a-16b3d44df4d8",
-      "scheduled_for": "2026-10-31T04:24:51Z",
-      "completed_at": "2026-10-31T04:23:20.949021Z",
-      "action": "quarantined_not_counted_as_verified_scheduler_completion"
     }
   ],
   "prior_snapshot": {
-    "observed_at": "2026-10-31T04:09:22.699Z",
-    "previously_quarantined_anomalies": 1,
+    "observed_at": "2026-10-31T05:04:32.101Z",
+    "previously_quarantined_anomalies": 2,
     "note": "Historical anomalies preserved in prior Git commits; current anomalies remain visible."
   }
 }
