@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-31T22:52:39.936Z",
+  "observed_at": "2026-10-31T23:35:33.809Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Dashboard Worker",
@@ -9,7 +9,7 @@
     "ZOO Agent Hunter",
     "ZOO PR Closure"
   ],
-  "publication_scope": "Authenticated scheduler metadata only; disabled Hunter and quarantined inconsistent timestamps remain recovery conditions. In-progress runs are not completed work, CI, host, or worker heartbeat proof.",
+  "publication_scope": "Authenticated scheduler metadata only. Hunter disabled; latest Hunter completion inconsistent and quarantined. Dashboard in-progress record has future scheduled_for; not counted. Completion receipts do not establish productive work, CI, host, or live heartbeat.",
   "refresh_policy": "Single Dashboard Worker publisher; GitHub blob SHA conditional update; browser polling cannot wake agents.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
@@ -22,29 +22,32 @@
       "receipt_source": "connected_automations_peek.latest_result",
       "automation_title": "ZOO Keeper — portfolio execution enforcement",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
-      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
+      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
+      "enabled": true
     },
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "45caaced-8fdc-8322-8cf5-ed4349d399a5",
+      "run_id": "65230e9a-5f90-8320-9104-21c071bf6c46",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T19:45:58Z",
-      "completed_at": "2026-10-31T19:49:05.962166Z",
-      "receipt_source": "connected_automations_peek.run_details",
+      "scheduled_for": "2026-10-31T22:50:25.077292Z",
+      "completed_at": "2026-10-31T22:53:52.796063Z",
+      "receipt_source": "connected_automations_peek.latest_result",
       "automation_title": "ZOO Dashboard — live repair and hourly grades",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
-      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
+      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
+      "enabled": true
     },
     {
       "role": "ZOO Asset Restoration",
-      "run_id": "dc475b6c-1b3c-8332-9c98-7a5d99c649c3",
+      "run_id": "167d2c63-f978-8329-8a83-3fffa1f365da",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T22:24:51Z",
-      "completed_at": "2026-10-31T22:26:59.362318Z",
+      "scheduled_for": "2026-10-31T23:24:51Z",
+      "completed_at": "2026-10-31T23:27:00.942574Z",
       "receipt_source": "connected_automations_peek.latest_result",
       "automation_title": "ZOO Builder — EZ Move and BeautyPath",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
-      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
+      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
+      "enabled": true
     },
     {
       "role": "ZOO Agent Hunter",
@@ -59,37 +62,25 @@
     },
     {
       "role": "ZOO PR Closure",
-      "run_id": "2363c281-de20-8323-a91b-9ac56280c418",
+      "run_id": "7ac49d46-bc80-832e-b4eb-743fac40e536",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T22:10:39Z",
-      "completed_at": "2026-10-31T22:17:12.625462Z",
-      "receipt_source": "connected_automations_peek.run_details",
+      "scheduled_for": "2026-10-31T23:10:39Z",
+      "completed_at": "2026-10-31T23:19:27.233360Z",
+      "receipt_source": "connected_automations_peek.latest_result",
       "automation_title": "ZOO PR closure — eligible fixes and merges",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
-      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
+      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
+      "enabled": true
     }
   ],
   "in_progress_runs": [
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "65230e9a-5f90-8320-9104-21c071bf6c46",
+      "run_id": "3af46e2d-655c-8328-a170-c8dca0e5e830",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-31T22:50:25.077292Z",
-      "started_at": "2026-10-31T22:50:43.550638Z"
-    },
-    {
-      "role": "ZOO Asset Restoration",
-      "run_id": "38369225-de24-8324-88ef-7cc3b08a3723",
-      "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-31T22:50:37.003470Z",
-      "started_at": "2026-10-31T22:50:39.230322Z"
-    },
-    {
-      "role": "ZOO PR Closure",
-      "run_id": "6ba6983e-f448-832d-913b-1e1cd762971e",
-      "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-31T22:50:25.988896Z",
-      "started_at": "2026-10-31T22:50:53.001968Z"
+      "scheduled_for": "2026-10-31T23:45:58Z",
+      "started_at": "2026-10-31T23:33:41.414749Z",
+      "timing_note": "scheduled_for_in_future_relative_to_observation_not_completion_proof"
     }
   ],
   "source_anomalies": [
@@ -261,6 +252,14 @@
       "scheduled_for": "2026-10-31T18:21:25Z",
       "completed_at": "2026-10-31T18:01:41.851473Z",
       "action": "quarantined_not_counted_as_verified_completion"
+    },
+    {
+      "role": "ZOO Agent Hunter",
+      "kind": "latest_completion_timing_inconsistent",
+      "run_id": "b487ae22-cbf4-8322-a512-ec8bbc2bea08",
+      "scheduled_for": "2026-10-31T18:21:25Z",
+      "completed_at": "2026-10-31T18:01:41.851473Z",
+      "action": "quarantined_not_counted"
     }
   ],
   "prior_snapshot": {
