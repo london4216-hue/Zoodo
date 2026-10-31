@@ -22,8 +22,8 @@ test('completed transition is not retried solely because NEXT is unconfirmed', (
   assert.equal(relayResponseStatus('not_started',{state:'requeued',next:{state:'next-unconfirmed'}}),200);
 });
 
-test('unexpected/missing results never claim retryable state without evidence', () => {
+test('unexpected or missing results cannot be acknowledged as durable success', () => {
   for (const result of [null,undefined,{}, {state:'unknown'}, {state:'uncertain'}]) {
-    assert.equal(relayResponseStatus('replay',result),200);
+    assert.equal(relayResponseStatus('replay',result),503);
   }
 });
