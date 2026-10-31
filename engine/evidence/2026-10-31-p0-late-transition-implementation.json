@@ -30,7 +30,7 @@
       "test": "6c806c40f21f6fc3fee86d0be15e49b234a56aeb",
       "integration": "4225e7eaec6489f5016b26fb25b5710d099920a0",
       "integration_test": "0a1a171fe9919514f7e5c3b77d9063bccf57ad81",
-      "handler_test": "NOT READ BACK YET"
+      "handler_test": "1fb484e13cb3d0c32861bd17683af3f27b58ba19"
     },
     "local_source_blobs_match": true,
     "full_integration_suite": "NOT EXECUTED; late-transition integration and handler HTTP tests committed; pending runner"
