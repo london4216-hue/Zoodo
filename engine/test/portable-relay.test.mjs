@@ -8,7 +8,7 @@ const token=n=>String(n).padStart(8,'0')+'-0000-4000-8000-000000000001';
 function fixture(){
  const tickets=[{id:'T1',asset:'lab',intent:'one',state:'queued'},{id:'T2',asset:'lab',intent:'two',state:'queued'}],events=[];let n=0;
  return {tickets,events,store:{
-  async claim(w){const t=tickets.find(x=>x.state==='queued');if(!t)return null;t.state='leased';t.lease_owner=w;t.lease_token=token(++n);events.push('claim:'+t.id);return {...t}},
+  async claim(w){if(tickets.some(x=>x.state==='leased'&&x.lease_owner===w))return null;const t=tickets.find(x=>x.state==='queued');if(!t)return null;t.state='leased';t.lease_owner=w;t.lease_token=token(++n);events.push('claim:'+t.id);return {...t}},
   async record(x){events.push('accept:'+x.ticket_id);return true},
   async complete(x){const t=tickets.find(y=>y.id===x.ticket_id);if(!t||t.state!=='leased'||t.lease_owner!==x.worker||t.lease_token!==x.lease_token)return false;t.state='done';events.push('done:'+t.id);return true},
   async notStarted(x){const t=tickets.find(y=>y.id===x.ticket_id);if(!t||t.state!=='leased'||t.lease_token!==x.lease_token)return false;t.state='queued';events.push('not-started:'+t.id);return true},
@@ -33,7 +33,8 @@ test('real local HTTP two-ticket chain dispatches NEXT on completion event, not 
 test('timeout is uncertain, not automatically duplicated; native non-execution can requeue',async()=>{
  const f=fixture();const relay=makeRelay({store:f.store,workers:[{id:'w',url:'https://example.org/worker',token:WSECRET}],fetchImpl:async()=>{throw Error('timeout')}});
  assert.equal((await relay.next('w')).state,'uncertain');assert.equal(f.tickets[0].state,'leased');
- assert.equal((await relay.next('w')).ticket,'T2');
+ assert.equal((await relay.next('w')).state,'idle'); // SQL enforces one active lease per worker
+ assert.equal(f.tickets[1].state,'queued');
  const result=await relay.notStarted({ticket_id:'T1',worker:'w',lease_token:f.tickets[0].lease_token,evidence_url:'https://example.org/not-started'});
  assert.equal(result.next.ticket,'T1');
 });
