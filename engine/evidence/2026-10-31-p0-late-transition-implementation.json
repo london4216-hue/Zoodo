@@ -54,7 +54,10 @@
     "task_id": "ZOO-P0-LATE-TRANSITION-FENCE-20261031-0727",
     "timestamp_utc": "2026-10-31T07:29:22.494Z",
     "next_trigger": "PR #59 review and full integration tests; hosted two-ticket failover still pending",
-    "confirmed_execution_by_keeper": false
+    "confirmed_execution_by_keeper": false,
+    "requested_keeper_run_now": true,
+    "requested_hunter_run_now": true,
+    "execution_confirmed": false
   },
   "four_agent_proof_matrix": {
     "hunter": "PREVIEW_DEPLOY_ONLY_HOSTED_UNKNOWN",
@@ -96,5 +99,20 @@
     "No real credentials or private tickets in public Zoodo",
     "No external agent invocation fabricated",
     "Preserve protected branch controls"
-  ]
+  ],
+  "ci": {
+    "run_id": 41180819922,
+    "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41180819922",
+    "conclusion": "failure",
+    "job_id": 124477705455,
+    "job_steps": [],
+    "job_log": "404 BlobNotFound",
+    "root_cause": "UNKNOWN; no executed steps exposed; not evidence of code test failure"
+  },
+  "host_capability_check": {
+    "local_environment_provider_variable_names": [],
+    "netlify_vercel_supabase_management_connectors": "NOT EXPOSED in available tool namespaces",
+    "public_netlify_http_probe": "UNAVAILABLE via current web fetch; cannot assert endpoint is down",
+    "deploy_credentials_verified": false
+  }
 }
