@@ -20,6 +20,12 @@ test('P0 priority row is additive and mobile responsive', () => {
   assert.match(html, /id="accountability"/);
   assert.match(html, /id="handoff-ledger"/);
   assert.match(html, /id="queue-panel"/);
+  assert.match(html, /id="restoration-lanes"/);
+  assert.match(html, /Zoodo\/issues\/25/);
+  assert.match(html, /Zoodo\/issues\/27/);
+  assert.match(html, /TransendIQ\/pull\/1070/);
+  assert.match(html, /My Block · original Figma reconstruction/);
+  assert.match(html, /YB3 · original Figma reconstruction/);
 });
 
 test('priority feed is source-linked and does not manufacture work or Sara URL', () => {
