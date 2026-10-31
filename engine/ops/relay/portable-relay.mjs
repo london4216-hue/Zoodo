@@ -6,6 +6,7 @@ import {nextWithDeadline} from './next-deadline.mjs';
 import {reconcileWithDeadline} from './reconcile-bounded.mjs';
 import {confirmDispatchReceipt} from './dispatch-receipt-fence.mjs';
 import {kickWithDeadline} from './bounded-kick.mjs';
+import {confirmTransitionWithinDeadline} from './transition-fence.mjs';
 const ID=/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const SHA=/^[a-f0-9]{40}$/;
 const UUID=/^[a-f0-9-]{36}$/i;
@@ -36,7 +37,7 @@ export function makeStore({origin,serviceRoleKey,fetchImpl=fetch}){
   recoverOutbox:()=>rpc('outbox_recover',{})
  };
 }
-export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),nextDeadlineMs=7500}){
+export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),nextDeadlineMs=7500,transitionDeadlineMs=6000}){
  if(!store||!Array.isArray(workers)||!workers.length)throw Error('Durable store and worker pool required');
  const pool=new Map();
  for(const w of workers){
@@ -98,14 +99,16 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),next
  async function completed(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
      !SHA.test(x?.commit_sha??'')||!https(x?.test_url)||!pool.has(x.worker))throw Error('Invalid completion');
-  if(await store.complete(x)!==true)throw Error('Completion not durably confirmed');
+  const transition=await confirmTransitionWithinDeadline(()=>store.complete(x),{timeoutMs:transitionDeadlineMs});
+  if(!transition.confirmed)return {state:'completion-unconfirmed',ticket:x.ticket_id,reason:transition.reason};
   // NEXT is triggered by the authenticated completion callback, not an hourly tick.
   return {state:'completed',ticket:x.ticket_id,next:await nextAfterTransition(x.worker),completed_at:new Date(now()).toISOString()};
  }
  async function notStarted(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
      !https(x?.evidence_url)||!pool.has(x.worker))throw Error('Native non-execution receipt required');
-  if(await store.notStarted(x)!==true)throw Error('Non-execution not durably confirmed');
+  const transition=await confirmTransitionWithinDeadline(()=>store.notStarted(x),{timeoutMs:transitionDeadlineMs});
+  if(!transition.confirmed)return {state:'requeue-unconfirmed',ticket:x.ticket_id,reason:transition.reason};
   return {state:'requeued',ticket:x.ticket_id,next:await nextAfterTransition(x.worker)};
  }
  async function replay(signal){return makeOutboxReplay({store,dispatch:next,worker:workers[0].id})(signal)}
