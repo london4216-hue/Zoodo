@@ -3,6 +3,7 @@
 import {timingSafeEqual} from 'node:crypto';
 import {makeOutboxReplay} from './outbox-replay.mjs';
 import {nextWithDeadline} from './next-deadline.mjs';
+import {reconcileWithDeadline} from './reconcile-bounded.mjs';
 const ID=/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const SHA=/^[a-f0-9]{40}$/;
 const UUID=/^[a-f0-9-]{36}$/i;
@@ -104,11 +105,14 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),next
   if(await store.notStarted(x)!==true)throw Error('Non-execution not durably confirmed');
   return {state:'requeued',ticket:x.ticket_id,next:await nextAfterTransition(x.worker)};
  }
- async function replay(){return makeOutboxReplay({store,dispatch:next,worker:workers[0].id})()}
+ async function replay(signal){return makeOutboxReplay({store,dispatch:next,worker:workers[0].id})(signal)}
  async function reconcile(){
-  const quarantined=await store.quarantine();
-  const recovered=await store.recoverOutbox();
-  return {state:'reconciled',quarantined,recovered,wakeup:await replay()};
+  return reconcileWithDeadline({
+   quarantine:()=>store.quarantine(),
+   recover:()=>store.recoverOutbox(),
+   replay:signal=>replay(signal),
+   timeoutMs:9000
+  });
  }
  return {next,completed,notStarted,replay,reconcile,quarantine:()=>store.quarantine()};
 }
