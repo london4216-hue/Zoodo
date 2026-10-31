@@ -1,0 +1,53 @@
+{
+  "schema": "zoo.ops.execution-receipt.v1",
+  "agent_id": "ZOO Keeper",
+  "task_id": "ZOODO-P0-OUTBOX-DRAIN-20261031",
+  "source_repository": "london4216-hue/Zoodo",
+  "branch": "keeper/zoo-outbox-drainer-20261031",
+  "source_commit_sha": "cb7326402df8265b4edd82f888f4d761f1c6a073",
+  "source_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "594ad40800083b68014f675ada1609f98d92bb3b",
+    "engine/test/outbox-drainer.test.mjs": "4f27781723fde86ddffc4706d5df9e473af0a71c"
+  },
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/68",
+  "base_pr": "https://github.com/london4216-hue/Zoodo/pull/32",
+  "execution": {
+    "command": "node --test /mnt/data/zoo-outbox/engine/test/outbox-drainer.test.mjs",
+    "runtime": "Node v22.16.0",
+    "environment": "local isolated Node; synthetic durable store and fake relay; no hosted worker",
+    "exit_code": 0,
+    "passed": 8,
+    "failed": 0,
+    "source_blobs_matched_git_remote": true
+  },
+  "result": "SELF_VERIFIED_PRIVATE_DRAFT_ONLY",
+  "decision": "GO_PRIVATE_DRAFT_ONLY",
+  "limitations": {
+    "netlify_deployed": "UNKNOWN",
+    "supabase_migration_applied": "UNKNOWN",
+    "authenticated_external_worker": "UNKNOWN",
+    "live_two_ticket_chain": "UNKNOWN",
+    "public_dashboard_readback": "UNKNOWN",
+    "github_ci": "UNKNOWN"
+  },
+  "handoff": {
+    "from": "ZOO Keeper",
+    "to": "Agent Hunter",
+    "next_action": "Qualify existing authenticated Netlify/Supabase runtime and actual independent worker endpoint; do not infer connectivity from config. Implementation Lead to wire outbox RPCs into makeStore and event-driven handler, then run disposable SQL and authenticated two-ticket recovery tests.",
+    "trigger": "existing independent agent task cadence or verified provider event",
+    "owner_intervention_required": false
+  },
+  "privacy": "Public Zoodo operations code only; no private HELD materials, credentials, patent details, or private ticket contents.",
+  "movement": {
+    "hour_utc": "2026-10-31T09:00:00Z",
+    "hour_et": "2026-10-31T05:00:00-04:00",
+    "prior": "SQL outbox exists but no bounded drain helper",
+    "new": "outbox drain helper and eight passing local tests committed to draft PR",
+    "commit": "cb7326402df8265b4edd82f888f4d761f1c6a073",
+    "pr_opened_utc": "2026-10-31T09:59:47Z",
+    "review_utc": null,
+    "merge_utc": null,
+    "deploy_utc": null,
+    "hosted_verified_utc": null
+  }
+}

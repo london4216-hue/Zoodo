@@ -1,0 +1,51 @@
+{
+  "schema": "zoo.ops.execution-receipt.v1",
+  "agent_id": "ZOO Keeper",
+  "task_id": "ZOODO-P0-OUTBOX-IDLE-ACK-FENCE-20261031",
+  "repo": "london4216-hue/Zoodo",
+  "branch": "keeper/zoo-outbox-drainer-20261031",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/68",
+  "source_commit_sha": "0380c34291a5ee2dbaff9d1ee767a46413437618",
+  "source_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "0e41a427eb57f34fdec8d0d9b387ad6f26f40038",
+    "engine/test/outbox-drainer.test.mjs": "2d80ec3eb8feb94956244e8e905d646d6d4990c1"
+  },
+  "executed_at_utc": "2026-10-31T10:52:11Z",
+  "runtime": "local Node v22.16.0",
+  "command": "node --test /mnt/data/zoo-keeper-lease-fix/engine/test/outbox-drainer.test.mjs",
+  "tests": {
+    "passed": 10,
+    "failed": 0,
+    "scope": "exact Git blob-matched source and tests; synthetic store/relay only",
+    "exit_code": 0
+  },
+  "change": "Use claimOutbox/ackOutbox native store contract, canonical UUID and ticket ID validation; require transactional settleIdleOutbox before idle wakeup can be removed. Prevent false successful ACK when worker idle but tickets remain.",
+  "pr_reconciliation": {
+    "closed_superseded_pr": "https://github.com/london4216-hue/Zoodo/pull/66",
+    "closed_pr_head_sha": "585061afb01a5d23343f17613e604d4b670f1876",
+    "comment_id": 6542453539,
+    "reason": "Duplicate sibling callback implementation; #69 plus #72 is continuing chain",
+    "remaining_stacks": [
+      "#65 -> #69 -> #72",
+      "#32 -> #68",
+      "#16 -> #71"
+    ],
+    "merged": 0
+  },
+  "external_provider_invocation": "UNKNOWN",
+  "hosted_ci": "UNKNOWN",
+  "netlify_deployment": "UNKNOWN",
+  "live_two_ticket_recovery": "UNKNOWN",
+  "dashboard_public_readback": "UNKNOWN",
+  "handoff": {
+    "from": "ZOO Keeper",
+    "to": "Implementation Lead",
+    "decision": "GO_PRIVATE_DRAFT_ONLY",
+    "next": "Wire a single durable outbox replay path (avoid duplicating #35), run exact-source integration tests and authenticated hosted two-ticket failure recovery; keep isolated branches. Agent Hunter independently qualify current runtime; Dashboard Lead preserve canonical source parity and verified evidence feed."
+  },
+  "safeguards": [
+    "No production deployment",
+    "No new external spend",
+    "No private product or patent data in public Zoodo"
+  ]
+}
