@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 
 const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
-const match=html.match(/const fmt=([\\s\\S]*?);\\nconst escapeHtml=/);
+const match=html.match(/const fmt=([\s\S]*?);\nconst escapeHtml=/);
 assert.ok(match,'dashboard source must expose the evidence age formatter');
 const fmt=runInNewContext('('+match[1]+')');
 const now=Date.parse('2026-10-31T19:45:00Z');
