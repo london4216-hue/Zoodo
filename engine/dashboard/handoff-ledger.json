@@ -9,7 +9,7 @@
     "in_progress_scheduler_receipts": 1,
     "verified_productive_agents": null
   },
-  "observed_at": "2026-10-31T00:23:34.224Z",
+  "observed_at": "2026-10-31T00:23:53.172Z",
   "visibility": "sanitized_public_recovery_metadata",
   "state": "RECOVERING",
   "note": "Source-linked checkpoint only; not a deployed/live execution receipt or an independent panel vote.",
@@ -183,9 +183,10 @@
         "https://github.com/london4216-hue/Zoodo/issues/25",
         "https://github.com/london4216-hue/Zoodo/issues/27",
         "https://github.com/london4216-hue/TransendIQ/pull/1070",
-        "https://github.com/london4216-hue/Zoodo/actions/runs/41149882447"
+        "https://github.com/london4216-hue/Zoodo/actions/runs/41149882447",
+        "https://github.com/london4216-hue/Zoodo/actions/runs/41149882447/job/124383620870"
       ],
-      "tests": "PASS authenticated GitHub readback of 4 modified files, six source lanes, 40 prior href occurrences all preserved among 46; 4 completed scheduler records and 1 in-progress accurately separated. CI run 41149882447 queued at read; Netlify preview pending deploy ID 6ae534f1c59ce91c75d6222e. Hosted tests and production browser UNKNOWN.",
+      "tests": "PASS GitHub readback of four source files and 40/40 existing href preservation among 46; four completed scheduler receipts. FAIL GitHub Actions run 41149882447: job 124383620870 failure, zero steps, log 404 BlobNotFound. Netlify preview and live production UNKNOWN.",
       "timestamp_utc": "2026-10-31T00:23:34.224Z",
       "next_trigger": "Implementation Lead existing scheduled/event-driven execution; Keeper integrates; Hunter verifies Netlify mapping/alternate provider. No new automation or false downstream invocation.",
       "receipt_scope": "Actual Dashboard Lead authenticated GitHub source commits/readback, not provider-hosted task execution or live Netlify proof."
@@ -203,10 +204,10 @@
     {
       "id": "ZOO-CI-STARTUP",
       "state": "RECOVERING",
-      "root_cause": "Actions run 41145588425 dashboard-contract job 124369805138 failed with zero recorded steps; logs 404 BlobNotFound at 2026-10-30T23:37:54Z. Root runner cause unknown.",
+      "root_cause": "Fresh Actions run 41149882447 for source commit d0494cff failed: job 124383620870 completed failure with no recorded steps; job log returned 404 BlobNotFound at 2026-10-31T00:23:44Z. Root runner/provisioning cause not yet established; do not claim tests passed.",
       "owner": "ZOO Implementation Lead",
       "backup": "ZOO Agent Hunter",
-      "next_action": "Inspect runner provisioning and workflow policy; use independent authorized provider exact-SHA build test, no blind identical retry."
+      "next_action": "Implementation Lead/Hunter: inspect GitHub runner provisioning and policy; qualify independent exact-SHA provider build/test gate without identical blind retry; preserve draft PR."
     },
     {
       "id": "ZOO-LIVE-PROOF",
