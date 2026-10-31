@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "task_id": "ZOO-DASHBOARD-1023-20261031-1033",
+  "status": "RECOVERING",
+  "observed_at": "2026-10-31T10:34:19.410Z",
+  "from": "Dashboard Lead",
+  "to": "Implementation Lead",
+  "decision": "REVISE",
+  "owner": "ZOO Dashboard Worker",
+  "backup": "ZOO Agent Hunter",
+  "integration_authority": "Sole ZOO Keeper",
+  "repo": "london4216-hue/Zoodo",
+  "branch": "fix/zoo-live-dashboard-accountability-20261030",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+  "snapshot_commit": "7644ebbc3e7f02cc717b3d4ec8011916ed030cc8",
+  "snapshot_url": "https://github.com/london4216-hue/Zoodo/blob/fix/zoo-live-dashboard-accountability-20261030/engine/dashboard/automation-proof.json",
+  "checks": {
+    "scheduler": {
+      "source": "authenticated_connected_automations_peek",
+      "observed_at": "2026-10-31T10:33:38.091Z",
+      "schema_assertions_passed": 12,
+      "github_readback_verified": true,
+      "last_valid_completions": {
+        "keeper": "2026-10-31T10:00:27.192518Z",
+        "hunter": "2026-10-31T10:27:30.927937Z",
+        "dashboard": "2026-10-31T10:03:41.295206Z",
+        "restoration": "2026-10-31T09:29:52.151888Z"
+      },
+      "dashboard_current_run": "in_progress_not_counted",
+      "restoration_latest_recorded_completion": "pre_scheduled_quarantined",
+      "authenticated_productive_workers": "UNKNOWN_NOT_DERIVED_FROM_SCHEDULER"
+    },
+    "source_navigation": {
+      "base_blob": "1b149db56e670dec02cb5ba02a2aef51676c16fe",
+      "candidate_blob": "9bbc74b34f13663d234852f0e10ab1ea9f80fb6e",
+      "base_unique_links": 25,
+      "candidate_unique_links": 40,
+      "missing_base_links": 0,
+      "known_dead_beautypaths_primary_anchor_present": false,
+      "live_endpoint_verification": "UNKNOWN"
+    },
+    "github_actions": {
+      "run_id": 41193254668,
+      "job_id": 124514173244,
+      "conclusion": "failure",
+      "job_steps": null,
+      "logs": "unavailable",
+      "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41193254668",
+      "classification": "CI_STARTUP_FAILURE_RECOVERY_EVENT"
+    },
+    "netlify": {
+      "production_url": "https://zoo-live-dashboard.netlify.app/",
+      "production_dns": "unresolved_from_web_and_container",
+      "preview_url": "https://deploy-preview-16--zoo-live-dashboard.netlify.app",
+      "preview_dns": "unresolved_from_container",
+      "github_preview_status": "success",
+      "production_site_id": null,
+      "production_deploy_id": null,
+      "production_sha": null,
+      "live_refresh_receipt": null
+    },
+    "external_model_invocations": "NO_NEW_PROVIDER_NATIVE_RECEIPTS"
+  },
+  "attempted_repairs": [
+    "Authenticated read of four actual scheduler records and source anomalies",
+    "Conditional GitHub proof update with 12 schema assertions and exact GitHub readback",
+    "Re-evaluated all 25 baseline unique navigation links against candidate source, zero removals",
+    "Inspected new exact-commit GitHub Actions failure, zero available step records",
+    "Retried production and preview DNS checks independently; unable to resolve host"
+  ],
+  "next_executable_steps": [
+    "Implementation Lead: diagnose zero-step CI job 124514173244; qualify authorized alternative exact-SHA Node test runner and preserve result",
+    "Agent Hunter: authenticate existing Netlify site mapping, deploy ID, source branch, rollback; probe preview and production expected landing and owner auth",
+    "Dashboard Lead: publish next scheduler snapshot on actual completion, test stale-to-recovery, verify manual and automatic refresh in browser",
+    "ZOO Keeper: maintain queue and integrate reversible fixes only with actual execution receipts"
+  ],
+  "next_trigger": "Next authorized worker event or hourly reconciliation; do not treat this checkpoint as terminal",
+  "release_gates": {
+    "production_deployment": "NOT_PERFORMED",
+    "demo_ready_email": "NOT_SENT",
+    "authenticated_live_refresh": "UNKNOWN",
+    "mobile_and_auth": "UNKNOWN",
+    "hosted_two_ticket_recovery": "UNKNOWN"
+  },
+  "hourly_movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T10:00:00Z",
+      "asset": "ZOO dashboard proof",
+      "repo": "london4216-hue/Zoodo",
+      "pr": 16,
+      "prior_status": "Hunter overdue and Dashboard prior completion stale",
+      "new_status": "Hunter recovered with valid 10:27 UTC completion; dashboard prior completion updated; live production remains UNKNOWN",
+      "commit": "7644ebbc3e7f02cc717b3d4ec8011916ed030cc8",
+      "worker": "ZOO Dashboard Worker",
+      "stage": "code_committed_and_readback_verified_not_deployed"
+    }
+  ],
+  "stage_times": {
+    "pr_opened_at": "2026-10-30T15:34:21Z",
+    "proof_snapshot_at": "2026-10-31T10:33:38.091Z",
+    "reviewed_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_live_at": null
+  },
+  "cycle_times": {
+    "pr_to_merge": "UNKNOWN",
+    "merge_to_deploy": "UNKNOWN",
+    "deploy_to_verified": "UNKNOWN",
+    "gap_detection_to_fix": "UNKNOWN"
+  }
+}
