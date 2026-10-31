@@ -1,0 +1,55 @@
+name: ZOO baseline - live backlog pulse
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+concurrency:
+  group: zoo-backlog-pulse
+  cancel-in-progress: false
+jobs:
+  pulse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Count live PRs, bug fixes and build tickets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os,urllib.request,datetime
+          repo=os.environ["GH_REPO"]
+          headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"}
+          def pages(path):
+              results=[]
+              for page in range(1,101):
+                  req=urllib.request.Request(f"https://api.github.com/repos/{repo}/{path}"+("&" if "?" in path else "?")+f"per_page=100&page={page}",headers=headers)
+                  with urllib.request.urlopen(req,timeout=25) as response: batch=json.load(response)
+                  results+=batch
+                  if len(batch)<100:break
+              return results
+          prs=pages("pulls?state=open")
+          issues=[i for i in pages("issues?state=open") if "pull_request" not in i]
+          def is_bug(i):
+              labels=[l["name"].lower() for l in i.get("labels",[])]
+              return any("bug" in x or "fix" in x for x in labels)
+          bugs=[i for i in issues if is_bug(i)]
+          other=[i for i in issues if not is_bug(i)]
+          stamp=datetime.datetime.now(datetime.timezone.utc).isoformat()
+          payload={"observed_at_utc":stamp,"repository":repo,"open_prs":len(prs),"open_bug_fix_tickets":len(bugs),"open_other_tickets":len(other),"open_total_issues":len(issues),"classification":"bug/fix label; all other issues treated as other tickets","execution_status":"BACKLOG_OBSERVED_ONLY","agent_dispatch_verified":False}
+          with open("zoo-pulse.json","w") as f:json.dump(payload,f,indent=2)
+          summary=f"## ZOO backlog pulse — {stamp}\n\n| Work class | Open |\n|---|---:|\n| PRs | {len(prs)} |\n| Bug/fix issues | {len(bugs)} |\n| Other issues | {len(other)} |\n\n**State:** Backlog observed. No coding-agent invocation, commit, merge, or autonomous handoff is implied.\n"
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as f:f.write(summary)
+          print(json.dumps(payload))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zoo-pulse
+          path: zoo-pulse.json
+          retention-days: 14
