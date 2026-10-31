@@ -15,3 +15,11 @@ test('old, future and inverted clocks fail closed',async()=>{for(const patch of 
 test('non-https evidence and invalid SHA fail closed',async()=>{for(const patch of [{evidence_url:'http://localhost/'},{artifact_sha:'not-a-sha'}]){const r=await assessProviderReceipt({...receipt(),...patch},{...opts,verifyProvider:async()=>native()});assert.equal(r.qualified,false)}});
 test('nonproductive scheduled heartbeat is not productive',async()=>{const r=await assessProviderReceipt({...receipt(),status:'scheduled'},{...opts,verifyProvider:async()=>native()});assert.equal(r.qualified,false)});
 test('counts only in-process verified unique invocations, not forged qualified flags',async()=>{const q=await assessProviderReceipt(receipt(),{...opts,verifyProvider:async()=>native()});const gr={...receipt(),provider:'gemini',model_id:'gemini-3',provider_request_id:'native-456'};const g=await assessProviderReceipt(gr,{...opts,verifyProvider:async()=>({...native(),provider:'gemini',model_id:'gemini-3',provider_request_id:'native-456'})});const fake={...q,provider:'claude',provider_request_id:'fake-1',qualified:true};const c=capabilityCounts([q,q,g,fake],{now:opts.now});assert.equal(c.productive_invocations,2);assert.equal(c.roles.builder,2);assert.equal(c.qualified_alternatives.builder,2)});
+
+test('verified attribution is immutable',async()=>{
+ const q=await assessProviderReceipt(receipt(),{...opts,verifyProvider:async()=>native()});
+ assert.equal(q.state,'QUALIFIED');
+ assert.equal(Object.isFrozen(q),true);
+ assert.equal(Object.getOwnPropertyDescriptor(q,'provider').writable,false);
+ assert.equal(capabilityCounts([q],{now:opts.now}).roles.builder,1);
+});
