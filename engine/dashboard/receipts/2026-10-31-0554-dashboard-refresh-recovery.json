@@ -14,7 +14,8 @@
     "test_commit": "c3a37b4d6000de2b941f88728d7b041b5fb2b9fc",
     "snapshot_commit": "f5623d5862b96260013640024845ab1da432e476",
     "snapshot_observed_at": "2026-10-31T05:54:25.926Z",
-    "pr": "https://github.com/london4216-hue/Zoodo/pull/16"
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+    "latest_status_head_sha": "f72cb114e10bc7d23118305f10066be8c756e15f"
   },
   "repair": {
     "change": "Bound GitHub API fetch to 10 seconds and serialize manual/30-second auto-refresh to prevent stale overlapping responses; published read-back scheduler snapshot.",
@@ -42,10 +43,10 @@
     ],
     "node_ci": {
       "state": "FAILED_UNDIAGNOSED",
-      "run_id": 41174455059,
-      "job_id": 124459004635,
-      "logs": "404 BlobNotFound",
-      "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41174455059"
+      "run_id": 41174536404,
+      "job_id": 124459244045,
+      "logs": "Earlier exact-head job logs 404 BlobNotFound; latest job steps absent.",
+      "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41174536404"
     },
     "netlify": {
       "production_url": "https://zoo-live-dashboard.netlify.app/",
@@ -53,7 +54,22 @@
       "production_source_sha": null,
       "preview_current_sha_verified": false,
       "live_refresh_verified": false,
-      "observation": "Web fetch unavailable; container DNS resolution failed. Not proof site is down."
+      "observation": "Web fetch unavailable; container DNS resolution failed. Not proof site is down.",
+      "preview_provider_status": {
+        "source_commit": "f72cb114e10bc7d23118305f10066be8c756e15f",
+        "context": "netlify/zoo-live-dashboard/deploy-preview",
+        "reported_state": "success",
+        "url": "https://deploy-preview-16--zoo-live-dashboard.netlify.app",
+        "source": "GitHub commit status",
+        "browser_readback_verified": false,
+        "site_id_verified": false
+      }
+    },
+    "baseline_href_parity": {
+      "original_branch": "autonomous-engine-replacement-2026-10-29",
+      "original_hrefs": 26,
+      "patched_hrefs": 45,
+      "missing_original_hrefs": 0
     }
   },
   "scheduler": {
