@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-31T01:22:35.902Z",
+  "observed_at": "2026-10-31T02:49:03.559Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Agent Hunter",
@@ -14,64 +14,66 @@
   "workers": [
     {
       "role": "ZOO Keeper",
-      "run_id": "4f1eb80e-8ecc-8329-890c-1b5f1c5f16ac",
+      "run_id": "ceb5d4cb-3204-832f-bee2-1b8ea60c5076",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T00:49:11.928371Z",
-      "completed_at": "2026-10-31T00:52:35.135890Z",
+      "scheduled_for": "2026-10-31T02:31:02.520442Z",
+      "completed_at": "2026-10-31T02:34:39.486528Z",
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
+      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
+      "receipt_source": "run_details.latest_result"
+    },
+    {
+      "role": "ZOO Agent Hunter",
+      "run_id": "4c6a6cb8-fab0-8324-8440-f16e05ae8986",
+      "recorded_status": "completed",
+      "scheduled_for": "2026-10-31T02:31:01.854282Z",
+      "completed_at": "2026-10-31T02:35:24.555896Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
       "receipt_source": "run_details.last_run"
     },
     {
       "role": "ZOO Asset Restoration",
-      "run_id": "94a0b344-9c3c-8320-8188-112385a6ba43",
+      "run_id": "f31f1a4e-2834-832e-9acb-3b65a129b442",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T00:45:08.895903Z",
-      "completed_at": "2026-10-31T00:50:12.946147Z",
+      "scheduled_for": "2026-10-31T02:24:51Z",
+      "completed_at": "2026-10-31T02:31:15.828396Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
-      "receipt_source": "run_details.latest_result"
+      "receipt_source": "run_details.last_run"
     }
   ],
   "in_progress_runs": [
     {
-      "role": "ZOO Dashboard Worker",
-      "run_id": "1beed231-5348-8322-a6f1-3606fefd66ca",
+      "role": "ZOO Keeper",
+      "run_id": "233e52ac-7564-8328-929f-941d842a923e",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-31T01:45:58Z",
-      "started_at": "2026-10-31T01:21:26.294627Z",
+      "scheduled_for": "2026-10-31T02:45:30Z",
+      "started_at": "2026-10-31T02:48:28.923199Z",
       "completed_at": null
     },
     {
-      "role": "ZOO Asset Restoration",
-      "run_id": "a19bb3f3-08f0-8323-bbc4-fd0e8d971870",
+      "role": "ZOO Dashboard Worker",
+      "run_id": "2c00892f-8644-832d-bd40-e3641d52fc80",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-31T01:24:51Z",
-      "started_at": "2026-10-31T01:22:16.125859Z",
+      "scheduled_for": "2026-10-31T02:45:58Z",
+      "started_at": "2026-10-31T02:48:16.413087Z",
       "completed_at": null
     }
   ],
   "source_anomalies": [
     {
-      "role": "ZOO Agent Hunter",
-      "kind": "completion_before_scheduled_for",
-      "run_id": "6514f38d-e688-832d-b6a6-179b8e2f5022",
-      "scheduled_for": "2026-10-31T01:21:25Z",
-      "completed_at": "2026-10-31T01:16:50.979440Z",
-      "action": "quarantined_not_counted_as_verified_scheduler_completion"
-    },
-    {
       "role": "ZOO Dashboard Worker",
       "kind": "completion_before_scheduled_for",
-      "run_id": "0e3c7c0d-9974-832b-971a-d4b45f6958d3",
-      "scheduled_for": "2026-10-31T00:45:58Z",
-      "completed_at": "2026-10-31T00:24:38.999319Z",
+      "run_id": "1beed231-5348-8322-a6f1-3606fefd66ca",
+      "scheduled_for": "2026-10-31T01:45:58Z",
+      "completed_at": "2026-10-31T01:25:56.670272Z",
       "action": "quarantined_not_counted_as_verified_scheduler_completion"
     }
   ],
   "prior_snapshot": {
-    "observed_at": "2026-10-31T00:22:17.136Z",
-    "previously_quarantined_anomalies": 0,
-    "note": "Prior snapshots retained in Git history; only completed authenticated run metadata is published."
+    "observed_at": "2026-10-31T01:22:35.902Z",
+    "previously_quarantined_anomalies": 2,
+    "note": "Historical anomalies preserved in prior Git commits; current anomalies remain visible."
   }
 }
