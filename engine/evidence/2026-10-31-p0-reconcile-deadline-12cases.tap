@@ -1,0 +1,84 @@
+TAP version 13
+# Subtest: external deadline while outbox claim is pending responds promptly and fences late worker
+ok 1 - external deadline while outbox claim is pending responds promptly and fences late worker
+  ---
+  duration_ms: 32.041964
+  type: 'test'
+  ...
+# Subtest: external deadline during worker dispatch aborts worker signal and leaves outbox unacked
+ok 2 - external deadline during worker dispatch aborts worker signal and leaves outbox unacked
+  ---
+  duration_ms: 25.735757
+  type: 'test'
+  ...
+# Subtest: normal replay still acknowledges a genuinely accepted dispatch
+ok 3 - normal replay still acknowledges a genuinely accepted dispatch
+  ---
+  duration_ms: 0.532753
+  type: 'test'
+  ...
+# Subtest: already-aborted external signal performs no database claim
+ok 4 - already-aborted external signal performs no database claim
+  ---
+  duration_ms: 0.288109
+  type: 'test'
+  ...
+# {"kind":"local-two-ticket-next","ticket_1":"T1","ticket_2":"T2","completion_to_next_callback_ms":4.588,"completion_to_next_worker_accept_ms":3.409,"provider":"localhost-http","hosted":false}
+# Subtest: actual localhost HTTP two-ticket completion immediately triggers NEXT with durable record
+ok 5 - actual localhost HTTP two-ticket completion immediately triggers NEXT with durable record
+  ---
+  duration_ms: 40.039828
+  type: 'test'
+  ...
+# {"kind":"local-failover","failed_worker":"dead","replacement_worker":"backup","uncertain_ticket":"T1","dispatched_ticket":"T2","provider":"localhost-http","hosted":false}
+# Subtest: actual localhost HTTP replacement dispatches independent T2 and quarantines uncertain T1
+ok 6 - actual localhost HTTP replacement dispatches independent T2 and quarantines uncertain T1
+  ---
+  duration_ms: 7.682819
+  type: 'test'
+  ...
+# Subtest: slow quarantine is bounded and does not launch later recovery or worker
+ok 7 - slow quarantine is bounded and does not launch later recovery or worker
+  ---
+  duration_ms: 31.54331
+  type: 'test'
+  ...
+# Subtest: slow recovery is bounded and cannot launch late replay
+ok 8 - slow recovery is bounded and cannot launch late replay
+  ---
+  duration_ms: 31.487338
+  type: 'test'
+  ...
+# Subtest: inflight replay receives abort signal and no false reconciliation
+ok 9 - inflight replay receives abort signal and no false reconciliation
+  ---
+  duration_ms: 20.671645
+  type: 'test'
+  ...
+# Subtest: fast reconciliation reports actual stage counts and replay receipt
+ok 10 - fast reconciliation reports actual stage counts and replay receipt
+  ---
+  duration_ms: 1.507716
+  type: 'test'
+  ...
+# Subtest: stage exception reports unconfirmed without inventing recovered count
+ok 11 - stage exception reports unconfirmed without inventing recovered count
+  ---
+  duration_ms: 1.0236
+  type: 'test'
+  ...
+# Subtest: unconfirmed outbox dispatch never becomes a reconciled success
+ok 12 - unconfirmed outbox dispatch never becomes a reconciled success
+  ---
+  duration_ms: 0.604263
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 211.814916
