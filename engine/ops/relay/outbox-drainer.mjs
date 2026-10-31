@@ -54,9 +54,11 @@ export async function drainOne({store,relay,workerIds}) {
         }
         return {state:'recovery_required',reason:'outbox ack not confirmed',eventId:event.id,attempts};
       }
-      if (r?.state === 'uncertain')
-        return {state:'recovery_required',eventId:event.id,attempts,
-          reason:'worker dispatch uncertain; await native non-started receipt'};
+      // Only a confirmed idle claim can safely try another worker. Any other
+      // result, including recovery_required/failed/unknown, may hide a started
+      // worker; a status string is not native proof of non-execution.
+      return {state:'recovery_required',eventId:event.id,attempts,
+        reason:'worker dispatch not confirmed; await native non-started receipt'};
     } catch (error) {
       attempts.push({worker,state:'error',reason:String(error?.message||error).slice(0,120)});
       // A thrown transport error cannot prove the worker did not start.
