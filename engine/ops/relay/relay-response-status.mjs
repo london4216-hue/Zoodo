@@ -1,16 +1,17 @@
-/** Map bounded relay recovery outcomes to HTTP retry semantics.
- * Durable leases and the outbox, not an HTTP response, own task recovery.
- * A completed transition remains acknowledged even if NEXT is unconfirmed.
+/** Only durable, documented relay outcomes may be acknowledged to a webhook sender.
+ * Unrecognized, missing and uncertain outcomes must remain retryable, otherwise
+ * the upstream provider may discard a wake-up while work is still leased.
+ * Completion/requeue callbacks stay acknowledged once their DB transition
+ * committed, even when the subsequent NEXT attempt is unconfirmed.
  */
-const RETRYABLE = new Set([
-  'next-unconfirmed',
-  'replay-unconfirmed',
-  'retry-after-lease',
-  'ack-unconfirmed',
-  'reconcile-unconfirmed',
-  'recovery_required'
-]);
+const ACKNOWLEDGED = Object.freeze({
+  kick: new Set(['dispatched', 'delegated', 'idle']),
+  replay: new Set(['acked', 'empty', 'idle-settled']),
+  reconcile: new Set(['reconciled']),
+  completed: new Set(['completed']),
+  not_started: new Set(['requeued'])
+});
+
 export function relayResponseStatus(type, result) {
-  if (!['kick', 'replay', 'reconcile'].includes(type)) return 200;
-  return RETRYABLE.has(result?.state) ? 503 : 200;
+  return ACKNOWLEDGED[type]?.has(result?.state) ? 200 : 503;
 }
