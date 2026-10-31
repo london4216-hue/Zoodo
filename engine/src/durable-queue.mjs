@@ -31,11 +31,11 @@ export class DurableQueue {
     if(e.type==='heartbeat')t.leaseUntil=e.leaseUntil;
     if(e.type==='submit'){t.status='review';t.commit=e.commit;t.leaseUntil=null}
     if(e.type==='approve'){t.status='test';t.reviewer=e.reviewer;t.reviewProvider=e.reviewProvider}
-    if(e.type==='tested'){t.tests={passed:e.passed,evidence:e.evidence};if(!e.passed){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;}}
+    if(e.type==='tested'){t.tests={passed:e.passed,evidence:e.evidence};if(!e.passed){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.commit=null;t.releaseProof=null;}}
     if(e.type==='release')t.releaseProof=e.evidence;
     if(e.type==='verify')t.status='verified';
     if(e.type==='done')t.status='done';
-    if(e.type==='requeue'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null}
+    if(e.type==='requeue'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null;t.commit=null;t.releaseProof=null}
     t.history.push(e);
   }
   #record(type,id,fields={}){
