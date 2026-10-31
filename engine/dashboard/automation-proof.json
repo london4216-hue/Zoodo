@@ -1,54 +1,54 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-31T15:34:49.619Z",
+  "observed_at": "2026-10-31T16:27:10.520Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Agent Hunter",
     "ZOO Dashboard Worker",
     "ZOO Asset Restoration"
   ],
-  "publication_scope": "Authenticated scheduler metadata only; not proof of productive agents, CI, Netlify, relay, or external model calls.",
-  "refresh_policy": "Single Dashboard Worker writer, conditional GitHub blob SHA; browser polling does not wake workers.",
+  "publication_scope": "Authenticated scheduler metadata only; recorded completions do NOT prove productive agents, CI, Netlify, relay or external model calls.",
+  "refresh_policy": "Single Dashboard Worker writer; GitHub blob SHA conditional update; browser polling does not wake workers.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
     {
       "role": "ZOO Keeper",
-      "run_id": "e9ccbf7d-9d60-8322-b2a5-748af094fe21",
+      "run_id": "a211a9f4-6b1c-8327-bf26-d1edf73c28cc",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T14:45:30Z",
-      "completed_at": "2026-10-31T14:45:56.689700Z",
-      "receipt_source": "run_details.last_run_or_latest_result",
+      "scheduled_for": "2026-10-31T15:48:43.410760Z",
+      "completed_at": "2026-10-31T15:52:38.747674Z",
+      "receipt_source": "run_details.last_run",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     },
     {
       "role": "ZOO Agent Hunter",
-      "run_id": "9fcb04b7-ac38-8324-887a-694860f19eee",
+      "run_id": "c5fc90b4-d10c-832f-bdd3-17840558cbb3",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T11:08:50.593397Z",
-      "completed_at": "2026-10-31T11:11:17.908979Z",
+      "scheduled_for": "2026-10-31T16:23:38.502616Z",
+      "completed_at": "2026-10-31T16:25:43.174898Z",
       "receipt_source": "run_details.last_run",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     },
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "3904b032-4de4-8327-9bcb-13926ad125c4",
+      "run_id": "05d7b99d-1a34-8330-842f-d8b4e1185871",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T14:45:58Z",
-      "completed_at": "2026-10-31T15:14:21.234662Z",
+      "scheduled_for": "2026-10-31T15:48:43.479427Z",
+      "completed_at": "2026-10-31T15:56:05.181850Z",
       "receipt_source": "run_details.latest_result",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     },
     {
       "role": "ZOO Asset Restoration",
-      "run_id": "264df86f-9ad8-8328-a72d-6261eaae8198",
+      "run_id": "bbc675d2-6600-8323-a720-1d22e2c889a1",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T14:24:51Z",
-      "completed_at": "2026-10-31T14:31:41.803741Z",
-      "receipt_source": "run_details.last_run_or_latest_result",
+      "scheduled_for": "2026-10-31T15:48:43.038329Z",
+      "completed_at": "2026-10-31T15:52:10.647231Z",
+      "receipt_source": "run_details.latest_result",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     }
@@ -56,10 +56,18 @@
   "in_progress_runs": [
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "5bf962ca-e13c-8332-9fbc-9947a9d143f8",
+      "run_id": "7a8ab523-9ce4-8324-9492-4246d6c425ee",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-31T15:45:58Z",
-      "started_at": "2026-10-31T15:32:45.098880Z",
+      "scheduled_for": "2026-10-31T16:23:39.792464Z",
+      "started_at": "2026-10-31T16:24:09.916443Z",
+      "completed_at": null
+    },
+    {
+      "role": "ZOO Asset Restoration",
+      "run_id": "3e189223-d1f0-832a-972d-cae8688bab3a",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-10-31T16:24:51Z",
+      "started_at": "2026-10-31T16:25:13.059701Z",
       "completed_at": null
     }
   ],
