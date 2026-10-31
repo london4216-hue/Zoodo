@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, X, Play, Pause } from 'lucide-react';
+import { X, Play, Pause } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 // Pre-activity briefing modal with personalized voice + avatar animation

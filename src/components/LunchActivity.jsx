@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Utensils } from 'lucide-react';
-import SensoryButton from '@/components/SensoryButton';
 import { playPop } from '@/lib/sensoryAudio';
 
 // A playful lunch-time break: tap each food to "eat" it. When the tray is

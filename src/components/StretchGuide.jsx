@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { playPop, playSuccess } from '@/lib/sensoryAudio';
 import { Check, Hand, Mic } from 'lucide-react';

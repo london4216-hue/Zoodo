@@ -97,6 +97,18 @@
       "type": "string",
       "title": "Story",
       "description": "AI-generated personalized story for this lesson"
+    },
+    "celebration_played": {
+      "type": "boolean",
+      "title": "Celebration Played",
+      "description": "Whether the post-lesson celebration (parent video + confetti) has been shown",
+      "default": false
+    },
+    "attempts": {
+      "type": "number",
+      "title": "Attempts",
+      "description": "How many times the child has attempted this lesson",
+      "default": 0
     }
   },
   "required": [
