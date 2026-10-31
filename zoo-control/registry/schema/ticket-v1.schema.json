@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ZOO durable ticket v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "asset",
+    "source_issue",
+    "intent",
+    "dependencies",
+    "priority",
+    "status",
+    "claim_lease",
+    "assigned_agent",
+    "branch",
+    "pr",
+    "commit_sha",
+    "tests",
+    "deployment",
+    "timestamps",
+    "evidence_receipts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^ZOO-ISSUE-[0-9]+$"
+    },
+    "asset": {
+      "type": "string"
+    },
+    "source_issue": {
+      "type": "string",
+      "format": "uri"
+    },
+    "intent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_title": {
+      "type": "string"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "priority": {
+      "enum": [
+        "P0",
+        "P1",
+        "P2"
+      ]
+    },
+    "status": {
+      "enum": [
+        "ready",
+        "blocked",
+        "claimed",
+        "in_progress",
+        "fixed",
+        "pr_open",
+        "merged",
+        "deployed",
+        "verified",
+        "recovering"
+      ]
+    },
+    "claim_lease": {
+      "type": "object",
+      "required": [
+        "holder",
+        "lease_id",
+        "acquired_at",
+        "expires_at"
+      ],
+      "properties": {
+        "holder": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lease_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acquired_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "expires_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "assigned_agent": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "branch": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "pr": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "associated_prs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "commit_sha": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tests": {
+      "type": "object",
+      "required": [
+        "status",
+        "receipts"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "UNKNOWN",
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "receipts": {
+          "type": "array"
+        }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "required": [
+        "status",
+        "url",
+        "deploy_id",
+        "sha"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "UNKNOWN",
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "deploy_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "timestamps": {
+      "type": "object"
+    },
+    "evidence_receipts": {
+      "type": "array"
+    },
+    "next_action": {
+      "type": "string"
+    },
+    "source_snapshot_observed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

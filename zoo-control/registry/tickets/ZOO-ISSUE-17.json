@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "id": "ZOO-ISSUE-17",
+  "asset": "Zoodo",
+  "source_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
+  "intent": "verify Netlify site/deploy/source/rollback mapping, CI and mobile links",
+  "source_title": "P0 RECOVERY: map existing ZOO Netlify published deploy to actual Zoodo source; unblock preview and CI",
+  "dependencies": [],
+  "priority": "P0",
+  "status": "ready",
+  "claim_lease": {
+    "holder": null,
+    "lease_id": null,
+    "acquired_at": null,
+    "expires_at": null
+  },
+  "assigned_agent": null,
+  "branch": null,
+  "pr": null,
+  "associated_prs": [
+    "https://github.com/london4216-hue/Zoodo/pull/16",
+    "https://github.com/london4216-hue/Zoodo/pull/21"
+  ],
+  "commit_sha": null,
+  "tests": {
+    "status": "UNKNOWN",
+    "receipts": []
+  },
+  "deployment": {
+    "status": "UNKNOWN",
+    "url": null,
+    "deploy_id": null,
+    "sha": null
+  },
+  "timestamps": {
+    "source_created_at": "2026-10-30T15:39:40Z",
+    "source_updated_at": "2026-10-30T23:24:02Z",
+    "claimed_at": null,
+    "first_commit_at": null,
+    "pr_opened_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_at": null
+  },
+  "evidence_receipts": [],
+  "next_action": "verify Netlify site/deploy/source/rollback mapping, CI and mobile links",
+  "source_snapshot_observed_at": "2026-10-30T23:30:37.622Z"
+}

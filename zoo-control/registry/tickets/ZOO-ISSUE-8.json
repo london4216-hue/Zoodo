@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "ZOO-ISSUE-8",
+  "asset": "Zoodo",
+  "source_issue": "https://github.com/london4216-hue/Zoodo/issues/8",
+  "intent": "host durable event-driven NEXT→ASSIGN→BUILD→TEST→FIX→NEXT relay",
+  "source_title": "P0 architecture correction: real-time event-driven worker queue, not hourly automation",
+  "dependencies": [],
+  "priority": "P0",
+  "status": "ready",
+  "claim_lease": {
+    "holder": null,
+    "lease_id": null,
+    "acquired_at": null,
+    "expires_at": null
+  },
+  "assigned_agent": null,
+  "branch": null,
+  "pr": null,
+  "associated_prs": [],
+  "commit_sha": null,
+  "tests": {
+    "status": "UNKNOWN",
+    "receipts": []
+  },
+  "deployment": {
+    "status": "UNKNOWN",
+    "url": null,
+    "deploy_id": null,
+    "sha": null
+  },
+  "timestamps": {
+    "source_created_at": "2026-10-30T06:35:03Z",
+    "source_updated_at": "2026-10-30T06:50:27Z",
+    "claimed_at": null,
+    "first_commit_at": null,
+    "pr_opened_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_at": null
+  },
+  "evidence_receipts": [],
+  "next_action": "host durable event-driven NEXT→ASSIGN→BUILD→TEST→FIX→NEXT relay",
+  "source_snapshot_observed_at": "2026-10-30T23:30:37.622Z"
+}

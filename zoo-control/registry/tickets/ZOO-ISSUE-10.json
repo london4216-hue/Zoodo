@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "ZOO-ISSUE-10",
+  "asset": "Zoodo",
+  "source_issue": "https://github.com/london4216-hue/Zoodo/issues/10",
+  "intent": "bounded recovery strategy rotation with durable queue",
+  "source_title": "P0 NO-GO circuit breaker: three-strike recovery without blocking worker fleet",
+  "dependencies": [],
+  "priority": "P0",
+  "status": "ready",
+  "claim_lease": {
+    "holder": null,
+    "lease_id": null,
+    "acquired_at": null,
+    "expires_at": null
+  },
+  "assigned_agent": null,
+  "branch": null,
+  "pr": null,
+  "associated_prs": [],
+  "commit_sha": null,
+  "tests": {
+    "status": "UNKNOWN",
+    "receipts": []
+  },
+  "deployment": {
+    "status": "UNKNOWN",
+    "url": null,
+    "deploy_id": null,
+    "sha": null
+  },
+  "timestamps": {
+    "source_created_at": "2026-10-30T06:37:17Z",
+    "source_updated_at": "2026-10-30T06:59:15Z",
+    "claimed_at": null,
+    "first_commit_at": null,
+    "pr_opened_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_at": null
+  },
+  "evidence_receipts": [],
+  "next_action": "bounded recovery strategy rotation with durable queue",
+  "source_snapshot_observed_at": "2026-10-30T23:30:37.622Z"
+}

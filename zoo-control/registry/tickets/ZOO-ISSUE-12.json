@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "ZOO-ISSUE-12",
+  "asset": "Zoodo",
+  "source_issue": "https://github.com/london4216-hue/Zoodo/issues/12",
+  "intent": "separate code, test, worker and deployed evidence clocks",
+  "source_title": "P0 evidence clock: Zoo dashboard falsely equates any commit with verified substantive progress",
+  "dependencies": [],
+  "priority": "P0",
+  "status": "ready",
+  "claim_lease": {
+    "holder": null,
+    "lease_id": null,
+    "acquired_at": null,
+    "expires_at": null
+  },
+  "assigned_agent": null,
+  "branch": null,
+  "pr": null,
+  "associated_prs": [],
+  "commit_sha": null,
+  "tests": {
+    "status": "UNKNOWN",
+    "receipts": []
+  },
+  "deployment": {
+    "status": "UNKNOWN",
+    "url": null,
+    "deploy_id": null,
+    "sha": null
+  },
+  "timestamps": {
+    "source_created_at": "2026-10-30T06:38:22Z",
+    "source_updated_at": "2026-10-30T06:49:04Z",
+    "claimed_at": null,
+    "first_commit_at": null,
+    "pr_opened_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_at": null
+  },
+  "evidence_receipts": [],
+  "next_action": "separate code, test, worker and deployed evidence clocks",
+  "source_snapshot_observed_at": "2026-10-30T23:30:37.622Z"
+}

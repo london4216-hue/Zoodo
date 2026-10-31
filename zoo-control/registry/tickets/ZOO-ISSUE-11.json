@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "ZOO-ISSUE-11",
+  "asset": "Zoodo",
+  "source_issue": "https://github.com/london4216-hue/Zoodo/issues/11",
+  "intent": "diagnose zero-step GitHub Actions and qualify independent exact-SHA test host",
+  "source_title": "P0 CI integrity: ZOO PR #6 workflows fail before any step; restore exact-head execution",
+  "dependencies": [],
+  "priority": "P0",
+  "status": "ready",
+  "claim_lease": {
+    "holder": null,
+    "lease_id": null,
+    "acquired_at": null,
+    "expires_at": null
+  },
+  "assigned_agent": null,
+  "branch": null,
+  "pr": null,
+  "associated_prs": [],
+  "commit_sha": null,
+  "tests": {
+    "status": "UNKNOWN",
+    "receipts": []
+  },
+  "deployment": {
+    "status": "UNKNOWN",
+    "url": null,
+    "deploy_id": null,
+    "sha": null
+  },
+  "timestamps": {
+    "source_created_at": "2026-10-30T06:38:20Z",
+    "source_updated_at": "2026-10-30T11:13:04Z",
+    "claimed_at": null,
+    "first_commit_at": null,
+    "pr_opened_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_at": null
+  },
+  "evidence_receipts": [],
+  "next_action": "diagnose zero-step GitHub Actions and qualify independent exact-SHA test host",
+  "source_snapshot_observed_at": "2026-10-30T23:30:37.622Z"
+}

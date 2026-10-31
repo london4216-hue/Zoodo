@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "ZOO-ISSUE-24",
+  "asset": "Zoodo",
+  "source_issue": "https://github.com/london4216-hue/Zoodo/issues/24",
+  "intent": "Discover owner-controlled Sara new UI/UX deployment and verify exact URL, landing, auth and mobile; do not conflate with TransendIQ PR #787",
+  "source_title": "P0: Discover and verify Sara new UI/UX URL (separate from TransendIQ #787)",
+  "dependencies": [],
+  "priority": "P0",
+  "status": "ready",
+  "claim_lease": {
+    "holder": null,
+    "lease_id": null,
+    "acquired_at": null,
+    "expires_at": null
+  },
+  "assigned_agent": null,
+  "branch": null,
+  "pr": null,
+  "associated_prs": [],
+  "commit_sha": null,
+  "tests": {
+    "status": "UNKNOWN",
+    "receipts": []
+  },
+  "deployment": {
+    "status": "UNKNOWN",
+    "url": null,
+    "deploy_id": null,
+    "sha": null
+  },
+  "timestamps": {
+    "source_created_at": "2026-10-30T23:36:15Z",
+    "source_updated_at": "2026-10-30T23:36:15Z",
+    "claimed_at": null,
+    "first_commit_at": null,
+    "pr_opened_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_at": null
+  },
+  "evidence_receipts": [],
+  "next_action": "Inspect authorized deployment metadata and Sara-related source, probe exact endpoint, record deploy SHA and independently retrievable live receipt.",
+  "source_snapshot_observed_at": "2026-10-30T23:39:20.043Z"
+}
