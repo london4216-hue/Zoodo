@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "task_id": "ZOO-DASHBOARD-2026-10-31-1239",
+  "issue_urls": [
+    "https://github.com/london4216-hue/Zoodo/issues/18",
+    "https://github.com/london4216-hue/TransendIQ/issues/1023"
+  ],
+  "status": "RECOVERING",
+  "decision": "REVISE",
+  "recorded_at": "2026-10-31T12:38:58.966Z",
+  "owner": "ZOO Dashboard Worker",
+  "backup": "ZOO Agent Hunter",
+  "integration_authority": "Sole ZOO Keeper",
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "canonical_path": "engine/dashboard",
+    "base_pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+    "stacked_pr": "https://github.com/london4216-hue/Zoodo/pull/71",
+    "test_commit": "e8911a8d6ff46fa7d4573ceb55ecc1c36f558b08",
+    "fix_commit": "17af1d6e87ae094685c88c7aab4c28aaeca986af",
+    "scheduler_snapshot_commit": "bdd5b18e4fd34b91ff798b1683cd5015cc329312",
+    "production_deployed_sha": null
+  },
+  "fix": {
+    "problem": "Recovery banner claimed automatic GitHub source retry every 30 seconds although source polling is every 10 minutes and scheduler proof polling is every 30 seconds.",
+    "change": "Recovery copy now derives each retry interval from the actual polling constants; no navigation or authentication changes.",
+    "reversible": true
+  },
+  "test": {
+    "method": "V8 assertions against GitHub-readback exact source, plus source parity; NOT native GitHub Actions/Node CI",
+    "fail_first": {
+      "passed": 0,
+      "failed": 3
+    },
+    "after": {
+      "passed": 10,
+      "failed": 0
+    },
+    "navigation": {
+      "baseline_unique_hrefs": 40,
+      "candidate_unique_hrefs": 40,
+      "removed": 0
+    },
+    "readback": true
+  },
+  "scheduler": {
+    "observed_at": "2026-10-31T12:38:28.366Z",
+    "source": "connected_automations_peek",
+    "valid_prior_completions": 4,
+    "verified_productive_agents": null,
+    "overdue_roles": [
+      "ZOO Keeper",
+      "ZOO Agent Hunter",
+      "ZOO Asset Restoration"
+    ],
+    "in_progress_roles": [
+      "ZOO Dashboard Worker"
+    ],
+    "note": "Latest Keeper and Restoration completion-before-scheduled anomalies quarantined. Scheduler metadata is not proof of productive execution."
+  },
+  "ci": {
+    "workflow_run_id": 41201989034,
+    "head_sha": "17af1d6e87ae094685c88c7aab4c28aaeca986af",
+    "conclusion": "failure",
+    "job_steps": null,
+    "logs": null,
+    "classification": "RECOVERY_EVENT_ZERO_STEP_STARTUP"
+  },
+  "provider": {
+    "netlify_production_url": "https://zoo-live-dashboard.netlify.app/",
+    "production_http": "DNS resolution failed from available web and curl probes",
+    "preview_http": "UNKNOWN",
+    "site_id": null,
+    "deploy_id": null,
+    "live_refresh": "UNKNOWN",
+    "owner_auth": "UNKNOWN",
+    "rollback_mapping": "UNKNOWN",
+    "production_publication_performed": false
+  },
+  "handoff": {
+    "from": "Dashboard Lead",
+    "to": "Implementation Lead",
+    "next": "Diagnose exact-head GitHub Actions run 41201989034 zero-step startup; run independent authorized Node test gate without weakening checks.",
+    "hunter": "Probe authenticated Netlify site ID/deploy/source and preview/production readback with actual provider credentials if connected; preserve rollback.",
+    "keeper": "Reconcile PR #71 into #16 only after evidence-backed integration checks; do not publish owner production without mapping.",
+    "trigger": "Next independent worker execution or next scheduled dashboard repair cycle"
+  },
+  "latencies": {
+    "gap_detected_to_fix_minutes": null,
+    "commit_to_ci_minutes": null,
+    "merge_to_deploy_minutes": null,
+    "reason": "Required authenticated stage timestamps and deployed receipts unavailable"
+  },
+  "independent_lanes_unblocked": [
+    "PR closure",
+    "EZ Move",
+    "BeautyPath",
+    "Hunter"
+  ]
+}
