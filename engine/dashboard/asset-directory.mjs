@@ -91,6 +91,10 @@ export function filterAssets(assets,query='',scope='all',product='all'){
 export function assetHost(asset){
  return new URL(asset.links[0][1],'https://zoo-live-dashboard.netlify.app/').hostname;
 }
+export function directoryResultLabel(assets){
+ const products=assets.length,links=assets.reduce((total,asset)=>total+directoryLinksFor(asset).length,0);
+ return products+' product'+(products===1?'':'s')+' · '+links+' link'+(links===1?'':'s');
+}
 function node(tag,className,text){
  const element=document.createElement(tag);element.className=className;
  if(text!==undefined)element.textContent=text;return element;
@@ -166,8 +170,7 @@ if(typeof document!=='undefined'){
     list.append(card);
    }
   }
-  document.getElementById('library-result').textContent=matches.length+' products · '+
-   matches.reduce((total,asset)=>total+directoryLinksFor(asset).length,0)+' links';
+  document.getElementById('library-result').textContent=directoryResultLabel(matches);
   document.getElementById('library-empty').hidden=matches.length!==0;
   document.getElementById('library-clear').hidden=!search.value&&scope==='all'&&product.value==='all';
   for(const button of filters)button.setAttribute('aria-pressed',String(button.dataset.libraryFilter===scope));

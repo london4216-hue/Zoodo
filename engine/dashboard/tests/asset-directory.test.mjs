@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {ASSETS,filterAssets,assetHost,directoryLinksFor,normalizedDirectoryUrl} from '../asset-directory.mjs';
+import {ASSETS,filterAssets,assetHost,directoryLinksFor,normalizedDirectoryUrl,directoryResultLabel} from '../asset-directory.mjs';
 import {ORIGINAL_LIVE_LINKS} from '../original-live-links.mjs';
 const read=name=>readFileSync(new URL('../'+name,import.meta.url),'utf8');
 test('owned demos and assets lead the page before technical details',()=>{
@@ -43,6 +43,15 @@ test('search is case insensitive, multiword, host-aware, and correctly scoped',(
  assert.equal(filterAssets(ASSETS,'nothing-matches-839234').length,0);
  assert.equal(filterAssets(ASSETS,'','all').length,ASSETS.length);
  assert.ok(filterAssets(ASSETS,'','asset').every(x=>x.type==='asset'));
+});
+test('result copy uses singular and plural product/link counts independently',()=>{
+ const product=id=>ASSETS.find(asset=>asset.id===id);
+ assert.equal(directoryResultLabel([]),'0 products · 0 links');
+ assert.equal(directoryResultLabel([product('prestige')]),'1 product · 1 link');
+ assert.equal(directoryResultLabel([product('wonup')]),'1 product · 9 links');
+ assert.equal(directoryResultLabel([product('prestige'),product('movemint')]),'2 products · 2 links');
+ assert.equal(directoryResultLabel(ASSETS),'11 products · 37 links');
+ assert.match(read('asset-directory.mjs'),/getElementById\('library-result'\)\.textContent=directoryResultLabel\(matches\)/);
 });
 test('hosting is collapsed operational context, never a fabricated operational backup',()=>{
  const html=read('index.html');
