@@ -48,11 +48,18 @@ test('every already advertised essential demo and owner link remains available',
  for(const url of required)assert.ok(html.includes('href="'+url+'"'),url);
 });
 test('source refresh is distinguished from worker heartbeat and verification',()=>{
- assert.match(script,/Last successful GitHub API source response:/);
+ assert.match(script,/Last successful GitHub commit endpoint response:/);
  assert.match(script,/source receipt is not proof of active worker/);
  assert.match(script,/review \/ active worker heartbeat NOT established/);
  assert.match(script,/Automatic retry every 30 seconds/);
  assert.match(script,/setInterval\(update,30000\)/);
+});
+
+test('automation proof fetch bypasses CDN cache and rejects older published snapshots',()=>{
+ assert.match(script,/automation-proof\\.json\\?proof_read=/);
+ assert.match(script,/cache:'no-store'/);
+ assert.match(script,/Published proof snapshot regressed/);
+ assert.match(script,/Last FETCH:/);
 });
 
 test('GitHub commit-source success is not inferred from an unrelated Actions response',()=>{
