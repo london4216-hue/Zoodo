@@ -2,18 +2,18 @@
   "schema_version": 1,
   "source": {
     "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
-    "head_before_ledger": "29dfcc64aea7f17e57f0e56c912092d2632636db",
-    "proof_blob": "ce901c5f58cf1f95f7f8f415196e40382fca12aa",
-    "proof_observed_at": "2026-10-31T01:22:35.902Z",
-    "completed_scheduler_receipts": 2,
+    "head_before_ledger": "a10fe8b76c33545a1f1f9edff3f0d080fb6ad722",
+    "proof_blob": "801b673200c182e739b24a9fce1ec3c0a8477245",
+    "proof_observed_at": "2026-10-31T02:49:03.559Z",
+    "completed_scheduler_receipts": 3,
     "in_progress_scheduler_receipts": 2,
     "verified_productive_agents": null,
-    "quarantined_scheduler_anomalies": 2
+    "quarantined_scheduler_anomalies": 1
   },
-  "observed_at": "2026-10-31T01:24:15.486Z",
+  "observed_at": "2026-10-31T02:49:33.932Z",
   "visibility": "sanitized_public_recovery_metadata",
   "state": "RECOVERING",
-  "note": "Verified source repair and scheduler proof publication; GitHub Actions startup failure and production Netlify mapping remain unresolved; no hosted execution or live proof claimed.",
+  "note": "Authenticated scheduler proof refreshed with three chronology-valid completed runs, two in-progress records and one quarantined Dashboard Worker anomaly; actual productive agents, hosted CI and live Netlify proof remain UNKNOWN.",
   "handoffs": [
     {
       "from": "Dashboard Lead",
@@ -209,6 +209,80 @@
       "timestamp_utc": "2026-10-31T01:24:15.486Z",
       "next_trigger": "Implementation Lead next existing run/event route; Keeper and Hunter receive durable issue checkpoints. No simulated invocation.",
       "receipt_scope": "GitHub source and scheduler metadata write; not local Node, provider deploy or live execution."
+    },
+    {
+      "from": "Dashboard Lead",
+      "to": "Implementation Lead",
+      "task_id": "ZOO-DASHBOARD-SCHEDULER-20261031-2249ET",
+      "decision": "REVISE",
+      "proposed_fix": "Run independently hosted exact-SHA Node suite and Netlify production site-ID/deploy/source/rollback mapping; diagnose zero-step GitHub Actions job without blind rerun; obtain authenticated Dashboard Worker completion after its current run ends and publish next monotonic proof snapshot. Keeper integrates only with provider receipt; Hunter qualifies alternate runner.",
+      "evidence": [
+        "https://github.com/london4216-hue/Zoodo/commit/a10fe8b76c33545a1f1f9edff3f0d080fb6ad722",
+        "https://github.com/london4216-hue/Zoodo/pull/16",
+        "https://github.com/london4216-hue/Zoodo/actions/runs/41155281186",
+        "https://github.com/london4216-hue/Zoodo/issues/18",
+        "https://github.com/london4216-hue/TransendIQ/issues/1023"
+      ],
+      "tests": "PASS 11/11 authenticated source/readback assertions (26 baseline href occurrences preserved, 45 candidate); PASS 3 valid scheduler completions read from connected Automations. FAIL Actions job 124400596869: 0 steps, logs 404 BlobNotFound. FAIL live Netlify DNS/HTTP retrieval in web and container; hosted Node, preview, production mapping and browser tests UNKNOWN.",
+      "timestamp_utc": "2026-10-31T02:49:33.932Z",
+      "next_trigger": "Existing Implementation Lead/Hunter next scheduled or authenticated event-driven execution; Dashboard Lead next scheduled snapshot publication. Handoff is durable, not an invoked worker.",
+      "receipt_scope": "Real authenticated GitHub write and scheduler metadata readback; not productive agent invocation, CI pass, Netlify deploy, or live browser proof.",
+      "movement_ledger": [
+        {
+          "hour_et": "2026-10-30 22:00",
+          "hour_utc": "2026-10-31 02:00",
+          "repo_asset": "Zoodo/engine/dashboard",
+          "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+          "prior_status": "RECOVERING; scheduler snapshot observed 2026-10-31T01:22:35.902Z",
+          "new_status": "RECOVERING; scheduler snapshot observed 2026-10-31T02:49:03.559Z",
+          "commit_sha": "a10fe8b76c33545a1f1f9edff3f0d080fb6ad722",
+          "commit_url": "https://github.com/london4216-hue/Zoodo/commit/a10fe8b76c33545a1f1f9edff3f0d080fb6ad722",
+          "worker": "Dashboard Lead",
+          "source_committed": true,
+          "source_readback_verified": true,
+          "local_node_tests": "UNKNOWN",
+          "provider_deploy": "UNKNOWN",
+          "independent_hosted_execution": "UNKNOWN"
+        }
+      ],
+      "pr_stage_times": {
+        "opened_at": "2026-10-30T15:34:21Z",
+        "reviewed_at": null,
+        "fix_commit_at": null,
+        "source_test_readback_at": "2026-10-31T02:49:33.932Z",
+        "merged_at": null,
+        "deployed_at": null,
+        "verified_at": null,
+        "elapsed_open_to_review_minutes": null,
+        "elapsed_review_to_fix_minutes": null,
+        "elapsed_fix_to_tests_minutes": null,
+        "elapsed_tests_to_merge_minutes": null,
+        "elapsed_merge_to_deploy_minutes": null,
+        "elapsed_deploy_to_verified_minutes": null
+      },
+      "gap_detection_to_fix_minutes": null,
+      "gap_detection_to_verified_minutes": null,
+      "unresolved_gap_age_minutes": 817,
+      "blockers": [
+        {
+          "code": "NETLIFY_PRODUCTION_MAPPING_UNKNOWN",
+          "owner": "ZOO Keeper",
+          "backup": "ZOO Agent Hunter",
+          "next_action": "Use authenticated Netlify site API or provider connection to read exact production site ID, deploy ID, source branch, SHA, rollback; do not publish before verified."
+        },
+        {
+          "code": "GITHUB_ACTIONS_ZERO_STEP_STARTUP_FAILURE",
+          "owner": "Implementation Lead",
+          "backup": "ZOO Agent Hunter",
+          "next_action": "Inspect runner startup and obtain independent provider exact-SHA Node test; job 124400596869 has no steps and log download 404."
+        },
+        {
+          "code": "DASHBOARD_SCHEDULER_COMPLETION_CHRONOLOGY_ANOMALY",
+          "owner": "Dashboard Lead",
+          "backup": "ZOO Agent Hunter",
+          "next_action": "Wait for current Dashboard Worker run completion and read actual scheduler record; quarantine earlier completion before scheduled timestamp."
+        }
+      ]
     }
   ],
   "unresolved": [
