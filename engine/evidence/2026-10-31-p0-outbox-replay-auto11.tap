@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: empty outbox does not invoke worker
+ok 1 - empty outbox does not invoke worker
+  ---
+  duration_ms: 1.934768
+  type: 'test'
+  ...
+# Subtest: durable wake-up atomically claimed then acknowledged only after dispatch
+ok 2 - durable wake-up atomically claimed then acknowledged only after dispatch
+  ---
+  duration_ms: 1.959485
+  type: 'test'
+  ...
+# Subtest: uncertain worker does not acknowledge durable wake-up
+ok 3 - uncertain worker does not acknowledge durable wake-up
+  ---
+  duration_ms: 0.346719
+  type: 'test'
+  ...
+# Subtest: replacement dispatch is valid, but failed ack remains unconfirmed
+ok 4 - replacement dispatch is valid, but failed ack remains unconfirmed
+  ---
+  duration_ms: 0.411236
+  type: 'test'
+  ...
+# Subtest: worker error leaves event for recovery, no ack
+ok 5 - worker error leaves event for recovery, no ack
+  ---
+  duration_ms: 0.392828
+  type: 'test'
+  ...
+# Subtest: invalid lease fails closed before worker invocation
+ok 6 - invalid lease fails closed before worker invocation
+  ---
+  duration_ms: 0.572588
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 83.087054
