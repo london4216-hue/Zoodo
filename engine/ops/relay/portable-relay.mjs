@@ -132,8 +132,14 @@ export function makeHandler({relay,callbackSecret,kickDeadlineMs=7500}){
   let x;try{x=JSON.parse(body)}catch{return send(400,{error:'invalid JSON'})}
   try{
    if(x.type==='kick')return send(200,await kickWithDeadline(relay,x.worker,{timeoutMs:kickDeadlineMs}));
-   if(x.type==='completed')return send(200,await relay.completed(x));
-   if(x.type==='not_started')return send(200,await relay.notStarted(x));
+   if(x.type==='completed'){
+    const result=await relay.completed(x);
+    return send(result?.state==='completion-unconfirmed'?503:200,result);
+   }
+   if(x.type==='not_started'){
+    const result=await relay.notStarted(x);
+    return send(result?.state==='requeue-unconfirmed'?503:200,result);
+   }
    if(x.type==='replay')return send(200,await relay.replay());
    if(x.type==='reconcile')return send(200,await relay.reconcile());
    return send(422,{error:'unsupported event'});
