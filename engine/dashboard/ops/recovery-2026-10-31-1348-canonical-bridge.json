@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "kind": "zoo_dashboard_recovery_checkpoint",
+  "observed_at": "2026-10-31T13:46:47.274Z",
+  "task": "zoodo-18/transendiq-1023",
+  "status": "RECOVERING",
+  "decision": "REVISE",
+  "owner": "ZOO Dashboard Worker",
+  "backup": "ZOO Agent Hunter",
+  "integration_authority": "Sole ZOO Keeper",
+  "canonical_source": {
+    "repo": "london4216-hue/Zoodo",
+    "branch": "autonomous-engine-replacement-2026-10-29",
+    "last_confirmed_merge_sha": "aee4815ac2f22ebde5d26dc082cf9c962f0191b4",
+    "pr16": {
+      "number": 16,
+      "merged": true,
+      "merged_at": "2026-10-31T12:56:11Z",
+      "merge_sha": "aee4815ac2f22ebde5d26dc082cf9c962f0191b4"
+    },
+    "pr71": {
+      "number": 71,
+      "merged": true,
+      "merged_at": "2026-10-31T12:56:19Z",
+      "merge_sha": "78b9ee078deb185706de67eba93080cd27873bc5",
+      "target_branch": "fix/zoo-live-dashboard-accountability-20261030",
+      "canonical_inclusion": "NOT_ESTABLISHED; branch compare shows 21 ahead / 6 behind"
+    }
+  },
+  "bounded_repair": {
+    "description": "Port future-dated evidence rejection to actual canonical target branch via isolated draft PR",
+    "branch": "fix/zoo-clock-future-evidence-20261031-1345",
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/90",
+    "code_commit": "5b7dfefdd328c7ca0dd11535a054d8ffeb88f3f5",
+    "test_commit": "1745ec894dfbb1bb1b1ce169766efd7fa13eb92c",
+    "code_blob": "890e1f55678eadf731af07b4e4874b000e2c8eb2",
+    "test_blob": "a77158026f9db33d3b2295d880392dc12d083b0b",
+    "tests": {
+      "runner": "authenticated GitHub source readback + V8 source-execution assertions",
+      "passed": 7,
+      "failed": 0,
+      "full_node_suite": "UNKNOWN",
+      "fail_first": "Canonical classifier incorrectly accepted +1h future evidence as VERIFIED",
+      "dashboard_html_unchanged": true,
+      "html_blob": "9bbc74b34f13663d234852f0e10ab1ea9f80fb6e"
+    }
+  },
+  "provider_checks": {
+    "github_actions": {
+      "run_id": 41207074000,
+      "conclusion": "failure",
+      "job_steps": "missing/null",
+      "diagnosis": "zero-step runner startup failure; no test execution evidence"
+    },
+    "netlify_preview": {
+      "status": "pending",
+      "deploy_url": "https://app.netlify.com/projects/zoo-live-dashboard/deploys/6ae5f12f804528edd9828659",
+      "http_readback": "UNVERIFIED"
+    },
+    "production": {
+      "url": "https://zoo-live-dashboard.netlify.app/",
+      "http_readback": "UNAVAILABLE_FROM_ENVIRONMENT",
+      "error": "DNS resolution failed from HTTP environment; browser tool cannot access URL",
+      "deploy_id": "UNKNOWN",
+      "deployed_sha": "UNKNOWN",
+      "auth": "UNKNOWN",
+      "rollback_mapping": "UNKNOWN"
+    }
+  },
+  "scheduler": {
+    "last_published_observed_at": "2026-10-31T12:38:28.366Z",
+    "latest_authenticated_checks": {
+      "dashboard": "in_progress at 2026-10-31T13:44:36Z",
+      "keeper": "in_progress at 2026-10-31T13:41:29Z",
+      "hunter": "recorded completed 2026-10-31T13:07:34Z but completion predates scheduled time; not valid proof of current work",
+      "restoration": "recorded completed 2026-10-31T13:32:19Z"
+    },
+    "productive_agent_count": "UNKNOWN",
+    "note": "Scheduler metadata is not authenticated productive work; current execution not counted completed"
+  },
+  "inventory": {
+    "zoodo_search_returned_open_issues": 24,
+    "zoodo_search_returned_open_prs": 52,
+    "counts_complete": "UNKNOWN; connector search result count, not a certified total",
+    "completed_tasks": "UNKNOWN",
+    "latencies": "UNKNOWN"
+  },
+  "handoff": {
+    "from": "Dashboard Lead",
+    "to": "Implementation Lead",
+    "task": "zoodo-18/ci-zero-step",
+    "decision": "REVISE",
+    "next_executable_action": "Inspect GitHub Actions workflow job provisioning and repository Actions policy; distinguish runner startup from test failure, then run exact-head tests without repeating identical failed workflow attempts.",
+    "hunter_task": "Map authenticated Netlify site ID, build branch and preview SHA; test HTTP/mobile link parity and rollback without publishing.",
+    "keeper_task": "Integrate PR #90 only after actual checks and source/deploy mapping; separately reconcile unported PR #71 changes onto canonical branch.",
+    "next_trigger": "Existing hourly dashboard watchdog and event-driven issue/PR handoff; do not mark closed"
+  },
+  "release": {
+    "production_published": false,
+    "demo_ready": false,
+    "owner_email_sent": false
+  }
+}
