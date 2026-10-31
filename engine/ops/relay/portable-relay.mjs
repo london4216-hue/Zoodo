@@ -6,6 +6,7 @@ import {nextWithDeadline} from './next-deadline.mjs';
 import {reconcileWithDeadline} from './reconcile-bounded.mjs';
 import {confirmDispatchReceipt} from './dispatch-receipt-fence.mjs';
 import {kickWithDeadline} from './bounded-kick.mjs';
+import {kickHttpStatus} from './kick-http-status.mjs';
 import {confirmTransitionWithinDeadline} from './transition-fence.mjs';
 import {classifyRelayError} from './relay-error-status.mjs';
 const ID=/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
@@ -132,7 +133,10 @@ export function makeHandler({relay,callbackSecret,kickDeadlineMs=7500}){
   if(typeof body!=='string'||Buffer.byteLength(body)>8192)return send(413,{error:'invalid payload'});
   let x;try{x=JSON.parse(body)}catch{return send(400,{error:'invalid JSON'})}
   try{
-   if(x.type==='kick')return send(200,await kickWithDeadline(relay,x.worker,{timeoutMs:kickDeadlineMs}));
+   if(x.type==='kick'){
+    const result=await kickWithDeadline(relay,x.worker,{timeoutMs:kickDeadlineMs});
+    return send(kickHttpStatus(result),result);
+   }
    if(x.type==='completed'){
     const result=await relay.completed(x);
     return send(result?.state==='completion-unconfirmed'?503:200,result);
