@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "kind": "zoo_dashboard_bounded_recovery_receipt",
+  "observed_at": "2026-10-31T17:40:49.025Z",
+  "status": "SOURCE_REPAIR_PROPOSED_PRODUCTION_UNVERIFIED",
+  "canonical_branch": "autonomous-engine-replacement-2026-10-29",
+  "pr_url": "https://github.com/london4216-hue/Zoodo/pull/102",
+  "fix": "Mark priority-watch.json snapshots older than 75 minutes as historical rather than current PR #787 or Sara status",
+  "source_blobs": {
+    "engine/dashboard/priority-watch.mjs": "316520015a70d4077931507128dc1bd5f5f5c933",
+    "engine/dashboard/tests/priority-freshness.test.mjs": "db74087ea4480ba6c8ab02471cdad3bc5294d695",
+    "engine/dashboard/tests/priority-watch.test.mjs": "ea7f43dcfb1988b9007781f5d1c6fdee1f906acd",
+    "engine/dashboard/index.html": "e6dfa8097239c28edead2f0814043a47c15a97aa"
+  },
+  "local_tests": {
+    "command": "node --test tests/priority-watch.test.mjs tests/priority-freshness.test.mjs",
+    "node": "22.16.0",
+    "passed": 6,
+    "failed": 0,
+    "scope": "local VM/static assertions against GitHub-blob-matched JS and tests; HTML and JSON fixtures equivalent for covered assertions, not hosted browser"
+  },
+  "provider_status": {
+    "context": "netlify/zoo-live-dashboard/deploy-preview",
+    "state": "success",
+    "for_head": "19a5c5303ba891ec9fbf212c43e498b67038d304",
+    "preview_url": "https://deploy-preview-102--zoo-live-dashboard.netlify.app",
+    "direct_http_verified": false
+  },
+  "github_actions": {
+    "last_inspected_run": 41221943104,
+    "job_id": 124598151452,
+    "job_conclusion": "failure",
+    "job_steps_returned": 0,
+    "exact_new_head_ci": "UNKNOWN"
+  },
+  "production": {
+    "url": "https://zoo-live-dashboard.netlify.app/",
+    "site_id": null,
+    "deploy_id": null,
+    "deploy_sha": null,
+    "owner_auth_readback": "UNKNOWN",
+    "browser_readback": "UNAVAILABLE",
+    "rollback_mapping": "UNKNOWN"
+  },
+  "scheduler": {
+    "canonical_snapshot_commit": "ef5cc18fdf0d2384be9ba4d20023137e729a1b1f",
+    "observed_at": "2026-10-31T17:40:22.589Z",
+    "valid_prior_completion_receipts": 4,
+    "latest_hunter_and_builder_completions": "QUARANTINED_COMPLETION_BEFORE_SCHEDULED",
+    "dashboard_execution": "IN_PROGRESS_NOT_PRODUCTIVE_PROOF",
+    "active_workers_verified": false
+  },
+  "github_queue": {
+    "open_issues_returned": 24,
+    "open_prs_returned": 59,
+    "search_limit": 100,
+    "production_display_verified": false
+  },
+  "integration": {
+    "pr16": "MERGED_CANONICAL",
+    "pr71": "MERGED_TO_OLD_FEATURE_BRANCH_NOT_CANONICAL",
+    "pr94": "MERGED_CANONICAL",
+    "open_dashboard_drafts": [
+      90,
+      98,
+      99,
+      100,
+      101,
+      102
+    ],
+    "keeper_required": true
+  },
+  "latencies": {
+    "merge_seconds": null,
+    "deploy_seconds": null,
+    "host_verification_seconds": null,
+    "reason": "No authenticated provider deploy/production mapping"
+  },
+  "handoff": {
+    "hunter": "Authenticated Netlify site/deploy/source SHA mapping and read-only preview/production host probe",
+    "implementation_lead": "GitHub Actions zero-step startup",
+    "keeper": "Integrate PR #102 with pending dashboard drafts only after existing safety gates; do not block product/PR closure lanes"
+  },
+  "guards": {
+    "preserve_links": true,
+    "preserve_owner_auth": true,
+    "no_production_publish": true,
+    "no_email": true,
+    "grades_deferred_until_wednesday": true
+  }
+}
