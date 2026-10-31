@@ -1,0 +1,63 @@
+{
+  "schema": "zoo.pr-closure-receipt.v1",
+  "date_utc": "2026-10-31",
+  "repo": "london4216-hue/Zoodo",
+  "pr": 93,
+  "branch": "integrate/p0-outbox-retry-backoff-main-20261031",
+  "task": "Prevent expired idle-outbox ACK after long PostgreSQL transaction or lock wait",
+  "reconciliation": {
+    "pr81": "Merged into intermediate stack; exact receipt 2026-10-31-1243-keeper-outbox-fence-fleet.json inspected; not hosted proof",
+    "issue77": "Time-based NEXT queue; no dedicated keeper or dual judge",
+    "stacks": {
+      "65→69→72": "all merged into intermediate branches",
+      "68→73→81": "#73 closed unmerged, #81 merged into #73; main integration not inferred",
+      "16→71": "both merged into intermediate dashboard branches; live deployment unverified"
+    }
+  },
+  "baseline": {
+    "path": "engine/ops/relay/002_outbox_idle_settlement.sql",
+    "blob_sha": "82db86bc110e8b44ef98d67f5fa399f5ac159805",
+    "finding": "idle ACK used now() transaction-start time for lease_until, allowing stale ACK after real expiry"
+  },
+  "repair": {
+    "migration": "engine/ops/relay/007_outbox_idle_ack_wall_clock.sql",
+    "blob_sha": "72defedddf4f8296a395dd2f8a10cb4b72f45b99",
+    "commit": "494b6d3c8192c522c0ee3c758ff9023eb1790fc7",
+    "test": "engine/test/outbox-idle-ack-wall-clock.test.mjs",
+    "test_blob_sha": "b689322f3ceae0cd67acf6152dfda2f8fa2bb5e6",
+    "test_commit": "ed5382a5e118bbba95d2b9f74065b986bc302483",
+    "invariant": "idle ACK requires matching token, lease_until>clock_timestamp(), and no runnable queued ticket"
+  },
+  "validation": {
+    "runtime": "Node.js v22.16.0",
+    "command": "node --test engine/test/*.test.mjs (isolated exact-source PR #93 SQL/test fixture)",
+    "passed": 13,
+    "failed": 0,
+    "fail_first": "one expected failure when replacement predicate changed to stale now()",
+    "all_7_github_blobs_match_local_git_hash_object": true,
+    "postgresql_engine_executed": false,
+    "postgresql_concurrency_executed": false
+  },
+  "github_actions": {
+    "exact_head": "ed5382a5e118bbba95d2b9f74065b986bc302483",
+    "run_id": 41223684779,
+    "job": "lab-tests",
+    "conclusion": "failure",
+    "steps": null,
+    "classification": "zero-step infrastructure UNKNOWN; not CI pass"
+  },
+  "gates": {
+    "branch_protection": "NOT_VERIFIED",
+    "private_durable_lease": "NOT_CLAIMED",
+    "native_external_model_invoked": false,
+    "hosted_next": false,
+    "merge": false,
+    "deploy": false
+  },
+  "ownership": {
+    "pr_closure": "PR #93 migrations 005/006/007",
+    "dashboard": "no edits",
+    "product": "no edits"
+  },
+  "next": "Run disposable PostgreSQL 001→002→005→006→007 with real long transaction/row lock wait and concurrency; verify branch protection/required checks; continue next eligible independent PR"
+}
