@@ -1,0 +1,28 @@
+{
+  "ticket": "Zoodo-18",
+  "date_utc": "2026-10-31T06:27:09Z",
+  "agent": "ZOO Keeper",
+  "branch": "keeper/zoo-next-late-claim-fence-20261031",
+  "base_pr": 49,
+  "code_commit": "da188a00f96f4b971eee1d6bc00facd043b4a12b",
+  "changed_files": [
+    "engine/ops/relay/next-deadline.mjs",
+    "engine/ops/relay/portable-relay.mjs",
+    "engine/test/late-next-fence.test.mjs"
+  ],
+  "blobs": {
+    "helper": "413c640839b4efb44aa92549f613ea1b96cc176a",
+    "relay": "506aa3f55415681bc9eb754198927f7c82ca984b",
+    "test": "980653584dbd043353ba920bb1d5c9424c365b32"
+  },
+  "defect": "NEXT may dispatch after callback deadline if durable claim resolves late",
+  "repair": "Fence late primary and replacement claims before dispatch",
+  "local_test": {
+    "command": "node --test engine/test/late-next-fence.test.mjs",
+    "baseline": "0/3 pass",
+    "modified": "3/3 pass",
+    "caveat": "Local relay was reconstructed; exact committed blob readback and source assertions passed; hosted execution not tested"
+  },
+  "deployment": "UNKNOWN",
+  "next": "Run exact-commit suite, integrate stacked relay, authenticate hosted runtime, prove recovery and dashboard"
+}

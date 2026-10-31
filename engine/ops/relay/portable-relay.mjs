@@ -40,22 +40,27 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),next
   if(!WORKER.test(w?.id??'')||!https(w?.url)||typeof w.token!=='string'||w.token.length<24||pool.has(w.id))throw Error('Invalid authorized worker');
   pool.set(w.id,w);
  }
- async function delegate(worker,allowReplacement,result){
+ async function delegate(worker,allowReplacement,result,isExpired=()=>false){
   if(!allowReplacement)return result;
   // One bounded pass, no timers and no repeat of a leased/uncertain ticket.
   for(const alternate of pool.keys()){
+   if(isExpired()) return result;
    if(alternate===worker)continue;
    try{
-    const replacement=await next(alternate,false);
+    const replacement=await next(alternate,false,isExpired);
     if(replacement.state==='dispatched')return result.state==='idle'
      ? {state:'delegated',worker,replacement}:{...result,replacement};
    }catch{ /* The original result remains durable and truthful. */ }
   }
   return result;
  }
- async function next(worker,allowReplacement=true){
+ async function next(worker,allowReplacement=true,isExpired=()=>false){
   const w=pool.get(worker);if(!w)throw Error('Unknown worker');
-  const t=await store.claim(worker);if(!t)return delegate(worker,allowReplacement,{state:'idle'});
+  const t=await store.claim(worker);
+  // A durable lease can arrive after the completion callback timed out.
+  // Do not start a phantom remote worker; quarantine/outbox recovery owns the lease.
+  if(isExpired())return {state:'next-unconfirmed',ticket:t?.id??null};
+  if(!t)return delegate(worker,allowReplacement,{state:'idle'},isExpired);
   if(!ID.test(t.id??'')||!UUID.test(t.lease_token??'')||t.lease_owner!==worker)throw Error('Invalid atomic lease');
   const key='zoo:'+t.id+':'+t.lease_token;
   let result;
@@ -77,14 +82,14 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),next
    }
   }catch(e){result={state:'uncertain',ticket:t.id,reason:String(e.message||e).slice(0,160)}}
   // The uncertain task stays leased/quarantined; only independent tickets may advance.
-  return delegate(worker,allowReplacement,result);
+  return delegate(worker,allowReplacement,result,isExpired);
  }
  // Keeper PR #34: preserve an already committed transition if NEXT fails.
  // The transactional outbox is the durable recovery checkpoint.
  async function nextAfterTransition(worker){
   // NEXT can hang after the prior transition was committed. Do not hang the
   // completion callback or infer that a late dispatch did not occur.
-  return nextWithDeadline(()=>next(worker),{timeoutMs:nextDeadlineMs});
+  return nextWithDeadline(isExpired=>next(worker,true,isExpired),{timeoutMs:nextDeadlineMs});
  }
  async function completed(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
