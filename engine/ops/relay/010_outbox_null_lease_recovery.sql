@@ -19,10 +19,13 @@ BEGIN
         OR (o.state='dead' AND o.next_at<=clock_timestamp())
      RETURNING o.ticket_id,o.attempts
   )
-  INSERT INTO public.zoo_ops_events(ticket_id,event)
+  -- Record the recovery at the actual wall clock: events.at DEFAULT now()
+  -- would backdate audit evidence for a long-running transaction.
+  INSERT INTO public.zoo_ops_events(ticket_id,event,at)
   SELECT ticket_id,
          CASE WHEN attempts>=4 THEN 'outbox_retry_budget_exceeded'
-              ELSE 'outbox_lease_recovered' END
+              ELSE 'outbox_lease_recovered' END,
+         clock_timestamp()
     FROM recovered;
   GET DIAGNOSTICS n=ROW_COUNT;
   RETURN n;
