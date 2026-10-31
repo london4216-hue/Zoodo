@@ -4,6 +4,7 @@ import {timingSafeEqual} from 'node:crypto';
 import {makeOutboxReplay} from './outbox-replay.mjs';
 import {nextWithDeadline} from './next-deadline.mjs';
 import {reconcileWithDeadline} from './reconcile-bounded.mjs';
+import {confirmDispatchReceipt} from './dispatch-receipt-fence.mjs';
 const ID=/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const SHA=/^[a-f0-9]{40}$/;
 const UUID=/^[a-f0-9-]{36}$/i;
@@ -76,9 +77,10 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),next
     if(ack.accepted!==true||ack.ticket_id!==t.id||ack.idempotency_key!==key||!https(ack.receipt_url))
      result={state:'uncertain',ticket:t.id,reason:'Invalid worker acceptance'};
     else {
-     if(await store.record({ticket_id:t.id,worker,lease_token:t.lease_token,receipt_url:ack.receipt_url})!==true)
-      throw Error('Dispatch receipt not durably recorded');
-     return {state:'dispatched',ticket:t.id,worker,receipt_url:ack.receipt_url};
+     return await confirmDispatchReceipt({
+      record:x=>store.record(x),ticket:t.id,worker,leaseToken:t.lease_token,
+      receiptUrl:ack.receipt_url,signal
+     });
     }
    }
   }catch(e){result={state:'uncertain',ticket:t.id,reason:String(e.message||e).slice(0,160)}}

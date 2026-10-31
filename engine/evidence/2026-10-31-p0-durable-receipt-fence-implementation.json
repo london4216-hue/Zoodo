@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "agent_id": "implementation-lead-chatgpt",
+  "task_id": "ZOO-P0-DURABLE-RECEIPT-FENCE-20261031-0641",
+  "repo": "london4216-hue/Zoodo",
+  "asset": "ZOO independent operations relay",
+  "target_issues": [
+    "https://github.com/london4216-hue/Zoodo/issues/18",
+    "https://github.com/london4216-hue/TransendIQ/issues/1023",
+    "https://github.com/london4216-hue/TransendIQ/issues/1048"
+  ],
+  "branch": "worker/p0-durable-receipt-fence-20261031-0641",
+  "pr_url": "https://github.com/london4216-hue/Zoodo/pull/55",
+  "source_commit_sha": "8f62c73559e3a4c96df4bcabc140c68d7573e8e6",
+  "evidence_head_before_receipt": "7534110d14fb7b5fd4f384520df1b4a0ed3cb413",
+  "code_change": "After HTTP 202 acceptance, preserve durable receipt write; if NEXT signal aborts while receipt persistence is pending, return next-unconfirmed instead of dispatched; leave lease/outbox for reconciliation",
+  "execution": {
+    "kind": "LOCAL synthetic Node 22 regression",
+    "command": "node --test engine/test/dispatch-receipt-fence.test.mjs",
+    "start_utc": "2026-10-31T06:44:39.981Z",
+    "end_utc": "2026-10-31T06:44:40.092Z",
+    "exit_code": 0,
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "tap_sha256": "6efdc2fcc350feb4b933934047cf3da75cfa7c595dbc67561befd21b051d7796",
+    "tap_url": "https://github.com/london4216-hue/Zoodo/blob/worker/p0-durable-receipt-fence-20261031-0641/engine/evidence/2026-10-31-p0-receipt-fence-4cases.tap",
+    "red_baseline": "ERR_MODULE_NOT_FOUND prior to implementation, expected for new helper; not an existing-behavior failing assertion",
+    "github_source_readback": {
+      "helper_blob": "67beb680f219c8f5489496af69275831a16c063a",
+      "test_blob": "7f332b98da2e5db2136dc959275dd08d8bfe3106",
+      "integration_blob": "0f1089f0801c571238402980a486c2e427c104ae"
+    }
+  },
+  "hosted": {
+    "netlify_deployment": "UNKNOWN",
+    "vercel_deployment": "UNKNOWN",
+    "supabase_migration": "UNKNOWN",
+    "authenticated_endpoint": "UNKNOWN",
+    "two_ticket_hosted_failover": "UNKNOWN",
+    "dashboard_publication": "UNKNOWN",
+    "deepseek_provider_native_receipt": "UNKNOWN",
+    "ci_for_evidence_head": "NO PR WORKFLOW RUN RETURNED BY FIRST-PAGE SHA QUERY"
+  },
+  "provider_access": {
+    "netlify_management_connector": "NOT EXPOSED",
+    "vercel_management_connector": "NOT EXPOSED",
+    "supabase_management_connector": "NOT EXPOSED",
+    "relevant_local_environment_variable_names": [],
+    "public_dashboard_http_probe": "UNAVAILABLE THROUGH WEB TOOL; no claim site is down"
+  },
+  "decision": {
+    "stamp": "REVISE",
+    "reason": "Local exact-source helper tests pass; no hosted 24/7 relay, provider-native failover, or dashboard readback",
+    "next_action": "ZOO Keeper integrate stacked PR #55 on #52/#50 after full-suite review; Agent Hunter verify Netlify/Supabase deployment credentials and run authenticated hosted two-ticket failover; Dashboard Lead publish native receipts"
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "task_id": "ZOO-P0-DURABLE-RECEIPT-FENCE-20261031-0641",
+    "utc": "2026-10-31T06:44:57.842Z",
+    "next_trigger": "Review draft PR #55 and host capability probe",
+    "keeper_existing_automation_id": "6ae3da9a4b048191be5c34ef8a19b1b7",
+    "keeper_run_now_requested": true,
+    "keeper_run_now_accepted": true,
+    "keeper_execution_confirmed": false,
+    "agent_hunter_parallel_capability_probe": {
+      "existing_automation_id": "6ae4a7a96c2c8191b990b12dda94f0f8",
+      "immediate_run_request_accepted": true,
+      "execution_confirmed": false,
+      "scope": "Existing Netlify/Vercel/Supabase authenticated deployment/runtime probe; no assumed credentials"
+    }
+  },
+  "panel_proof_matrix": {
+    "agent_hunter": "UNKNOWN",
+    "dashboard_lead": "UNKNOWN",
+    "implementation_lead": "LOCAL_TEST_PASS_HOSTED_UNKNOWN",
+    "zoo_keeper": "UNKNOWN"
+  },
+  "movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T06:00:00Z",
+      "hour_et": "2026-10-31T02:00:00-04:00",
+      "repo": "london4216-hue/Zoodo",
+      "asset": "ZOO relay durable receipt fence",
+      "pr": 55,
+      "prior_status": "Late durable receipt write could return dispatched after abort",
+      "new_status": "Fenced in draft PR; local 4/4; hosted UNKNOWN",
+      "commit_sha": "8f62c73559e3a4c96df4bcabc140c68d7573e8e6",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/8f62c73559e3a4c96df4bcabc140c68d7573e8e6"
+    }
+  ],
+  "pr_stage_timing": {
+    "opened_at_utc": "2026-10-31T06:44:17Z",
+    "review_at_utc": null,
+    "local_tests_end_utc": "2026-10-31T06:44:40.092Z",
+    "opened_to_local_tests_seconds": 23.092,
+    "merge_at_utc": null,
+    "deployed_at_utc": null,
+    "verified_at_utc": null,
+    "gap_detected_at_utc": "UNKNOWN",
+    "gap_fix_verification_latency": "UNKNOWN",
+    "unresolved_gap_age": "UNKNOWN until hosted verification"
+  }
+}
