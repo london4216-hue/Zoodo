@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-31T21:51:32.770Z",
+  "observed_at": "2026-10-31T22:26:43.650Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Dashboard Worker",
@@ -9,7 +9,7 @@
     "ZOO Agent Hunter",
     "ZOO PR Closure"
   ],
-  "publication_scope": "Authenticated scheduler metadata only. Keeper's latest valid completion recorded; Dashboard and PR Closure in progress; Builder latest completion timestamp inconsistent and quarantined; Hunter disabled with inconsistent latest completion. Older valid completions retained. Scheduler run records do not prove productive code, CI, deploy or browser operation.",
+  "publication_scope": "Authenticated scheduler metadata only; current role enablement and completion receipts are distinct from productive worker, CI, deploy, and live browser proof. Invalid future or start-before-scheduled executions quarantined. Hunter disabled; Builder and Dashboard latest in-progress scheduling inconsistent.",
   "refresh_policy": "Single Dashboard Worker publisher; GitHub blob SHA conditional update; browser polling cannot wake agents.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
@@ -59,34 +59,17 @@
     },
     {
       "role": "ZOO PR Closure",
-      "run_id": "0ef230f2-cad8-8325-a5a1-faa123b53cb4",
+      "run_id": "2363c281-de20-8323-a91b-9ac56280c418",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T20:48:11.906355Z",
-      "completed_at": "2026-10-31T20:51:19.595692Z",
+      "scheduled_for": "2026-10-31T22:10:39Z",
+      "completed_at": "2026-10-31T22:17:12.625462Z",
       "receipt_source": "connected_automations_peek.run_details",
       "automation_title": "ZOO PR closure — eligible fixes and merges",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
     }
   ],
-  "in_progress_runs": [
-    {
-      "role": "ZOO Dashboard Worker",
-      "run_id": "8d4b1671-8ea0-832d-a116-ca49a5f64e7a",
-      "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-31T21:49:20.346145Z",
-      "started_at": "2026-10-31T21:49:22.120628Z",
-      "completed_at": null
-    },
-    {
-      "role": "ZOO PR Closure",
-      "run_id": "d752ce9e-2830-832d-8f32-be2513ba4adc",
-      "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-31T21:49:19.449733Z",
-      "started_at": "2026-10-31T21:49:21.815497Z",
-      "completed_at": null
-    }
-  ],
+  "in_progress_runs": [],
   "source_anomalies": [
     {
       "role": "ZOO Agent Hunter",
@@ -232,6 +215,30 @@
       "scheduled_for": "2026-10-31T21:24:51Z",
       "completed_at": "2026-10-31T21:22:23.350327Z",
       "action": "quarantined_not_counted_as_verified_scheduler_completion"
+    },
+    {
+      "role": "ZOO Dashboard Worker",
+      "kind": "in_progress_started_before_scheduled_or_future_scheduled",
+      "run_id": "121d3f0d-f700-8331-b51e-766fd02d39dd",
+      "scheduled_for": "2026-10-31T22:45:58Z",
+      "started_at": "2026-10-31T22:24:07.840084Z",
+      "action": "quarantined_not_counted_as_current_worker_proof"
+    },
+    {
+      "role": "ZOO Asset Restoration",
+      "kind": "in_progress_started_before_scheduled_or_future_scheduled",
+      "run_id": "dc475b6c-1b3c-8332-9c98-7a5d99c649c3",
+      "scheduled_for": "2026-10-31T22:24:51Z",
+      "started_at": "2026-10-31T22:23:37.674605Z",
+      "action": "quarantined_not_counted_as_current_worker_proof"
+    },
+    {
+      "role": "ZOO Agent Hunter",
+      "kind": "latest_execution_timestamp_inconsistent_or_failed",
+      "run_id": "b487ae22-cbf4-8322-a512-ec8bbc2bea08",
+      "scheduled_for": "2026-10-31T18:21:25Z",
+      "completed_at": "2026-10-31T18:01:41.851473Z",
+      "action": "quarantined_not_counted_as_verified_completion"
     }
   ],
   "prior_snapshot": {
