@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "task_id": "Zoodo-8-relay-atomic-lease",
+  "agent_id": "ZOO-Keeper",
+  "repo": "london4216-hue/Zoodo",
+  "branch": "feat/zoo-durable-relay-lease-20261030",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/33",
+  "tested_source_blobs": {
+    "engine/relay/lease-queue.mjs": "dfa3590366265cc8f9ec65ba1c2b5a827c469eaa",
+    "engine/relay/lease-queue.test.mjs": "df6c4b202050b98774f9fbb2e4ccf0f62355d690"
+  },
+  "tested_head_sha": "d406ff86a4d32f24f28ac61a831e9d4ebdf455f5",
+  "test_command": "node --test engine/relay/lease-queue.test.mjs",
+  "runtime": "Node v22.16.0",
+  "tests": {
+    "passed": 4,
+    "failed": 0,
+    "scope": "local deterministic synthetic queue recovery only"
+  },
+  "observed_utc": "2026-10-31T00:29:16Z",
+  "decision": "GO_FOR_REVERSIBLE_DRAFT_ONLY",
+  "evidence": "https://github.com/london4216-hue/Zoodo/pull/33",
+  "live_provider_invocation": "UNKNOWN",
+  "hosted_ci": "UNKNOWN",
+  "production_deployment": "UNKNOWN",
+  "limitations": [
+    "No hosted 24/7 relay, no authenticated worker dispatch, no live production proof",
+    "SQLite Node 22 API experimental; persistent volume required",
+    "Caller-supplied completion evidence not yet authenticated; do not expose as public API"
+  ],
+  "handoff": {
+    "from": "ZOO Keeper",
+    "to": "Agent Hunter",
+    "ticket": "Zoodo-8-relay-host-probe",
+    "action": "Probe existing authorized persistent host and credentials; pass authenticated runtime evidence to Implementation Lead; do not claim dispatch until confirmed",
+    "trigger": "next actual qualified worker run"
+  },
+  "resource_stewardship": "Single integration authority; preserve worker branch ownership, finite retry budgets, source-linked tests and privacy; Rule 11 evidence freshness applies.",
+  "next_executable": "Authenticated persistent host probe, then webhook+worker wiring and real two-ticket recovery with deployment evidence"
+}
