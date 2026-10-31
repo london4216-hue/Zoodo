@@ -19,7 +19,7 @@ async function refreshPriority(){
   $('zoo787drift').textContent='Last VERIFIED meaningful task movement: UNKNOWN (no independent receipt). PR metadata last changed '+age(p.last_meaningful_update_at)+' ago; NOT a worker heartbeat.';
   $('zooSaraState').textContent=stale?'STALE SNAPSHOT':(s.state||'UNKNOWN');
   $('zooSaraDetail').textContent=stale?'Last recorded Sara URL '+(s.url||'UNKNOWN')+' · reverify before use':s.url&&s.last_verified_at?'Verified URL: '+s.url:'URL UNKNOWN · '+(s.next_action||'verification pending');
-  $('zooPriorityReceipt').textContent='Authenticated source observed '+d.observed_at+' · source age '+age(d.observed_at)+(stale?' · STALE SNAPSHOT: historical only; current PR/Sara status UNKNOWN':'')+' · production proof +(d.dashboard?.production_verified?'VERIFIED':'UNKNOWN')+' · last FETCH '+new Date().toISOString()+' (not execution evidence).';
+  $('zooPriorityReceipt').textContent='Authenticated source observed '+d.observed_at+' · source age '+age(d.observed_at)+(stale?' · STALE SNAPSHOT: historical only; current PR/Sara status UNKNOWN':'')+' · production proof '+(d.dashboard?.production_verified?'VERIFIED':'UNKNOWN')+' · last FETCH '+new Date().toISOString()+' (not execution evidence).';
  }catch(e){
   $('zoo787stage').textContent='RECOVERING';
   $('zooSaraState').textContent='UNKNOWN';
