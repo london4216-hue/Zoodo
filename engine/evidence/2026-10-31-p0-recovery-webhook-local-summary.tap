@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: unconfirmed kick returns HTTP 503 for provider retry
+ok 1 - unconfirmed kick returns HTTP 503 for provider retry
+# Subtest: unacknowledged outbox replay returns HTTP 503
+ok 2 - unacknowledged outbox replay returns HTTP 503
+# Subtest: reconcile stage failure returns HTTP 503
+ok 3 - reconcile stage failure returns HTTP 503
+# Subtest: acknowledged replay stays HTTP 200
+ok 4 - acknowledged replay stays HTTP 200
+# Subtest: unconfirmed NEXT after completed transition must not retry completed callback
+ok 5 - unconfirmed NEXT after completed transition must not retry completed callback
+# Subtest: unauthenticated control endpoint remains forbidden
+ok 6 - unauthenticated control endpoint remains forbidden
+# Subtest: bounded kick/replay/reconcile failures return retryable HTTP 503
+ok 7 - bounded kick/replay/reconcile failures return retryable HTTP 503
+# Subtest: durably confirmed or idle outcomes remain HTTP 200
+ok 8 - durably confirmed or idle outcomes remain HTTP 200
+# Subtest: completed transition is not retried solely because NEXT is unconfirmed
+ok 9 - completed transition is not retried solely because NEXT is unconfirmed
+# Subtest: unexpected/missing results never claim retryable state without evidence
+ok 10 - unexpected/missing results never claim retryable state without evidence
+1..10
+# tests 10
+# pass 10
+# fail 0
+# duration_ms 90.611346
+# NOTE: condensed TAP transcription; original local stdout SHA256 52eb4fbe21ce84b14cffcd31889b285f9c90d09575f4a59c146f779e16b8fee2
+# NOTE: handler smoke used locally reconstructed handler-only source; full exact GitHub module suite not executed.
