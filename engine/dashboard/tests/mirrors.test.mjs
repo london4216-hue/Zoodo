@@ -62,8 +62,8 @@ test('missing published automation proof is NOT a usable dashboard mirror',async
 });
 test('mirror build allowlist contains both automation proof assets',()=>{
  const source=readFileSync(resolve(root,'scripts/prepare-mirror.mjs'),'utf8');
- assert.match(source,/'automation-proof\\.mjs'/);
- assert.match(source,/'automation-proof\\.json'/);
+ assert.match(source,/'automation-proof\.mjs'/);
+ assert.match(source,/'automation-proof\.json'/);
 });
 test('different SHA never counts as healthy redundancy',async()=>{
  const out=await inspectMirror(base,{fetcher:async url=>mockSuccess(url),expectedSha:'b'.repeat(40)});

@@ -51,6 +51,6 @@ test('no unverified demo URL is promoted to verified live navigation',()=>{
 });
 test('source response, evidence refresh and automation run are separate receipts',()=>{
  for(const id of ['checked','sourceSuccess','dashboardEvidenceRefresh','lastAutomationRun'])assert.match(html,new RegExp('id="'+id+'"'));
- assert.match(html,/authenticated run receipt not connected/);
+ assert.match(html,/scheduler receipt only; functional work and active worker heartbeat NOT established/);
  assert.match(html,/Dashboard evidence refresh:/);
 });

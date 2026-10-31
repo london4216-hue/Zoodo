@@ -21,3 +21,8 @@
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "no-referrer"
+
+[[headers]]
+  for = "/build-proof.json"
+  [headers.values]
+    Cache-Control = "no-store"

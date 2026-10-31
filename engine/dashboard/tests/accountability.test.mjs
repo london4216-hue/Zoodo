@@ -52,7 +52,7 @@ test('source refresh is distinguished from worker heartbeat and verification',()
  assert.match(script,/source receipt is not proof of active worker/);
  assert.match(script,/review \/ active worker heartbeat NOT established/);
  assert.match(script,/Automatic retry every 30 seconds/);
- assert.match(script,/setInterval\(update,30000\)/);
+ assert.match(script,/setInterval\(update,GITHUB_SOURCE_POLL_MS\)/);
 });
 
 test('automation proof fetch bypasses CDN cache and rejects older published snapshots',()=>{
@@ -72,7 +72,7 @@ test('source polling has bounded GitHub requests and no overlapping stale refres
  assert.match(script,/if\(updateInFlight\)return;/);
  assert.match(script,/updateInFlight=true;/);
  assert.match(script,/finally\{updateInFlight=false;\}/);
- assert.match(script,/setInterval\(update,30000\)/);
+ assert.match(script,/setInterval\(update,GITHUB_SOURCE_POLL_MS\)/);
 });
 
 test('automation proof refresh is bounded and serialized across manual and scheduled triggers',()=>{

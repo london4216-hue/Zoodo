@@ -1,0 +1,31 @@
+# Canonical ZOO dashboard branch only. The Base44 app is not this publish root.
+# Repository-root discovery makes the existing dashboard source gate explicit.
+[build]
+  base = "engine/dashboard"
+  publish = "."
+  command = "node scripts/build-proof.mjs"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/dashboard"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/dashboard/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+
+[[headers]]
+  for = "/build-proof.json"
+  [headers.values]
+    Cache-Control = "no-store"
