@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: hanging database outbox claim returns unconfirmed without dispatch
+ok 1 - hanging database outbox claim returns unconfirmed without dispatch
+  ---
+  duration_ms: 48.329997
+  type: 'test'
+  ...
+# Subtest: hanging worker dispatch returns unconfirmed and never acknowledges the wake-up
+ok 2 - hanging worker dispatch returns unconfirmed and never acknowledges the wake-up
+  ---
+  duration_ms: 20.340935
+  type: 'test'
+  ...
+# Subtest: late worker acceptance cannot acknowledge after deadline
+ok 3 - late worker acceptance cannot acknowledge after deadline
+  ---
+  duration_ms: 30.728842
+  type: 'test'
+  ...
+# Subtest: fast authenticated dispatch still atomically acknowledges its event
+ok 4 - fast authenticated dispatch still atomically acknowledges its event
+  ---
+  duration_ms: 1.38236
+  type: 'test'
+  ...
+# Subtest: invalid deadline is rejected instead of silently disabling bounded replay
+ok 5 - invalid deadline is rejected instead of silently disabling bounded replay
+  ---
+  duration_ms: 0.54365
+  type: 'test'
+  ...
+# Subtest: late outbox lease acquisition does not launch a worker after HTTP deadline
+ok 6 - late outbox lease acquisition does not launch a worker after HTTP deadline
+  ---
+  duration_ms: 30.782661
+  type: 'test'
+  ...
+# Subtest: two distinct local HTTP tickets: first uncertain, second acknowledged without duplicate
+ok 7 - two distinct local HTTP tickets: first uncertain, second acknowledged without duplicate
+  ---
+  duration_ms: 107.461429
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1391.132855
