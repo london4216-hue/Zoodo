@@ -1,0 +1,96 @@
+{
+  "schema": "zoo.ops.execution-receipt.v1",
+  "agent_id": "Implementation Lead (ChatGPT)",
+  "task_id": "ZOO-P0-CALLBACK-ENVELOPE-WIRING-20261031T1022Z",
+  "repository": "london4216-hue/Zoodo",
+  "asset": "independent ZOO operations relay",
+  "issues": [
+    "https://github.com/london4216-hue/Zoodo/issues/18",
+    "https://github.com/london4216-hue/TransendIQ/issues/1023",
+    "https://github.com/london4216-hue/TransendIQ/issues/1048"
+  ],
+  "decision": "REVISE",
+  "reason": "Callback validation integrated and isolated tests pass; full exact-source integration, external host and two-ticket failover remain unverified.",
+  "branch": "worker/p0-callback-envelope-wiring-20261031-1022",
+  "base_branch": "keeper/p0-callback-envelope-fence-20261031-0840",
+  "pull_request": "https://github.com/london4216-hue/Zoodo/pull/69",
+  "test_first_commit": "4e6099ce071f7953377e979e6fd48dc3561e10c7",
+  "code_commit": "60c65e790af092c543b1e839df0c36cea709711c",
+  "source_blobs": {
+    "engine/ops/relay/portable-relay.mjs": "3ce835ac67ef676913aa595b439c6f47247bf1ec",
+    "engine/ops/relay/callback-envelope.mjs": "c5807f4dbdf52614a258165f1e8fc93dfab366d5",
+    "engine/test/callback-handler-regression.test.mjs": "b19a2f42844309c0ef9386a9c52bb11d46701486"
+  },
+  "execution": {
+    "command": "node --test engine/test/callback-handler-regression.test.mjs",
+    "runtime": "local isolated Node v22.16.0",
+    "test_scope": "exact GitHub helper and regression test blobs; extracted byte-identical handler function; dependency stubs, NOT full production import graph",
+    "start_utc": "UNKNOWN",
+    "end_utc": "2026-10-31T10:22:24Z",
+    "baseline": {
+      "passed": 3,
+      "failed": 1,
+      "exit_code": 1,
+      "tap_sha256": "f1ad908d0c28ace34db24cfcc5cd39471f9200c1e7d6fa87b0dd56c5f67bc089"
+    },
+    "patched": {
+      "passed": 4,
+      "failed": 0,
+      "exit_code": 0,
+      "tap_sha256": "8256bc31733ebfe9fd5ac6317f0bc0239c36099049bcf8a4fdf1ace4d8ac22a5"
+    },
+    "authenticated_github_readback": {
+      "checks_passed": 6,
+      "checks_total": 6
+    },
+    "github_workflow": {
+      "run_id": 41192506935,
+      "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41192506935",
+      "job_id": 124511966456,
+      "status": "completed",
+      "conclusion": "failure",
+      "job_started_at_utc": "2026-10-31T10:22:43Z",
+      "job_completed_at_utc": "2026-10-31T10:22:46Z",
+      "steps": 0,
+      "job_log": "NOT_AVAILABLE: GitHub job log endpoint returned BlobNotFound 404",
+      "interpretation": "GitHub Actions CI did not execute test steps; cannot count as a test pass; exact failure cause unproven"
+    },
+    "provider_deployment": "UNKNOWN: no authorized Netlify/Vercel/Supabase deployment action available in this execution environment",
+    "external_worker_invocation": "UNKNOWN",
+    "hosted_two_ticket_failover": "UNKNOWN",
+    "deepseek_request_id": null,
+    "live_dashboard_refresh": "UNKNOWN: public site and function endpoint could not be fetched through available browser source"
+  },
+  "movement": {
+    "hour_et": "2026-10-31T06:00:00-04:00",
+    "hour_utc": "2026-10-31T10:00:00Z",
+    "previous": "validator helper existed but not integrated",
+    "new": "handler wired and draft stacked PR #69 opened",
+    "opened_at_utc": "2026-10-31T10:22:40Z",
+    "review_at_utc": null,
+    "fix_at_utc": "UNKNOWN",
+    "test_at_utc": "2026-10-31T10:22:24Z",
+    "merged_at_utc": null,
+    "deployed_at_utc": null,
+    "verified_at_utc": null,
+    "pr_to_merge_latency_ms": null,
+    "gap_to_fix_latency_ms": null,
+    "unresolved_gap_age_ms": null
+  },
+  "proof_matrix": {
+    "Agent Hunter": "UNKNOWN",
+    "Dashboard Lead": "UNKNOWN",
+    "Implementation Lead": "PARTIAL_LOCAL_ONLY",
+    "ZOO Keeper": "UNKNOWN"
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "status": "REVISE",
+    "task_id": "ZOO-P0-CALLBACK-ENVELOPE-WIRING-20261031T1022Z",
+    "proposed_fix": "Integrate PR #69 atop #65, run full exact-source relay tests, then authenticate Supabase and external Netlify/Vercel worker; prove two-ticket failover and production dashboard source readback.",
+    "next_trigger": "next authorized Keeper integration execution or actual hosted completion event",
+    "evidence_url": "https://github.com/london4216-hue/Zoodo/pull/69"
+  },
+  "observed_at_utc": "2026-10-31T10:23:11Z"
+}
