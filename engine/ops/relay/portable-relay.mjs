@@ -77,14 +77,19 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now()}){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
      !SHA.test(x?.commit_sha??'')||!https(x?.test_url)||!pool.has(x.worker))throw Error('Invalid completion');
   if(await store.complete(x)!==true)throw Error('Completion not durably confirmed');
-  // NEXT is triggered by the authenticated completion callback, not an hourly tick.
-  return {state:'completed',ticket:x.ticket_id,next:await next(x.worker),completed_at:new Date(now()).toISOString()};
+  // Completion was durably committed. A subsequent NEXT failure must not turn
+  // the successful completion into a false 409 or invite a duplicate callback.
+  return {state:'completed',ticket:x.ticket_id,next:await dispatchAfterCheckpoint(x.worker),completed_at:new Date(now()).toISOString()};
+ }
+ async function dispatchAfterCheckpoint(worker){
+  try{return await next(worker)}
+  catch{return {state:'recovering',reason:'NEXT dispatch unavailable after durable checkpoint'}}
  }
  async function notStarted(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
      !https(x?.evidence_url)||!pool.has(x.worker))throw Error('Native non-execution receipt required');
   if(await store.notStarted(x)!==true)throw Error('Non-execution not durably confirmed');
-  return {state:'requeued',ticket:x.ticket_id,next:await next(x.worker)};
+  return {state:'requeued',ticket:x.ticket_id,next:await dispatchAfterCheckpoint(x.worker)};
  }
  return {next,completed,notStarted,quarantine:()=>store.quarantine()};
 }
