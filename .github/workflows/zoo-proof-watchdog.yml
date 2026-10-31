@@ -1,0 +1,43 @@
+name: ZOO out-of-browser scheduler-proof watchdog
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'engine/dashboard/scripts/watchdog.mjs'
+      - 'engine/dashboard/tests/watchdog.test.mjs'
+      - '.github/workflows/zoo-proof-watchdog.yml'
+permissions:
+  contents: read
+concurrency:
+  group: zoo-proof-watchdog-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fail-first and recovery regression tests
+        run: node --test engine/dashboard/tests/watchdog.test.mjs
+  inspect:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: test
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Inspect actual published scheduler proof and dedupe recovery issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node engine/dashboard/scripts/watchdog.mjs
