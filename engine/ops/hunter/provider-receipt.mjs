@@ -19,7 +19,7 @@ export async function assessProviderReceipt(r,{now=new Date().toISOString(),expe
  const start=time(r.started_at),end=time(r.finished_at),clock=time(now);
  if(!Number.isFinite(start)||!Number.isFinite(end)||!Number.isFinite(clock)||end<start||end>clock+30000||clock-end>maxAgeMs||start>clock+30000)return reject('invalid_or_stale_clock');
  if(r.cost_usd!==null&&r.cost_usd!==undefined&&(!Number.isFinite(r.cost_usd)||r.cost_usd<0))return reject('invalid_cost');
- const base={provider:r.provider,provider_kind:r.provider_kind,provider_request_id:r.provider_request_id,role:r.role,latency_ms:end-start,source_sha:r.source_sha,artifact_sha:r.artifact_sha};
+ const base={provider:r.provider,provider_kind:r.provider_kind,provider_request_id:r.provider_request_id,role:r.role,latency_ms:end-start,source_sha:r.source_sha,artifact_sha:r.artifact_sha,finished_at:r.finished_at};
  if(typeof verifyProvider!=='function')return {...base,...reject('authenticated_provider_readback_required','UNVERIFIED')};
  let native;try{native=await verifyProvider({provider:r.provider,request_id:r.provider_request_id,kind:r.provider_kind});}catch{return {...base,...reject('provider_adapter_unavailable','RECOVERING')}}
  const fields=['provider','provider_kind','provider_request_id','source_sha','artifact_sha','status','evidence_url'];
@@ -27,10 +27,14 @@ export async function assessProviderReceipt(r,{now=new Date().toISOString(),expe
  const qualified={...base,state:'QUALIFIED',qualified:true,reason:'authenticated_native_readback_matched'};
  verifiedObjects.add(qualified);return qualified;
 }
-export function capabilityCounts(receipts){
+export function capabilityCounts(receipts,{now=new Date().toISOString(),maxAgeMs=3600000}={}){
  const unique=new Set(),roles={},providers={};
+ const clock=time(now);
+ if(!Number.isFinite(clock)||!Number.isFinite(maxAgeMs)||maxAgeMs<0)return {productive_invocations:0,roles,qualified_alternatives:{}};
  for(const r of receipts||[]){
   if(!r||!verifiedObjects.has(r)||r.qualified!==true||!NAME.test(r.role||'')||!NAME.test(r.provider||'')||!ID.test(r.provider_request_id||''))continue;
+  const finish=time(r.finished_at);
+  if(!Number.isFinite(finish)||finish>clock+30000||clock-finish>maxAgeMs)continue;
   const key=r.provider+':'+r.provider_request_id;if(unique.has(key))continue;unique.add(key);
   roles[r.role]=(roles[r.role]||0)+1;(providers[r.role]??=new Set()).add(r.provider);
  }
