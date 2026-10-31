@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-31T10:33:38.091Z",
+  "observed_at": "2026-10-31T10:40:41.796Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Agent Hunter",
@@ -55,11 +55,27 @@
   ],
   "in_progress_runs": [
     {
-      "role": "ZOO Dashboard Worker",
-      "run_id": "d460f77b-3ba0-8323-9cb5-94232ae4348b",
+      "role": "ZOO Agent Hunter",
+      "run_id": "80ce0bef-534c-8332-b6a1-43aea114d097",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-31T10:45:58Z",
-      "started_at": "2026-10-31T10:32:32.788729Z",
+      "scheduled_for": "2026-10-31T10:39:30.915093Z",
+      "started_at": "2026-10-31T10:39:32.339317Z",
+      "completed_at": null
+    },
+    {
+      "role": "ZOO Dashboard Worker",
+      "run_id": "0221e5a5-f940-832e-a5f8-187540f744b7",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-10-31T10:39:30.558532Z",
+      "started_at": "2026-10-31T10:39:55.958980Z",
+      "completed_at": null
+    },
+    {
+      "role": "ZOO Asset Restoration",
+      "run_id": "7e7ecb5f-bc7c-8325-a870-1a2a3425fd3e",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-10-31T10:39:31.343792Z",
+      "started_at": "2026-10-31T10:39:34.600965Z",
       "completed_at": null
     }
   ],
@@ -111,19 +127,27 @@
       "scheduled_for": "2026-10-31T10:24:51Z",
       "completed_at": "2026-10-31T10:23:45.022395Z",
       "action": "quarantined_not_counted_as_verified_scheduler_completion"
+    },
+    {
+      "role": "ZOO Dashboard Worker",
+      "kind": "completion_before_scheduled_for_or_invalid",
+      "run_id": "d460f77b-3ba0-8323-9cb5-94232ae4348b",
+      "scheduled_for": "2026-10-31T10:45:58Z",
+      "completed_at": "2026-10-31T10:34:59.730110Z",
+      "action": "quarantined_not_counted_as_verified_scheduler_completion"
     }
   ],
   "prior_snapshot": {
-    "observed_at": "2026-10-31T10:02:05.937Z",
-    "previously_quarantined_anomalies": 5,
-    "note": "Authenticated scheduler records re-read; prior valid completed receipts retained if latest record in progress or pre-scheduled."
+    "observed_at": "2026-10-31T10:33:38.091Z",
+    "previously_quarantined_anomalies": 6,
+    "note": "Authenticated scheduler metadata re-read; only valid completed receipts counted, in-progress and pre-scheduled completions quarantined."
   },
   "recovery_handoff": {
     "status": "RECOVERING",
     "owner": "ZOO Dashboard Worker",
     "backup": "ZOO Agent Hunter",
     "integration_authority": "Sole ZOO Keeper",
-    "next_action": "Hunter valid completion recovered; dashboard current execution still in progress. Diagnose Netlify production DNS/source/deploy mapping and zero-step GitHub Actions startup; independently test live proof refresh and preserve rollback.",
+    "next_action": "Three roles currently in_progress; do not count as completed. Dashboard latest_result has a pre-scheduled completion anomaly; retain prior valid receipt. Authenticate Netlify production site/deploy/source and run browser refresh; GitHub Actions zero-step startup failure requires qualified alternate test.",
     "issues": [
       "https://github.com/london4216-hue/Zoodo/issues/17",
       "https://github.com/london4216-hue/TransendIQ/issues/1023"
@@ -132,10 +156,17 @@
   "recovery_events": [
     {
       "role": "ZOO Asset Restoration",
-      "kind": "invalid_completion_timestamp",
+      "kind": "completion_before_scheduled_for_or_invalid",
       "run_id": "75629db4-eaac-8324-aefc-c609b705a5e6",
       "scheduled_for": "2026-10-31T10:24:51Z",
       "completed_at": "2026-10-31T10:23:45.022395Z"
+    },
+    {
+      "role": "ZOO Dashboard Worker",
+      "kind": "completion_before_scheduled_for_or_invalid",
+      "run_id": "d460f77b-3ba0-8323-9cb5-94232ae4348b",
+      "scheduled_for": "2026-10-31T10:45:58Z",
+      "completed_at": "2026-10-31T10:34:59.730110Z"
     }
   ]
 }
