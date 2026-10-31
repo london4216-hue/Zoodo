@@ -20,7 +20,7 @@ test('unconfigured hosts are never misrepresented as live',()=>{
 });
 test('host verification retries with existing evidence polling, no forced navigation',()=>{
  assert.match(script,/checkHostingMirrors\(\)\.catch/);
- assert.match(script,/setInterval\(update,30000\)/);
+ assert.match(script,/setInterval\(update,GITHUB_SOURCE_POLL_MS\)/);
  assert.ok(!script.includes('window.location.assign('));
  assert.ok(!script.includes('window.location.replace('));
 });

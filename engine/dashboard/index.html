@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ZOO | Execution Proof</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ZOO | My demos & assets</title><meta name="description" content="Your demos, product assets and portfolio activity, together in one easy-to-open library.">
 <style>
 :root{font-family:Inter,system-ui,sans-serif;color:#e6edf7;background:#090e17}*{box-sizing:border-box}body{margin:0;padding:24px;max-width:1600px;margin:auto}header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}h1{font-size:32px;letter-spacing:.12em;margin:0}h2{font-size:15px;color:#a9b9d0;margin:0 0 12px}small,.muted{color:#92a3bd}.status{padding:9px 15px;border-radius:99px;background:#292f3b;font-weight:700}.good{color:#6ee7b7}.bad{color:#ff8585}.warn{color:#ffd47c}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:24px 0}.card,.panel{background:#121b2a;border:1px solid #273448;border-radius:14px;padding:18px}.metric{font-size:35px;font-weight:800;margin:8px 0}.panels{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:850px){.panels{grid-template-columns:1fr}}.row{padding:12px 0;border-bottom:1px solid #283548;overflow-wrap:anywhere}.row:last-child{border:0}.time{font-size:12px;color:#93a7c2}a{color:#8cc6ff}#errors{margin:14px 0;color:#ff8585}.bar{height:6px;background:#263246;border-radius:8px;overflow:hidden;margin-top:10px}.bar>div{height:100%;background:#4fd1a5;width:0;transition:width .3s}button{background:#263b56;color:#fff;border:0;padding:10px 16px;border-radius:8px;cursor:pointer}footer{margin-top:20px;color:#a2b2ca;font-size:13px}
  .launchpad{margin-top:20px}.launchlinks{display:flex;flex-wrap:wrap;gap:10px}.launchlinks a{display:inline-block;border:1px solid #36506c;border-radius:9px;padding:12px 14px;text-decoration:none;background:#192a3e}.launchlinks a:hover{background:#263d57}.launchlinks a:not([data-zoo-verified]):not([data-zoo-home]){display:none}
@@ -19,8 +19,24 @@
 @media(max-width:400px){.kpi-grid{grid-template-columns:1fr}}
 
 .zoo-p0{margin:16px 0;border:1px solid #e0ae56}.zoo-p0-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.zoo-p0-grid>div{min-width:0;border:1px solid #344256;border-radius:10px;padding:12px}.zoo-p0 p{overflow-wrap:anywhere;margin:8px 0}.zoo-p0 strong{font-size:15px}@media(max-width:680px){.zoo-p0-grid{grid-template-columns:1fr}.zoo-p0{padding:12px}}
-</style></head><body>
-<header><div><h1>ZOO <span style="color:#69e2b2">/ EXECUTION PROOF</span></h1><small>GitHub-backed evidence, never simulated activity</small></div><div><span id="state" class="status warn">CONNECTING</span> <button id="refresh">Refresh now</button><div class="time" id="checked"></div></div></header>
+</style><link rel="stylesheet" href="./library.css"></head><body>
+<a class="skip-link" href="#library">Skip to my library</a>
+<header class="site-header">
+ <a href="./" class="brand" aria-label="ZOO home">ZOO<span class="brand-subtitle">Your product library</span></a>
+ <nav class="site-nav" aria-label="Main navigation"><a href="#my-demos" data-library-nav="demo">My demos</a><a href="#my-assets" data-library-nav="asset">My assets</a><a href="#zoo-activity">ZOO activity</a></nav>
+</header>
+<main id="library">
+ <section class="library-hero" aria-labelledby="library-title"><p class="eyebrow">Your ideas. Your products. One place.</p><h1 id="library-title">Less searching.<br>More showing.</h1><p class="intro">Open your demos, find your assets, and see what ZOO has actually checked. Everything you own, a little easier to reach.</p></section>
+ <div class="library-toolbar"><div class="search-wrap"><label for="asset-search">Find a demo or asset</label><input type="search" id="asset-search" placeholder="Try BeautyPath, My Block, or student…" autocomplete="off"></div><div class="library-filters" role="group" aria-label="Filter your library"><button type="button" data-library-filter="all" aria-pressed="true">All</button><button type="button" data-library-filter="demo" aria-pressed="false">Demos</button><button type="button" data-library-filter="asset" aria-pressed="false">Assets</button></div></div>
+ <div class="library-meta"><p id="library-result" role="status" aria-live="polite">Loading your destinations…</p><button id="library-clear" type="button" hidden>Clear filters</button></div>
+ <section class="library-section" id="demo-section" aria-labelledby="my-demos"><div class="library-section-heading"><h2 id="my-demos">My demos</h2><span class="section-count" id="demo-count">06</span></div><p class="library-standard">Public demos. Clear tenant and role journeys. Production sign-in stays separate.</p><div class="asset-grid" id="demo-cards"></div><p class="library-notice">Recorded destinations are not a claim of current availability. Synthetic labs are labeled. Until each asset meets the demo standard, an older destination may still require sign-in; no production access controls are changed here.</p></section>
+ <section class="library-section" id="asset-section" aria-labelledby="my-assets"><div class="library-section-heading"><h2 id="my-assets">My assets</h2><span class="section-count" id="asset-count">05</span></div><div class="asset-grid" id="asset-cards"></div></section>
+ <div id="library-empty" class="library-empty" hidden><h2>No matching destinations</h2><p>Try a product name, a broader search, or clear the filters to see your full library.</p></div>
+ <noscript><p>Turn on JavaScript for the searchable library, or open the detailed evidence section below for your original links.</p></noscript>
+ <section class="activity-section" id="zoo-activity" aria-labelledby="activity-title"><div class="activity-overview"><div><p class="eyebrow">Behind the scenes</p><h2 id="activity-title">ZOO activity</h2><p>Review receipts, not promises. Check the latest result without digging through engineering notes.</p></div><button id="refresh" type="button">Refresh now</button></div><div class="activity-summary"><strong id="reviewOverviewStatus">Review status: UNKNOWN</strong><p id="reviewOverviewReason">Connecting the recurring review feed. No passing result is assumed.</p><p>15-minute cadence · pinned intent baseline + Base44 public workflows. The selected Netlify demo is not yet covered by these checks.</p></div>
+ <details class="activity-details" id="hosting-recovery"><summary>Hosting &amp; recovery</summary><p>The canonical ZOO dashboard is <a href="https://zoo-live-dashboard.netlify.app/">zoo-live-dashboard.netlify.app</a>. A connected provider is not an operational backup.</p><p>No independent recovery host is verified here. Recovery requires an exact-source restore and a tested journey; provider choices also need cost and portability comparison. A connection alone does not establish an active backup or the best host.</p></details>
+ <details class="activity-details" id="operational-details"><summary>Review details &amp; engineering evidence</summary>
+ <div class="activity-heading"><h2>Detailed source accountability</h2><div><span id="state" class="status warn">CONNECTING</span><div class="time" id="checked"></div></div></div>
 <section class="panel zoo-p0" id="zoo-p0" aria-label="Priority PR 787 and Sara UI/UX">
 <h2>P0 · TRANSENDIQ PR #787 + SARA NEW UI/UX</h2>
 <div class="zoo-p0-grid">
@@ -63,12 +79,13 @@
  <p id="reviewReason" class="muted">Connecting sanitized review receipts. No passing result is assumed.</p>
  <p id="reviewExecution">Task execution: UNKNOWN · review outcome: UNKNOWN</p>
  <div class="review-counts">
-  <div class="kpi"><span class="caption">Intent checks</span><strong id="reviewIntent">Not measured</strong></div>
-  <div class="kpi"><span class="caption">Public live workflow checks</span><strong id="reviewLive">Not measured</strong></div>
+  <div class="kpi"><span class="caption">Pinned intent baseline</span><strong id="reviewIntent">Not measured</strong></div>
+  <div class="kpi"><span class="caption">Base44 public workflows</span><strong id="reviewLive">Not measured</strong></div>
  </div>
  <p id="reviewTimes" class="time">Last completed review: UNKNOWN</p>
  <p id="reviewIdentity" class="time">Run and tested source commit: UNKNOWN</p>
  <p id="reviewCoverage" class="muted">Expected coverage: eight intent suites and BeautyPath public desktop/mobile workflows.</p>
+ <p class="muted">Intent checks run against the immutable source commit in the receipt, not continuously against current main. Live workflow checks currently target the older BeautyPath Base44 public site. The owner-selected Netlify demo is not covered by these checks.</p>
  <p class="muted">Scheduled cadence: every 15 minutes. This panel reads evidence every 30 seconds; opening or refreshing it does not start work. Receipts older than 35 minutes are stale. Other assets and authenticated workflows remain unverified.</p>
  <p class="muted">Completed PRs / deployed fixes: UNKNOWN from this review feed. Existing GitHub, CI and link panels below remain the source evidence; a scheduler completion does not prove a fix, a merge, a deployment, or that all agents are healthy.</p>
  <details><summary>Recent recorded review attempts</summary><div id="reviewHistory" class="time">No historical review receipts available.</div></details>
@@ -97,6 +114,9 @@
 </div>
 <div class="panels"><section class="panel"><h2>Rolling commit evidence</h2><div id="commits" aria-live="polite">Connecting…</div></section><section class="panel"><h2>Workflow executions</h2><div id="runs" aria-live="polite">Connecting…</div></section></div>
 <footer>Checks GitHub source every 10 minutes and published scheduler receipts every 30 seconds while open; retains truthful timestamps and reports missing proof. The browser cannot directly wake ChatGPT workers: the scheduled ZOO recovery worker monitors overdue receipts. GitHub source requests are rate-limited separately from scheduler-proof reads. Verified movement requires a substantive code diff, linked ticket, exact-head CI and authenticated independent-provider review. Commits and green CI alone never reset the clock. Independent reviewer, deployed host and worker heartbeat feeds are not connected; show UNKNOWN. Read-only, no worker dispatch or stored credentials.</footer>
+</details></section>
+</main>
+<footer class="site-footer"><p>ZOO · Your demos and assets, together.</p><p><a href="#library">Back to library</a> · Evidence stays separate from availability claims.</p></footer>
 <script type="module">
 import {evaluateEvidence} from './evidence-clock.mjs';
 import {evaluateAutomationProof} from './automation-proof.mjs';
@@ -235,7 +255,7 @@ async function checkHostingMirrors(){
    row.append(name,detail);
    if(!item.url){detail.textContent='NOT CONNECTED · no mirror deployment or failover claim';box.append(row);continue;}
    let u;try{u=new URL(item.url)}catch{detail.textContent='Invalid host address';box.append(row);continue;}
-   const privateAddress=/^(?:localhost|127\\.|10\\.|192\\.168\\.|169\\.254\\.|172\\.(?:1[6-9]|2\\d|3[01])\\.)/i.test(u.hostname)||u.hostname.startsWith('[');
+   const privateAddress=/^(?:localhost|127\.|10\.|192\.168\.|169\.254\.|172\.(?:1[6-9]|2\d|3[01])\.)/i.test(u.hostname)||u.hostname.startsWith('[');
    if(u.protocol!=='https:'||u.username||u.password||u.port||!u.hostname.includes('.')||privateAddress){
     detail.textContent='Untrusted host address';box.append(row);continue;
    }
@@ -424,4 +444,4 @@ function tickClock(){
 }
 $('refresh').addEventListener('click',update);
 update();setInterval(update,GITHUB_SOURCE_POLL_MS);setInterval(refreshAutomationProof,AUTOMATION_PROOF_POLL_MS);setInterval(tickClock,1000);
-</script><script type="module" src="./priority-watch.mjs"></script><script type="module" src="./review-panel.mjs"></script></body></html>
+</script><script type="module" src="./priority-watch.mjs"></script><script type="module" src="./review-panel.mjs"></script><script type="module" src="./asset-directory.mjs"></script></body></html>

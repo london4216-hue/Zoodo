@@ -6,8 +6,10 @@ function render(){
  const view=reader.read(),latest=view.latest;
  const label=view.fetchError?(latest?'CONNECTION WARNING':'UNKNOWN'):view.state;
  $('reviewStatus').textContent=label;
+ if($('reviewOverviewStatus'))$('reviewOverviewStatus').textContent='Latest review: '+label;
  $('reviewStatus').className='receipt '+(!view.fetchError&&view.state==='REVIEW PASSED'?'good':'warn');
  $('reviewReason').textContent=(view.fetchError?view.fetchError+'; retained receipt is '+view.state+'. ':'')+view.reason;
+ if($('reviewOverviewReason'))$('reviewOverviewReason').textContent=$('reviewReason').textContent;
  $('reviewTimes').textContent=latest?'Scheduled: '+stamp(latest.scheduled_for)+' · finished: '+stamp(latest.finished_at)+
   ' · feed observed: '+stamp(view.observedAt):'Last completed review: UNKNOWN · waiting for a valid connected receipt.';
  $('reviewExecution').textContent=latest?'Task execution: '+latest.task_status+' · review outcome: '+latest.review_status:
@@ -19,7 +21,7 @@ function render(){
   (latest.review_run_id?' · child review: '+latest.review_run_id:'')+
   ' · source commit: '+(latest.source_commit||'UNKNOWN'):'Run and tested source commit: UNKNOWN';
  $('reviewCoverage').textContent=latest?'Recorded coverage: '+latest.coverage:
-  'Expected coverage: eight intent suites and BeautyPath public desktop/mobile workflows.';
+  'Expected coverage: eight pinned intent suites and the older BeautyPath Base44 public workflows; selected Netlify demo not covered.';
  const rows=$('reviewHistory');rows.replaceChildren();
  for(const receipt of view.history.slice(0,5)){
   const row=document.createElement('div');row.className='row';

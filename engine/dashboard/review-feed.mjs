@@ -1,6 +1,8 @@
 // Trigger.dev evidence is separate from agent heartbeat, merged PRs and fixes.
 export const REVIEW_POLL_MS=30000;
 export const REVIEW_STALE_MS=35*60000;
+// Account for small device/server clock differences, never future scheduled work.
+export const REVIEW_CLOCK_SKEW_MS=60000;
 export const REVIEW_FEED_URL='https://srqlfqnykkzxewwxsxvy.supabase.co/functions/v1/zoo-review-feed';
 const TIME=x=>typeof x==='string'&&Number.isFinite(Date.parse(x));
 const ID=x=>typeof x==='string'&&/^[a-zA-Z0-9_.:-]{1,160}$/.test(x);
@@ -15,7 +17,7 @@ function record(row,observed,now){
     !(row.source_commit===null||/^[a-f0-9]{40}$/.test(row.source_commit))||
     typeof row.coverage!=='string'||row.coverage.length>800)return null;
  const scheduled=Date.parse(row.scheduled_for),finished=Date.parse(row.finished_at),received=Date.parse(row.received_at);
- if(scheduled>finished||finished>received||received>observed||observed>now)return null;
+ if(scheduled>finished||finished>received||received>observed||observed>now+REVIEW_CLOCK_SKEW_MS)return null;
  if(row.task_status==='COMPLETED'&&(!row.source_commit||!row.review_run_id))return null;
  if(row.review_status==='passed'&&!(row.intent_passed>0&&row.live_passed>0&&
    ['intent_failed','intent_skipped','live_failed','live_skipped'].every(key=>row[key]===0)))return null;
@@ -25,8 +27,9 @@ function record(row,observed,now){
 }
 export function evaluateReviewFeed(feed,now=Date.now()){
  const unknown=reason=>({valid:false,state:'UNKNOWN',reason,latest:null,history:[],observedAt:null});
+ if(feed===null||feed===undefined)return unknown('No connected review receipt is available');
  if(feed?.schema_version!==1||feed.provider!=='trigger.dev'||!TIME(feed.observed_at)||
-    Date.parse(feed.observed_at)>now||!Array.isArray(feed.history)||feed.history.length>20)
+    Date.parse(feed.observed_at)>now+REVIEW_CLOCK_SKEW_MS||!Array.isArray(feed.history)||feed.history.length>20)
   return unknown('Review evidence schema or publication time is invalid');
  const observed=Date.parse(feed.observed_at),history=feed.history.map(row=>record(row,observed,now));
  if(history.some(row=>!row)||new Set(history.map(row=>row.event_id)).size!==history.length)

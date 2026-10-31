@@ -19,6 +19,8 @@ const allowedFiles = [
   'handoff-ledger.json',
   'review-feed.mjs',
   'review-panel.mjs',
+  'asset-directory.mjs',
+  'library.css',
   'verified-links.json',
   'hosting-mirrors.json',
   'build-proof.json',

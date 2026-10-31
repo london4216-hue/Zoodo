@@ -31,7 +31,8 @@ test('P0 priority row is additive and mobile responsive', () => {
 test('priority feed is source-linked and does not manufacture work or Sara URL', () => {
   assert.equal(feed.schema_version, 1);
   assert.equal(feed.source, 'authenticated_github_connector_read');
-  assert.equal(feed.priority.stage, 'DRAFT_PR_OPEN');
+  assert.equal(feed.priority.stage, 'DRAFT_PR_OPEN_CONFLICTED');
+  assert.match(feed.priority.stage_source,/draft=true, mergeable=false/);
   assert.equal(feed.priority.source_head_sha.length, 40);
   assert.equal(feed.priority.last_test.state, 'UNKNOWN');
   assert.equal(feed.sara.url, null);
@@ -50,7 +51,7 @@ test('snapshot rendering retains stale warning; 403 enters recovery without eras
   const ctx = vm.createContext({document, fetch:async()=>response, setInterval() {}, Date, String, Error, Number, Math});
   vm.runInContext(script, ctx);
   await vm.runInContext('refreshPriority()', ctx);
-  assert.equal(elements.get('zoo787stage').textContent, 'DRAFT_PR_OPEN');
+  assert.equal(elements.get('zoo787stage').textContent, feed.priority.stage);
   assert.equal(elements.get('zooSaraState').textContent, 'UNKNOWN');
   assert.match(elements.get('zoo787drift').textContent, /Last VERIFIED meaningful task movement: UNKNOWN/);
   response = {ok:false,status:403};

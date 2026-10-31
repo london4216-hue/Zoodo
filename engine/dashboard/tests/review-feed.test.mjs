@@ -45,7 +45,8 @@ test('future, impossible time order, malformed IDs and invalid/contradictory cou
   {live_failed:0.5},{live_failed:1},{live_skipped:1},{intent_passed:0},{intent_failed:null},
   {live_passed:null},{intent_passed:Number.MAX_SAFE_INTEGER+1}])
   assert.equal(evaluateReviewFeed(feed(change),now).valid,false,JSON.stringify(change));
- assert.equal(evaluateReviewFeed({...feed(),observed_at:'2026-10-31T22:00:01Z'},now).valid,false);
+ assert.equal(evaluateReviewFeed({...feed(),observed_at:'2026-10-31T22:01:01Z'},now).valid,false);
+ assert.equal(evaluateReviewFeed({...feed(),observed_at:'2026-10-31T22:00:01Z'},now).valid,true);
  assert.equal(evaluateReviewFeed({...feed(),history:[row,row]},now).valid,false);
 });
 test('nullable counts remain unknown for nonpassing receipt, never converted to zero',()=>{
@@ -90,10 +91,20 @@ test('panel remains independent, truthful and mirrored without replacing links o
  const html=read('index.html'),module=read('review-panel.mjs'),mirror=read('scripts/prepare-mirror.mjs');
  assert.match(html,/id="trigger-review"/);assert.match(html,/Completed PRs \/ deployed fixes: UNKNOWN/);
  assert.match(html,/Scheduled cadence: every 15 minutes/);assert.match(html,/Other assets and authenticated workflows remain unverified/);
+ assert.match(html,/Base44 public workflows/);assert.match(html,/owner-selected Netlify demo is not covered by these checks/);
  assert.match(html,/id="accountability"/);assert.match(html,/YOUR HOME \/ QUICK LINKS/);
  assert.match(module,/textContent/);assert.doesNotMatch(module,/innerHTML|Authorization|Bearer/);
  assert.match(module,/setInterval\(refresh,REVIEW_POLL_MS\)/);
  for(const asset of ['review-feed.mjs','review-panel.mjs','source-identity.mjs','refresh-policy.mjs','priority-watch.mjs','priority-watch.json','handoff-ledger.json'])
   assert.ok(mirror.includes("'"+asset+"'"),asset);
  assert.match(read('automation-proof.mjs'),/connected_automations_peek/);
+});
+test('every dashboard entry-point module and its local imports are in mirror allowlist',()=>{
+ const root=new URL('../',import.meta.url),read=name=>readFileSync(new URL(name,root),'utf8');
+ const prep=read('scripts/prepare-mirror.mjs');
+ const files=[...prep.matchAll(/^  '([^']+)',/gm)].map(match=>match[1]);
+ for(const file of ['index.html',...files.filter(name=>name.endsWith('.mjs'))]){
+  for(const match of read(file).matchAll(/(?:from\s+|src=)["']\.\/([^"']+\.mjs)["']/g))
+   assert.ok(files.includes(match[1]),file+' imports missing mirror asset '+match[1]);
+ }
 });

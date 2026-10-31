@@ -105,7 +105,9 @@ test('public mirror configs permit cross-origin verification of HTML and lab JS'
 });
 
 test('private network addresses are rejected before any mirror asset fetch',async()=>{
- const r=await inspect({mirrorUrl:'https://127.0.0.1/'});
- assert.equal(r.anchors.length,0);
- assert.match(r.rows[0].children.find(x=>x.className==='time').textContent,/Untrusted host address/);
+ for(const host of ['127.0.0.1','10.0.0.1','192.168.1.2','169.254.1.1','172.16.0.1','172.31.255.254','[::1]']){
+  const r=await inspect({mirrorUrl:'https://'+host+'/'});
+  assert.equal(r.anchors.length,0,host);
+  assert.match(r.rows[0].children.find(x=>x.className==='time').textContent,/Untrusted host address/);
+ }
 });
