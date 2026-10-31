@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-31T20:53:59.957Z",
+  "observed_at": "2026-10-31T20:54:11.753Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Dashboard Worker",
@@ -9,7 +9,7 @@
     "ZOO Agent Hunter",
     "ZOO PR Closure"
   ],
-  "publication_scope": "Authenticated scheduler metadata: Keeper, PR Closure and Asset Restoration have new completed run receipts; Dashboard currently in progress with prior valid completion. Hunter automation is disabled and last valid completion is overdue. Run completion is not proof of task correctness, active heartbeat, CI, deployment or live browser verification.",
+  "publication_scope": "Authenticated scheduler metadata: Keeper, PR Closure and Asset Restoration recently completed; Dashboard's prior run completed at 19:49 UTC and a newer Dashboard run is in progress. Hunter automation disabled with overdue prior valid completion. Run completion is not proof of task correctness, active heartbeat, CI, deployment or live browser verification.",
   "refresh_policy": "Single Dashboard Worker publisher; GitHub blob SHA conditional update; browser polling cannot wake agents.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
@@ -26,10 +26,10 @@
     },
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "fe9c3217-291c-8326-bbd3-aebd41cba03c",
+      "run_id": "45caaced-8fdc-8322-8cf5-ed4349d399a5",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T18:44:50.539541Z",
-      "completed_at": "2026-10-31T18:49:10.002335Z",
+      "scheduled_for": "2026-10-31T19:45:58Z",
+      "completed_at": "2026-10-31T19:49:05.962166Z",
       "receipt_source": "connected_automations_peek.run_details",
       "automation_title": "ZOO Dashboard — live repair and hourly grades",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
@@ -219,8 +219,8 @@
     }
   ],
   "prior_snapshot": {
-    "observed_at": "2026-10-31T19:47:50.331Z",
-    "note": "Previous authenticated scheduler publication; preserve historical anomalies and last valid completions."
+    "observed_at": "2026-10-31T20:53:59.957Z",
+    "note": "Corrected Dashboard last valid completed run from latest_result while current run remains in_progress."
   },
   "recovery_handoff": {
     "status": "RECOVERING",
