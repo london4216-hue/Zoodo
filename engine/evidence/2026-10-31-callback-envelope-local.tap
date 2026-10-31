@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: accepts bounded typed callback
+ok 1 - accepts bounded typed callback
+  ---
+  duration_ms: 1.797514
+  type: 'test'
+  ...
+# Subtest: rejects JSON scalars arrays and missing type before dispatch
+ok 2 - rejects JSON scalars arrays and missing type before dispatch
+  ---
+  duration_ms: 0.451987
+  type: 'test'
+  ...
+# Subtest: rejects invalid JSON and oversized/non-string input
+ok 3 - rejects invalid JSON and oversized/non-string input
+  ---
+  duration_ms: 0.32538
+  type: 'test'
+  ...
+# Subtest: authenticated null, scalar and array envelopes are 400 with zero dispatch
+ok 4 - authenticated null, scalar and array envelopes are 400 with zero dispatch
+  ---
+  duration_ms: 0.898286
+  type: 'test'
+  ...
+# Subtest: unauthorized invalid envelope still returns 401
+ok 5 - unauthorized invalid envelope still returns 401
+  ---
+  duration_ms: 0.261897
+  type: 'test'
+  ...
+# Subtest: valid authenticated kick dispatches exactly once
+ok 6 - valid authenticated kick dispatches exactly once
+  ---
+  duration_ms: 1.170708
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 68.621868
