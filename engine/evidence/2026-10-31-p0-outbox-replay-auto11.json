@@ -14,7 +14,10 @@
     "code_url": "https://github.com/london4216-hue/Zoodo/commit/a904b81ca9945c6cf223a761086389f555c69570",
     "module_blob": "150cd96fcc9b1eee795c8c3423dc5c3dd35d3c25",
     "test_blob": "20b56ccd5050581a91d82a48daca2917359ce911",
-    "relay_blob": "de3ee5eb79890b96ec3048d86cfa57946c6d7a79"
+    "relay_blob": "025427dd48df8d0032a867d65a40b379276d7740",
+    "latest_integration_commit": "1c1087f7110be9454c39b80224abfeb7f90ef24b",
+    "latest_integration_url": "https://github.com/london4216-hue/Zoodo/commit/1c1087f7110be9454c39b80224abfeb7f90ef24b",
+    "portable_relay_test_blob": "9bc0015ba8cead99957d3280d285af2eca60aeda"
   },
   "execution": {
     "kind": "local-node-unit-tests",
@@ -27,7 +30,8 @@
     "failed": 0,
     "tap_sha256": "9ee614b7a5719601be0ff73f9812c200becd3c29725afbff8adb359ab3b7c694",
     "tap_path": "engine/evidence/2026-10-31-p0-outbox-replay-auto11.tap",
-    "limitations": "Simulated store and worker. Exact committed module and test blob SHAs match locally executed files. Existing complete portable-relay suite and PostgreSQL migration were not executed in this run."
+    "limitations": "Simulated store and worker. Exact committed module and test blob SHAs match locally executed files. Existing complete portable-relay suite and PostgreSQL migration were not executed in this run.",
+    "additional_unexecuted_tests": "Three portable-relay integration regression tests committed after the six executed outbox module tests; complete Node suite NOT executed."
   },
   "fail_first": {
     "base_commit": "f04581db20e33e5a3eb1da329ae29feaa3e44803",
@@ -51,7 +55,8 @@
       "code_commit": "a904b81ca9945c6cf223a761086389f555c69570",
       "tests": "6/6 local Node",
       "provider_deploy": "UNKNOWN",
-      "hosted_execution": "UNKNOWN"
+      "hosted_execution": "UNKNOWN",
+      "latest_integration_commit": "1c1087f7110be9454c39b80224abfeb7f90ef24b"
     }
   ],
   "pr_stages": {
@@ -93,5 +98,20 @@
     "credentials_committed": false,
     "production_merge": false,
     "provider_deploy": false
+  },
+  "coordination": {
+    "keeper_pr": 34,
+    "keeper_source_fix": "nextAfterTransition incorporated into PR #35 to prevent false completion failure",
+    "overlap": "PRs #34 and #35 modify portable-relay.mjs; Keeper must select and integrate conflict-free",
+    "private_checkpoint_comments": [
+      {
+        "issue": 1048,
+        "comment_id": 6536738284
+      },
+      {
+        "issue": 1023,
+        "comment_id": 6536738669
+      }
+    ]
   }
 }
