@@ -9,6 +9,7 @@ import {kickWithDeadline} from './bounded-kick.mjs';
 import {confirmTransitionWithinDeadline} from './transition-fence.mjs';
 import {classifyRelayError} from './relay-error-status.mjs';
 import {relayResponseStatus} from './relay-response-status.mjs';
+import {decodeCallbackEnvelope} from './callback-envelope.mjs';
 const ID=/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const SHA=/^[a-f0-9]{40}$/;
 const UUID=/^[a-f0-9-]{36}$/i;
@@ -130,8 +131,9 @@ export function makeHandler({relay,callbackSecret,kickDeadlineMs=7500}){
  return async({method,headers={},body})=>{
   if(method!=='POST')return send(405,{error:'method not allowed'});
   if(!equal(headers.authorization??headers.Authorization??'','Bearer '+callbackSecret))return send(401,{error:'unauthorized'});
-  if(typeof body!=='string'||Buffer.byteLength(body)>8192)return send(413,{error:'invalid payload'});
-  let x;try{x=JSON.parse(body)}catch{return send(400,{error:'invalid JSON'})}
+  const envelope=decodeCallbackEnvelope(body);
+  if(envelope.statusCode)return send(envelope.statusCode,{error:envelope.error});
+  const x=envelope.value;
   try{
    if(x.type==='kick'){const result=await kickWithDeadline(relay,x.worker,{timeoutMs:kickDeadlineMs});return send(relayResponseStatus('kick',result),result);}
    if(x.type==='completed'){
