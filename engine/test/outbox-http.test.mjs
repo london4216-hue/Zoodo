@@ -32,7 +32,7 @@ test('valid authenticated drain runs exactly once and returns bounded native res
  assert.equal(r.headers['cache-control'],'no-store');assert.equal(calls,1);
 });
 test('runtime errors and invalid drain result are not reported as success',async()=>{
- for(const drain of [async()=>{throw Error('secret token must not leak')},async()=>null]){
+ for(const drain of [async()=>{throw Error('secret token must not leak')},async()=>null,async()=>({state:'recovery_required',eventId:4})]){
   const r=await call(makeOutboxHttpHandler({callbackSecret:secret,drain}),'{"type":"drain"}');
   assert.equal(r.statusCode,503);assert.ok(!r.body.includes('secret token'));
  }
