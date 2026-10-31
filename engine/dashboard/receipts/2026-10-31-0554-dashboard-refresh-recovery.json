@@ -33,6 +33,11 @@
         "kind": "connector_side_proof_evaluator",
         "result": "PASS",
         "details": "Current Hunter scheduler anomaly is RECOVERY REQUIRED, not green; 76-minute stale feed remains recovery."
+      },
+      {
+        "kind": "connector_side_functional_mock",
+        "result": "PASS",
+        "details": "Executed actual PR #16 update() with deferred GitHub calls: overlapping second refresh issued no additional API calls; completion released lock; next refresh resumed; api() passed 10000ms timeout to fetch."
       }
     ],
     "node_ci": {
@@ -85,7 +90,7 @@
   "pr_stages": {
     "opened_at": "2026-10-30T15:34:21Z",
     "reviewed_at": null,
-    "fix_committed_at": null,
+    "fix_committed_at": "2026-10-31T05:54:39Z",
     "tests_completed_at": "2026-10-31T05:55:23.313Z",
     "merged_at": null,
     "deployed_at": null,
@@ -94,5 +99,27 @@
   "gap_detection_at": "2026-10-30T13:12:14Z",
   "gap_verified_fixed_at": null,
   "release_status": "NOT_DEPLOYED_NOT_DEMO_READY",
-  "owner_notification": "SUPPRESSED_PRECONDITIONS_NOT_MET"
+  "owner_notification": "SUPPRESSED_PRECONDITIONS_NOT_MET",
+  "timing_seconds": {
+    "pr_open_to_fix": 51618,
+    "gap_detection_to_code_fix": 60145,
+    "gap_detection_to_deployed_verification": null,
+    "pr_to_merge": null,
+    "merge_to_deploy": null
+  },
+  "hourly_movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T05:00:00Z",
+      "repo": "london4216-hue/Zoodo",
+      "pr": 16,
+      "prior_status": "RECOVERING_SOURCE_UNBOUNDED",
+      "new_status": "SOURCE_REPAIR_COMMITTED_CI_FAILED_LIVE_UNVERIFIED",
+      "source_fix_sha": "cf561050fe2cb51e0adda51e5b8d653b4a090887",
+      "test_sha": "c3a37b4d6000de2b941f88728d7b041b5fb2b9fc",
+      "scheduler_snapshot_sha": "f5623d5862b96260013640024845ab1da432e476",
+      "worker": "ZOO Dashboard Worker",
+      "tests": "connector-side functional mock PASS; full GitHub CI failure",
+      "deployed_sha": null
+    }
+  ]
 }
