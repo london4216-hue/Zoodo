@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-10-31T15:35:24.625Z",
+  "state": "RECOVERING",
+  "task_id": "Zoodo#18/TransendIQ#1023",
+  "lane": "ZOO Dashboard Worker",
+  "owner": "ZOO Dashboard Worker",
+  "backup": "ZOO Agent Hunter",
+  "integration_authority": "Sole ZOO Keeper",
+  "source_repo": "london4216-hue/Zoodo",
+  "canonical_branch": "autonomous-engine-replacement-2026-10-29",
+  "draft_pr": "https://github.com/london4216-hue/Zoodo/pull/94",
+  "prior_prs": {
+    "16": "MERGED to canonical branch",
+    "71": "MERGED to former PR #16 feature branch, not proof of canonical inclusion",
+    "90": "DRAFT separate future-timestamp fix"
+  },
+  "repair": {
+    "finding": "Canonical dashboard branch and PR #94 attributed commit evidence to hard-coded branch instead of validated provider build SHA; merged PR #71's exact-SHA repair was not integrated into canonical.",
+    "reversible_change": "Port selectSourceIdentity module, tests and exact-SHA GitHub source query into draft PR #94; no navigation, owner-auth UI or production changes.",
+    "module_commit": "b745518aa6db9b759ce3dba448647a4296fd235e",
+    "test_commit": "bce3fa4aff050cd7bb7d7072f40f4680a7cfbdd3",
+    "code_commit": "cdd73099270e5585d4331a23f7f3d4386e54b2ca",
+    "code_blob_sha": "e6dfa8097239c28edead2f0814043a47c15a97aa",
+    "local_test": {
+      "command": "node --test /mnt/data/zoo-identity-test/tests/source-identity.test.mjs",
+      "passed": 4,
+      "failed": 0,
+      "source_blob_sha_verified": "47c4e10834b0bd16f575f0fc8abee55c774a460e",
+      "test_blob_sha_verified": "803e48b0b3ad64363605b6299945ff4253b5c8e7",
+      "source_assertions_passed": 9,
+      "ci_test_execution": "UNKNOWN"
+    },
+    "navigation_parity": {
+      "before_href_attributes": 45,
+      "after_href_attributes": 45,
+      "removed": 0,
+      "html_before_script_unchanged": true
+    },
+    "readback": {
+      "code_blob_sha": "e6dfa8097239c28edead2f0814043a47c15a97aa",
+      "module_blob_sha": "47c4e10834b0bd16f575f0fc8abee55c774a460e",
+      "test_blob_sha": "803e48b0b3ad64363605b6299945ff4253b5c8e7"
+    }
+  },
+  "scheduler_snapshot": {
+    "commit": "5d48011ac956012e0ea0e974ee5531ba111053f5",
+    "observed_at": "2026-10-31T15:34:49.619Z",
+    "provenance": "connected_automations_peek",
+    "scope": "recorded scheduler metadata only; not active productive workers",
+    "invalid_future_scheduled_receipts_quarantined": true
+  },
+  "github_actions": {
+    "run_id": 41215498179,
+    "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41215498179",
+    "head_sha": "cdd73099270e5585d4331a23f7f3d4386e54b2ca",
+    "status": "completed",
+    "conclusion": "failure",
+    "job": "dashboard-contract",
+    "executed_steps": 0,
+    "root_cause": "UNKNOWN; job failed before recorded steps, no usable job logs",
+    "next_action": "Implementation Lead inspect Actions organization/repository runner eligibility, workflow validation, policy and billing; use independent local/Netlify preview test without treating provider status as CI pass"
+  },
+  "provider": {
+    "status_context": "netlify/zoo-live-dashboard/deploy-preview",
+    "reported_state": "success",
+    "reported_url": "https://deploy-preview-94--zoo-live-dashboard.netlify.app",
+    "verified_http": false,
+    "provider_deploy_id": null,
+    "production_sha": null,
+    "production_http_verified": false,
+    "reason": "Production and preview host DNS failed in web and container HTTP probes; no authenticated Netlify site mapping"
+  },
+  "external_models": {
+    "authenticated_productive_invocations": "UNKNOWN",
+    "reason": "No provider-native request IDs or completed task receipts verified this run"
+  },
+  "movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T15:00:00Z",
+      "repo_asset": "Zoodo engine/dashboard",
+      "pr": 94,
+      "prior_status": "DRAFT source-cadence fix; source identity absent",
+      "new_status": "DRAFT exact-SHA source identity repair committed and locally tested",
+      "code_sha": "cdd73099270e5585d4331a23f7f3d4386e54b2ca",
+      "source_url": "https://github.com/london4216-hue/Zoodo/commit/cdd73099270e5585d4331a23f7f3d4386e54b2ca",
+      "worker": "ZOO Dashboard Worker"
+    }
+  ],
+  "pr_stage_timestamps_utc": {
+    "opened": "2026-10-31T15:12:00Z",
+    "fix_committed": "2026-10-31T15:34:19Z",
+    "local_tests_completed": "UNKNOWN exact UTC",
+    "reviewed": null,
+    "merged": null,
+    "provider_deployed": null,
+    "production_verified": null
+  },
+  "elapsed_latencies": {
+    "opened_to_fix_seconds": 1339,
+    "opened_to_review_seconds": null,
+    "fix_to_ci_seconds": null,
+    "merge_to_deploy_seconds": null,
+    "deploy_to_live_verify_seconds": null,
+    "gap_detection_to_fix_seconds": null
+  },
+  "unresolved": [
+    {
+      "kind": "NETLIFY_SOURCE_MAPPING_UNKNOWN",
+      "owner": "ZOO Agent Hunter",
+      "backup": "Sole ZOO Keeper",
+      "next_executable_step": "Use authenticated Netlify provider access to map production site ID, publish branch, build commit, deploy ID and rollback; independently GET production and PR preview"
+    },
+    {
+      "kind": "GITHUB_ACTIONS_ZERO_STEP_FAILURE",
+      "owner": "ZOO Implementation Lead",
+      "backup": "Sole ZOO Keeper",
+      "next_executable_step": "Inspect run 41215498179 Actions runner/policy and logs, diagnose startup without repeating identical retries"
+    },
+    {
+      "kind": "CANONICAL_INTEGRATION_PENDING",
+      "owner": "Sole ZOO Keeper",
+      "backup": "ZOO Agent Hunter",
+      "next_executable_step": "Reconcile PR #90 future timestamp fix and PR #94 polling plus source identity against canonical branch, preserve link parity and owner publication gate"
+    }
+  ],
+  "handoff": {
+    "from": "ZOO Dashboard Worker",
+    "to": "ZOO Implementation Lead",
+    "next": "Sole ZOO Keeper",
+    "decision": "REVISE",
+    "next_trigger": "next available independently authenticated CI or Netlify provider result; next scheduled checkpoint",
+    "owner_notification": false
+  },
+  "publication": {
+    "production_changed": false,
+    "demo_ready": false,
+    "email_sent": false
+  }
+}
