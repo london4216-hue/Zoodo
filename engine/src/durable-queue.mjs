@@ -5,6 +5,9 @@ import {dirname} from 'node:path';
 import {randomUUID} from 'node:crypto';
 
 const valid = s => typeof s === 'string' && s.trim().length > 0 && s.length <= 256;
+// Invocation, provider and reviewer IDs must have one canonical spelling.
+// Otherwise whitespace aliases bypass worker-lease and review independence fences.
+const validIdentity = s => valid(s) && s === s.trim();
 const fail = message => {throw new Error(message)};
 const snapshot = x => structuredClone(x);
 export class DurableQueue {
@@ -54,7 +57,7 @@ export class DurableQueue {
   }
   claim(id,{worker,provider}){
     const t=this.get(id);if(!t||t.status!=='queued')fail('Ticket not queued');
-    if(!valid(worker)||!valid(provider))fail('Real worker identity and provider required');
+    if(!validIdentity(worker)||!validIdentity(provider))fail('Real worker identity and provider required');
     if(t.attempts>=this.maxAttempts)fail('Retry budget exhausted');
     // A worker value is an invocation identity, not a reusable provider name.
     // Reusing it on this ticket would let a late callback from the prior lease
@@ -73,7 +76,7 @@ export class DurableQueue {
   submit(id,worker,{commit,evidence}){const t=this.#active(id,worker);if(t.status!=='running')fail('Not running');if(!/^[a-f0-9]{40}$/.test(commit)||!valid(evidence))fail('Exact commit SHA and evidence required');return this.#record('submit',id,{commit,evidence})}
   approve(id,{reviewer,provider,commit,evidence,approved}){
     const t=this.get(id);if(!t||t.status!=='review')fail('Not awaiting review');
-    if(!valid(reviewer)||!valid(provider)||!valid(evidence)||provider===t.provider||reviewer===t.worker||commit!==t.commit)fail('Independent exact-commit review required');
+    if(!validIdentity(reviewer)||!validIdentity(provider)||!valid(evidence)||provider===t.provider||reviewer===t.worker||commit!==t.commit)fail('Independent exact-commit review required');
     if(typeof approved!=='boolean')fail('Boolean review verdict required');
     if(approved!==true)return this.#record('requeue',id,{reason:'Independent reviewer rejected',reviewer,reviewProvider:provider,evidence,dead:t.attempts>=this.maxAttempts});
     return this.#record('approve',id,{reviewer,reviewProvider:provider,commit,evidence});
