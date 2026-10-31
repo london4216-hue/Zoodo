@@ -35,10 +35,12 @@
       "kind": "source-readback V8 assertions",
       "passed": 8,
       "failed": 0,
-      "node_test_file": "engine/dashboard/refresh-policy.test.mjs",
-      "node_execution": "UNKNOWN",
+      "node_test_file": "engine/dashboard/tests/refresh-policy.test.mjs",
+      "node_execution": "UNKNOWN_ZERO_STEP_CI",
       "navigation_href_occurrences_before": 46,
-      "navigation_href_occurrences_after": 46
+      "navigation_href_occurrences_after": 46,
+      "ci_glob_covered": true,
+      "test_discovery_fix_commit": "f0ea66fb298a6d37e3d9b664e10e614e9a62f34f"
     },
     "code_committed": true,
     "local_node_tests": "NOT_RUN",
@@ -102,7 +104,8 @@
     "merge_at": null,
     "deploy_at": null,
     "verified_live_at": null,
-    "latencies": "UNKNOWN where source timestamps absent"
+    "latencies": "UNKNOWN where source timestamps absent",
+    "test_discovery_fixed_at": "UNKNOWN"
   },
   "handoff": {
     "from": "ZOO Dashboard Lead",
@@ -113,7 +116,8 @@
     "host_probe": "map Netlify production site ID/deploy ID/branch and obtain authenticated preview HTTP+rollback receipts",
     "integration_owner": "Sole ZOO Keeper",
     "next_trigger": "next independent receipt or next scheduled reconciliation",
-    "blocked_production_reason": "No verified Netlify mapping, exact deployed SHA, owner-auth browser readback, or rollback proof"
+    "blocked_production_reason": "No verified Netlify mapping, exact deployed SHA, owner-auth browser readback, or rollback proof",
+    "task_id": "Zoodo#18"
   },
   "release_gate": "DRAFT_ONLY_NO_PRODUCTION_NO_EMAIL",
   "other_lanes": "PR closure, EZ Move, BeautyPath, Hunter remain unblocked"
