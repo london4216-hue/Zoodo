@@ -102,5 +102,47 @@
     "merge_to_deploy": null,
     "gap_to_verified": null
   },
-  "unresolved": "Authenticated Netlify/Supabase control-plane credentials, native function HTTP execution, durable store migration, provider external AI invocation"
+  "unresolved": "Authenticated Netlify/Supabase control-plane credentials, native function HTTP execution, durable store migration, provider external AI invocation",
+  "four_agent_hosted_proof_matrix": [
+    {
+      "agent": "Agent Hunter",
+      "requirement": "provider-native external capability invocation",
+      "status": "UNKNOWN",
+      "evidence_url": null
+    },
+    {
+      "agent": "Dashboard Lead",
+      "requirement": "production hosted evidence retrieval/rendering",
+      "status": "UNKNOWN",
+      "evidence_url": null
+    },
+    {
+      "agent": "Implementation Lead",
+      "requirement": "real hosted worker execution and failure recovery",
+      "status": "UNKNOWN",
+      "evidence_url": null
+    },
+    {
+      "agent": "ZOO Keeper",
+      "requirement": "actual NEXT dispatch and handoff",
+      "status": "UNKNOWN",
+      "evidence_url": null
+    }
+  ],
+  "pr_stage_elapsed_seconds": {
+    "opened_to_review": null,
+    "review_to_fix": null,
+    "fix_to_tests": null,
+    "tests_to_merge": null,
+    "merge_to_deploy": null,
+    "deploy_to_verified": null
+  },
+  "current_verified_metrics": {
+    "authenticated_productive_external_agents": 0,
+    "newly_qualified_external_providers": 0,
+    "qualified_independent_fallbacks": 0,
+    "verified_hosted_recoveries": 0,
+    "active_hosted_assignments": "UNKNOWN",
+    "oldest_checkpoint_age_seconds": "UNKNOWN"
+  }
 }
