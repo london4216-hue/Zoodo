@@ -17,7 +17,8 @@ test('repair preserves bounded backoff and dead-letter replay',()=>{
   assert.match(sql,/lease_token=NULL\s*,\s*lease_until=NULL/i);
 });
 test('repair retains audit trail and service-role-only access',()=>{
-  assert.match(sql,/INSERT INTO public\.zoo_ops_events\(ticket_id,event\)/i);
+  assert.match(sql,/INSERT INTO public\.zoo_ops_events\(ticket_id,event,at\)/i);
+  assert.match(sql,/END\s*,\s*clock_timestamp\(\)\s+FROM recovered/i);
   assert.match(sql,/outbox_retry_budget_exceeded/);
   assert.match(sql,/outbox_lease_recovered/);
   assert.match(sql,/SECURITY DEFINER SET search_path=public,pg_temp/i);
