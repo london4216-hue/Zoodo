@@ -115,5 +115,7 @@
     "No protected merge",
     "No real secrets or private asset content published",
     "No fabricated provider or judge receipts"
-  ]
+  ],
+  "repository_visibility": "public (verified via authenticated GitHub repository metadata; no secrets or private ticket data committed)",
+  "security_note": "Zoodo is public, unlike private TransendIQ; durable private ticket state and secrets must remain in an access-controlled backing store, not public repo files."
 }
