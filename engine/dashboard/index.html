@@ -78,11 +78,12 @@
 <div class="card"><h2>Independent agent verdicts</h2><div class="metric" id="judges">UNKNOWN</div><div class="muted">Awaiting independently signed evidence</div></div>
 </div>
 <div class="panels"><section class="panel"><h2>Rolling commit evidence</h2><div id="commits" aria-live="polite">Connecting…</div></section><section class="panel"><h2>Workflow executions</h2><div id="runs" aria-live="polite">Connecting…</div></section></div>
-<footer>Polls GitHub and actual published automation-run receipts every 30 seconds while this page is open; retains truthful timestamps and reports missing proof. The browser cannot directly wake ChatGPT workers: the scheduled ZOO recovery worker monitors overdue receipts. Polls GitHub every 30 seconds. Verified movement requires a substantive code diff, linked ticket, exact-head CI and authenticated independent-provider review. Commits and green CI alone never reset the clock. Independent reviewer, deployed host and worker heartbeat feeds are not connected; show UNKNOWN. Read-only, no worker dispatch or stored credentials.</footer>
+<footer>Polls published scheduler-run proof every 30 seconds and GitHub REST source evidence every 10 minutes while this page is open; retains truthful timestamps and reports missing proof. The browser cannot directly wake ChatGPT workers: the scheduled ZOO recovery worker monitors overdue receipts. Manual refresh still rechecks GitHub immediately. Verified movement requires a substantive code diff, linked ticket, exact-head CI and authenticated independent-provider review. Commits and green CI alone never reset the clock. Independent reviewer, deployed host and worker heartbeat feeds are not connected; show UNKNOWN. Read-only, no worker dispatch or stored credentials.</footer>
 <script type="module">
 import {evaluateEvidence} from './evidence-clock.mjs';
 import {evaluateAutomationProof} from './automation-proof.mjs';
 import {selectSourceIdentity} from './source-identity.mjs';
+import {GITHUB_SOURCE_POLL_MS,AUTOMATION_PROOF_POLL_MS} from './refresh-policy.mjs';
 const owner='london4216-hue',repo='Zoodo',fallbackBranch='autonomous-engine-replacement-2026-10-29';
 let sourceIdentity=selectSourceIdentity(null,fallbackBranch),sourceIdentityError='build receipt not read';
 const root='https://api.github.com/repos/'+owner+'/'+repo;
@@ -405,5 +406,8 @@ function tickClock(){
   $('accountabilityNext').textContent='Keep builders active; refresh source evidence and verify actual deployed host independently.';
 }
 $('refresh').addEventListener('click',update);
-update();setInterval(update,30000);setInterval(tickClock,1000);
+update();
+setInterval(update,GITHUB_SOURCE_POLL_MS);
+setInterval(()=>refreshAutomationProof().catch(()=>{runFeedFetchError='Unexpected proof refresh error';paintAutomationProof()}),AUTOMATION_PROOF_POLL_MS);
+setInterval(tickClock,1000);
 </script><script type="module" src="./priority-watch.mjs"></script></body></html>
