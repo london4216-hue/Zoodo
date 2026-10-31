@@ -58,3 +58,34 @@ test('late outbox lease acquisition does not launch a worker after HTTP deadline
   await new Promise(resolve=>setTimeout(resolve,10));
   assert.equal(dispatched,0);assert.equal(acked,0);
 });
+
+test('two distinct local HTTP tickets: first uncertain, second acknowledged without duplicate', async () => {
+  const {createServer} = await import('node:http');
+  const {once} = await import('node:events');
+  const seen=[]; const acked=[];
+  const server=createServer(async(req,res)=>{
+    let raw='';for await(const part of req)raw+=part;
+    const payload=JSON.parse(raw);seen.push(payload.ticket_id);
+    res.writeHead(202,{'content-type':'application/json'});
+    res.end(JSON.stringify({accepted:true,ticket_id:payload.ticket_id}));
+  });
+  server.listen(0,'127.0.0.1');await once(server,'listening');
+  try {
+    const events=[{...event,id:1,ticket_id:'T1'},{...event,id:2,ticket_id:'T2'}];
+    let calls=0;
+    const replay=makeOutboxReplay({
+      store:{claimOutbox:async()=>events.shift()??null,ackOutbox:async(id)=>{acked.push(id);return true}},
+      dispatch:async()=>{
+        calls++;
+        if(calls===1) return {state:'uncertain',ticket:'T1'};
+        const response=await fetch(`http://127.0.0.1:${server.address().port}/work`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({ticket_id:'T2'})});
+        assert.equal(response.status,202);
+        assert.equal((await response.json()).ticket_id,'T2');
+        return {state:'dispatched',ticket:'T2'};
+      },worker:'w',timeoutMs:2000
+    });
+    assert.equal((await replay()).state,'retry-after-lease');
+    assert.equal((await replay()).state,'acked');
+    assert.deepEqual(seen,['T2']);assert.deepEqual(acked,[2]);
+  } finally {await new Promise(resolve=>server.close(resolve));}
+});
