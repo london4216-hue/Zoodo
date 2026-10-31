@@ -94,6 +94,32 @@
     "test_evidence": "https://github.com/london4216-hue/Zoodo/blob/c6e49a7831d0c96653f1fad2f999e8fe9e4d277d/engine/evidence/2026-10-31-p0-idle-outbox-auto11.tap",
     "utc_timestamp": "2026-10-31T01:24:30Z",
     "next_action": "Integrate PR #36 atop #35 after private PostgreSQL 001+002 migration tests, authenticated Netlify replay/reconcile, genuine two-ticket worker recovery and production dashboard readback. Coordinate Hunter provider probe; no protected merge without required checks.",
-    "next_trigger": "Existing ZOO Keeper scheduled continuation or genuine authenticated hosted event; no invocation claimed"
+    "next_trigger": "Existing ZOO Keeper scheduled continuation or genuine authenticated hosted event; no invocation claimed",
+    "github_comments": [
+      {
+        "repository": "london4216-hue/Zoodo",
+        "issue_or_pr": 35,
+        "comment_id": 6537138583,
+        "url": "https://github.com/london4216-hue/Zoodo/pull/35#issuecomment-6537138583"
+      },
+      {
+        "repository": "london4216-hue/TransendIQ",
+        "issue_or_pr": 1048,
+        "comment_id": 6537139008,
+        "url": "https://github.com/london4216-hue/TransendIQ/issues/1048#issuecomment-6537139008"
+      },
+      {
+        "repository": "london4216-hue/TransendIQ",
+        "issue_or_pr": 1023,
+        "comment_id": 6537139457,
+        "url": "https://github.com/london4216-hue/TransendIQ/issues/1023#issuecomment-6537139457"
+      }
+    ],
+    "keeper_continuation": {
+      "requested": true,
+      "request_accepted": true,
+      "execution_confirmed": false,
+      "task_id": "6ae3da9a4b048191be5c34ef8a19b1b7"
+    }
   }
 }
