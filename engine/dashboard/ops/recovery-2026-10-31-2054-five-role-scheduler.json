@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-10-31T20:54:48.778Z",
+  "kind": "bounded_scheduler_feed_freshness_repair",
+  "source_feed": {
+    "path": "engine/dashboard/automation-proof.json",
+    "source_commit": "2d8e93b68f618fbe5def7380698afaba333a99db",
+    "blob_sha": "1a44b051df71eb22561f45e57fe64598607efafe",
+    "published_at": "2026-10-31T20:54:11.753Z",
+    "source": "connected_automations_peek",
+    "role_count": 5,
+    "valid_completed_receipts": 5,
+    "in_progress_roles": [
+      "ZOO Dashboard Worker"
+    ],
+    "overdue_roles": [
+      "ZOO Agent Hunter"
+    ],
+    "hunter_automation_enabled": false,
+    "active_productive_workers": "UNKNOWN"
+  },
+  "source_tests": {
+    "kind": "source-executed V8 classifier + schema and timestamp assertions",
+    "initial_checks": "14/14 PASS",
+    "correction_checks": "7/7 PASS",
+    "ci_executed": false
+  },
+  "queue_counts": {
+    "source": "authenticated GitHub search connector",
+    "observed_utc": "2026-10-31T20:54:48.778Z",
+    "repository": "london4216-hue/Zoodo",
+    "open_issues": 24,
+    "open_prs": 61,
+    "production_display_verified": false
+  },
+  "public_task_receipts": [
+    {
+      "repo": "london4216-hue/Zoodo",
+      "pr": 93,
+      "source_head": "ce848cdc4fc91cee61c78d4a506ac18d100ca8d2",
+      "state": "draft_open",
+      "source_changes_reported": true,
+      "local_tests": "reported_6_of_6_not_independently_rerun",
+      "merge": false,
+      "deployment": "UNKNOWN"
+    }
+  ],
+  "private_task_summary": {
+    "source": "authenticated GitHub PR metadata",
+    "draft_product_prs_observed": 2,
+    "source_changes_not_live_releases": true,
+    "details": "Omitted from public receipt; private TransendIQ PRs #1135 and #1136 retained in private coordination issue."
+  },
+  "pr_reconciliation": [
+    {
+      "pr": 16,
+      "merged": true,
+      "target_branch": "autonomous-engine-replacement-2026-10-29",
+      "open_to_merge_seconds": 76910,
+      "deploy_latency_seconds": null
+    },
+    {
+      "pr": 71,
+      "merged": true,
+      "target_branch": "fix/zoo-live-dashboard-accountability-20261030",
+      "open_to_merge_seconds": 8072,
+      "canonical_inclusion": "not established by this merge alone",
+      "deploy_latency_seconds": null
+    }
+  ],
+  "ci": {
+    "workflow_run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41235923868",
+    "job_id": 124639577458,
+    "conclusion": "failure",
+    "recorded_steps": 0,
+    "logs": "unavailable",
+    "owner": "Implementation Lead"
+  },
+  "netlify": {
+    "commit_status": "success",
+    "context": "netlify/zoo-live-dashboard/deploy-preview",
+    "preview_url": "https://deploy-preview-104--zoo-live-dashboard.netlify.app",
+    "preview_http_readback": "DNS_FAILED",
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "production_http_readback": "DNS_FAILED",
+    "site_id": null,
+    "production_deploy_id": null,
+    "production_sha": null,
+    "owner_auth_verified": false,
+    "rollback_mapping": null
+  },
+  "latencies": {
+    "merge_seconds_available_for": [
+      16,
+      71
+    ],
+    "task_test_seconds": null,
+    "source_to_deploy_seconds": null,
+    "deploy_to_browser_verification_seconds": null,
+    "reason": "No independently verified deploy/test timestamps"
+  },
+  "preservation": {
+    "dashboard_html_changed": false,
+    "existing_links_changed": false,
+    "owner_auth_changed": false,
+    "production_published": false
+  },
+  "handoff": {
+    "keeper": "Reconcile dashboard drafts and arrange qualified host probe while Hunter disabled",
+    "hunter": "Automation disabled; do not claim active backup",
+    "implementation_lead": "Diagnose Actions failed job with zero recorded steps",
+    "product_lanes": "Independent; no blocking"
+  },
+  "verdict": "RECOVERY REQUIRED — stale/disabled Hunter; all productive-worker and live-production claims remain UNKNOWN"
+}
