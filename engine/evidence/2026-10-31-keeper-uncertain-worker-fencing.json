@@ -1,0 +1,61 @@
+{
+  "schema": "zoo.ops.execution-receipt.v1",
+  "agent_id": "ZOO Keeper (ChatGPT)",
+  "task_id": "P0-ZOODO-UNCERTAIN-WORKER-FENCING-20261031",
+  "repository": "london4216-hue/Zoodo",
+  "control_plane": "Zoodo (outside private TransendIQ product repository)",
+  "branch": "keeper/p0-uncertain-worker-fencing-20261031",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/37",
+  "parent_pr": "https://github.com/london4216-hue/Zoodo/pull/36",
+  "code_test_commit": "ae2f710cd64d9517c104735550880519f11ef8b7",
+  "code_test_commit_url": "https://github.com/london4216-hue/Zoodo/commit/ae2f710cd64d9517c104735550880519f11ef8b7",
+  "changed_files": [
+    "engine/ops/relay/003_uncertain_worker_fencing.sql",
+    "engine/test/uncertain-worker-fencing.test.mjs"
+  ],
+  "exact_source_blobs": {
+    "engine/ops/relay/003_uncertain_worker_fencing.sql": "8b98580d70a3ae1fc48df2269fb4bbd63a6d3d0f",
+    "engine/test/uncertain-worker-fencing.test.mjs": "561db22185ab2d0541dc575aed621db6bf38c1f3"
+  },
+  "observed_at_utc": "2026-10-31T01:42:49Z",
+  "action": "Authenticated GitHub branch, 2 code/test commits, draft PR and exact-source blob readback",
+  "local_test": {
+    "environment": "Node v22.16.0 local container, synthetic fixture; PostgreSQL not available",
+    "command": "node --test engine/test/uncertain-worker-fencing.test.mjs",
+    "passed": 4,
+    "failed": 0,
+    "exit_code": 0,
+    "syntax_check": "node --check engine/test/uncertain-worker-fencing.test.mjs PASS",
+    "exact_source_blob_match": true,
+    "postgres_executed": false
+  },
+  "decision": "REVISE",
+  "reason": "Uncertain-worker duplicate claim fixed in additive migration and self-checked; actual database migration and hosted recovery remain unverified",
+  "host_proof": {
+    "postgres_migration": "UNKNOWN",
+    "netlify_worker": "UNKNOWN",
+    "authenticated_two_ticket_failover": "UNKNOWN",
+    "dashboard_production_readback": "UNKNOWN",
+    "external_model_invocation": "NOT_CLAIMED"
+  },
+  "timing": {
+    "hour_et": "2026-10-30T21:00:00-04:00",
+    "hour_utc": "2026-10-31T01:00:00Z",
+    "pr_opened_utc": "2026-10-31T01:42:46Z",
+    "test_started_utc": null,
+    "test_completed_utc": null,
+    "pr_to_merge_seconds": null,
+    "merge_to_deploy_seconds": null,
+    "gap_detected_to_fix_seconds": null,
+    "unresolved_gap_age_seconds": null
+  },
+  "handoff": {
+    "from": "ZOO Keeper",
+    "to": "Agent Hunter",
+    "proposed_fix": "Qualify authenticated existing private Supabase/Netlify execution path for additive migrations 001,002,003; do not assume public manifest equals a running host",
+    "decision": "REVISE",
+    "next_action": "Probe existing authenticated host and private operations DB without exposing credentials, apply migration only when authorized; independently verify duplicate-lease preflight and real two-ticket worker failover. Dashboard Lead then publishes source-linked hosted receipt. Preserve branch isolation.",
+    "next_trigger": "Existing Hunter scheduled worker or actually authenticated event; this GitHub receipt is not an invocation"
+  },
+  "guardrails": "No protected merge, public product deployment, private ticket disclosure, new spending, or fabricated provider receipt"
+}
