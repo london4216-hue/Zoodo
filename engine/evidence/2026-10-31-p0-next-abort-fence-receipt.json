@@ -89,7 +89,7 @@
   "pr_stages": {
     "opened_at": "2026-10-31T06:24:22Z",
     "review_at": null,
-    "fix_at": "2026-10-31T06:23:24Z",
+    "fix_at": null,
     "local_tests_ended_at": "2026-10-31T06:24:45Z",
     "merged_at": null,
     "deployed_at": null,
@@ -103,11 +103,12 @@
   },
   "gap_metrics": {
     "gap_detected_at": null,
-    "fix_completed_at": "2026-10-31T06:23:24Z",
+    "fix_completed_at": null,
     "verified_locally_at": "2026-10-31T06:24:45Z",
     "detection_to_fix_ms": null,
     "detection_to_hosted_verification_ms": null,
-    "unresolved_gap_age_ms": null
+    "unresolved_gap_age_ms": null,
+    "fix_observed_no_later_than_utc": "2026-10-31T06:23:24Z"
   },
   "four_agent_proof_matrix": {
     "agent_hunter": "UNKNOWN - no external provider-native receipt verified in this run",
