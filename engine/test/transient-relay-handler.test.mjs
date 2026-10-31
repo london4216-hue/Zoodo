@@ -19,9 +19,9 @@ test('provider RPC outage returns retryable HTTP 503 rather than terminal 409',a
 
 test('network error on event-driven NEXT requests retry',async()=>{
   const handler=makeHandler({callbackSecret:SECRET,relay:{
-    next:async()=>{throw Error('fetch failed');}
+    completed:async()=>{throw Error('fetch failed');}
   }});
-  const response=await invoke(handler,'kick');
+  const response=await invoke(handler,'completed');
   assert.equal(response.statusCode,503);
 });
 
