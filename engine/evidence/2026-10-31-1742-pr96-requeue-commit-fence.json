@@ -1,0 +1,51 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-10-31T17:42:00Z",
+  "task": "PR_INTEGRATE #96: prevent stale active commit in requeued/blocked pilot tickets",
+  "scope": "single-writer local JSONL pilot; not distributed or hosted queue",
+  "pr": 96,
+  "source_baseline_blob": "27eae8d1137d3fb65b2dd0af49b2f0e7c9d649b8",
+  "source_fixed_blob": "7bb04694ed059b7ea75e4d0b7fa58348f962f832",
+  "new_regression_blob": "a9270e5b32de36ce33a1ec0a084148da0a84a4f1",
+  "source_commit": "c2a0cacc1842c8bfdcb51bfb857d6274aa0a67b1",
+  "test_commit": "8eea6d7f55398cfd5c0cbd1e69497c8512c06205",
+  "exact_tested_head": "8eea6d7f55398cfd5c0cbd1e69497c8512c06205",
+  "tests": {
+    "runtime": "Node v22.16.0",
+    "command": "node --test engine/test/*.test.mjs",
+    "baseline_new_regression": {
+      "passed": 0,
+      "failed": 2,
+      "expected_fail": true
+    },
+    "after_fix": {
+      "passed": 16,
+      "failed": 0
+    },
+    "existing_test_blobs": {
+      "engine/test/durable-queue.test.mjs": "eecd9a930d5e3a0a6d381b5b601684822eee6728",
+      "engine/test/single-worker-active-lease.test.mjs": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79",
+      "engine/test/expired-fail-lease.test.mjs": "24f0c52e417ade6c191ce9bafb857ce95b5b1061",
+      "engine/test/failed-test-retry-budget.test.mjs": "093ac86fd369ba21aca3f83d7ae9207fdb688a3f"
+    },
+    "github_readback_matches_local_tested_blobs": true,
+    "scope": "synthetic local deterministic, no hosted execution"
+  },
+  "finding": "After rejected review or failed tests, ticket became queued/blocked but retained old active commit SHA; a dashboard or worker reading ticket snapshot could misinterpret failed work as current. Historical submit SHA remains in append-only history.",
+  "repair": "Clear active commit and releaseProof on requeue and failed tests; preserve historical events and failed-test evidence.",
+  "github_actions": {
+    "latest_test_head": "8eea6d7f55398cfd5c0cbd1e69497c8512c06205",
+    "pull_request_workflow_runs_returned": 0,
+    "combined_commit_statuses_returned": 0,
+    "conclusion": "UNKNOWN; no CI pass claimed",
+    "prior_zero_step_startup": "infrastructure UNKNOWN"
+  },
+  "branch_protection": "UNKNOWN; no accessible protected-rules read",
+  "durable_private_queue_lease": "NOT_CLAIMED; no authorized private queue DB access",
+  "external_native_provider_invoked": false,
+  "hosted_worker_handoff": false,
+  "merged": false,
+  "deployed": false,
+  "single_writer_scope": "engine/src/durable-queue.mjs and new engine/test/requeue-stale-commit.test.mjs only; product, dashboard, SQL untouched",
+  "next": "Inspect independent PR #93 and #92 migration order; disposable PostgreSQL concurrency tests remain required before integration"
+}
