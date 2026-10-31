@@ -25,7 +25,7 @@ export async function assessProviderReceipt(r,{now=new Date().toISOString(),expe
  const fields=['provider','provider_kind','provider_request_id','source_sha','artifact_sha','status','evidence_url'];
  if(!native||native.authenticated!==true||fields.some(k=>native[k]!==r[k])||(r.provider_kind==='model'&&native.model_id!==r.model_id))return {...base,...reject('native_receipt_mismatch_or_untrusted','RECOVERING')};
  const qualified={...base,state:'QUALIFIED',qualified:true,reason:'authenticated_native_readback_matched'};
- verifiedObjects.add(qualified);return qualified;
+ Object.freeze(qualified);verifiedObjects.add(qualified);return qualified;
 }
 export function capabilityCounts(receipts,{now=new Date().toISOString(),maxAgeMs=3600000}={}){
  const unique=new Set(),roles={},providers={};
