@@ -1,0 +1,144 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-10-31T12:43:51Z",
+  "task_ids": [
+    "Zoodo#78",
+    "Zoodo#77",
+    "Zoodo#76",
+    "Zoodo#67",
+    "Zoodo#74",
+    "Zoodo#18"
+  ],
+  "executor": {
+    "identity": "ChatGPT tool-enabled temporary coordinator",
+    "route": "authenticated GitHub connector + local Node.js 22.16.0",
+    "provider_native_external_model_invoked": false,
+    "external_host_invoked": false,
+    "cost_usd": "UNKNOWN",
+    "latency_ms": "UNKNOWN"
+  },
+  "change": {
+    "repository": "london4216-hue/Zoodo",
+    "branch": "worker/p0-outbox-rpc-adapter-20261031-1143",
+    "pr": 81,
+    "stack": [
+      "#68",
+      "#73",
+      "#81"
+    ],
+    "source_commit_sha": "8f4a14db0db0db2cdfd810aacbb7094e239b1e99",
+    "test_commit_sha": "efd67752149a6d6a6403aa7709122434a473eaca",
+    "files": [
+      "engine/ops/relay/outbox-drainer.mjs",
+      "engine/test/outbox-drainer.test.mjs"
+    ],
+    "exact_git_blob_shas": {
+      "engine/ops/relay/outbox-drainer.mjs": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+      "engine/test/outbox-drainer.test.mjs": "76b1fcb63dd7baebe71e30ae20462510b8d6c408"
+    },
+    "test_command": "node --test engine/test/outbox-drainer.test.mjs",
+    "baseline_tests": {
+      "passed": 11,
+      "failed": 2
+    },
+    "after_fix_tests": {
+      "passed": 16,
+      "failed": 0
+    },
+    "github_source_readback_matches_local_tested_blobs": true,
+    "scope": "synthetic local deterministic tests, not hosted integration",
+    "merged": false,
+    "deployed": false,
+    "fixes": [
+      "Reject missing/mismatched HTTPS dispatch receipts before durable ACK",
+      "Do not dispatch another worker after uncertain transport result or ACK exception",
+      "Preserve bounded alternate dispatch for explicit non-execution results"
+    ]
+  },
+  "queue_snapshot": {
+    "observed_utc": "2026-10-31T12:41:00Z",
+    "zoodo_open_issue_search_results": 24,
+    "zoodo_open_pr_search_results": 58,
+    "transendiq_open_pr_search_results": 100,
+    "transendiq_search_truncated": true,
+    "counts_are_search_snapshots": true,
+    "open_product_drafts": [
+      "https://github.com/london4216-hue/TransendIQ/pull/1099",
+      "https://github.com/london4216-hue/TransendIQ/pull/1098",
+      "https://github.com/london4216-hue/TransendIQ/pull/1097",
+      "https://github.com/london4216-hue/TransendIQ/pull/1096"
+    ]
+  },
+  "observed_fleet": [
+    {
+      "lane": "Product builder EZ Move/BeautyPath",
+      "route": "ChatGPT scheduled automation",
+      "last_run_utc": "2026-10-31T12:24:11Z",
+      "cadence": "hourly scheduled",
+      "native_Copilot_Claude_Gemini_DeepSeek": "UNKNOWN",
+      "verified_backup": "UNKNOWN"
+    },
+    {
+      "lane": "PR closure",
+      "route": "ChatGPT scheduled automation",
+      "last_run_utc": "2026-10-31T12:18:01Z",
+      "cadence": "hourly scheduled",
+      "native_Copilot_Gemini": "UNKNOWN",
+      "verified_backup": "UNKNOWN"
+    },
+    {
+      "lane": "Agent Hunter",
+      "route": "ChatGPT scheduled automation",
+      "last_run_utc": "2026-10-31T11:46:25Z",
+      "cadence": "hourly scheduled",
+      "external_host_qualification": "UNKNOWN",
+      "verified_backup": "UNKNOWN"
+    },
+    {
+      "lane": "Dashboard Lead",
+      "route": "ChatGPT scheduled automation",
+      "last_run_utc": "2026-10-31T12:39:48Z",
+      "cadence": "hourly scheduled",
+      "verified_production_deploy": "UNKNOWN",
+      "verified_backup": "UNKNOWN"
+    }
+  ],
+  "reconciliation": {
+    "#78": "Scheduled executors observed; external model-native invocations and qualified backups not established",
+    "#77": "Durable queue/outbox draft stack exists, but hosted autonomous two-ticket NEXT not proven",
+    "#76": "Local code now fences uncertain execution rather than blindly substituting; real replacement not proven",
+    "#67": "Dashboard PR #16→#71 source exists; live Netlify feed/deploy unverified",
+    "#74": "No authenticated event host or native worker capacity receipts verified"
+  },
+  "next_executable_tasks": [
+    {
+      "owner": "PR integration worker",
+      "task": "Run full stack test on #68→#73→#81; check #65→#69→#72 conflicts; merge only if branch protections and CI permit",
+      "status": "QUEUED_NOT_INVOKED"
+    },
+    {
+      "owner": "Agent Hunter",
+      "task": "Read existing Trigger.dev/Netlify provider access, obtain native host execution receipt; prove two-ticket NEXT and forced-failure recovery",
+      "status": "QUEUED_NOT_INVOKED"
+    },
+    {
+      "owner": "Dashboard Lead",
+      "task": "Verify deployed Netlify SHA and source mapping #16→#71, publish live truthful fleet/queue freshness",
+      "status": "QUEUED_NOT_INVOKED"
+    },
+    {
+      "owner": "Product builder",
+      "task": "Continue EZ Move #1098 and BeautyPath #1099 independent functional previews; preserve original Figma baseline for My Block",
+      "status": "QUEUED_NOT_INVOKED"
+    }
+  ],
+  "outcomes": {
+    "new_code_commits": 2,
+    "new_receipt_commit": "PENDING_THIS_WRITE",
+    "merges": 0,
+    "deployment_ids": [],
+    "verified_hosted_handoffs": 0,
+    "verified_recovered_workers": 0
+  },
+  "disposition": "SELF_VERIFIED_DRAFT_ONLY; HOSTED_AUTOMATION_UNVERIFIED"
+}
