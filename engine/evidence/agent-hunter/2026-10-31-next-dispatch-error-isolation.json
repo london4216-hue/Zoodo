@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "agent": "ZOO Agent Hunter",
+  "task_id": "Zoodo #18 / relay recovery",
+  "decision": "REVISE",
+  "observed_at_utc": "2026-10-31T02:33:18.772Z",
+  "source_repo": "london4216-hue/Zoodo",
+  "source_branch": "hunter/zoo-next-dispatch-error-isolation-20261030",
+  "source_commit_sha": "c98a3c5e2cf51430d1062f29294835a2440ea25f",
+  "test_first_commit_sha": "68dfdd942cb05c57a37312a833a2e5a40978a17f",
+  "pull_request": "https://github.com/london4216-hue/Zoodo/pull/40",
+  "action": "isolated downstream NEXT claim failure after durably committed completion/non-start",
+  "test_receipts": {
+    "authenticated_github_blob_static_assertions": {
+      "passed": 8,
+      "total": 8
+    },
+    "node_runtime": {
+      "status": "PASS",
+      "runner": "local isolated Node.js v22.16.0, not an external hosted worker",
+      "exact_source_blob": "ac1b76ac1ef268d8a01538fdaf94038d280cbfab",
+      "exact_test_blob": "3e851c8a0486c60e738afe09d4bdcfb72b502683",
+      "baseline_source_blob": "8ce62710c474969a09e5be67af3eccc522d57895",
+      "fail_first": {
+        "passed": 6,
+        "failed": 2,
+        "exit_code": 1,
+        "failed_cases": [
+          "durable completion remains acknowledged when NEXT claim fails; outbox owns recovery",
+          "durable native non-start remains acknowledged when NEXT claim fails"
+        ],
+        "tap_sha256": "4aa266155772ee1c3b88969ebcd09d4754c61e64ebdaea387ba0bf2c1e0f2cdf"
+      },
+      "fixed": {
+        "passed": 8,
+        "failed": 0,
+        "exit_code": 0,
+        "tap_sha256": "df39dccda905e3cb51133ad68704de6c472565fa7d41dcdb80d0b7e045cb70e9"
+      },
+      "command": "node --test engine/test/portable-relay.test.mjs",
+      "observed_at_utc": "2026-10-31T02:34:34Z",
+      "note": "Tested reconstructed files byte-identical to GitHub blobs. Local HTTP synthetic worker only; no authenticated external host or Supabase."
+    },
+    "postgresql_runtime": "UNKNOWN",
+    "hosted_worker": "UNKNOWN",
+    "external_model_invocation": "UNKNOWN"
+  },
+  "blobs": {
+    "engine/ops/relay/portable-relay.mjs": "ac1b76ac1ef268d8a01538fdaf94038d280cbfab",
+    "engine/test/portable-relay.test.mjs": "3e851c8a0486c60e738afe09d4bdcfb72b502683"
+  },
+  "independent_host_probes": {
+    "netlify": "NO AUTHENTICATED PROVIDER EXECUTION ADAPTER AVAILABLE IN THIS SESSION",
+    "vercel": "NO AUTHENTICATED PROVIDER EXECUTION ADAPTER AVAILABLE IN THIS SESSION",
+    "render": "NO AUTHENTICATED PROVIDER EXECUTION ADAPTER AVAILABLE IN THIS SESSION",
+    "cloudflare": "NO AUTHENTICATED PROVIDER EXECUTION ADAPTER AVAILABLE IN THIS SESSION"
+  },
+  "external_ai_panel": {
+    "DeepSeek": "UNKNOWN - no provider-native invocation",
+    "Claude": "UNKNOWN - no provider-native invocation",
+    "Gemini": "UNKNOWN - no provider-native invocation",
+    "Copilot": "UNKNOWN - no provider-native invocation",
+    "Codex": "UNKNOWN - no provider-native invocation"
+  },
+  "movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T02:00Z",
+      "repo": "london4216-hue/Zoodo",
+      "pr": 40,
+      "prior": "NEXT dispatch failure after committed completion propagated as 409",
+      "new": "source patch with recovery response; hosted execution UNKNOWN",
+      "commit_sha": "c98a3c5e2cf51430d1062f29294835a2440ea25f",
+      "worker": "ZOO Agent Hunter"
+    },
+    {
+      "hour_utc": "2026-10-31T02:00Z",
+      "repo": "london4216-hue/Zoodo",
+      "pr": 40,
+      "prior": "source-only regression patch",
+      "new": "exact-blob Node fail-first 6/8 then fix 8/8 PASS; hosted UNKNOWN",
+      "commit_sha": "c98a3c5e2cf51430d1062f29294835a2440ea25f",
+      "worker": "ZOO Agent Hunter"
+    }
+  ],
+  "pr_stages": {
+    "opened_at": "UNKNOWN",
+    "review_at": null,
+    "fix_commit": "c98a3c5e2cf51430d1062f29294835a2440ea25f",
+    "runtime_tests_at": "2026-10-31T02:34:34Z",
+    "merged_at": null,
+    "provider_deployed_at": null,
+    "hosted_verified_at": null,
+    "elapsed_times": "UNKNOWN"
+  },
+  "handoff": {
+    "from": "Agent Hunter",
+    "to": "Dashboard Lead",
+    "then": "Implementation Lead",
+    "integrator": "ZOO Keeper",
+    "decision": "REVISE",
+    "next_trigger": "Implementer runs Node and disposable PostgreSQL exact-head tests, authentic hosted two-ticket completion+NEXT drill, and stores provider-native receipt; Dashboard Lead links only factual proof"
+  },
+  "confidentiality": "No private model prompts, secrets, token values, or product IP in this public receipt."
+}

@@ -96,3 +96,31 @@ test('busy worker kick delegates next eligible ticket to idle authorized worker'
  assert.deepEqual(accepted.map(x=>x.ticket_id),['T2']);
  assert.equal(f.tickets[0].state,'leased');
 });
+
+
+test('durable completion remains acknowledged when NEXT claim fails; outbox owns recovery',async()=>{
+ const f=fixture();
+ await f.store.claim('w');
+ const leased=f.tickets[0];
+ f.store.claim=async()=>{throw Error('temporary durable queue unavailable')};
+ const relay=makeRelay({store:f.store,workers:[{id:'w',url:'https://example.org/worker',token:WSECRET}]});
+ const result=await relay.completed({ticket_id:'T1',worker:'w',lease_token:leased.lease_token,commit_sha:SHA,test_url:'https://example.org/tests/1'});
+ assert.equal(result.state,'completed');
+ assert.equal(result.ticket,'T1');
+ assert.equal(result.next.state,'recovering');
+ assert.match(result.next.reason,/NEXT dispatch unavailable/);
+ assert.equal(f.tickets[0].state,'done');
+ assert.equal(f.tickets[1].state,'queued');
+});
+
+test('durable native non-start remains acknowledged when NEXT claim fails',async()=>{
+ const f=fixture();
+ await f.store.claim('w');
+ const leased=f.tickets[0];
+ f.store.claim=async()=>{throw Error('temporary durable queue unavailable')};
+ const relay=makeRelay({store:f.store,workers:[{id:'w',url:'https://example.org/worker',token:WSECRET}]});
+ const result=await relay.notStarted({ticket_id:'T1',worker:'w',lease_token:leased.lease_token,evidence_url:'https://example.org/non-start'});
+ assert.equal(result.state,'requeued');
+ assert.equal(result.next.state,'recovering');
+ assert.equal(f.tickets[0].state,'queued');
+});
