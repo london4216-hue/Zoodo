@@ -281,8 +281,8 @@ async function checkMyBlockLab(){
    return r.text();
   }));
   if(!html.includes('My Block · Creator-first lab')||!html.includes('id="compose"')||!js.includes('export function publishPost'))throw Error('stale or incomplete lab');
-  status.textContent='● LIVE ON THIS HOST · HTML + LOGIC VERIFIED';
-  status.className='live';
+  status.textContent='● HOST ASSETS PRESENT · FUNCTIONAL WALK UNVERIFIED';
+  status.className='pending';
   link.href='/labs/myblock/index.html';
   link.textContent='Open My Block lab';
  }catch{
@@ -300,7 +300,7 @@ async function checkYB3Lab(){
    const r=await fetch(path,{cache:'no-store'});if(!r.ok)throw Error('not deployed');return r.text();
   }));
   if(!html.includes('Yearbook 3 · Student Lab')||!html.includes('id="quote"')||!html.includes('id="consent"')||!js.includes('export function submitEntry'))throw Error('stale or incomplete lab');
-  status.textContent='● HOST ASSETS PRESENT · FUNCTIONAL WALK UNVERIFIED';status.className='live';
+  status.textContent='● HOST ASSETS PRESENT · FUNCTIONAL WALK UNVERIFIED';status.className='pending';
   link.href='/labs/yearbook3/index.html';link.textContent='Open YB3 student lab';
  }catch{
   status.textContent='● DEPLOY NOT VERIFIED · SOURCE ONLY';status.className='pending';
