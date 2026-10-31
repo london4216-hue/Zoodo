@@ -56,7 +56,7 @@ test('source refresh is distinguished from worker heartbeat and verification',()
 });
 
 test('automation proof fetch bypasses CDN cache and rejects older published snapshots',()=>{
- assert.match(script,/automation-proof\\.json\\?proof_read=/);
+ assert.ok(script.includes("automation-proof.json?proof_read="));
  assert.match(script,/cache:'no-store'/);
  assert.match(script,/Published proof snapshot regressed/);
  assert.match(script,/Last FETCH:/);
