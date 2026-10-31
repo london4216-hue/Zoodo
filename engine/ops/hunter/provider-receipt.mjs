@@ -38,7 +38,7 @@ export function capabilityCounts(receipts,{now=new Date().toISOString(),maxAgeMs
  for(const r of receipts||[]){
   if(!r||!verifiedObjects.has(r)||r.qualified!==true||!NAME.test(r.role||'')||!NAME.test(r.provider||'')||!ID.test(r.provider_request_id||''))continue;
   const finish=time(r.finished_at);
-  if(!Number.isFinite(finish)||finish>clock+30000||clock-finish>maxAgeMs)continue;
+  if(!Number.isFinite(finish)||finish>clock||clock-finish>maxAgeMs)continue;
   const key=r.provider+':'+r.provider_request_id;if(unique.has(key))continue;unique.add(key);
   roles[r.role]=(roles[r.role]||0)+1;(providers[r.role]??=new Set()).add(r.provider);
  }
