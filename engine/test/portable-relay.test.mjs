@@ -99,6 +99,7 @@ test('busy worker kick delegates next eligible ticket to idle authorized worker'
 
 test('durable completion remains completed when NEXT store claim fails',async()=>{
  const f=fixture();
+ await f.store.claim('w'); // Establish a real leased task before testing durable transition.
  f.store.claim=async()=>{throw Error('temporary storage outage')};
  const relay=makeRelay({store:f.store,workers:[{id:'w',url:'https://example.org/worker',token:WSECRET}]});
  const result=await relay.completed({ticket_id:'T1',worker:'w',lease_token:token(1),commit_sha:SHA,test_url:'https://example.org/tests/T1'});
@@ -107,6 +108,7 @@ test('durable completion remains completed when NEXT store claim fails',async()=
 });
 test('durable requeue remains acknowledged when NEXT store claim fails',async()=>{
  const f=fixture();
+ await f.store.claim('w'); // Establish a real leased task before testing durable transition.
  f.store.claim=async()=>{throw Error('temporary storage outage')};
  const relay=makeRelay({store:f.store,workers:[{id:'w',url:'https://example.org/worker',token:WSECRET}]});
  const result=await relay.notStarted({ticket_id:'T1',worker:'w',lease_token:token(1),evidence_url:'https://example.org/nonexecution/T1'});

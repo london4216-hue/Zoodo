@@ -1,0 +1,40 @@
+{
+  "schema": "zoo-handoff-v1",
+  "ticket_id": "ZOO-RELAY-FIXTURE-NEXT-20261031",
+  "asset": "Zoodo control-plane relay",
+  "lane": "keeper-integration",
+  "agent_id": "ZOO Keeper (ChatGPT scheduled run)",
+  "branch": "keeper/relay-completion-fixture-fix-20261031",
+  "source_commit_sha": "00903adc1ff7153c45bba8afceac16f386456362",
+  "changed_files": [
+    "engine/test/portable-relay.test.mjs"
+  ],
+  "self_check": {
+    "scope": "isolated Node 22 fixture smoke, not full repo suite",
+    "command": "node --test relay-fixture-smoke.test.mjs",
+    "result": "PASS",
+    "passed": 2,
+    "failed": 0,
+    "stdout_sha256": "da796e5ca2e8af4007372c48349a395179419b64339309e5b7dfeffce1cc664d",
+    "hosted_ci": "UNKNOWN",
+    "postgresql": "UNKNOWN",
+    "netlify": "UNKNOWN"
+  },
+  "provider": {
+    "name": "GitHub connected repository writer",
+    "invocation": "authenticated create_branch/update_file/fetch_file/create_pull_request",
+    "model_call": "NONE",
+    "latency_ms": "UNKNOWN",
+    "cost": "UNKNOWN"
+  },
+  "decision": "GO for isolated draft only",
+  "checkpoint": "https://github.com/london4216-hue/Zoodo/pull/43",
+  "blockers": [
+    "Full exact-branch Node suite not run in this execution environment",
+    "Supabase/Netlify host deployment and authenticated worker invocation unverified"
+  ],
+  "next_executable_task": "Run exact-branch Node suite, reconcile PR #43 with parent branch and PR #23/#28; run disposable PostgreSQL migration and authenticated hosted two-ticket recovery probe before any release.",
+  "next_owner": "Implementation Lead; Keeper integrates after evidence",
+  "utc_timestamp": "2026-10-31T03:33:47Z",
+  "resource_stewardship": "No invented provider, separate branch ownership, bounded self-check, preserve receipts, no new spend, no public private-IP content"
+}
