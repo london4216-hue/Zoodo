@@ -1,0 +1,45 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-10-31T16:46:04Z",
+  "task": "Zoodo PR #93 ACK lease-expiry check must use wall-clock not transaction-start time",
+  "issue_handoff": 77,
+  "source_context": {
+    "pr81": "https://github.com/london4216-hue/Zoodo/pull/81",
+    "baseline_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "stack_status": "65→69→72,68→73→81,16→71 closed; deployed source and native hosted execution unverified"
+  },
+  "branch": "integrate/p0-outbox-retry-backoff-main-20261031",
+  "baseline": {
+    "sql_blob": "e863faa6ced228341ef7ccad1ef1462dea0f2c5e",
+    "test_blob": "91ae579a6ba8e2a962540c48650bd0f12683f670",
+    "finding": "PostgreSQL now() is transaction-start stable; a long transaction can ACK after the actual lease expiry"
+  },
+  "fix": {
+    "sql": "engine/ops/relay/006_outbox_ack_lease_fence.sql",
+    "sql_blob": "351ce19f456c456a2a1f59070e16fcc45d44fdde",
+    "sql_commit": "47e8546cf62237addadff16e6c0ccd4caa0147b6",
+    "test": "engine/test/outbox-ack-expired-lease.test.mjs",
+    "test_blob": "4992b7e0db25f84cc900f7b62bf201a457e8d51a",
+    "test_commit": "dc50ae80c1414eef90b122f75e16ea36226e3ac6",
+    "predicate": "lease_until > clock_timestamp()"
+  },
+  "local_tests": {
+    "runtime": "Node.js v22.16.0",
+    "fail_first": "5 tests: 4 pass, 1 expected fail on original source",
+    "after_fix": "node --test engine/test/*.test.mjs: 7 pass, 0 fail",
+    "baseline_005_sql_blob": "696cf71f3b6039fd2842c6b5251ad18b57c988c1",
+    "baseline_005_test_blob": "ba455dd90d8ffb418efec0d5762f631e656eebcb",
+    "exact_git_blob_readback_matches_local_git_hash_object": true,
+    "scope": "static source-contract and synthetic transaction-clock test; NOT PostgreSQL engine/concurrency validation"
+  },
+  "ci": {
+    "head_workflow_run": 41221247315,
+    "status_at_check": "queued",
+    "classification": "UNKNOWN; no CI pass claimed"
+  },
+  "durable_private_queue_lease": "NOT_CLAIMED; no authenticated DB lease endpoint available",
+  "external_provider_native_invocation": false,
+  "merge": false,
+  "deployment": false,
+  "next": "Disposable PostgreSQL 001→002→005→006 migration and concurrent ACK/lease expiry test; exact-head required checks and branch protections before merge; continue next nonoverlapping PR"
+}
