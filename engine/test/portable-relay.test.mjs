@@ -96,3 +96,37 @@ test('busy worker kick delegates next eligible ticket to idle authorized worker'
  assert.deepEqual(accepted.map(x=>x.ticket_id),['T2']);
  assert.equal(f.tickets[0].state,'leased');
 });
+
+test('Keeper recovery: completed ticket remains completed when NEXT claim fails',async()=>{
+ const f=fixture(),leased=await f.store.claim('w');
+ f.store.claim=async()=>{throw Error('temporary storage outage')};
+ const relay=makeRelay({store:f.store,workers:[{id:'w',url:'https://example.org/worker',token:WSECRET}]});
+ const result=await relay.completed({ticket_id:'T1',worker:'w',lease_token:leased.lease_token,commit_sha:SHA,test_url:'https://example.org/tests/T1'});
+ assert.equal(result.state,'completed');
+ assert.equal(result.next.state,'recovery_required');
+ assert.equal(f.tickets[0].state,'done');
+});
+
+test('Keeper recovery: non-execution requeue remains durable when NEXT fails',async()=>{
+ const f=fixture(),leased=await f.store.claim('w');
+ f.store.claim=async()=>{throw Error('temporary storage outage')};
+ const relay=makeRelay({store:f.store,workers:[{id:'w',url:'https://example.org/worker',token:WSECRET}]});
+ const result=await relay.notStarted({ticket_id:'T1',worker:'w',lease_token:leased.lease_token,evidence_url:'https://example.org/nonexecution/T1'});
+ assert.equal(result.state,'requeued');
+ assert.equal(result.next.state,'recovery_required');
+ assert.equal(f.tickets[0].state,'queued');
+});
+
+test('authenticated outbox replay consumes wake-up only after successful NEXT dispatch',async()=>{
+ const f=fixture();let acked=0;
+ f.store.claimOutbox=async()=>({id:1,ticket_id:'T1',lease_token:token(1)});
+ f.store.ackOutbox=async(id,lease)=>{assert.equal(id,1);assert.equal(lease,token(1));acked++;return true};
+ const relay=makeRelay({store:f.store,workers:[{id:'w',url:'https://example.org/worker',token:WSECRET}],
+  fetchImpl:async(url,opts)=>{const x=JSON.parse(opts.body);return new Response(JSON.stringify({accepted:true,ticket_id:x.ticket_id,idempotency_key:x.idempotency_key,receipt_url:'https://example.org/receipt/'+x.ticket_id}),{status:202})}});
+ const h=makeHandler({relay,callbackSecret:SECRET});
+ const response=await h({method:'POST',headers:{authorization:'Bearer '+SECRET},body:JSON.stringify({type:'replay'})});
+ assert.equal(response.statusCode,200);
+ assert.equal(JSON.parse(response.body).state,'acked');
+ assert.equal(acked,1);
+ assert.equal(f.tickets[0].state,'leased');
+});

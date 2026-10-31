@@ -1,0 +1,144 @@
+{
+  "schema": "zoo-ops-execution-receipt/v1",
+  "agent_id": "Implementation Lead (ChatGPT)",
+  "task_id": "P0-OUTBOX-REPLAY-20261031",
+  "decision": "REVISE",
+  "decision_reason": "Durable outbox replay code and isolated local tests verified; no authenticated hosted queue or worker invocation proven.",
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "visibility": "public",
+    "branch": "worker/p0-durable-outbox-replay-20261031-auto11",
+    "base_pr": 32,
+    "pr": 35,
+    "code_commit": "a904b81ca9945c6cf223a761086389f555c69570",
+    "code_url": "https://github.com/london4216-hue/Zoodo/commit/a904b81ca9945c6cf223a761086389f555c69570",
+    "module_blob": "150cd96fcc9b1eee795c8c3423dc5c3dd35d3c25",
+    "test_blob": "2a4c4305ec779938bc4b05ca92187f168f07719f",
+    "relay_blob": "025427dd48df8d0032a867d65a40b379276d7740",
+    "latest_integration_commit": "1c1087f7110be9454c39b80224abfeb7f90ef24b",
+    "latest_integration_url": "https://github.com/london4216-hue/Zoodo/commit/1c1087f7110be9454c39b80224abfeb7f90ef24b",
+    "portable_relay_test_blob": "9bc0015ba8cead99957d3280d285af2eca60aeda",
+    "latest_test_commit": "6df901a9e61130d1d77a88d28217b16b59c6a9dd"
+  },
+  "execution": {
+    "kind": "local-node-unit-tests",
+    "command": "node --test engine/test/outbox-replay.test.mjs",
+    "node_version": "v22.16.0",
+    "started_at_utc": "2026-10-31T00:49:09Z",
+    "ended_at_utc": "2026-10-31T00:49:09Z",
+    "tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "tap_sha256": "9b6c243f4afffc674b22c4095599a3a07fc2bd7d05083544d8b69194caf4d916",
+    "tap_path": "engine/evidence/2026-10-31-p0-outbox-replay-auto11.tap",
+    "limitations": "New module and test source exact Git blob SHAs matched locally executed Node 22 files. Store/worker state simulated, HTTP server local. Three added portable-relay integration regressions and complete suite NOT executed; PostgreSQL migration NOT applied.",
+    "additional_unexecuted_tests": "Three portable-relay integration regression tests committed after the six executed outbox module tests; complete Node suite NOT executed.",
+    "local_two_ticket_http": "Two distinct synthetic ticket IDs T1/T2 accepted over real localhost HTTP; NOT a hosted worker or independent provider receipt"
+  },
+  "fail_first": {
+    "base_commit": "f04581db20e33e5a3eb1da329ae29feaa3e44803",
+    "missing_before": [
+      "outbox_claim RPC",
+      "outbox_ack RPC",
+      "outbox_recover RPC",
+      "authenticated replay intake"
+    ],
+    "present_after": 4,
+    "kind": "source-contract assertions, not runtime tests"
+  },
+  "hourly_movement": [
+    {
+      "hour_et": "2026-10-30 20",
+      "hour_utc": "2026-10-31 00",
+      "asset": "Zoodo relay",
+      "prior": "Outbox SQL existed but portable relay could not consume it",
+      "new": "Outbox consumer, authenticated replay and reconciliation committed",
+      "pr": 35,
+      "code_commit": "a904b81ca9945c6cf223a761086389f555c69570",
+      "tests": "7/7 local Node including two-ticket localhost HTTP",
+      "provider_deploy": "UNKNOWN",
+      "hosted_execution": "UNKNOWN",
+      "latest_integration_commit": "1c1087f7110be9454c39b80224abfeb7f90ef24b"
+    }
+  ],
+  "pr_stages": {
+    "opened_utc": "2026-10-31T00:47:05Z",
+    "reviewed_utc": null,
+    "fixed_utc": null,
+    "tests_completed_utc": "2026-10-31T00:46:57Z",
+    "merged_utc": null,
+    "deployed_utc": null,
+    "verified_hosted_utc": null,
+    "elapsed_open_to_merge_ms": null,
+    "elapsed_merge_to_deploy_ms": null,
+    "gap_detection_to_fix_ms": null,
+    "gap_age_ms": null
+  },
+  "four_agent_hosted_proof": {
+    "agent_hunter": "UNKNOWN",
+    "dashboard_lead": "UNKNOWN",
+    "implementation_lead": "UNKNOWN",
+    "zoo_keeper": "UNKNOWN"
+  },
+  "hosted_proof": {
+    "supabase_migration": "UNKNOWN",
+    "netlify_function_invocation": "UNKNOWN",
+    "worker_replacement_two_ticket": "UNKNOWN",
+    "production_dashboard_readback": "UNKNOWN",
+    "deepseek_provider_receipt": "NOT CONNECTED/NOT INVOKED"
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "task_id": "P0-OUTBOX-REPLAY-HOSTED",
+    "decision": "REVISE",
+    "next_action": "Keeper integrate conflict-free PR #34/#35, execute full Node suite, private PostgreSQL migration and authenticated Netlify replay/reconcile, then real hosted two-ticket failover and dashboard proof; Hunter probe actual existing provider credentials.",
+    "next_trigger": "Existing scheduled Keeper reconciliation or authenticated durable relay event; not claimed invoked."
+  },
+  "security": {
+    "private_tickets_committed": false,
+    "credentials_committed": false,
+    "production_merge": false,
+    "provider_deploy": false
+  },
+  "coordination": {
+    "keeper_pr": 34,
+    "keeper_source_fix": "nextAfterTransition incorporated into PR #35 to prevent false completion failure",
+    "overlap": "PRs #34 and #35 modify portable-relay.mjs; Keeper must select and integrate conflict-free",
+    "private_checkpoint_comments": [
+      {
+        "issue": 1048,
+        "comment_id": 6536738284
+      },
+      {
+        "issue": 1023,
+        "comment_id": 6536738669
+      }
+    ]
+  },
+  "capability_probe": {
+    "runtime": "ChatGPT automation execution container plus connected GitHub tool",
+    "checked_at_utc": "2026-10-31T00:49:09Z",
+    "provider_environment_variable_presence": {
+      "NETLIFY_AUTH_TOKEN": false,
+      "NETLIFY_TOKEN": false,
+      "SUPABASE_ACCESS_TOKEN": false,
+      "SUPABASE_URL": false,
+      "SUPABASE_SERVICE_ROLE_KEY": false,
+      "VERCEL_TOKEN": false,
+      "TRIGGER_API_KEY": false,
+      "DEEPSEEK_API_KEY": false
+    },
+    "direct_connected_provider_actions": {
+      "netlify": false,
+      "vercel": false,
+      "supabase": false,
+      "trigger_dev": false,
+      "deepseek": false,
+      "github": true
+    },
+    "github_commit_statuses_for_final_code": "No statuses returned",
+    "public_dashboard_probe": "Could not retrieve using web tool; does not establish site outage",
+    "interpretation": "No authenticated external deployment/migration capability exposed to this run. GitHub source write access is available; GitHub Actions is not the runtime replacement."
+  }
+}

@@ -1,6 +1,7 @@
 /** ZOO event-driven relay: one bounded invocation, never an in-memory queue or polling loop.
  * All ticket data/leases live in a private Supabase project. */
 import {timingSafeEqual} from 'node:crypto';
+import {makeOutboxReplay} from './outbox-replay.mjs';
 const ID=/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const SHA=/^[a-f0-9]{40}$/;
 const UUID=/^[a-f0-9-]{36}$/i;
@@ -24,7 +25,10 @@ export function makeStore({origin,serviceRoleKey,fetchImpl=fetch}){
   complete:x=>rpc('complete',{p_id:x.ticket_id,p_worker:x.worker,p_token:x.lease_token,p_commit:x.commit_sha,p_test_url:x.test_url}),
   notStarted:x=>rpc('not_started',{p_id:x.ticket_id,p_worker:x.worker,p_token:x.lease_token,p_evidence:x.evidence_url}),
   record:x=>rpc('dispatch_recorded',{p_id:x.ticket_id,p_worker:x.worker,p_token:x.lease_token,p_receipt:x.receipt_url}),
-  quarantine:()=>rpc('quarantine_expired',{})
+  quarantine:()=>rpc('quarantine_expired',{}),
+  claimOutbox:async()=>{const r=await rpc('outbox_claim',{});if(!Array.isArray(r)||r.length>1)throw Error('Invalid outbox claim');return r[0]??null},
+  ackOutbox:(id,token)=>rpc('outbox_ack',{p_id:id,p_token:token}),
+  recoverOutbox:()=>rpc('outbox_recover',{})
  };
 }
 export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now()}){
@@ -73,20 +77,32 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now()}){
   // The uncertain task stays leased/quarantined; only independent tickets may advance.
   return delegate(worker,allowReplacement,result);
  }
+ // Keeper PR #34: preserve an already committed transition if NEXT fails.
+ // The transactional outbox is the durable recovery checkpoint.
+ async function nextAfterTransition(worker){
+  try{return await next(worker)}
+  catch{return {state:'recovery_required',reason:'NEXT dispatch unavailable; durable outbox retry required'}}
+ }
  async function completed(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
      !SHA.test(x?.commit_sha??'')||!https(x?.test_url)||!pool.has(x.worker))throw Error('Invalid completion');
   if(await store.complete(x)!==true)throw Error('Completion not durably confirmed');
   // NEXT is triggered by the authenticated completion callback, not an hourly tick.
-  return {state:'completed',ticket:x.ticket_id,next:await next(x.worker),completed_at:new Date(now()).toISOString()};
+  return {state:'completed',ticket:x.ticket_id,next:await nextAfterTransition(x.worker),completed_at:new Date(now()).toISOString()};
  }
  async function notStarted(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
      !https(x?.evidence_url)||!pool.has(x.worker))throw Error('Native non-execution receipt required');
   if(await store.notStarted(x)!==true)throw Error('Non-execution not durably confirmed');
-  return {state:'requeued',ticket:x.ticket_id,next:await next(x.worker)};
+  return {state:'requeued',ticket:x.ticket_id,next:await nextAfterTransition(x.worker)};
  }
- return {next,completed,notStarted,quarantine:()=>store.quarantine()};
+ async function replay(){return makeOutboxReplay({store,dispatch:next,worker:workers[0].id})()}
+ async function reconcile(){
+  const quarantined=await store.quarantine();
+  const recovered=await store.recoverOutbox();
+  return {state:'reconciled',quarantined,recovered,wakeup:await replay()};
+ }
+ return {next,completed,notStarted,replay,reconcile,quarantine:()=>store.quarantine()};
 }
 export function makeHandler({relay,callbackSecret}){
  if(typeof callbackSecret!=='string'||callbackSecret.length<24)throw Error('Callback secret required');
@@ -100,7 +116,8 @@ export function makeHandler({relay,callbackSecret}){
    if(x.type==='kick')return send(200,await relay.next(x.worker));
    if(x.type==='completed')return send(200,await relay.completed(x));
    if(x.type==='not_started')return send(200,await relay.notStarted(x));
-   if(x.type==='reconcile')return send(200,{state:'reconciled',count:await relay.quarantine()});
+   if(x.type==='replay')return send(200,await relay.replay());
+   if(x.type==='reconcile')return send(200,await relay.reconcile());
    return send(422,{error:'unsupported event'});
   }catch(e){return send(409,{error:String(e.message||e).slice(0,160)})}
  };
