@@ -2,8 +2,9 @@
 -- A malformed legacy outbox row may be 'leased' with a NULL lease_until:
 -- 001 permits this nullable column, while the 008 recovery comparison
 -- `NULL < clock_timestamp()` is UNKNOWN. ACK and claim also cannot progress it.
--- Recover such unleased-in-practice wake-ups with the existing bounded retry
--- and event audit. No host, worker, scheduler or production DB is changed here.
+-- Recover NULL-expiry rows only when no fencing token exists: a token-bearing
+-- unknown-expiry claim may still be executing and requires operator evidence.
+-- Preserve bounded retry and event audit. No host or DB is changed here.
 BEGIN;
 CREATE OR REPLACE FUNCTION public.zoo_ops_outbox_recover()
 RETURNS int LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $$
@@ -15,7 +16,8 @@ BEGIN
            next_at=clock_timestamp() + LEAST(3600, 30 * (1 << LEAST(GREATEST(o.attempts-1,0),7))) * interval '1 second',
            lease_token=NULL,
            lease_until=NULL
-     WHERE (o.state='leased' AND (o.lease_until IS NULL OR o.lease_until<clock_timestamp()))
+     WHERE (o.state='leased' AND (o.lease_until IS NULL OR o.lease_until<clock_timestamp())
+            AND (o.lease_until IS NOT NULL OR o.lease_token IS NULL))
         OR (o.state='dead' AND o.next_at<=clock_timestamp())
      RETURNING o.ticket_id,o.attempts
   )
