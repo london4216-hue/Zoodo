@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "task": "ZOO-18-runner-replacement",
+  "state": "RECOVERING",
+  "observed_source": {
+    "dashboard_proof_blob_sha": "801b673200c182e739b24a9fce1ec3c0a8477245",
+    "dashboard_proof_observed_at": "2026-10-31T02:49:03.559Z"
+  },
+  "verified": {
+    "github_issue_18": "open",
+    "private_issue_1045": "open",
+    "authenticated_external_runner": false,
+    "hosted_two_ticket_test": false,
+    "external_model_native_votes": 0
+  },
+  "available_tools": {
+    "github_connector": true,
+    "netlify_management": false,
+    "vercel_management": false,
+    "render_management": false,
+    "cloudflare_management": false,
+    "external_model_adapters": false
+  },
+  "next_action": "Implementation Lead: obtain authenticated existing-host Netlify function invocation and provider-native request/deploy receipt; verify durable store claim/complete/next for two synthetic tickets. Dashboard Lead retains single-writer proof feed. Keeper integrates only after proof.",
+  "handoff": {
+    "from": "Agent Hunter",
+    "to": "Dashboard Lead",
+    "decision": "BLOCKED",
+    "reason": "No callable provider management/runtime adapter in this session; scheduled runs are not hosted worker proof."
+  },
+  "no_production_publish": true
+}
