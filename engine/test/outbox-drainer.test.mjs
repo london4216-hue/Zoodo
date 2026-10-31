@@ -27,10 +27,10 @@ test('idle with queued work or missing settle RPC never ACKs',async()=>{
  assert.equal(f.calls.some(x=>Array.isArray(x)&&x[0]==='ack'),false);
  delete f.store.settleIdleOutbox;assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'recovery_required');
 });
-test('failed worker tries qualified alternative without acking failure',async()=>{
- const f=fixture({result:w=>w==='workerA'?{state:'recovery_required'}:{state:'dispatched',ticket:'T2',worker:w,receipt_url:'https://runner.example/receipts/T2'}});
+test('idle worker tries qualified alternative after failed queue settlement',async()=>{
+ const f=fixture({result:w=>w==='workerA'?{state:'idle'}:{state:'dispatched',ticket:'T2',worker:w,receipt_url:'https://runner.example/receipts/T2'},settle:false});
  const r=await drainOne({...f,workerIds:['workerA','workerB']});assert.equal(r.state,'acknowledged');
- assert.deepEqual(r.attempts,[{worker:'workerA',state:'recovery_required'},{worker:'workerB',state:'dispatched'}]);
+ assert.deepEqual(r.attempts,[{worker:'workerA',state:'idle'},{worker:'workerB',state:'dispatched'}]);
 });
 test('uncertain native dispatch does not fake success or ack',async()=>{
  const f=fixture({result:{state:'uncertain',ticket:'T1'}});
