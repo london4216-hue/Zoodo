@@ -1,0 +1,34 @@
+TAP version 13
+# Subtest: authenticated kick forwards a cancellation signal and returns a real dispatch receipt
+ok 1 - authenticated kick forwards a cancellation signal and returns a real dispatch receipt
+  ---
+  duration_ms: 1.30801
+  type: 'test'
+  ...
+# Subtest: hanging kick returns an unconfirmed checkpoint within the deadline
+ok 2 - hanging kick returns an unconfirmed checkpoint within the deadline
+  ---
+  duration_ms: 22.39942
+  type: 'test'
+  ...
+# Subtest: late atomic claim after kick timeout is fenced before dispatch
+ok 3 - late atomic claim after kick timeout is fenced before dispatch
+  ---
+  duration_ms: 15.416747
+  type: 'test'
+  ...
+# Subtest: kick rejects invalid callback and unbounded deadline
+ok 4 - kick rejects invalid callback and unbounded deadline
+  ---
+  duration_ms: 0.722884
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 93.948465

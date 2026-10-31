@@ -5,6 +5,7 @@ import {makeOutboxReplay} from './outbox-replay.mjs';
 import {nextWithDeadline} from './next-deadline.mjs';
 import {reconcileWithDeadline} from './reconcile-bounded.mjs';
 import {confirmDispatchReceipt} from './dispatch-receipt-fence.mjs';
+import {kickWithDeadline} from './bounded-kick.mjs';
 const ID=/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const SHA=/^[a-f0-9]{40}$/;
 const UUID=/^[a-f0-9-]{36}$/i;
@@ -118,7 +119,7 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),next
  }
  return {next,completed,notStarted,replay,reconcile,quarantine:()=>store.quarantine()};
 }
-export function makeHandler({relay,callbackSecret}){
+export function makeHandler({relay,callbackSecret,kickDeadlineMs=7500}){
  if(typeof callbackSecret!=='string'||callbackSecret.length<24)throw Error('Callback secret required');
  const send=(statusCode,data)=>({statusCode,headers:{'content-type':'application/json','cache-control':'no-store'},body:JSON.stringify(data)});
  return async({method,headers={},body})=>{
@@ -127,7 +128,7 @@ export function makeHandler({relay,callbackSecret}){
   if(typeof body!=='string'||Buffer.byteLength(body)>8192)return send(413,{error:'invalid payload'});
   let x;try{x=JSON.parse(body)}catch{return send(400,{error:'invalid JSON'})}
   try{
-   if(x.type==='kick')return send(200,await relay.next(x.worker));
+   if(x.type==='kick')return send(200,await kickWithDeadline(relay,x.worker,{timeoutMs:kickDeadlineMs}));
    if(x.type==='completed')return send(200,await relay.completed(x));
    if(x.type==='not_started')return send(200,await relay.notStarted(x));
    if(x.type==='replay')return send(200,await relay.replay());
