@@ -1,0 +1,43 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-10-31T18:14:33.550Z",
+  "lane": "PR_INTEGRATE",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 93,
+  "base": "main",
+  "source_baseline": {
+    "path": "engine/ops/relay/001_ticket_directory.sql",
+    "blob_sha": "c76707cdcb785e22fa14e0758e511ec19af2a0e0",
+    "defect": "outbox_claim uses transaction-start now() for ready eligibility and 30-second lease expiry"
+  },
+  "fix": {
+    "migration": "engine/ops/relay/009_outbox_claim_wall_clock.sql",
+    "test": "engine/test/outbox-claim-wall-clock.test.mjs",
+    "commit_migration": "a31710edbb2c275899808689ec6ec5add22c0e73",
+    "commit_test": "56c93445f800e26e086ff674c1842f297bada496",
+    "exact_git_blobs": {
+      "engine/ops/relay/009_outbox_claim_wall_clock.sql": "7e5595fa366d8bcb8c94c889f1d1db88f20e7294",
+      "engine/test/outbox-claim-wall-clock.test.mjs": "0fd7f1ade9d37ae26d31e94aebf5f01c753d094e"
+    }
+  },
+  "local": {
+    "node_version": "v22.16.0",
+    "command": "node --test engine/test/outbox-claim-wall-clock.test.mjs",
+    "passed": 4,
+    "failed": 0,
+    "baseline_test": "new migration absent: test module failed before creation",
+    "scope": "source-contract assertions only; no PostgreSQL instance"
+  },
+  "verified": {
+    "github_blob_readback_matches_local_git_hash_object": true,
+    "branch_protection": "403 Resource not accessible by integration",
+    "commit_statuses": 0,
+    "github_actions": "queued at inspection",
+    "postgresql_migration_execution": false,
+    "hosted_worker_invocation": false,
+    "provider_native_gemini_copilot_deepseek": false,
+    "merges": 0,
+    "deployments": 0
+  },
+  "next": "Disposable PostgreSQL 001→002→005→006→007→008→009, claim/ack/recovery concurrency and time-skew tests; verify required checks and merge eligibility. Inspect #96 independently."
+}
