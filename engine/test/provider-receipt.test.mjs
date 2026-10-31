@@ -4,7 +4,7 @@ import {assessProviderReceipt, capabilityCounts} from '../ops/hunter/provider-re
 const SHA='a'.repeat(40), ART='b'.repeat(40);
 const receipt=()=>({schema:'zoo.provider-invocation.v1',provider:'deepseek',provider_kind:'model',model_id:'deepseek-reasoner',provider_request_id:'native-123',agent_id:'hunter',task_id:'T-100',role:'builder',source_sha:SHA,artifact_sha:ART,status:'completed',started_at:'2026-10-31T10:00:00Z',finished_at:'2026-10-31T10:00:03Z',evidence_url:'https://provider.example/requests/native-123',cost_usd:null});
 const native=()=>({authenticated:true,provider:'deepseek',provider_kind:'model',model_id:'deepseek-reasoner',provider_request_id:'native-123',source_sha:SHA,artifact_sha:ART,status:'completed',evidence_url:'https://provider.example/requests/native-123'});
-const opts={now:'2026-10-31T10:01:00Z',expectedTaskId:'T-100',expectedSourceSha:SHA};
+const opts={now:'2026-10-31T10:01:00Z',expectedTaskId:'T-100',expectedAgentId:'hunter',expectedRole:'builder',expectedSourceSha:SHA};
 test('schema-valid self-report is never qualified without provider readback',async()=>{const r=await assessProviderReceipt(receipt(),opts);assert.equal(r.state,'UNVERIFIED');assert.equal(r.qualified,false)});
 test('matching authenticated native readback qualifies',async()=>{const r=await assessProviderReceipt(receipt(),{...opts,verifyProvider:async()=>native()});assert.equal(r.state,'QUALIFIED');assert.equal(r.qualified,true);assert.equal(r.latency_ms,3000)});
 test('native mismatch is not qualified',async()=>{const r=await assessProviderReceipt(receipt(),{...opts,verifyProvider:async()=>({...native(),artifact_sha:SHA})});assert.equal(r.state,'RECOVERING');assert.equal(r.qualified,false)});
