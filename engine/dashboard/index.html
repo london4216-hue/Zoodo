@@ -87,6 +87,7 @@ const root='https://api.github.com/repos/'+owner+'/'+repo;
 const $=id=>document.getElementById(id);let evidenceState=null;
 let linkRefreshInFlight=false, directoryLinks=null;
 let lastRunFeed=null, runFeedFetchError=null;
+let updateInFlight=false; // prevent stale overlapping GitHub API responses
 function paintAutomationProof(){
  const proof=evaluateAutomationProof(lastRunFeed);
  const status=runFeedFetchError?'RECOVERY REQUIRED':proof.state;
@@ -251,7 +252,7 @@ async function checkHostingMirrors(){
 }
 const fmt=t=>{const d=Math.max(0,Date.now()-Date.parse(t)),m=Math.floor(d/60000);return m<1?'just now':m<60?m+'m ago':Math.floor(m/60)+'h '+m%60+'m ago'};
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-async function api(path){const r=await fetch(root+path,{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});if(!r.ok)throw Error('GitHub API '+r.status);return r.json()}
+async function api(path){const r=await fetch(root+path,{headers:{Accept:'application/vnd.github+json'},cache:'no-store',signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('GitHub API '+r.status);return r.json()}
 // Never advertise a lab as live from a GitHub file alone. Confirm both deployed HTML and JS on this exact host.
 async function checkMyBlockLab(){
  const status=$('myblock-live'),link=$('myblock-source');
@@ -305,6 +306,9 @@ async function loadQueue(){
  $('queue-heartbeat').textContent='UNKNOWN · NO WORKER FEED';
 }
 async function update(){
+ if(updateInFlight)return; // manual and interval refresh share one bounded source check
+ updateInFlight=true;
+ try{
  $('checked').textContent='Last attempted source check '+new Date().toLocaleTimeString();
  classifyDemoLinks().catch(()=>{});
  refreshAutomationProof().catch(()=>{runFeedFetchError='Unexpected proof refresh error';paintAutomationProof()});
@@ -353,6 +357,7 @@ async function update(){
     ? 'Work continues. Source connections needing recovery: '+errors.join(' | ')
     : 'GitHub source endpoints returned. Independent work and deployment verification are tracked separately.';
 
+ }finally{updateInFlight=false;}
 }
 function tickClock(){
  paintAutomationProof();
