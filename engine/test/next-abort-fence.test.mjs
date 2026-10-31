@@ -127,3 +127,36 @@ test('real localhost two-ticket NEXT chain remains immediate and durably recorde
     assert.equal(tickets[0].state,'done');assert.equal(tickets[1].state,'leased');
   }finally{await new Promise(resolve=>server.close(resolve))}
 });
+
+test('real localhost replacement dispatches independent T2 after T1 worker failure',async()=>{
+  const tickets=[{id:'T1',state:'queued'},{id:'T2',state:'queued'}],seen=[],recorded=[];
+  const server=createServer(async(req,res)=>{
+    let raw='';for await(const part of req)raw+=part;
+    const x=JSON.parse(raw);seen.push(x.ticket_id);
+    res.writeHead(202,{'content-type':'application/json'});
+    res.end(JSON.stringify({accepted:true,ticket_id:x.ticket_id,idempotency_key:x.idempotency_key,
+      receipt_url:'https://example.org/native/'+x.ticket_id}));
+  });
+  server.listen(0,'127.0.0.1');await once(server,'listening');
+  try{
+    const store={
+      async claim(worker){if(tickets.some(t=>t.state==='leased'&&t.lease_owner===worker))return null;
+        const t=tickets.find(x=>x.state==='queued');if(!t)return null;
+        t.state='leased';t.lease_owner=worker;t.lease_token=LEASE;return {...t,asset:'test',intent:'synthetic'}},
+      async record(x){recorded.push(x.ticket_id);return true}
+    };
+    const relay=makeRelay({store,workers:[
+      {id:'dead',url:'https://dead.example.org/work',token:TOKEN},
+      {id:'backup',url:`https://127.0.0.1:${server.address().port}/work`,token:TOKEN}],
+      fetchImpl:(url,opts)=>String(url).includes('dead.example.org')
+        ? Promise.reject(Error('synthetic primary worker unavailable'))
+        : fetch(String(url).replace('https:','http:'),opts)});
+    const result=await relay.next('dead');
+    assert.equal(result.state,'uncertain');
+    assert.equal(result.ticket,'T1');
+    assert.equal(result.replacement?.state,'dispatched');
+    assert.equal(result.replacement?.ticket,'T2');
+    assert.deepEqual(seen,['T2']);assert.deepEqual(recorded,['T2']);
+    assert.equal(tickets[0].state,'leased','uncertain T1 is not automatically duplicated');
+  }finally{await new Promise(resolve=>server.close(resolve))}
+});
