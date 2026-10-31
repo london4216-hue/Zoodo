@@ -60,3 +60,27 @@ test('declared four-worker roster cannot report healthy when a role is missing',
  assert.deepEqual(p.overdue,['ZOO Agent Hunter']);
  assert.equal(p.activeWorkersVerified,false);
 });
+
+// A quarantined historical scheduler anomaly must not create a permanent red
+// status after the same worker completes a later authenticated run.
+test('historical anomaly clears recovery after a newer valid same-role completion',()=>{
+ const later={...good.workers[0],role:'ZOO Agent Hunter',
+  run_id:'44444444-aaaa-4bbb-8ccc-aaaaaaaaaaaa',
+  scheduled_for:'2026-10-30T16:10:00Z',completed_at:'2026-10-30T16:15:00Z'};
+ const anomaly={role:'ZOO Agent Hunter',kind:'completion_before_scheduled_for_or_invalid',
+  run_id:'55555555-aaaa-4bbb-8ccc-aaaaaaaaaaaa',
+  scheduled_for:'2026-10-30T16:00:00Z',completed_at:'2026-10-30T15:50:00Z'};
+ const feed={...good,workers:[good.workers[0],later],
+  expected_roles:['ZOO Keeper','ZOO Agent Hunter'],source_anomalies:[anomaly]};
+ const p=evaluateAutomationProof(feed,now);
+ assert.equal(p.state,'RECORDED RUNS CURRENT');
+ assert.deepEqual(p.overdue,[]);
+ assert.equal(p.activeWorkersVerified,false);
+});
+test('newer unresolved anomaly still triggers recovery even with old valid completion',()=>{
+ const anomaly={role:'ZOO Keeper',kind:'invalid_completion_timestamp',
+  scheduled_for:'2026-10-30T16:20:00Z'};
+ const p=evaluateAutomationProof({...good,source_anomalies:[anomaly]},now);
+ assert.equal(p.state,'RECOVERY REQUIRED');
+ assert.deepEqual(p.overdue,['ZOO Keeper']);
+});
