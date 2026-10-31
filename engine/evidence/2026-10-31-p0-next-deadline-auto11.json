@@ -1,0 +1,141 @@
+{
+  "schema": "zoo.ops.execution-receipt.v1",
+  "agent_id": "Implementation Lead (ChatGPT)",
+  "task_id": "ZOODO-P0-NEXT-DEADLINE-20261031-0329",
+  "decision": "REVISE",
+  "reason": "Exact-source local callback recovery tests passed; private PostgreSQL and hosted event-driven two-ticket execution remain unverified.",
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "visibility": "public",
+    "branch": "worker/p0-next-handoff-deadline-20261031-auto11",
+    "pr": 42,
+    "pr_url": "https://github.com/london4216-hue/Zoodo/pull/42",
+    "base_pr": 39,
+    "code_commit": "7ea1512476d91f29102943b452cf601c49b7b8f0",
+    "code_url": "https://github.com/london4216-hue/Zoodo/commit/7ea1512476d91f29102943b452cf601c49b7b8f0",
+    "test_log_commit": "7c05bb51becaae90a2823838989676537c29a39d",
+    "source_blobs": {
+      "engine/ops/relay/portable-relay.mjs": "6e5725aec2fe53903a4c3708c3aacddac7fdc82c",
+      "engine/ops/relay/next-deadline.mjs": "98a081f28b43729121729107e077cdb1630f098f",
+      "engine/test/next-deadline.test.mjs": "5fb8e24837b10bbb3e71e10ad6e81881928d214c",
+      "engine/test/next-completion-deadline.test.mjs": "fc8b678bef5e95874c2759a2de3c8a7ee733d2e3"
+    }
+  },
+  "execution": {
+    "kind": "local-node22-exact-source-tests",
+    "command": "node --test engine/test/next-deadline.test.mjs engine/test/next-completion-deadline.test.mjs",
+    "started_at_utc": null,
+    "ended_at_utc": "2026-10-31T03:30:45Z",
+    "runtime": "Node v22.16.0",
+    "tests": 8,
+    "passed": 8,
+    "failed": 0,
+    "exit_code": 0,
+    "source_blob_matches": true,
+    "tap_sha256": "71166dfcfd7cdbd20a0c46d8cc65b55c094d1833fde4b1bd3cb63584d8dadcba",
+    "tap_url": "https://github.com/london4216-hue/Zoodo/blob/worker/p0-next-handoff-deadline-20261031-auto11/engine/evidence/2026-10-31-p0-next-deadline-auto11.tap",
+    "scope": "Synthetic in-memory store and authenticated local handler; no private database or provider invocation."
+  },
+  "fail_first": {
+    "base_commit": "4e49c0b098d0534ab9a2bed641109693cedc3f99",
+    "old_source_lacks_deadline": true,
+    "old_source_next_callback_waits_unbounded": true,
+    "method": "exact GitHub source contract inspection, not a prepatch runtime test"
+  },
+  "change": {
+    "description": "7.5s bounded NEXT handoff; preserve committed completion/requeue and return next-unconfirmed on deadline, never falsely claim cancellation or safe duplicate retry.",
+    "limitations": "Original NEXT promise may still finish after deadline; durable leases/outbox must reconcile. Not an always-on worker or hosted recovery proof."
+  },
+  "hourly_movement": [
+    {
+      "hour_et": "2026-10-30 23",
+      "hour_utc": "2026-10-31 03",
+      "repository": "london4216-hue/Zoodo",
+      "asset": "ZOO independent relay",
+      "pr": 42,
+      "prior_status": "Committed completion could hang indefinitely on stalled NEXT claim",
+      "new_status": "Bounded NEXT handoff committed; 8/8 exact-source local tests passed",
+      "code_commit": "7ea1512476d91f29102943b452cf601c49b7b8f0",
+      "provider_deploy": "UNKNOWN",
+      "hosted_execution": "UNKNOWN"
+    }
+  ],
+  "pr_stages": {
+    "opened_utc": "2026-10-31T03:30:56Z",
+    "reviewed_utc": null,
+    "fix_committed_utc": "2026-10-31T03:29:54Z",
+    "tests_completed_utc": "2026-10-31T03:30:45Z",
+    "merged_utc": null,
+    "deployed_utc": null,
+    "verified_hosted_utc": null,
+    "opened_to_review_ms": null,
+    "review_to_fix_ms": null,
+    "fix_to_tests_ms": 51000,
+    "pr_to_merge_ms": null,
+    "merge_to_deploy_ms": null,
+    "deploy_to_verified_ms": null,
+    "gap_detection_to_fix_ms": null,
+    "unresolved_hosted_gap_age_ms": null,
+    "tests_to_pr_open_ms": 11000
+  },
+  "provider_proof": {
+    "netlify_runtime_invocation": "UNKNOWN",
+    "supabase_migration": "NOT_EXECUTED",
+    "two_ticket_hosted_failover": "UNKNOWN",
+    "production_dashboard_readback": "UNKNOWN",
+    "deepseek_native_judge": "NOT_INVOKED",
+    "github_commit_statuses": 0,
+    "github_workflow_runs": 0,
+    "provider_env_credentials_exposed": false,
+    "public_dashboard_web_probe": "INACCESSIBLE_TO_WEB_TOOL_NOT_PROOF_OF_OUTAGE"
+  },
+  "four_agent_hosted_proof": {
+    "agent_hunter": "UNKNOWN",
+    "dashboard_lead": "UNKNOWN",
+    "implementation_lead": "UNKNOWN_LOCAL_TESTS_PASS",
+    "zoo_keeper": "UNKNOWN"
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "task_id": "ZOODO-P0-NEXT-DEADLINE-20261031-0329",
+    "decision": "REVISE",
+    "utc_timestamp": "2026-10-31T03:31:21Z",
+    "proposed_fix": "Integrate bounded completion callback after private SQL/Netlify qualification; preserve original dashboard, inspect outstanding #1023/#1048 and Hunter probe #38.",
+    "next_action": "Keeper coordinate conflict-free integration of PR #42 on top of #39 and earlier stacked branches, run full exact-SHA tests, apply private migrations with authorization, then hosted T1 failure→T2 dispatch and dashboard readback.",
+    "next_trigger": "Existing Keeper automation requested after durable GitHub checkpoint; request acceptance is not execution proof.",
+    "github_comments": [
+      {
+        "repo": "london4216-hue/TransendIQ",
+        "issue": 1048,
+        "id": 6538444853
+      },
+      {
+        "repo": "london4216-hue/TransendIQ",
+        "issue": 1023,
+        "id": 6538445215
+      },
+      {
+        "repo": "london4216-hue/Zoodo",
+        "pr": 39,
+        "id": 6538445469
+      }
+    ],
+    "keeper_continuation": {
+      "requested": true,
+      "request_accepted": true,
+      "execution_confirmed": true,
+      "automation_id": "6ae3da9a4b048191be5c34ef8a19b1b7",
+      "started_at_utc": "2026-10-31T03:32:15.373285Z",
+      "completed_at_utc": null,
+      "execution_status": "IN_PROGRESS"
+    }
+  },
+  "security": {
+    "production_merge": false,
+    "provider_deploy": false,
+    "new_spend": false,
+    "private_ticket_content_committed": false,
+    "figma_originals_changed": false
+  }
+}

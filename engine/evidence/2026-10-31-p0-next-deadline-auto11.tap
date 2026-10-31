@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: authenticated completion callback returns promptly when NEXT claim hangs
+ok 1 - authenticated completion callback returns promptly when NEXT claim hangs
+  ---
+  duration_ms: 22.781264
+  type: 'test'
+  ...
+# Subtest: authenticated non-execution callback returns promptly when NEXT claim hangs
+ok 2 - authenticated non-execution callback returns promptly when NEXT claim hangs
+  ---
+  duration_ms: 21.592681
+  type: 'test'
+  ...
+# Subtest: NEXT claim error leaves committed transition intact
+ok 3 - NEXT claim error leaves committed transition intact
+  ---
+  duration_ms: 0.601785
+  type: 'test'
+  ...
+# Subtest: successful NEXT dispatch preserves actual receipt
+ok 4 - successful NEXT dispatch preserves actual receipt
+  ---
+  duration_ms: 1.234957
+  type: 'test'
+  ...
+# Subtest: rejected NEXT returns recovery checkpoint without throwing
+ok 5 - rejected NEXT returns recovery checkpoint without throwing
+  ---
+  duration_ms: 0.244327
+  type: 'test'
+  ...
+# Subtest: hanging NEXT cannot indefinitely block already-durable completion
+ok 6 - hanging NEXT cannot indefinitely block already-durable completion
+  ---
+  duration_ms: 22.323921
+  type: 'test'
+  ...
+# Subtest: late NEXT completion cannot be misreported as a confirmed failure
+ok 7 - late NEXT completion cannot be misreported as a confirmed failure
+  ---
+  duration_ms: 10.443881
+  type: 'test'
+  ...
+# Subtest: invalid/unbounded deadline is rejected
+ok 8 - invalid/unbounded deadline is rejected
+  ---
+  duration_ms: 0.895416
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 135.419369
