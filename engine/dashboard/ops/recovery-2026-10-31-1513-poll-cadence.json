@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "kind": "dashboard_recovery_checkpoint",
+  "observed_at": "2026-10-31T15:12:51.291Z",
+  "decision": "REVISE",
+  "status": "RECOVERING",
+  "task_id": "TransendIQ#1023 / Zoodo#18",
+  "worker": "ZOO Dashboard Lead",
+  "source_repository": "london4216-hue/Zoodo",
+  "canonical_branch": "autonomous-engine-replacement-2026-10-29",
+  "prior_prs": [
+    {
+      "number": 16,
+      "state": "merged",
+      "merged_at": "2026-10-31T12:56:11Z"
+    },
+    {
+      "number": 71,
+      "state": "merged_to_noncanonical_feature_branch",
+      "merged_at": "2026-10-31T12:56:19Z"
+    },
+    {
+      "number": 90,
+      "state": "draft_open",
+      "fix": "future timestamp rejection"
+    }
+  ],
+  "this_cycle": {
+    "pr": 94,
+    "branch": "fix/zoo-proof-poll-cadence-20261031-1510",
+    "code_commit_sha": "28fd266c3d3a4ab6313141910bf4ffac693f5307",
+    "source_change": "separate 10-minute GitHub REST source poll from 30-second same-origin scheduler proof poll; manual refresh preserved",
+    "baseline_failure": "canonical index used 30-second GitHub source polling and inaccurately described both cadences",
+    "tests": {
+      "kind": "source-readback V8 assertions",
+      "passed": 8,
+      "failed": 0,
+      "node_test_file": "engine/dashboard/refresh-policy.test.mjs",
+      "node_execution": "UNKNOWN",
+      "navigation_href_occurrences_before": 46,
+      "navigation_href_occurrences_after": 46
+    },
+    "code_committed": true,
+    "local_node_tests": "NOT_RUN",
+    "github_actions": {
+      "run_id": 41213712073,
+      "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41213712073",
+      "status": "completed",
+      "conclusion": "failure",
+      "job": "dashboard-contract",
+      "recorded_steps": 0,
+      "job_log": "HTTP 404 BlobNotFound"
+    },
+    "provider_status": {
+      "context": "netlify/zoo-live-dashboard/deploy-preview",
+      "state": "success",
+      "url": "https://deploy-preview-94--zoo-live-dashboard.netlify.app",
+      "scope": "status_only_not_http_verified"
+    },
+    "live_verification": {
+      "production_url": "https://zoo-live-dashboard.netlify.app/",
+      "production_dns": "FAILED_IN_THIS_ENVIRONMENT",
+      "preview_http": "UNKNOWN",
+      "production_http": "UNKNOWN",
+      "netlify_site_id": "UNKNOWN",
+      "netlify_deploy_id": "UNKNOWN",
+      "production_sha": "UNKNOWN",
+      "owner_auth": "UNKNOWN",
+      "rollback": "UNKNOWN",
+      "mobile": "UNKNOWN"
+    }
+  },
+  "scheduler_snapshot": {
+    "canonical_commit_sha": "d99d8763023ae96909c7817264981356e275968a",
+    "observed_at": "2026-10-31T15:12:15.835Z",
+    "source": "connected_automations_peek",
+    "keeper_last_valid": "2026-10-31T14:45:56.689700Z",
+    "restoration_last_valid": "2026-10-31T14:31:41.803741Z",
+    "dashboard_last_valid": "2026-10-31T13:47:33.271577Z",
+    "hunter_last_valid": "2026-10-31T11:11:17.908979Z",
+    "hunter_invalid_newer_receipt": "completed before scheduled time; quarantined",
+    "productive_agents_verified": "UNKNOWN",
+    "scheduler_completions_not_equivalent_to_productive_work": true
+  },
+  "queue_inventory": {
+    "source": "authenticated GitHub search",
+    "open_issues": 24,
+    "open_prs": 55,
+    "as_of": "2026-10-31T15:12:51.291Z",
+    "notes": "Counts from result lists, not independently displayed on production"
+  },
+  "hourly_movement": {
+    "hour_utc": "2026-10-31T15:00Z",
+    "repo_asset": "Zoodo/engine/dashboard",
+    "pr": 94,
+    "prior_status": "canonical GitHub REST source polling every 30s",
+    "new_status": "draft 10m REST / 30s proof cadence",
+    "gap_detected_at": "2026-10-31T15:10Z",
+    "code_committed_at": "UNKNOWN",
+    "pr_opened_at": "2026-10-31T15:12:00Z",
+    "review_at": null,
+    "merge_at": null,
+    "deploy_at": null,
+    "verified_live_at": null,
+    "latencies": "UNKNOWN where source timestamps absent"
+  },
+  "handoff": {
+    "from": "ZOO Dashboard Lead",
+    "to": "Implementation Lead",
+    "task": "diagnose zero-step GitHub Actions startup; test Node policy suite on authorized independent runner; do not retry same technique without evidence",
+    "backup": "ZOO Keeper",
+    "host_probe_owner": "ZOO Agent Hunter",
+    "host_probe": "map Netlify production site ID/deploy ID/branch and obtain authenticated preview HTTP+rollback receipts",
+    "integration_owner": "Sole ZOO Keeper",
+    "next_trigger": "next independent receipt or next scheduled reconciliation",
+    "blocked_production_reason": "No verified Netlify mapping, exact deployed SHA, owner-auth browser readback, or rollback proof"
+  },
+  "release_gate": "DRAFT_ONLY_NO_PRODUCTION_NO_EMAIL",
+  "other_lanes": "PR closure, EZ Move, BeautyPath, Hunter remain unblocked"
+}
