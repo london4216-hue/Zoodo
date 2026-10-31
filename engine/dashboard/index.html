@@ -394,7 +394,7 @@ function tickClock(){
     $('accountabilityProof').textContent=observed
       ?'Most recent GitHub code/commit receipt: '+new Date(observed).toLocaleString()+' · independent review / active worker heartbeat NOT established'
       :'GitHub source receipt unavailable. Existing assignments continue; do not infer zero agents or fabricated progress.';
-    $('accountabilityNext').textContent='Automatic retry every 30 seconds; Dashboard Worker investigates actual source, Agent Hunter is backup, Keeper owns deployment integration.';
+    $('accountabilityNext').textContent='GitHub source retry every '+(GITHUB_SOURCE_POLL_MS/60000)+' minutes; recorded scheduler-proof fetch every '+(AUTOMATION_PROOF_POLL_MS/1000)+' seconds. Dashboard Worker investigates actual source; Agent Hunter is backup; Keeper owns deployment integration.';
     return;
   }
   const at=evidenceState.lastVerifiedCodeAt,mins=Math.max(0,(Date.now()-Date.parse(at))/60000);
