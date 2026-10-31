@@ -74,3 +74,11 @@ test('source polling has bounded GitHub requests and no overlapping stale refres
  assert.match(script,/finally\{updateInFlight=false;\}/);
  assert.match(script,/setInterval\(update,30000\)/);
 });
+
+test('automation proof refresh is bounded and serialized across manual and scheduled triggers',()=>{
+ assert.match(script,/let proofRefreshInFlight=false/);
+ assert.match(script,/async function refreshAutomationProof\(\)\{\s*if\(proofRefreshInFlight\)return;/);
+ assert.match(script,/proofRefreshInFlight=true;/);
+ assert.match(script,/automation-proof\.json\?proof_read=.*AbortSignal\.timeout\(10000\)/);
+ assert.match(script,/finally\{proofRefreshInFlight=false;\}/);
+});
