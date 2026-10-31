@@ -76,7 +76,7 @@
     "to": "Implementation Lead",
     "backup": "ZOO Agent Hunter",
     "integration_authority": "Sole ZOO Keeper",
-    "next_action": "Implementation Lead: diagnose GitHub Actions zero-step startup and run exact-head tests or independent authorized provider build; Hunter: authenticate Netlify site/deploy/source mapping and verify preview/live with rollback; Keeper: reconcile draft PR #90/#94 into canonical source only after gates.",
+    "next_action": "Implementation Lead: diagnose GitHub Actions zero-step startup and run exact-head tests or independent authorized provider build; Hunter: authenticate Netlify site/deploy/source mapping and verify preview/live with rollback; Keeper: reconcile draft PR #90/#94 into canonical source only after gates. Also test the mirror allowlist build with a real provider before claiming any mirror is healthy.",
     "trigger": "Next scheduled watchdog or verified event-driven worker handoff",
     "unresolved": true,
     "private_incident": "https://github.com/london4216-hue/TransendIQ/issues/1023",
@@ -95,5 +95,19 @@
     "note": "No cycle latency invented from absent timestamps",
     "pr_open_to_this_fix_seconds": 2319,
     "pr_open_to_this_fix_basis": "PR #94 opened 2026-10-31T15:12:00Z; latest code fix committed 2026-10-31T15:50:39Z"
+  },
+  "updated_at": "2026-10-31T15:53:09.512Z",
+  "additional_integration_repair": {
+    "problem": "Existing mirror allowlist omitted source-identity.mjs, refresh-policy.mjs, priority-watch.mjs and priority-watch.json; new queue-counts.mjs would also be omitted. Mirror page would fail to load modules.",
+    "fix_commit": "2032168f8e4eabc8e12c02bd7b69e333618dadd7",
+    "fix_url": "https://github.com/london4216-hue/Zoodo/commit/2032168f8e4eabc8e12c02bd7b69e333618dadd7",
+    "regression_test_blob_sha": "2308e76e0863ed1b66b935c1a24d277b0b5b948c",
+    "mirror_script_blob_sha": "75a6b9a45f4cbfd27995059a24b65f82c696e3b2",
+    "exact_source_executed_v8_tests": {
+      "passed": 2,
+      "failed": 0
+    },
+    "allowlisted_static_assets": 16,
+    "unresolved": "No live mirror host connected; no provider deployment or browser verification"
   }
 }
