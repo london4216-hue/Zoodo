@@ -115,5 +115,30 @@
         "comment_id": 6536738669
       }
     ]
+  },
+  "capability_probe": {
+    "runtime": "ChatGPT automation execution container plus connected GitHub tool",
+    "checked_at_utc": "2026-10-31T00:49:09Z",
+    "provider_environment_variable_presence": {
+      "NETLIFY_AUTH_TOKEN": false,
+      "NETLIFY_TOKEN": false,
+      "SUPABASE_ACCESS_TOKEN": false,
+      "SUPABASE_URL": false,
+      "SUPABASE_SERVICE_ROLE_KEY": false,
+      "VERCEL_TOKEN": false,
+      "TRIGGER_API_KEY": false,
+      "DEEPSEEK_API_KEY": false
+    },
+    "direct_connected_provider_actions": {
+      "netlify": false,
+      "vercel": false,
+      "supabase": false,
+      "trigger_dev": false,
+      "deepseek": false,
+      "github": true
+    },
+    "github_commit_statuses_for_final_code": "No statuses returned",
+    "public_dashboard_probe": "Could not retrieve using web tool; does not establish site outage",
+    "interpretation": "No authenticated external deployment/migration capability exposed to this run. GitHub source write access is available; GitHub Actions is not the runtime replacement."
   }
 }
