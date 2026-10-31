@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "receipt_type": "dashboard_source_repair",
+  "agent_id": "ZOO Dashboard Worker",
+  "task_id": "TransendIQ#1023 / Zoodo#18",
+  "decision": "REVISE",
+  "status": "RECOVERING",
+  "observed_at": "2026-10-31T11:57:39.309Z",
+  "defect": "Dashboard GitHub REST source polling every 30 seconds consumes approximately 5-6 unauthenticated REST calls per refresh, exceeding the shared GitHub API 60/hour rate limit and contributing to UNKNOWN evidence fetch failures. The 30-second same-origin scheduler proof refresh must remain independent.",
+  "action": "Split GitHub REST source polling to 10 minutes (max 36 calls/hour at six/cycle) from same-origin automation-proof.json polling every 30 seconds; manual Refresh still triggers immediate source fetch. No owner navigation, authentication, or publication controls changed.",
+  "repository": "london4216-hue/Zoodo",
+  "branch": "fix/zoo-dashboard-deploy-source-identity-20261031",
+  "pr_url": "https://github.com/london4216-hue/Zoodo/pull/71",
+  "base_pr_url": "https://github.com/london4216-hue/Zoodo/pull/16",
+  "code_commit_sha": "2239d6874f3eb4e01e6897b09b0d18a206fd4672",
+  "code_source_blob_sha": "95a61bfcf60f1700533f952e7d93d2b9b9859725",
+  "refresh_policy_blob_sha": "31f50b1f84d84a8775ad14bdf0b978f4887ca02b",
+  "regression_test_blob_sha": "81d59c2de9f30bac14f8e1fb3fcc998ac4a89efa",
+  "tests": [
+    {
+      "kind": "local_node_22",
+      "command": "node --test refresh-policy.test.mjs",
+      "scope": "exact GitHub-blob-matched refresh-policy.mjs and local isolated test harness",
+      "passed": 3,
+      "failed": 0,
+      "source_blob_sha_verified": true
+    },
+    {
+      "kind": "connected_GitHub_readback_V8",
+      "scope": "exact GitHub HTML/module and canonical proof snapshot: syntax, rate budget, manual refresh, separate 30s proof, 46/46 href parity, snapshot provenance/future dates",
+      "passed": 11,
+      "failed": 0
+    }
+  ],
+  "github_actions": {
+    "run_id": 41198908712,
+    "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41198908712",
+    "conclusion": "failure",
+    "job_id": 124530611730,
+    "steps": 0,
+    "logs": "not available; previous job log returned BlobNotFound 404",
+    "verified_ci_pass": false
+  },
+  "scheduler_snapshot": {
+    "source": "connected_automations_peek",
+    "snapshot_commit_sha": "c7e64f0cfc3d6ed741e81cdadd473e03dff51522",
+    "observed_at": "2026-10-31T11:56:53.811Z",
+    "worker_roles": 4,
+    "active_worker_proof": false,
+    "note": "in-progress Dashboard run not counted completed; future completion Keeper quarantined"
+  },
+  "deployment": {
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "site_id": null,
+    "deploy_id": null,
+    "deployed_sha": null,
+    "preview_verified": false,
+    "production_verified": false,
+    "auth_verified": false,
+    "rollback_verified": false,
+    "attempts": [
+      "web open URL: inaccessible",
+      "container HTTPS DNS: name resolution failed",
+      "GitHub connector: source/Actions access only"
+    ],
+    "status": "UNKNOWN"
+  },
+  "navigation": {
+    "canonical_href_count": 46,
+    "changed_href_count": 46,
+    "removed_hrefs": 0
+  },
+  "movement": [
+    {
+      "time_utc": "2026-10-31T11:57:39.309Z",
+      "repo": "Zoodo",
+      "asset": "engine/dashboard",
+      "pr": 71,
+      "prior": "30s GitHub REST polling / rate-limit risk",
+      "next": "10m REST + 30s same-origin scheduler proof",
+      "commit": "2239d6874f3eb4e01e6897b09b0d18a206fd4672",
+      "stage": "code_committed_and_local_tested_not_deployed"
+    }
+  ],
+  "latencies": {
+    "pr_opened_at": "2026-10-31T10:41:47Z",
+    "fix_commit_at": "2026-10-31T11:56:18Z",
+    "opened_to_fix_seconds": 4471,
+    "review_at": null,
+    "merge_at": null,
+    "deploy_at": null,
+    "verified_at": null,
+    "gap_detection_to_fix_seconds": null
+  },
+  "handoff": {
+    "from": "Dashboard Lead",
+    "to": "Implementation Lead",
+    "next": "Sole ZOO Keeper",
+    "owner": "ZOO Dashboard Worker",
+    "backup": "ZOO Agent Hunter",
+    "next_trigger": "Next scheduled or authorized event-driven execution",
+    "next_action": "Implementation Lead investigate GitHub Actions zero-step startup and provide independent exact-SHA test gate; Hunter obtain authenticated Netlify site/deploy mapping; Keeper integrate stacked #71 into #16 only after source/rollback and link-parity gates; Dashboard Lead next address exact GitHub issue/PR counts and production refresh readback."
+  },
+  "constraints": {
+    "no_production_publish": true,
+    "no_owner_email": true,
+    "no_fake_green": true,
+    "private_product_data_excluded": true
+  }
+}
