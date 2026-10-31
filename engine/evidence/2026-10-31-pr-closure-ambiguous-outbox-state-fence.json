@@ -1,6 +1,6 @@
 {
   "schema": "zoo.pr-closure-evidence.v1",
-  "recorded_at_utc": "2026-10-31T23:30:00Z",
+  "recorded_at_utc": "2026-10-31T23:18:00Z",
   "repo": "london4216-hue/Zoodo",
   "branch": "integrate/p0-outbox-ambiguous-state-fence-20261031",
   "tested_code_head": "d71b108e78b2392dff86e1fab371229325b967ba",
