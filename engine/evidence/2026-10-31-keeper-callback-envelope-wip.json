@@ -1,0 +1,12 @@
+{
+  "ticket": "Zoodo #18",
+  "branch": "keeper/p0-callback-envelope-fence-20261031-0840",
+  "source_sha": "68d1b97f6332f98a72e4dd2726c39416dcb54c08",
+  "test_command": "node --test engine/test/callback-envelope.test.mjs",
+  "tests_passed": 3,
+  "tests_failed": 0,
+  "local_only": true,
+  "integrated": false,
+  "next": "Wire helper into portable relay handler and run full handler tests.",
+  "timestamp": "2026-10-31T08:42:59Z"
+}
