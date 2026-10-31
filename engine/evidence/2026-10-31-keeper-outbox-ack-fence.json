@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "agent_id": "zoo-keeper",
+  "ticket_id": "Zoodo#18/outbox-ack-fence",
+  "asset": "Zoodo control plane",
+  "branch": "keeper/zoo-outbox-drainer-20261031",
+  "checkpoint_utc": "2026-10-31T11:10:11Z",
+  "decision": "GO_PRIVATE_DRAFT_ONLY",
+  "code_commit": "4caed4816bc2b8c4489ef79cedc62b86518227a8",
+  "test_first_commit": "7a6f5543d35ccf137bafcd9f24d91ed193a50b95",
+  "changed_files": [
+    {
+      "path": "engine/ops/relay/outbox-drainer.mjs",
+      "git_blob_sha": "1ddea441669e13ba3b4d161a3c21a29b52b43c17"
+    },
+    {
+      "path": "engine/test/outbox-drainer.test.mjs",
+      "git_blob_sha": "4c12cfc2f8e6411b39553a364b97891b722546ad"
+    }
+  ],
+  "command": "node --test engine/test/outbox-drainer.test.mjs",
+  "red": {
+    "tests": 13,
+    "pass": 11,
+    "fail": 2,
+    "tap_sha256": "b74a8eea521b68113aae23b6ff3cc54e7d19dc8f2bc8ab25147495bf29ab2fa1"
+  },
+  "green": {
+    "tests": 13,
+    "pass": 13,
+    "fail": 0,
+    "tap_sha256": "8ea37c62fd1f7d5e7eb7bfbcc403f8671343b164fae1efdddb60f24ef01fff84",
+    "runtime": "Node.js v22.16.0",
+    "scope": "local deterministic unit tests only"
+  },
+  "result": "Fail closed when a relay returns a dispatch label without a concrete HTTPS receipt. Preserve recovery_required on ambiguous durable ACK errors and do not call another worker after a confirmed dispatch.",
+  "evidence": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/68",
+    "source": "https://github.com/london4216-hue/Zoodo/blob/keeper/zoo-outbox-drainer-20261031/engine/ops/relay/outbox-drainer.mjs",
+    "tests": "https://github.com/london4216-hue/Zoodo/blob/keeper/zoo-outbox-drainer-20261031/engine/test/outbox-drainer.test.mjs"
+  },
+  "worker_invocation": {
+    "type": "local_node",
+    "external_model": "UNKNOWN",
+    "provider_native_request_id": "UNKNOWN",
+    "cost": "UNKNOWN",
+    "latency": "UNKNOWN"
+  },
+  "queue": {
+    "claim": "existing keeper PR #68; no new external atomic claim asserted",
+    "next": "Wire outbox store to Supabase RPC on a separate authorized branch; run disposable SQL integration; qualify authenticated host and test two-ticket forced-failure recovery."
+  },
+  "blockers": [
+    "Hosted relay/Netlify/Supabase provider-native invocation not verified",
+    "No exact-head CI or production deployment evidence"
+  ],
+  "safeguard": "Draft PR only; no main merge, no production publish, no confidential TransendIQ content."
+}
