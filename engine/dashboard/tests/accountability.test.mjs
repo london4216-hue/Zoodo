@@ -66,3 +66,11 @@ test('GitHub commit-source success is not inferred from an unrelated Actions res
  assert.match(script,/if\(commits\.status==='fulfilled'\)\{\s*\$\('sourceSuccess'\)/);
  assert.match(script,/GitHub commit endpoint response/);
 });
+
+test('source polling has bounded GitHub requests and no overlapping stale refresh writes',()=>{
+ assert.match(script,/async function api\\(path\\).*AbortSignal\\.timeout\\(10000\\)/);
+ assert.match(script,/if\\(updateInFlight\\)return;/);
+ assert.match(script,/updateInFlight=true;/);
+ assert.match(script,/finally\\{updateInFlight=false;\\}/);
+ assert.match(script,/setInterval\\(update,30000\\)/);
+});
