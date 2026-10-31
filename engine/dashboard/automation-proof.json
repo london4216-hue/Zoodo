@@ -61,14 +61,6 @@
       "scheduled_for": "2026-10-31T03:21:25Z",
       "completed_at": "2026-10-31T02:53:58.817204Z",
       "action": "quarantined_not_counted_as_verified_scheduler_completion"
-    },
-    {
-      "role": "ZOO Agent Hunter",
-      "kind": "completion_before_scheduled_for",
-      "run_id": "ddcc89bd-31a8-832f-8c55-d27bd2a43e7d",
-      "scheduled_for": "2026-10-31T03:21:25Z",
-      "completed_at": "2026-10-31T02:53:58.817204Z",
-      "action": "quarantined_not_counted_as_verified_scheduler_completion"
     }
   ],
   "prior_snapshot": {
