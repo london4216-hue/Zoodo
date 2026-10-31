@@ -49,11 +49,11 @@
   },
   "root_cause": "Netlify COMMIT_REF is a build-time variable, not a guaranteed runtime Function variable; old probe could return null source SHA even after successful deploy. Build-time stamp added to preview branch.",
   "qualification": {
-    "authenticated_productive_agents": 0,
     "qualified_independent_runners": 0,
     "host_execution_verified": false,
     "durable_two_ticket_chain_verified": false,
-    "external_model_votes": 0
+    "external_model_votes": 0,
+    "new_authenticated_productive_agents_this_run": 0
   },
   "handoff": {
     "from": "Agent Hunter",
