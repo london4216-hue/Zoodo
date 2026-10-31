@@ -1,3 +1,4 @@
+import {originalLinksFor} from './original-live-links.mjs';
 // Owner-owned product doors. A recorded URL is not a live verification receipt.
 export const ASSETS=[
  {id:'beautypath',name:'BeautyPath',type:'demo',initials:'BP',tone:'sage',category:'Career pathways',references:true,
@@ -46,63 +47,159 @@ export const ASSETS=[
    ['ZOO repository','https://github.com/london4216-hue/Zoodo'],
    ['TransendIQ repository','https://github.com/london4216-hue/TransendIQ']]}
 ];
-export function filterAssets(assets,query='',scope='all'){
+export function normalizedDirectoryUrl(value,product=''){
+ const url=new URL(value,'https://zoo-live-dashboard.netlify.app/');
+ if(url.protocol!=='https:'||url.username||url.password)throw new TypeError('Unsafe directory URL');
+ url.hash='';url.pathname=url.pathname.replace(/\/+$/,'')||'/';
+ // The owner-selected versioned chooser wins over its unversioned base URL.
+ // Never collapse real role/query differences such as WonUp's ?as=student.
+ if(product==='beautypath'&&url.hostname==='beautypath-grad.netlify.app'&&url.pathname==='/')
+  url.searchParams.delete('v');
+ url.searchParams.sort();return url.href;
+}
+export function directoryLinksFor(asset){
+ const seen=new Set(),links=[];
+ const candidates=[
+  ...asset.links.map(([label,url],index)=>({label,url,primary:index===0,
+   kind:index===0?(asset.type==='demo'?'demo':'asset'):
+    /github\.com/.test(url)?'source':/reference|older|base demo/i.test(label)?'reference':
+    /demo/i.test(label)?'demo':/workspace|sign in|login/i.test(label)?'workspace':
+    asset.references?'workspace':'reference'})),
+  ...originalLinksFor(asset.id)
+ ];
+ for(const entry of candidates){
+  const identity=normalizedDirectoryUrl(entry.url,asset.id);
+  if(seen.has(identity)){
+   // Preserve approved historical/access notes even when an older address
+   // normalizes to a destination already in the current directory.
+   const existing=links.find(link=>normalizedDirectoryUrl(link.url,asset.id)===identity);
+   if(entry.note)existing.note=entry.note;
+   if(!existing.primary)existing.kind=entry.kind;
+   continue;
+  }
+  seen.add(identity);links.push({...entry});
+ }
+ return links;
+}
+export function filterAssets(assets,query='',scope='all',product='all'){
  const words=query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
  return assets.filter(asset=>(scope==='all'||asset.type===scope)&&
-  words.every(word=>[asset.name,asset.category,asset.description,asset.status,...asset.links.flat()].join(' ').toLocaleLowerCase().includes(word)));
+  (product==='all'||asset.id===product)&&
+  words.every(word=>[asset.name,asset.category,asset.description,asset.status,
+   ...directoryLinksFor(asset).flatMap(link=>[link.label,link.url,link.kind,link.note||''])].join(' ').toLocaleLowerCase().includes(word)));
 }
 export function assetHost(asset){
  return new URL(asset.links[0][1],'https://zoo-live-dashboard.netlify.app/').hostname;
+}
+export function directoryResultLabel(assets){
+ const products=assets.length,links=assets.reduce((total,asset)=>total+directoryLinksFor(asset).length,0);
+ return products+' product'+(products===1?'':'s')+' · '+links+' link'+(links===1?'':'s');
 }
 function node(tag,className,text){
  const element=document.createElement(tag);element.className=className;
  if(text!==undefined)element.textContent=text;return element;
 }
+const purposeByProduct={
+ beautypath:'Student, graduate, school, salon and owner journeys.',
+ wonup:'Student experience on the recorded app host.',
+ prestige:'Existing student-engagement demo.',
+ ezmove:'Synthetic relocation and buyer journey.',
+ myblock:'Synthetic creator-community lab. Browser-only actions.',
+ yearbook:'Fictional yearbook lab. Browser-only submissions.',
+ 'control-center':'Your original pitch and control-panel workspace.',
+ movemint:'Owned source collection. No live demo claimed.',
+ letshelp:'Community-product source collection. No live demo claimed.',
+ sara:'Discovery record. A new demo address is not yet verified.',
+ engineering:'Engineering repositories. Your own access may be required.'
+};
+const purposeByKind={
+ demo:'Recorded demo journey; availability not independently checked.',
+ workspace:'Workspace or sign-in; your own access may be required.',
+ reference:'Saved for context; current availability not verified.',
+ source:'Source record; owner access may be required.',
+ design:'Recorded Figma prototype, separate from the synthetic lab.',
+ preview:'Recorded preview; current availability not verified.'
+};
+function linkRow(link,asset){
+ const row=node('a','directory-link'+(link.primary?' asset-primary':' asset-secondary'));
+ row.href=link.url;row.target='_blank';row.rel='noopener noreferrer';
+ row.setAttribute('aria-label',link.label+' · '+asset.name);
+ const address=new URL(link.url,'https://zoo-live-dashboard.netlify.app/');
+ const purpose=link.note||(link.primary?purposeByProduct[asset.id]:purposeByKind[link.kind])||'Recorded destination; current availability not verified.';
+ row.append(node('span','link-label',link.label),
+  node('span','link-purpose',(link.kind==='reference'?'Historical reference. ':'')+purpose),
+  node('span','link-host',address.hostname));
+ const open=node('span','link-open','Open '),arrow=node('b','','↗');
+ arrow.setAttribute('aria-hidden','true');open.append(arrow);row.append(open);
+ return row;
+}
 if(typeof document!=='undefined'){
- const search=document.getElementById('asset-search'),filters=[...document.querySelectorAll('[data-library-filter]')];
+ const search=document.getElementById('asset-search'),filters=[...document.querySelectorAll('[data-library-filter]')],
+  product=document.getElementById('product-filter');
+ for(const asset of ASSETS){const option=node('option','',asset.name);option.value=asset.id;product.append(option);}
  let scope='all';
  function render(){
-  const matches=filterAssets(ASSETS,search.value,scope);
+  const matches=filterAssets(ASSETS,search.value,scope,product.value);
   for(const type of ['demo','asset']){
    const list=document.getElementById(type+'-cards');list.replaceChildren();
    const entries=matches.filter(asset=>asset.type===type);
    document.getElementById(type+'-section').hidden=entries.length===0;
    document.getElementById(type+'-count').textContent=String(entries.length).padStart(2,'0');
    for(const asset of entries){
-    const card=node('article','asset-card '+asset.tone);card.dataset.asset=asset.id;
-    const top=node('div','asset-card-top');
-    top.append(node('span','asset-initials',asset.initials),node('span','asset-status',asset.status));
-    const description=node('p','asset-description');
-    if(asset.mobileDescription)description.append(node('span','desktop-only',asset.description),node('span','mobile-only',asset.mobileDescription));
-    else description.textContent=asset.description;
-    card.append(top,node('p','asset-category',asset.category),node('h3','',asset.name),
-     node('p','asset-host',assetHost(asset)),description);
-    if(asset.type==='demo'&&asset.id!=='beautypath')
-     card.append(node('p','asset-standard','Demo journey standard: not yet verified'));
-    const links=node('div','asset-actions');
-    const reference=asset.references?node('details','asset-reference'):null;
-    if(reference)reference.append(node('summary','','Workspace & reference links'));
-    asset.links.forEach(([label,url],index)=>{
-     const link=node('a',index===0?'asset-primary':'asset-secondary',label);
-     link.href=url;link.target='_blank';link.rel='noopener noreferrer';
-     link.setAttribute('aria-label',label+' · '+asset.name);
-     if(index>0&&reference)reference.append(link);else links.append(link);
-    });
-    if(reference)links.append(reference);
-    card.append(links);list.append(card);
+    const card=node('article','asset-card');card.dataset.asset=asset.id;
+    const heading=node('div','product-heading'),identity=node('div','product-identity');
+    identity.append(node('h3','',asset.name),node('span','asset-category',asset.category));
+    const status=node('span','asset-status',asset.status);
+    if(asset.type==='demo'&&asset.id!=='beautypath'){
+     status.textContent+=' · Unverified';
+     status.setAttribute('aria-label',asset.status+'. Demo journey standard: not yet verified');
+    }
+    heading.append(identity,status);card.append(heading);
+    const links=directoryLinksFor(asset);
+    card.append(linkRow(links[0],asset));
+    if(links.length>1){
+     const reference=node('details','asset-reference');
+     const summary=node('summary','',links.length-1+' more '+(links.length===2?'link':'links'));
+     summary.setAttribute('aria-label',summary.textContent+' · '+asset.name);
+     reference.append(summary);
+     for(const link of links.slice(1))reference.append(linkRow(link,asset));
+     // Search results expose matching role/host links rather than hiding the answer.
+     reference.open=Boolean(search.value.trim());
+     card.append(reference);
+    }
+    list.append(card);
    }
   }
-  document.getElementById('library-result').textContent=matches.length+' of '+ASSETS.length+' destinations'+
-   (search.value.trim()?' matching “'+search.value.trim()+'”':'');
+  document.getElementById('library-result').textContent=directoryResultLabel(matches);
   document.getElementById('library-empty').hidden=matches.length!==0;
-  document.getElementById('library-clear').hidden=!search.value&&scope==='all';
+  document.getElementById('library-clear').hidden=!search.value&&scope==='all'&&product.value==='all';
   for(const button of filters)button.setAttribute('aria-pressed',String(button.dataset.libraryFilter===scope));
  }
  search.addEventListener('input',render);
+ product.addEventListener('change',render);
  for(const button of filters)button.addEventListener('click',()=>{scope=button.dataset.libraryFilter;render()});
- document.getElementById('library-clear').addEventListener('click',()=>{search.value='';scope='all';render();search.focus()});
+ document.getElementById('library-clear').addEventListener('click',()=>{search.value='';scope='all';product.value='all';render();search.focus()});
  for(const link of document.querySelectorAll('[data-library-nav]'))link.addEventListener('click',()=>{
   scope=link.dataset.libraryNav;search.value='';render();
  });
+ function navigate(){
+  const hash=location.hash,target=document.getElementById(hash.slice(1)),
+   activity=hash==='#zoo-activity'||Boolean(target?.closest('#zoo-activity'));
+  document.getElementById('library').hidden=Boolean(activity);
+  document.getElementById('zoo-activity').hidden=!activity;
+  for(const link of document.querySelectorAll('[data-directory-view]')){
+   if((link.dataset.directoryView==='activity')===Boolean(activity))link.setAttribute('aria-current','page');
+   else link.removeAttribute('aria-current');
+  }
+  if(hash==='#my-demos'||hash==='#my-assets'){
+   scope=hash==='#my-demos'?'demo':'asset';search.value='';product.value='all';render();
+  }
+  if(activity){
+   if(hash!=='#zoo-activity')document.getElementById('operational-details').open=true;
+  }
+  if(hash==='#library'||hash==='#zoo-activity')window.scrollTo(0,0);
+ }
+ window.addEventListener('hashchange',navigate);
  render();
+ navigate();
 }

@@ -1,5 +1,24 @@
 # Dashboard change verification
 
+## Superseding owner request: original branded live directory
+- Current base is canonical 1dd11e5; root verified its successful production
+  exact-SHA build. Historical 404 and earlier cream-library notes below are past
+  observations, not current production identity or current design requirements.
+- Owner explicitly wants the consistent original black TranscendIQ UI and a
+  simple live-link directory, not a command center. The frozen uploaded brand CSS
+  supplies black/white, mint/violet/pink tokens and Inter; no invented light theme.
+- Directory first: compact header, product search/select, All/Demos/Assets
+  filters, clear product groups and labelled destination rows. One primary link
+  plus expandable additional links per product; primary mobile action above fold.
+- Directory / Activity are two simple views. Direct #zoo-activity must show
+  evidence with disclosures collapsed; original scripts, IDs, active-worker
+  UNKNOWN and pinned-versus-Base44 coverage distinctions remain intact.
+- Merge the 23 approved original public URL records, retain historical/PIN/404
+  notes, normalize duplicate slash/base-version URLs without collapsing real
+  WonUp role queries; keep the selected BeautyPath primary query URL exact.
+- No product/lab source changes, PIN bypasses, secrets or old grades imported.
+  No commit/push/deploy until root review; scope is existing canonical dashboard.
+
 ## Latest user override: full readable redesign
 - User explicitly cancelled preservation of the old visual layout. Same production site and all owned asset/demo destinations remain; no replacement site.
 - Primary flows now My demos / My assets / ZOO activity. Demo and asset cards first, large touch targets, searchable/filterable, calm white/cream/slate, readable 16px body.
@@ -74,3 +93,17 @@ Canonical source before edits: public london4216-hue/Zoodo branch autonomous-eng
 - Independent root visual review requested above-fold mobile access. Compact mobile-only title/intro and first-card description now put BeautyPath primary action at y645.78–690.78 in a 375x812 viewport without scrolling. Search/filter and all other card body text remain readable 16px; standard note moved after cards.
 - Native GitHub check at the first PR head did not start any steps because the account is locked due to a billing issue. This is not reported as a passing check. Netlify preview succeeded, but native source-build proof and final production identity still need provider verification.
 - Native preview on head 9657c0b rendered correctly but build-proof.json remained 404. Root explicitly authorized a dashboard-branch-only repository-root netlify.toml: base engine/dashboard, publish ".", existing fail-closed source test command, matching functions/redirects/security headers and no-store build receipt. A new contract test checks this discovery configuration. Final merge requires a real provider-generated exact-SHA receipt, not an untracked local receipt.
+
+## Latest black-directory verification, 31 October 2026
+- This section supersedes the historical card-layout observations above. Candidate branch: zoo/portfolio-studio-20261031, based on canonical 1dd11e54bf8a4a7fc79462e84e3cf995d0cef67b. No product/lab application code changed or exercised for new data writes during this directory-only pass.
+- Frozen owner black/mint/violet brand and three self-hosted Inter weights applied throughout Directory, search, filters, disclosures and Activity. The default screen has 11 products and 37 deduplicated links, including all 23 approved original public addresses and their historical, PIN-required or unverified qualifications.
+- Desktop 1440x900 uses 90px product rows: all six demo primary actions are visible in the initial viewport. At 375x812 the BeautyPath primary link spans y488.59–620.09, without scrolling or reducing body copy below 16px.
+- Fresh-context checks exercised product filtering, All/Demos/Assets, role and Figma search, automatic matching-reference expansion, useful no-results state, Clear filters reset, open/close reference disclosures and visible historical/PIN notes.
+- Real primary popup preserved the exact owner-selected BeautyPath query URL and rendered the BeautyPath title. A real original WonUp pre_enrolled role popup preserved that recorded route and rendered Prestige Engage. This proves those navigations, not all product journeys or URL availability.
+- Directory/Activity navigation, direct Activity fragment, Refresh now, hosting disclosure, operational evidence disclosure and review-history expansion passed. Activity starts collapsed and keeps scheduler completion distinct from review outcome; selected Netlify BeautyPath remains explicitly outside the older Base44 check coverage. Active coding-agent count remains Not measured.
+- Browser-only feed fixtures passed for stale completion, HTTP503 UNKNOWN, scheduler-completed review needing attention, regressing receipt connection warning with retained evidence, covered passing review and HTML-like coverage rendered as literal text with no injected images. Fixtures were never published.
+- No horizontal overflow at 375, 720 or 1440; no duplicate live DOM IDs or new page errors. All original HTML IDs remain present. No private directory grades, inventory, credentials or retired provider URL added.
+- Keyboard order passed through skip link, brand link, Directory, Activity, search and product filter, each with a visible 2px focus outline. All three local Inter weights loaded. Sampled directory metadata/navigation contrast was at least 8.48:1 against its opaque background; this is a bounded sample, not a full accessibility audit.
+- Final local source build: 85/85 tests passed across 15 test modules. Mirror preparation: 24 allowlisted files. These local checks are not a provider-generated exact-SHA deployment receipt.
+- Final screenshots are outside deployment: /tmp/r/studio-directory-desktop.png, /tmp/r/studio-directory-mobile.png, /tmp/r/studio-directory-mobile-expanded.png, /tmp/r/studio-activity-desktop.png, /tmp/r/studio-activity-mobile.png and /tmp/r/studio-activity-expanded-full.png.
+- Release remains subject to a normal PR, exact-SHA native Netlify preview receipt and independent different-lineage review. GitHub Actions billing restrictions must not be relabeled as passing; no merge, production deployment or provider change is authorized to this implementation agent.
