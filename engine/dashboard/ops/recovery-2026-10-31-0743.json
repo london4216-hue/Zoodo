@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-31T07:44:32.995Z",
+  "task_id": "TransendIQ#1023 / Zoodo#17",
+  "status": "RECOVERING",
+  "decision": "REVISE",
+  "agent_id": "ZOO Dashboard Worker",
+  "from": "Dashboard Lead",
+  "to": "Implementation Lead",
+  "next_in_chain": "ZOO Keeper",
+  "repository": "london4216-hue/Zoodo",
+  "branch": "fix/zoo-live-dashboard-accountability-20261030",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+  "source_commit_sha": "1fc3f187cff24baa6fac77e836b44386ae658e6d",
+  "source_commit_url": "https://github.com/london4216-hue/Zoodo/commit/1fc3f187cff24baa6fac77e836b44386ae658e6d",
+  "action": "Published authenticated scheduler snapshot with conditional blob SHA and read it back",
+  "action_started_at": "2026-10-31T07:43:32Z",
+  "action_finished_at": "2026-10-31T07:43:50.885Z",
+  "snapshot_observed_at": "2026-10-31T07:43:50.885Z",
+  "snapshot_blob_sha": "02f54b4c68e0ca2e0837bdf4cb5a6561c691c5cf",
+  "tests": {
+    "snapshot_contract": {
+      "passed": 11,
+      "failed": 0,
+      "scope": "Independent data/schema and link parity assertions, not a GitHub CI or browser pass"
+    },
+    "baseline_source_hrefs": 26,
+    "proposed_source_hrefs": 45,
+    "missing_baseline_hrefs": 0,
+    "old_banner_removed": true,
+    "github_actions": {
+      "run_id": 41181752660,
+      "job_id": 124480415405,
+      "status": "failure",
+      "job_steps": null,
+      "logs": "unavailable BlobNotFound"
+    },
+    "netlify_preview": {
+      "state": "pending",
+      "provider_status_url": "https://app.netlify.com/projects/zoo-live-dashboard/deploys/6ae59c3c5e75bb087f981656"
+    },
+    "production": {
+      "url": "https://zoo-live-dashboard.netlify.app/",
+      "verified": false,
+      "reason": "Read-only web HTTP inaccessible; independent container curl DNS resolution failed; site ID/deploy SHA/source mapping not authenticated"
+    }
+  },
+  "source_receipts": {
+    "scheduler_completed": 4,
+    "active_productive_agents_verified": null,
+    "provider_model_invocations_verified": null,
+    "live_dashboard_receipt_verified": false
+  },
+  "issues": [
+    "https://github.com/london4216-hue/Zoodo/issues/17",
+    "https://github.com/london4216-hue/Zoodo/issues/18",
+    "https://github.com/london4216-hue/TransendIQ/issues/1023"
+  ],
+  "movement_ledger": [
+    {
+      "utc_hour": "2026-10-31T07:00:00Z",
+      "et_hour": "2026-10-31 03:00 EDT",
+      "repo": "london4216-hue/Zoodo",
+      "asset": "dashboard scheduler proof",
+      "pr": 16,
+      "prior_status": "06:52 UTC scheduler snapshot, unresolved Netlify/CI",
+      "new_status": "07:43 UTC authenticated snapshot committed/read back; Netlify/CI still unresolved",
+      "commit_sha": "1fc3f187cff24baa6fac77e836b44386ae658e6d",
+      "worker": "ZOO Dashboard Worker"
+    }
+  ],
+  "pr_stages": {
+    "opened_at": "2026-10-30T15:34:21Z",
+    "review_at": null,
+    "fix_at": "2026-10-31T07:43:50.885Z",
+    "tests_at": "2026-10-31T07:44:32.995Z",
+    "merge_at": null,
+    "deploy_at": null,
+    "verified_at": null,
+    "opened_to_fix_minutes": 969,
+    "gap_detection_to_verified_minutes": null
+  },
+  "unresolved_gap_age_minutes": 1112,
+  "owner": "ZOO Dashboard Worker",
+  "backup": "ZOO Agent Hunter",
+  "integration_authority": "Sole ZOO Keeper",
+  "next_executable_action": "Implementation Lead: diagnose GitHub Actions startup job with null steps and BlobNotFound logs; use authorized independent Netlify preview test gate. Hunter: qualify Netlify site mapping/deploy API access without new spend. Dashboard Worker: on next execution verify current scheduler completions and refresh snapshot, then verify live production SHA/manual-auto refresh/mobile and demo links before release. Keeper: maintain durable queue and integrate only tested reversible fix.",
+  "next_trigger": "Next actual scheduled run or authenticated event-driven completion, whichever is available; no claim of an external invocation."
+}

@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "task_id": "ZOO-DASHBOARD-FUTURE-RECEIPT-FRESHNESS-20261031-1112",
+  "status": "RECOVERING",
+  "observed_at": "2026-10-31T11:12:00.026Z",
+  "owner": "ZOO Dashboard Worker",
+  "backup": "ZOO Agent Hunter",
+  "integration_authority": "Sole ZOO Keeper",
+  "from": "Dashboard Lead",
+  "to": "Implementation Lead",
+  "next_handoff": "Sole ZOO Keeper",
+  "decision": "REVISE",
+  "source_repository": "london4216-hue/Zoodo",
+  "canonical_pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+  "stacked_pr": "https://github.com/london4216-hue/Zoodo/pull/71",
+  "fix": {
+    "root_cause": "evidence-clock.mjs accepted future-dated successful CI, independent review, deployment and heartbeat timestamps, allowing a clock-skewed or invalid receipt to reset freshness",
+    "code_sha": "ddaaeda49db75a6b4b73b864986ab07c7631377b",
+    "test_sha": "91c88b16e97fd28bf2ad6d7948df36c68c4ef842",
+    "source_path": "engine/dashboard/evidence-clock.mjs",
+    "test_path": "engine/dashboard/tests/evidence-freshness.test.mjs",
+    "rule": "Reject timestamps more than 60 seconds after evaluation time; preserve UNKNOWN rather than claim future proof"
+  },
+  "tests": {
+    "environment": "local Node.js v22.16.0",
+    "command": "node --test engine/dashboard/tests/evidence-freshness.test.mjs",
+    "before": {
+      "passed": 1,
+      "failed": 3
+    },
+    "after": {
+      "passed": 4,
+      "failed": 0
+    },
+    "github_source_readback": "PASS",
+    "full_dashboard_suite": "NOT_RUN",
+    "independent_ci": "FAILED_ZERO_STEPS"
+  },
+  "ci": {
+    "run_id": 41195777628,
+    "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41195777628",
+    "job_id": 124521518002,
+    "job_status": "completed",
+    "conclusion": "failure",
+    "steps": 0,
+    "job_log": "HTTP_404_BlobNotFound",
+    "classification": "RUNNER_STARTUP_RECOVERY_EVENT"
+  },
+  "scheduler": {
+    "source": "authenticated_connected_automations_peek",
+    "snapshot_commit": "41f20f522ea72efaef98b6f4921eac71bdced651",
+    "snapshot_observed_at": "2026-10-31T11:11:32.325Z",
+    "valid_prior_completed_roles": 4,
+    "at_snapshot_in_progress": [
+      "ZOO Dashboard Worker"
+    ],
+    "productive_agents": "UNKNOWN",
+    "note": "Scheduler completion is not productive worker proof; in-progress is not a completion."
+  },
+  "deployment": {
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "site_id": null,
+    "deploy_id": null,
+    "source_sha": null,
+    "preview_browser_readback": "UNKNOWN",
+    "production_browser_readback": "UNKNOWN",
+    "netlify_dns": "UNRESOLVED_FROM_CONTAINER",
+    "web_url_readback": "UNAVAILABLE",
+    "owner_auth": "UNKNOWN",
+    "rollback": "UNKNOWN",
+    "published": false
+  },
+  "navigation": {
+    "source_index_changed_this_cycle": false,
+    "previous_baseline_unique_hrefs": 23,
+    "previous_pr71_unique_hrefs": 37,
+    "removed_by_this_fix": [],
+    "live_link_parity": "UNKNOWN"
+  },
+  "queue_snapshot": {
+    "zoodo_open_issues_returned": 15,
+    "zoodo_open_prs_returned": 57,
+    "source": "authenticated GitHub search; results below 100 cap",
+    "published_on_live_dashboard": false
+  },
+  "hourly_movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T11:00:00Z",
+      "asset": "Zoodo dashboard",
+      "pr": 71,
+      "previous": "FUTURE_DATED_RECEIPTS_ACCEPTED",
+      "new": "LOCAL_REGRESSION_PASS__CI_ZERO_STEP_RECOVERING",
+      "code_sha": "ddaaeda49db75a6b4b73b864986ab07c7631377b",
+      "test_sha": "91c88b16e97fd28bf2ad6d7948df36c68c4ef842",
+      "source_committed": true,
+      "local_tests": "4/4 PASS",
+      "provider_deploy": "UNKNOWN",
+      "live_verified": "UNKNOWN",
+      "worker": "Dashboard Lead",
+      "pr_opened_at": "2026-10-31T10:41:47Z",
+      "code_committed_at": "2026-10-31T11:10:31Z",
+      "test_committed_at": "2026-10-31T11:10:45Z",
+      "pr_open_to_code_minutes": 28.73,
+      "review_at": null,
+      "merge_at": null,
+      "deploy_at": null,
+      "verified_at": null,
+      "merge_to_deploy_minutes": null,
+      "gap_detection_to_fix_minutes": null
+    }
+  ],
+  "unresolved_gap_age_minutes": 1320,
+  "next_executable_steps": [
+    "Implementation Lead: diagnose GitHub Actions job provisioning zero-step failure for run 41195777628; use independently authorized local/provider read-only test gate; do not repeat identical reruns.",
+    "Agent Hunter: obtain authenticated Netlify site/deploy ID and exact source SHA; probe production/preview readback, mobile, auth, rollback and existing links.",
+    "Sole ZOO Keeper: reconcile PR #71 stacked on PR #16; rebase scheduler snapshot without overwriting single-writer evidence; integrate only after actual source/deploy mapping and required safety.",
+    "Dashboard Lead: fix GitHub queue count pagination/source-linked receipt display and validate live freshness once provider mapping is available; keep UNKNOWN where evidence absent."
+  ],
+  "next_trigger": "New authenticated provider CI/Netlify receipt or next scheduled dashboard cycle",
+  "release": {
+    "production_published": false,
+    "demo_ready": false,
+    "owner_email_sent": false
+  }
+}

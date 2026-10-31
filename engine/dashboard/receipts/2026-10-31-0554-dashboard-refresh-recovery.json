@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "task_id": "TransendIQ#1023/Zoodo#17",
+  "agent_id": "ZOO Dashboard Worker",
+  "decision": "REVISE",
+  "status": "RECOVERING",
+  "observed_at": "2026-10-31T05:55:23.313Z",
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "branch": "fix/zoo-live-dashboard-accountability-20261030",
+    "source_head_sha_before_receipt": "c3a37b4d6000de2b941f88728d7b041b5fb2b9fc",
+    "source_path": "engine/dashboard/index.html",
+    "source_commit": "cf561050fe2cb51e0adda51e5b8d653b4a090887",
+    "test_commit": "c3a37b4d6000de2b941f88728d7b041b5fb2b9fc",
+    "snapshot_commit": "f5623d5862b96260013640024845ab1da432e476",
+    "snapshot_observed_at": "2026-10-31T05:54:25.926Z",
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+    "latest_status_head_sha": "f72cb114e10bc7d23118305f10066be8c756e15f"
+  },
+  "repair": {
+    "change": "Bound GitHub API fetch to 10 seconds and serialize manual/30-second auto-refresh to prevent stale overlapping responses; published read-back scheduler snapshot.",
+    "link_parity": {
+      "before": 45,
+      "after": 45,
+      "preserved": true
+    },
+    "test_receipts": [
+      {
+        "kind": "connector_side_source_contract",
+        "result": "PASS",
+        "details": "Module JavaScript parsed, five refresh assertions passed, 45 hrefs unchanged."
+      },
+      {
+        "kind": "connector_side_proof_evaluator",
+        "result": "PASS",
+        "details": "Current Hunter scheduler anomaly is RECOVERY REQUIRED, not green; 76-minute stale feed remains recovery."
+      },
+      {
+        "kind": "connector_side_functional_mock",
+        "result": "PASS",
+        "details": "Executed actual PR #16 update() with deferred GitHub calls: overlapping second refresh issued no additional API calls; completion released lock; next refresh resumed; api() passed 10000ms timeout to fetch."
+      }
+    ],
+    "node_ci": {
+      "state": "FAILED_UNDIAGNOSED",
+      "run_id": 41174536404,
+      "job_id": 124459244045,
+      "logs": "Earlier exact-head job logs 404 BlobNotFound; latest job steps absent.",
+      "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41174536404"
+    },
+    "netlify": {
+      "production_url": "https://zoo-live-dashboard.netlify.app/",
+      "production_deploy_id": null,
+      "production_source_sha": null,
+      "preview_current_sha_verified": false,
+      "live_refresh_verified": false,
+      "observation": "Web fetch unavailable; container DNS resolution failed. Not proof site is down.",
+      "preview_provider_status": {
+        "source_commit": "f72cb114e10bc7d23118305f10066be8c756e15f",
+        "context": "netlify/zoo-live-dashboard/deploy-preview",
+        "reported_state": "success",
+        "url": "https://deploy-preview-16--zoo-live-dashboard.netlify.app",
+        "source": "GitHub commit status",
+        "browser_readback_verified": false,
+        "site_id_verified": false
+      }
+    },
+    "baseline_href_parity": {
+      "original_branch": "autonomous-engine-replacement-2026-10-29",
+      "original_hrefs": 26,
+      "patched_hrefs": 45,
+      "missing_original_hrefs": 0
+    }
+  },
+  "scheduler": {
+    "verified_completed_roles": [
+      "ZOO Keeper",
+      "ZOO Dashboard Worker (previous run)",
+      "ZOO Asset Restoration"
+    ],
+    "quarantined": [
+      {
+        "role": "ZOO Agent Hunter",
+        "reason": "completed_at precedes scheduled_for",
+        "run_id": "0bde120d-c504-8331-9f02-bef37d4a6473"
+      }
+    ],
+    "current_run": "in_progress_not_counted",
+    "productive_agent_count": null
+  },
+  "handoff": {
+    "from": "Dashboard Lead",
+    "to": "Implementation Lead",
+    "backup": "ZOO Agent Hunter",
+    "integration_authority": "Sole ZOO Keeper",
+    "task_id": "Zoodo#17 / TransendIQ#1023",
+    "next_trigger": "next authorized execution or verified provider deploy callback",
+    "next_executable_actions": [
+      "Inspect Netlify existing site published deploy ID, source branch and publish directory with authorized site API; record rollback ID.",
+      "Run exact-head preview browser and mobile tests, verify all demo links and owner access gate.",
+      "Repair GitHub Actions job log/startup failure or obtain independent provider build receipt; do not call CI PASS.",
+      "Keep Hunter timestamp anomaly quarantined and request new valid native execution receipt.",
+      "After provider mapping and independent tests, publish only with owner-authorized controls and verify live refresh."
+    ]
+  },
+  "pr_stages": {
+    "opened_at": "2026-10-30T15:34:21Z",
+    "reviewed_at": null,
+    "fix_committed_at": "2026-10-31T05:54:39Z",
+    "tests_completed_at": "2026-10-31T05:55:23.313Z",
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_at": null
+  },
+  "gap_detection_at": "2026-10-30T13:12:14Z",
+  "gap_verified_fixed_at": null,
+  "release_status": "NOT_DEPLOYED_NOT_DEMO_READY",
+  "owner_notification": "SUPPRESSED_PRECONDITIONS_NOT_MET",
+  "timing_seconds": {
+    "pr_open_to_fix": 51618,
+    "gap_detection_to_code_fix": 60145,
+    "gap_detection_to_deployed_verification": null,
+    "pr_to_merge": null,
+    "merge_to_deploy": null
+  },
+  "hourly_movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T05:00:00Z",
+      "repo": "london4216-hue/Zoodo",
+      "pr": 16,
+      "prior_status": "RECOVERING_SOURCE_UNBOUNDED",
+      "new_status": "SOURCE_REPAIR_COMMITTED_CI_FAILED_LIVE_UNVERIFIED",
+      "source_fix_sha": "cf561050fe2cb51e0adda51e5b8d653b4a090887",
+      "test_sha": "c3a37b4d6000de2b941f88728d7b041b5fb2b9fc",
+      "scheduler_snapshot_sha": "f5623d5862b96260013640024845ab1da432e476",
+      "worker": "ZOO Dashboard Worker",
+      "tests": "connector-side functional mock PASS; full GitHub CI failure",
+      "deployed_sha": null
+    }
+  ]
+}

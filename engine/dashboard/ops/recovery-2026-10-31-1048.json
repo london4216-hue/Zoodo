@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "task_id": "ZOO-DASHBOARD-ANOMALY-SUPERSESSION-20261031-1048",
+  "status": "RECOVERING",
+  "observed_at": "2026-10-31T10:48:09.673Z",
+  "from": "Dashboard Lead",
+  "to": "Implementation Lead",
+  "next_handoff": "ZOO Keeper",
+  "decision": "REVISE",
+  "owner": "ZOO Dashboard Worker",
+  "backup": "ZOO Agent Hunter",
+  "integration_authority": "Sole ZOO Keeper",
+  "source_repository": "london4216-hue/Zoodo",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+  "fix_pr": "https://github.com/london4216-hue/Zoodo/pull/71",
+  "source_code_commit": "805e061bd4974bab565575568132ea9a35b0c309",
+  "regression_test_commit": "2c0313ff85e0d660dcebf221608d73d173a4c1cc",
+  "scheduler_snapshot_commit": "f56d43bf234cd04db89a3781b54fcaf470607d22",
+  "root_cause": "Automation proof classifier compared valid completion against an anomalous future scheduled_for, leaving a false active RECOVERY REQUIRED after a later genuine completion.",
+  "attempted_repair": "On PR #71, compare newer valid same-role completion against anomaly's actual completed_at; retain missing/unresolved and later anomalies as recovery events. Refresh canonical PR #16 proof snapshot from four authenticated automation last_run records.",
+  "tests": {
+    "command": "node --test automation-proof.test.mjs (isolated regression fixture)",
+    "node": "v22",
+    "before": {
+      "passed": 2,
+      "failed": 1
+    },
+    "after": {
+      "passed": 3,
+      "failed": 0
+    },
+    "full_repository_suite": "NOT_RUN",
+    "github_source_readback": "PASS",
+    "github_ci_exact_head": "UNKNOWN_NO_RUN",
+    "github_commit_statuses": []
+  },
+  "scheduler": {
+    "source": "authenticated_connected_automations_peek",
+    "observed_at": "2026-10-31T10:47:46.186Z",
+    "valid_completed_roles": 4,
+    "verified_productive_agents": "UNKNOWN",
+    "latest_completion": "2026-10-31T10:46:11.967536Z",
+    "note": "Completed scheduler runs are not active worker or hosted relay proof."
+  },
+  "host": {
+    "url": "https://zoo-live-dashboard.netlify.app/",
+    "http_check": "DNS_UNRESOLVED_FROM_CONTAINER_AND_WEB",
+    "site_id": null,
+    "deploy_id": null,
+    "deployed_sha": null,
+    "live_browser_refresh": null,
+    "owner_access_check": null,
+    "rollback_mapping": null
+  },
+  "github_actions": {
+    "previous_run_id": 41193304587,
+    "previous_job_id": 124514315409,
+    "steps": 0,
+    "prior_logs": "404 BlobNotFound",
+    "exact_new_head_runs": 0,
+    "classification": "CI_STARTUP_FAILURE_RECOVERY_EVENT"
+  },
+  "release": {
+    "production_published": false,
+    "demo_ready": false,
+    "email_sent": false
+  },
+  "hourly_movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T10:00:00Z",
+      "asset": "Zoodo dashboard",
+      "pr": 71,
+      "prior_status": "FALSE_RECOVERY_FROM_FUTURE_SCHEDULED_ANOMALY",
+      "new_status": "LOCAL_REGRESSION_FIXED_ON_DRAFT_PR",
+      "code_sha": "805e061bd4974bab565575568132ea9a35b0c309",
+      "test_sha": "2c0313ff85e0d660dcebf221608d73d173a4c1cc",
+      "scheduler_sha": "f56d43bf234cd04db89a3781b54fcaf470607d22",
+      "source_committed": true,
+      "local_tests": "3/3 targeted passed",
+      "ci": "UNKNOWN",
+      "provider_deploy": "UNKNOWN",
+      "independent_live": "UNKNOWN",
+      "worker": "Dashboard Lead",
+      "gap_to_fix_minutes": "UNKNOWN",
+      "merge_to_deploy_minutes": "UNKNOWN"
+    }
+  ],
+  "next_executable_steps": [
+    "Implementation Lead: run full Zoodo dashboard suite on exact PR #71 SHA in independent Node/provider test; diagnose GitHub Actions zero-step startup without repeating failed technique.",
+    "Agent Hunter: authenticate Netlify site/deploy mapping and independently verify preview and production read-only browser, mobile and navigation parity; preserve rollback.",
+    "ZOO Keeper: integrate PR #71 into PR #16 only after full suite/provider receipt, preserve owner-only production release.",
+    "Dashboard Lead: confirm fixed anomaly state in preview and live once Netlify mapping is authenticated; continue publishing only actual scheduler receipts."
+  ],
+  "next_trigger": "Next qualified test receipt, Netlify site mapping, or scheduled dashboard recovery execution"
+}

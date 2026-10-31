@@ -1,0 +1,23 @@
+name: ZOO dashboard source and link safety
+on:
+  pull_request:
+    branches: [autonomous-engine-replacement-2026-10-29, fix/zoo-live-dashboard-accountability-20261030]
+    paths:
+      - 'engine/dashboard/**'
+      - '.github/workflows/zoo-dashboard-contract.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dashboard-contract:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Source contract and preservation tests
+        run: node --test engine/dashboard/tests/*.test.mjs
+      - name: Confirm no production deploy in validation workflow
+        run: echo 'Source tests only; production deployment remains owner-only.'

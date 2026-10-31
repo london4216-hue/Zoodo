@@ -1,0 +1,86 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {evaluateAutomationProof} from '../automation-proof.mjs';
+const now=Date.parse('2026-10-30T16:30:00Z');
+const good={schema_version:1,source:'connected_automations_peek',observed_at:'2026-10-30T16:25:00Z',
+ workers:[{role:'ZOO Keeper',run_id:'60a78be7-d2f8-832f-a788-25876c50adc2',
+ recorded_status:'completed',scheduled_for:'2026-10-30T16:00:00Z',completed_at:'2026-10-30T16:05:00Z'}]};
+test('actual completed execution is not misrepresented as a live worker heartbeat',()=>{
+ const p=evaluateAutomationProof(good,now);
+ assert.equal(p.state,'RECORDED RUNS CURRENT');assert.equal(p.activeWorkersVerified,false);
+ assert.equal(p.lastRunAt,'2026-10-30T16:05:00Z');
+});
+test('stale or absent worker evidence becomes an actionable recovery state',()=>{
+ assert.equal(evaluateAutomationProof(good,now+80*60000).state,'RECOVERY REQUIRED');
+ assert.equal(evaluateAutomationProof(null,now).state,'UNKNOWN');
+});
+test('page reload, fake active status and future timestamps do not refresh proof',()=>{
+ assert.equal(evaluateAutomationProof({...good,workers:[{...good.workers[0],recorded_status:'in_progress'}]},now).state,'UNKNOWN');
+ assert.equal(evaluateAutomationProof({...good,observed_at:'2026-11-01T00:00:00Z'},now).state,'UNKNOWN');
+});
+
+test('scheduler anomaly: completed before scheduled cannot count as verified run',()=>{
+ const anomalous={...good.workers[0],scheduled_for:'2026-10-30T16:21:25Z',completed_at:'2026-10-30T16:06:05Z'};
+ const p=evaluateAutomationProof({...good,workers:[anomalous]},now);
+ assert.equal(p.state,'UNKNOWN');assert.equal(p.workerCount,0);
+ const mixed=evaluateAutomationProof({...good,workers:[good.workers[0],anomalous]},now);
+ assert.equal(mixed.state,'UNKNOWN');assert.equal(mixed.workerCount,0);
+});
+
+test('duplicate worker roles cannot inflate scheduler proof',()=>{
+ const duplicate={...good.workers[0],run_id:'33333333-aaaa-4bbb-8ccc-aaaaaaaaaaaa'};
+ const p=evaluateAutomationProof({...good,workers:[good.workers[0],duplicate]},now);
+ assert.equal(p.state,'UNKNOWN');assert.equal(p.workerCount,0);
+});
+test('replayed run IDs across roles cannot inflate scheduler proof',()=>{
+ const replay={...good.workers[0],role:'ZOO Agent Hunter'};
+ const p=evaluateAutomationProof({...good,workers:[good.workers[0],replay]},now);
+ assert.equal(p.state,'UNKNOWN');assert.equal(p.workerCount,0);
+});
+test('malformed worker identity is not accepted as a scheduler receipt',()=>{
+ const malformed={...good.workers[0],role:'  '};
+ const p=evaluateAutomationProof({...good,workers:[malformed]},now);
+ assert.equal(p.state,'UNKNOWN');
+});
+
+test('a separately reported scheduler anomaly prevents false healthy status',()=>{
+ const p=evaluateAutomationProof({...good,source_anomalies:[{role:'ZOO Agent Hunter',kind:'invalid_completion_timestamp',run_id:'33333333-aaaa-4bbb-8ccc-aaaaaaaaaaaa'}]},now);
+ assert.equal(p.state,'RECOVERY REQUIRED');
+ assert.deepEqual(p.overdue,['ZOO Agent Hunter']);
+});
+test('a newer in-progress run is not treated as completed or a live heartbeat',()=>{
+ const p=evaluateAutomationProof({...good,in_progress_runs:[{role:'ZOO Keeper',run_id:'33333333-aaaa-4bbb-8ccc-aaaaaaaaaaaa',recorded_status:'in_progress',scheduled_for:'2026-10-30T16:20:00Z',started_at:'2026-10-30T16:21:00Z',completed_at:null}]},now);
+ assert.equal(p.state,'RECORDED RUNS CURRENT');
+ assert.equal(p.activeWorkersVerified,false);
+});
+
+test('declared four-worker roster cannot report healthy when a role is missing',()=>{
+ const p=evaluateAutomationProof({...good,expected_roles:['ZOO Keeper','ZOO Agent Hunter']},now);
+ assert.equal(p.state,'RECOVERY REQUIRED');
+ assert.deepEqual(p.overdue,['ZOO Agent Hunter']);
+ assert.equal(p.activeWorkersVerified,false);
+});
+
+// A quarantined historical scheduler anomaly must not create a permanent red
+// status after the same worker completes a later authenticated run.
+test('historical anomaly clears recovery after a newer valid same-role completion',()=>{
+ const later={...good.workers[0],role:'ZOO Agent Hunter',
+  run_id:'44444444-aaaa-4bbb-8ccc-aaaaaaaaaaaa',
+  scheduled_for:'2026-10-30T16:10:00Z',completed_at:'2026-10-30T16:15:00Z'};
+ const anomaly={role:'ZOO Agent Hunter',kind:'completion_before_scheduled_for_or_invalid',
+  run_id:'55555555-aaaa-4bbb-8ccc-aaaaaaaaaaaa',
+  scheduled_for:'2026-10-30T16:00:00Z',completed_at:'2026-10-30T15:50:00Z'};
+ const feed={...good,workers:[good.workers[0],later],
+  expected_roles:['ZOO Keeper','ZOO Agent Hunter'],source_anomalies:[anomaly]};
+ const p=evaluateAutomationProof(feed,now);
+ assert.equal(p.state,'RECORDED RUNS CURRENT');
+ assert.deepEqual(p.overdue,[]);
+ assert.equal(p.activeWorkersVerified,false);
+});
+test('newer unresolved anomaly still triggers recovery even with old valid completion',()=>{
+ const anomaly={role:'ZOO Keeper',kind:'invalid_completion_timestamp',
+  scheduled_for:'2026-10-30T16:20:00Z'};
+ const p=evaluateAutomationProof({...good,source_anomalies:[anomaly]},now);
+ assert.equal(p.state,'RECOVERY REQUIRED');
+ assert.deepEqual(p.overdue,['ZOO Keeper']);
+});
