@@ -1,6 +1,15 @@
 /** Bounded durable outbox consumer; never infer a worker started from an unconfirmed receipt. */
 const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
 const TICKET = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
+const WORKER = /^[A-Za-z0-9_-]{1,64}$/;
+function confirmedDispatch(r) {
+  if (r?.state !== 'dispatched' || !TICKET.test(r.ticket ?? '') ||
+      !WORKER.test(r.worker ?? '') || typeof r.receipt_url !== 'string') return false;
+  try {
+    const u = new URL(r.receipt_url);
+    return u.protocol === 'https:' && !u.username && !u.password && !u.hash;
+  } catch { return false; }
+}
 export async function drainOne({store,relay,workerIds}) {
   if (!store || typeof store.claimOutbox !== 'function' || typeof store.ackOutbox !== 'function' ||
       !relay || typeof relay.next !== 'function' || !Array.isArray(workerIds) || !workerIds.length ||
@@ -25,8 +34,19 @@ export async function drainOne({store,relay,workerIds}) {
         continue;
       }
       if (r?.state === 'dispatched' || r?.state === 'delegated') {
-        if (await store.ackOutbox(event.id,event.lease_token) !== true)
-          return {state:'recovery_required',reason:'outbox ack not confirmed',eventId:event.id,attempts};
+        const dispatch = r.state === 'dispatched' ? r : r.replacement;
+        // A state label alone cannot settle durable work; retain the wakeup
+        // if the relay cannot identify a concrete worker and receipt URL.
+        if (!confirmedDispatch(dispatch))
+          return {state:'recovery_required',reason:'dispatch receipt incomplete',eventId:event.id,attempts};
+        // An ACK timeout is ambiguous AFTER a worker was dispatched. Never
+        // fall through to another worker, which could duplicate execution.
+        try {
+          if (await store.ackOutbox(event.id,event.lease_token) !== true)
+            return {state:'recovery_required',reason:'outbox ack not confirmed',eventId:event.id,attempts};
+        } catch (error) {
+          return {state:'recovery_required',reason:'outbox ack uncertain',eventId:event.id,attempts};
+        }
         return {state:'acknowledged',eventId:event.id,dispatch:r,attempts};
       }
       if (r?.state === 'uncertain' && r.replacement?.state === 'dispatched')
