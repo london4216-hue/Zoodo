@@ -62,7 +62,13 @@
     "keeper_existing_automation_id": "6ae3da9a4b048191be5c34ef8a19b1b7",
     "keeper_run_now_requested": true,
     "keeper_run_now_accepted": true,
-    "keeper_execution_confirmed": false
+    "keeper_execution_confirmed": false,
+    "agent_hunter_parallel_capability_probe": {
+      "existing_automation_id": "6ae4a7a96c2c8191b990b12dda94f0f8",
+      "immediate_run_request_accepted": true,
+      "execution_confirmed": false,
+      "scope": "Existing Netlify/Vercel/Supabase authenticated deployment/runtime probe; no assumed credentials"
+    }
   },
   "panel_proof_matrix": {
     "agent_hunter": "UNKNOWN",
