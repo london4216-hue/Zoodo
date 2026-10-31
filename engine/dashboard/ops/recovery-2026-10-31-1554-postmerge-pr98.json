@@ -64,22 +64,28 @@
     "job_steps": null,
     "job_logs": "404 BlobNotFound",
     "classification": "RECOVERY EVENT: runner startup failed before any test steps",
-    "owner": "Implementation Lead"
+    "owner": "Implementation Lead",
+    "latest_exact_head_run_id": 41217125038,
+    "latest_exact_head_run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41217125038",
+    "latest_job_id": 124583887406,
+    "latest_job_steps": null,
+    "latest_conclusion": "failure"
   },
   "provider": {
     "production_url": "https://zoo-live-dashboard.netlify.app/",
-    "preview_url": "https://deploy-preview-98--zoo-live-dashboard.netlify.app/",
+    "preview_url": "https://deploy-preview-98--zoo-live-dashboard.netlify.app",
     "github_status_context": "netlify/zoo-live-dashboard/deploy-preview",
-    "github_status_at_check": "pending",
-    "provider_status_target": "https://app.netlify.com/projects/zoo-live-dashboard/deploys/6ae60f3904b56d1fcfbbb5fa",
-    "provider_deploy_id_claim": "6ae60f3904b56d1fcfbbb5fa (status target only, not authenticated deployment receipt)",
+    "github_status_at_check": "success",
+    "provider_status_target": "https://deploy-preview-98--zoo-live-dashboard.netlify.app",
+    "provider_deploy_id_claim": "UNKNOWN for exact PR98 head; previous pending status target was not a live deployment receipt",
     "production_deployed_sha": "UNKNOWN",
-    "preview_browser_readback": "UNVERIFIED",
-    "production_browser_readback": "UNVERIFIED",
+    "preview_browser_readback": "UNVERIFIED: DNS resolution failed 2026-10-31T15:55:15Z",
+    "production_browser_readback": "UNVERIFIED: DNS resolution failed 2026-10-31T15:55:15Z",
     "runtime_http": "DNS resolution failed",
     "owner_authentication": "UNVERIFIED",
     "rollback_mapping": "UNVERIFIED",
-    "production_publication": false
+    "production_publication": false,
+    "preview_status_scope": "GitHub commit status only, NOT independently verified Netlify build logs or browser content"
   },
   "scheduler": {
     "source": "authenticated connected Automations peek",
@@ -121,5 +127,6 @@
     "unresolved": true,
     "issue": "https://github.com/london4216-hue/Zoodo/issues/18",
     "private_issue": "https://github.com/london4216-hue/TransendIQ/issues/1023"
-  }
+  },
+  "last_checked_at": "2026-10-31T15:55:15Z"
 }
