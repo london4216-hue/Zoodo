@@ -27,6 +27,12 @@ export function evaluateAutomationProof(feed, now=Date.now(), dueMs=75*60000){
  // Publisher-side anomalies are separate evidence; never discard them merely
  // because an older completion for that worker remains valid.
  const anomalies=Array.isArray(feed.source_anomalies)?feed.source_anomalies:[];
+ // Keep historical invalid receipts visible for audit, but a later valid
+ // completion by the SAME role resolves the active recovery condition.
+ // An anomaly without a trustworthy scheduled_for stays unresolved.
+ const unresolvedAnomalies=anomalies.filter(a=>!valid.some(w=>
+  w.role===a?.role&&DATE(a?.scheduled_for)&&
+  Date.parse(w.completed_at)>Date.parse(a.scheduled_for)));
  // The publisher declares the expected worker roster. Missing roles cannot
  // turn a partial scheduler feed into a misleading all-clear.
  const expected=feed.expected_roles===undefined?[]:feed.expected_roles;
@@ -36,7 +42,7 @@ export function evaluateAutomationProof(feed, now=Date.now(), dueMs=75*60000){
   ...expected.filter(role=>!valid.some(w=>w.role===role)),
   ...feed.workers.filter(w=>!valid.includes(w)||now-Date.parse(w.completed_at)>dueMs)
    .map(w=>String(w?.role||'Unknown worker')),
-  ...anomalies.map(a=>typeof a?.role==='string'&&a.role.trim()?a.role:'Unknown anomaly')
+  ...unresolvedAnomalies.map(a=>typeof a?.role==='string'&&a.role.trim()?a.role:'Unknown anomaly')
  ])];
  const sourceStale=now-observed>dueMs;
  const status=sourceStale||overdue.length?'RECOVERY REQUIRED':'RECORDED RUNS CURRENT';
