@@ -2,16 +2,75 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ZOO | Execution Proof</title>
 <style>
 :root{font-family:Inter,system-ui,sans-serif;color:#e6edf7;background:#090e17}*{box-sizing:border-box}body{margin:0;padding:24px;max-width:1600px;margin:auto}header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}h1{font-size:32px;letter-spacing:.12em;margin:0}h2{font-size:15px;color:#a9b9d0;margin:0 0 12px}small,.muted{color:#92a3bd}.status{padding:9px 15px;border-radius:99px;background:#292f3b;font-weight:700}.good{color:#6ee7b7}.bad{color:#ff8585}.warn{color:#ffd47c}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:24px 0}.card,.panel{background:#121b2a;border:1px solid #273448;border-radius:14px;padding:18px}.metric{font-size:35px;font-weight:800;margin:8px 0}.panels{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:850px){.panels{grid-template-columns:1fr}}.row{padding:12px 0;border-bottom:1px solid #283548;overflow-wrap:anywhere}.row:last-child{border:0}.time{font-size:12px;color:#93a7c2}a{color:#8cc6ff}#errors{margin:14px 0;color:#ff8585}.bar{height:6px;background:#263246;border-radius:8px;overflow:hidden;margin-top:10px}.bar>div{height:100%;background:#4fd1a5;width:0;transition:width .3s}button{background:#263b56;color:#fff;border:0;padding:10px 16px;border-radius:8px;cursor:pointer}footer{margin-top:20px;color:#a2b2ca;font-size:13px}
- .launchpad{margin-top:20px}.launchlinks{display:flex;flex-wrap:wrap;gap:10px}.launchlinks a{display:inline-block;border:1px solid #36506c;border-radius:9px;padding:12px 14px;text-decoration:none;background:#192a3e}.launchlinks a:hover{background:#263d57}
-.lab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0 24px}.lab-card{border:1px solid #34465e;border-radius:14px;padding:18px;background:linear-gradient(145deg,#1c2b41,#101b2b)}.lab-card h3{margin:0 0 8px;font-size:18px}.lab-card p{font-size:13px;color:#a9b9d0;min-height:38px}.lab-card a{display:inline-block;padding:10px 14px;border-radius:8px;background:#294c70;text-decoration:none}.lab-card .pending{color:#ffd47c;font-size:13px}.lab-card .live{color:#6ee7b7;font-size:13px}.lab-card .kind{font-size:11px;letter-spacing:.1em;color:#a5c8e9;text-transform:uppercase;margin-bottom:9px}.queue-meta{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.queue-pill{background:#22344a;border:1px solid #39516e;border-radius:9px;padding:9px 12px;font-size:12px}.queue-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}.queue-list .row{padding:12px;border:1px solid #314159;border-radius:10px}.queue-state{font-size:12px;color:#ffd47c;margin-top:7px}</style></head><body>
+ .launchpad{margin-top:20px}.launchlinks{display:flex;flex-wrap:wrap;gap:10px}.launchlinks a{display:inline-block;border:1px solid #36506c;border-radius:9px;padding:12px 14px;text-decoration:none;background:#192a3e}.launchlinks a:hover{background:#263d57}.launchlinks a:not([data-zoo-verified]):not([data-zoo-home]){display:none}
+.lab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0 24px}.lab-card{border:1px solid #34465e;border-radius:14px;padding:18px;background:linear-gradient(145deg,#1c2b41,#101b2b)}.lab-card h3{margin:0 0 8px;font-size:18px}.lab-card p{font-size:13px;color:#a9b9d0;min-height:38px}.lab-card a{display:inline-block;padding:10px 14px;border-radius:8px;background:#294c70;text-decoration:none}.lab-card .pending{color:#ffd47c;font-size:13px}.lab-card .live{color:#6ee7b7;font-size:13px}.lab-card .kind{font-size:11px;letter-spacing:.1em;color:#a5c8e9;text-transform:uppercase;margin-bottom:9px}.queue-meta{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.queue-pill{background:#22344a;border:1px solid #39516e;border-radius:9px;padding:9px 12px;font-size:12px}.queue-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}.queue-list .row{padding:12px;border:1px solid #314159;border-radius:10px}.queue-state{font-size:12px;color:#ffd47c;margin-top:7px}
+.accountability{margin:14px 0 18px;padding:18px;border:1px solid #597699;background:#112339;border-radius:14px}
+.accountability h2{margin:0 0 10px;color:#f8d2a3;font-size:17px}
+.accountability .owners{display:flex;flex-wrap:wrap;gap:9px 24px;font-size:14px;margin-bottom:8px}
+.accountability .next{color:#b8cce3;font-size:13px;margin:8px 0 0;overflow-wrap:anywhere}
+.accountability .receipt{color:#d1e3f4;font-size:13px;margin:8px 0 0;overflow-wrap:anywhere}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
+.kpi{padding:14px;background:#17293e;border:1px solid #3b526b;border-radius:10px;min-width:0}
+.kpi strong{display:block;font-size:22px;overflow-wrap:anywhere;color:#fff;margin:7px 0}
+.kpi a{font-size:12px;overflow-wrap:anywhere}
+.kpi .caption{font-size:12px;color:#c4d4e6}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:400px){.kpi-grid{grid-template-columns:1fr}}
+
+.zoo-p0{margin:16px 0;border:1px solid #e0ae56}.zoo-p0-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.zoo-p0-grid>div{min-width:0;border:1px solid #344256;border-radius:10px;padding:12px}.zoo-p0 p{overflow-wrap:anywhere;margin:8px 0}.zoo-p0 strong{font-size:15px}@media(max-width:680px){.zoo-p0-grid{grid-template-columns:1fr}.zoo-p0{padding:12px}}
+</style></head><body>
 <header><div><h1>ZOO <span style="color:#69e2b2">/ EXECUTION PROOF</span></h1><small>GitHub-backed evidence, never simulated activity</small></div><div><span id="state" class="status warn">CONNECTING</span> <button id="refresh">Refresh now</button><div class="time" id="checked"></div></div></header>
+<section class="panel zoo-p0" id="zoo-p0" aria-label="Priority PR 787 and Sara UI/UX">
+<h2>P0 · TRANSENDIQ PR #787 + SARA NEW UI/UX</h2>
+<div class="zoo-p0-grid">
+<div><strong><a href="https://github.com/london4216-hue/TransendIQ/pull/787" target="_blank" rel="noopener">PR #787</a> · <span id="zoo787stage">UNKNOWN</span></strong><p id="zoo787detail" class="muted">Authenticated snapshot pending. No active worker inferred.</p><p id="zoo787drift" class="warn">Verified meaningful movement: UNKNOWN</p><p class="muted"><a href="https://github.com/london4216-hue/TransendIQ/pull/1070" target="_blank" rel="noopener">#1070 reconciliation draft (source-only)</a> · <a href="https://github.com/london4216-hue/TransendIQ/pull/782" target="_blank" rel="noopener">#782 conflict</a> · <a href="https://github.com/london4216-hue/TransendIQ/pull/788" target="_blank" rel="noopener">#788 separate change</a></p></div>
+<div><strong>Sara new UI/UX · <span id="zooSaraState">UNKNOWN</span></strong><p id="zooSaraDetail" class="muted">No independently verified new UI/UX URL.</p><p class="muted"><a href="https://github.com/london4216-hue/Zoodo/issues/24" target="_blank" rel="noopener">Sara URL discovery ticket</a></p></div>
+</div><p id="zooPriorityReceipt" class="muted" aria-live="polite">Source receipt UNKNOWN; production deployment not verified.</p><p class="muted"><a href="./priority-watch.json" target="_blank" rel="noopener">Source-linked priority evidence</a> · Page refresh does not reset execution freshness.</p></section>
+<section class="panel zoo-p0" id="restoration-lanes" aria-label="Original Figma restoration and alternate design lanes">
+<h2>P0 · ORIGINAL ASSET FIDELITY + SEPARATE DESIGN EXPERIMENTS</h2>
+<p class="muted">Tracked tickets: <a href="https://github.com/london4216-hue/Zoodo/issues/25" target="_blank" rel="noopener">Prestige student comparison #25</a> · <a href="https://github.com/london4216-hue/Zoodo/issues/27" target="_blank" rel="noopener">My Block / YB3 Figma preservation #27</a>. No Figma fidelity, deployment, client preference or score is claimed without an independent receipt.</p>
+<div class="zoo-p0-grid">
+<div><strong>Prestige Engage · existing baseline</strong><p class="muted">Owner-recorded baseline: prestigeengage-demo.netlify.app · endpoint and expected landing not independently verified in this run. Keep original intact.</p><p class="warn">LIVE VERIFICATION UNKNOWN</p></div>
+<div><strong>Prestige Engage · alternate UI/UX</strong><p class="muted">Distinct branch and client comparison URL required; preserve original workflows and logic. <a href="https://github.com/london4216-hue/Zoodo/issues/25" target="_blank" rel="noopener">Implementation ticket</a>.</p><p class="warn">ALTERNATE URL UNKNOWN · SCORE UNKNOWN</p></div>
+<div><strong>My Block · original Figma reconstruction</strong><p class="muted">Canonical owned Figma/SOW source must be recovered and compared before claiming fidelity. <a href="https://github.com/london4216-hue/Zoodo/issues/27" target="_blank" rel="noopener">Source recovery ticket</a>.</p><p class="warn">FIGMA SOURCE/DEPLOY/FIDELITY UNKNOWN</p></div>
+<div><strong>My Block · Gold Standard alternate</strong><p class="muted">Optional, separately branched design experiment; same workflows; no substitution for original.</p><p class="warn">ALTERNATE URL/SCORE UNKNOWN</p></div>
+<div><strong>YB3 · original Figma reconstruction</strong><p class="muted">Canonical owned Figma/SOW source must be recovered and compared before claiming fidelity. <a href="https://github.com/london4216-hue/Zoodo/issues/27" target="_blank" rel="noopener">Source recovery ticket</a>.</p><p class="warn">FIGMA SOURCE/DEPLOY/FIDELITY UNKNOWN</p></div>
+<div><strong>YB3 · Gold Standard alternate</strong><p class="muted">Optional, separately branched design experiment; same workflows; no substitution for original.</p><p class="warn">ALTERNATE URL/SCORE UNKNOWN</p></div>
+</div><p class="time">Fable Wednesday review is retrospective; it is not a build gate. These are ticket/source labels, not verified deployed applications.</p></section>
+<section class="accountability" id="accountability" aria-label="ZOO accountability status">
+  <h2 id="accountabilityStatus">WORK IN PROGRESS · Evidence reconciliation underway</h2>
+  <div class="owners"><span><b>Owner:</b> ZOO Dashboard Worker</span><span><b>Independent backup:</b> ZOO Agent Hunter</span><span><b>Integration authority:</b> Sole ZOO Keeper</span></div>
+  <div class="receipt" id="accountabilityProof">Last authenticated worker proof: not connected. GitHub code and CI receipts are measured separately.</div>
+  <div class="next" id="accountabilityNext">Next automatic step: retry GitHub evidence fetch; diagnose failed CI and link the actual Netlify deployment to this source.</div>
+  <div class="time" id="sourceSuccess">Last successful GitHub source response: not established</div>
+  <div class="time" id="dashboardEvidenceRefresh">Dashboard evidence refresh: not established (distinct from page load)</div>
+  <div class="time" id="lastAutomationRun">Last successful automation run: checking recorded execution…</div>
+  <div class="time" id="proofChecked">Last automation proof fetch: not attempted</div>
+  <div class="receipt" id="proofStatus" role="status" aria-live="polite">WORK IN PROGRESS · loading recorded worker executions, not simulating heartbeats</div>
+  <div class="next" id="proofRecovery">If overdue: owner ZOO Dashboard Worker · backup ZOO Agent Hunter · Keeper coordinates recovery. <a href="https://github.com/london4216-hue/Zoodo/issues/17" target="_blank" rel="noopener">Open durable recovery ticket</a></div>
+  <div class="kpi-grid" aria-label="Four live KPI checks">
+    <div class="kpi"><div class="caption">Agents doing verified work now</div><strong id="kpiActive">Not measured</strong><a href="#queue-panel">See agent heartbeat evidence</a></div>
+    <div class="kpi"><div class="caption">Unfinished projects</div><strong id="kpiProjects">Not established</strong><a href="#labs">See tracked labs and builds</a></div>
+    <div class="kpi"><div class="caption">BeautyPath scoreboard today</div><strong id="kpiToday">No dated report</strong><a href="https://github.com/london4216-hue/TransendIQ/blob/main/ops/scorecard-ledger.jsonl" target="_blank" rel="noopener">View private source ledger</a></div>
+    <div class="kpi"><div class="caption">Most recent BP report score</div><strong id="kpiLast">Not retrieved</strong><a href="https://github.com/london4216-hue/TransendIQ/blob/main/ops/scorecard-ledger.jsonl" target="_blank" rel="noopener">Review last source receipt</a></div>
+  </div>
+  <p class="time">Scores and active-agent totals are not inferred from GitHub branches, queued jobs, or old grades. The evidence source is separate from page refresh.</p>
+</section>
+<details class="panel" id="handoff-ledger" aria-label="Source-linked recovery handoffs"><summary><strong>Recovery handoffs and unresolved automation gaps</strong> · RECOVERING</summary><p class="muted">Durable, sanitized decision and next-action receipts; a handoff request is not proof another agent executed. <a href="./handoff-ledger.json" target="_blank" rel="noopener">Open source-linked handoff ledger</a> · <a href="https://github.com/london4216-hue/Zoodo/issues/18" target="_blank" rel="noopener">Review unattended recovery ticket</a>. Missing live verification remains UNKNOWN.</p></details>
+<details class="panel" id="hostingFailover" aria-label="Independent hosting recovery">
+  <summary><strong>Independent hosting and failover</strong> · proof required</summary>
+  <p class="muted">Netlify primary; Vercel, Render and Cloudflare Pages are independent mirror candidates. A mirror is shown as usable only after its exact-source build receipt is checked; this does not imply DNS failover or active agent execution.</p>
+  <div id="hostMirrorRows" class="queue-list"><p class="muted">Checking configured hosting providers…</p></div>
+  <p class="time" id="hostMirrorChecked">Host check not yet attempted</p>
+</details>
 <nav class="panel launchpad" aria-label="Zoo home and product links"><h2>YOUR HOME / QUICK LINKS</h2><div class="launchlinks"><a href="https://beautypaths.io/app" target="_blank" rel="noopener">BeautyPath App</a><a href="https://beautypaths.io/super" target="_blank" rel="noopener">BeautyPath Admin</a><a href="https://beautypaths.io/tour" target="_blank" rel="noopener">BeautyPath Tour</a><a href="https://beautypaths.io/enter" target="_blank" rel="noopener">BeautyPath Demo Entrance</a><a href="https://beautypath-grad.netlify.app/" target="_blank" rel="noopener">BeautyPath Twin</a><a href="https://ez-move-transcendiq.netlify.app/demo" target="_blank" rel="noopener">EZ Move AI Demo (Lab)</a><a href="https://wonup2.transendtiq2.com/login" target="_blank" rel="noopener">WonUp 2</a><a href="https://wonup2.transendtiq2.com/demo?as=student" target="_blank" rel="noopener">WonUp 2 Student Demo</a><a href="https://wonup2.transendtiq2.com/demo?as=school_admin" target="_blank" rel="noopener">WonUp 2 Admin Demo</a><a href="https://beautypaths.io/links" target="_blank" rel="noopener">BeautyPath Links</a><a href="https://prestigeengage-demo.netlify.app/" target="_blank" rel="noopener">Prestige Engage Demo</a><a href="https://transcendiq-control-panel.netlify.app/pitch/control-panel.html" target="_blank" rel="noopener">Transcend Control Center</a><a href="https://app.netlify.com/projects/zoo-live-dashboard/overview" target="_blank" rel="noopener">Zoo deployment controls</a><a href="https://github.com/london4216-hue/Zoodo" target="_blank" rel="noopener">Zoo engineering repository</a><a href="https://github.com/london4216-hue/TransendIQ" target="_blank" rel="noopener">TranscendIQ repository</a><a href="https://app.netlify.com/" target="_blank" rel="noopener">Netlify projects / Transcend Control Center</a></div><p class="muted">Live app directory: Transcend Control Center added from owner-supplied URL. Links discovered in TransendIQ ops/live-links.json and URL_DIRECTORY.md; availability and sign-in may vary. Lab/demo links are labeled.</p></nav>
+<details class="panel" id="needs-verification" open><summary>Needs verification / repair — preserved demo destinations</summary><p class="muted">Unverified links are retained here, not presented as live. This is not a claim of outage. Owner: ZOO Dashboard Worker · Backup: ZOO Agent Hunter · Next: independently check endpoint and expected landing, then record receipt.</p><div id="repair-links" class="queue-list"></div></details>
 <section class="panel" aria-label="Lab rat showcase" id="labs"><h2>LAB RAT SHOWCASE / DIRECT ACCESS</h2><p class="muted">Prototype and demo doors. A repository listing is not proof of a deployed app; unavailable demo URLs are explicitly marked.</p><div class="lab-grid"><article class="lab-card"><div class="kind">01 / Relocation</div><h3>EZ Move AI</h3><p>Buyer journey lab using synthetic data.</p><div class="live">● LAB URL RECORDED</div><p><a href="https://ez-move-transcendiq.netlify.app/demo" target="_blank" rel="noopener">Open lab demo</a></p></article><article class="lab-card"><div class="kind">02 / Neighborhood</div><h3>My Block</h3><p>Neighborhood user journey and next lab candidate.</p><div class="pending" id="myblock-live">● MOBILE LAB CODE BUILT · DEPLOY UNVERIFIED</div><p><a id="myblock-source" href="https://github.com/london4216-hue/Zoodo/blob/autonomous-engine-replacement-2026-10-29/engine/dashboard/labs/myblock/index.html" target="_blank" rel="noopener">Inspect My Block lab source</a></p></article><article class="lab-card"><div class="kind">03 / Education</div><h3>Yearbook 3 (YB3)</h3><p>Student journey prototype and next lab candidate.</p><div class="pending" id="yb3-live">● STUDENT LAB CODE BUILT · DEPLOY UNVERIFIED</div><p><a id="yb3-source" href="https://github.com/london4216-hue/Zoodo/blob/autonomous-engine-replacement-2026-10-29/engine/dashboard/labs/yearbook3/index.html" target="_blank" rel="noopener">Inspect YB3 lab source</a></p></article><article class="lab-card"><div class="kind">04 / Moving</div><h3>MoveMint</h3><p>Learn-only candidate, not a published demo.</p><div class="pending">● NO LIVE DEMO RECORDED</div><p><a href="https://github.com/london4216-hue/TransendIQ/tree/main/apps/movemint/source" target="_blank" rel="noopener">Inspect MoveMint source assets</a></p></article><article class="lab-card"><div class="kind">05 / Community</div><h3>Let's Help</h3><p>Learn-only candidate, not a published demo.</p><div class="pending">● NO LIVE DEMO RECORDED</div><p><a href="https://github.com/london4216-hue/TransendIQ/tree/main/apps/letshelp/source" target="_blank" rel="noopener">Inspect Let's Help source assets</a></p></article></div></section>
 <section class="panel" id="architecture-panel" aria-label="Architecture and provider panel"><h2>ARCHITECTURE PANEL / VERIFIED PROVENANCE</h2><p class="muted">Decision evidence: <a href="https://github.com/london4216-hue/Zoodo/blob/autonomous-engine-replacement-2026-10-29/engine/ARCHITECTURE_REVIEW_2026-10-30.md" target="_blank" rel="noopener">Seven-option architecture review</a>. No Claude, DeepSeek, Copilot or CodeRabbit review was obtained in this run. A draft PR is not a live worker.</p><div class="queue-meta"><div class="queue-pill">Durable single-writer queue: <strong class="warn">PILOT CODE</strong></div><div class="queue-pill">Lease-loss regression: <strong class="good">LOCAL TEST PASSED</strong></div><div class="queue-pill">New GitHub CI: <strong class="warn">UNVERIFIED</strong></div><div class="queue-pill">Independent AI judge: <strong class="warn">NOT CONSULTED</strong></div></div><div class="queue-list"><div class="row"><strong>01 · GitHub Actions</strong><p class="muted">Event-driven dispatch after permissions and CI are verified</p></div><div class="row"><strong>02 · JSONL queue pilot</strong><p class="muted">Restart, heartbeat, bounded failover; single writer only</p></div><div class="row"><strong>03 · BullMQ + Valkey</strong><p class="muted">Distributed queue candidate; hosting not deployed</p></div><div class="row"><strong>04 · Temporal</strong><p class="muted">Durable workflow candidate; hosting not deployed</p></div><div class="row"><strong>05 · Gitea</strong><p class="muted">Self-hosted code/CI fallback candidate</p></div><div class="row"><strong>06 · Coolify</strong><p class="muted">Isolated preview deployment candidate</p></div><div class="row"><strong>07 · Verified dashboard probes</strong><p class="muted">Read-only evidence, no assumed worker heartbeat</p></div></div><p class="muted">Local Node 22 pilot: 9/9 queue and 8/8 YB3 student-journey regression tests passed. GitHub CI at exact new commit, independent review, 18-company execution and live deployment remain unverified. <a href="https://github.com/london4216-hue/Zoodo/pull/6" target="_blank" rel="noopener">Review draft PR #6</a>.</p></section>
 <section class="panel" id="queue-panel" aria-label="Evidence-based work queue"><h2>WORK QUEUE / AGENT HEARTBEAT</h2><p class="muted">Read-only GitHub issue and PR evidence. A PR is not proof that an AI worker is running. No invented worker assignments, review verdicts or cost.</p><div class="queue-meta"><div class="queue-pill">Open issues: <strong id="queue-issues">UNKNOWN</strong></div><div class="queue-pill">Open PRs: <strong id="queue-prs">UNKNOWN</strong></div><div class="queue-pill">Worker heartbeat: <strong id="queue-heartbeat">UNKNOWN · NO WORKER FEED</strong></div><div class="queue-pill">Exact-head CI (not verified work): <strong id="queue-verified">UNKNOWN</strong></div></div><div class="queue-list"><div><h2>Actionable issues</h2><div id="queue-issue-list">Checking GitHub…</div></div><div><h2>Review and test queue</h2><div id="queue-pr-list">Checking GitHub…</div></div></div><p class="muted">Cross-repository recovery: <a href="https://github.com/london4216-hue/TransendIQ/issues/999" target="_blank" rel="noopener">TransendIQ #999 — hosted apps and dashboard</a>. Owner approval and independent exact-commit review remain required where governed.</p></section>
 <div id="errors" role="alert"></div>
 <div class="grid">
-<div class="card"><h2>Verified movement / 5-minute escalation</h2><div class="metric" id="lastAge">UNKNOWN</div><div class="muted" id="lastSha">Exact-head evidence pending</div></div><div class="card"><h2>Evidence provenance</h2><div class="muted" id="proof-details">Last commit: UNKNOWN; code diff: UNKNOWN; exact-head CI: UNKNOWN; independent review: UNKNOWN; deployment: UNKNOWN; heartbeat: UNKNOWN</div></div>
+<div class="card"><h2>Last source-confirmed code movement</h2><div class="metric" id="lastAge">UNKNOWN</div><div class="muted" id="lastSha">Exact-head evidence pending</div></div><div class="card"><h2>Evidence provenance</h2><div class="muted" id="proof-details">Last commit: UNKNOWN; code diff: UNKNOWN; exact-head CI: UNKNOWN; independent review: UNKNOWN; deployment: UNKNOWN; heartbeat: UNKNOWN</div></div>
 <div class="card"><h2>Commits in last 60 minutes</h2><div class="metric" id="commitsHour">—</div><div class="muted">Actual GitHub commits</div></div>
 <div class="card"><h2>CI runs / passing</h2><div class="metric" id="ci">—</div><div class="muted">Branch workflow runs</div></div>
 <div class="card"><h2>Live verified product demos</h2><div class="metric" id="demos">UNKNOWN</div><div class="muted">Not inferred from commits</div></div>
@@ -19,15 +78,184 @@
 <div class="card"><h2>Independent agent verdicts</h2><div class="metric" id="judges">UNKNOWN</div><div class="muted">Awaiting independently signed evidence</div></div>
 </div>
 <div class="panels"><section class="panel"><h2>Rolling commit evidence</h2><div id="commits" aria-live="polite">Connecting…</div></section><section class="panel"><h2>Workflow executions</h2><div id="runs" aria-live="polite">Connecting…</div></section></div>
-<footer>Polls GitHub every 30 seconds. Verified movement requires a substantive code diff, linked ticket, exact-head CI and authenticated independent-provider review. Commits and green CI alone never reset the clock. Independent reviewer, deployed host and worker heartbeat feeds are not connected; show UNKNOWN. Read-only, no worker dispatch or stored credentials.</footer>
+<footer>Polls GitHub and actual published automation-run receipts every 30 seconds while this page is open; retains truthful timestamps and reports missing proof. The browser cannot directly wake ChatGPT workers: the scheduled ZOO recovery worker monitors overdue receipts. Polls GitHub every 30 seconds. Verified movement requires a substantive code diff, linked ticket, exact-head CI and authenticated independent-provider review. Commits and green CI alone never reset the clock. Independent reviewer, deployed host and worker heartbeat feeds are not connected; show UNKNOWN. Read-only, no worker dispatch or stored credentials.</footer>
 <script type="module">
 import {evaluateEvidence} from './evidence-clock.mjs';
+import {evaluateAutomationProof} from './automation-proof.mjs';
 const owner='london4216-hue',repo='Zoodo',branch='autonomous-engine-replacement-2026-10-29';
 const root='https://api.github.com/repos/'+owner+'/'+repo;
 const $=id=>document.getElementById(id);let evidenceState=null;
+let linkRefreshInFlight=false, directoryLinks=null;
+let lastRunFeed=null, runFeedFetchError=null;
+let proofRefreshInFlight=false; // serialize manual and scheduled proof fetches
+let updateInFlight=false; // prevent stale overlapping GitHub API responses
+function paintAutomationProof(){
+ const proof=evaluateAutomationProof(lastRunFeed);
+ const status=runFeedFetchError?'RECOVERY REQUIRED':proof.state;
+ $('lastAutomationRun').textContent=proof.lastRunAt?
+  'Last RECORDED automation execution: '+new Date(proof.lastRunAt).toLocaleString()+
+  ' · scheduler receipt only; functional work and active worker heartbeat NOT established':
+  'Last RECORDED automation execution: UNKNOWN · no valid completed run proof';
+ $('proofStatus').textContent=status+' · '+(runFeedFetchError||proof.reason)+
+  (proof.observedAt?' · feed published '+new Date(proof.observedAt).toLocaleString():'')+
+  (proof.overdue.length?' · overdue: '+proof.overdue.join(', '):'')+
+  ' · worker-active KPI remains unverified';
+ $('proofStatus').className='receipt '+(status==='RECORDED RUNS CURRENT'?'good':'warn');
+ $('proofRecovery').style.display=status==='RECORDED RUNS CURRENT'?'none':'block';
+}
+async function refreshAutomationProof(){
+ if(proofRefreshInFlight)return;
+ proofRefreshInFlight=true;
+ $('proofChecked').textContent='Last automation proof fetch attempted: '+new Date().toISOString();
+ try{
+  const res=await fetch('./automation-proof.json?proof_read='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(10000)});
+  if(!res.ok)throw Error('HTTP '+res.status);
+  const next=await res.json();
+  const tested=evaluateAutomationProof(next);
+  if(lastRunFeed&&Date.parse(next.observed_at)<Date.parse(lastRunFeed.observed_at))throw Error('Published proof snapshot regressed');
+  if(tested.state==='UNKNOWN')throw Error(tested.reason);
+  lastRunFeed=next;runFeedFetchError=null;
+  $('proofChecked').textContent='Last FETCH: '+new Date().toISOString()+' · last published scheduler snapshot: '+next.observed_at+
+   ' · not an always-on worker connection';
+ }catch(e){
+  runFeedFetchError='Run proof feed inaccessible or invalid: '+String(e.message||e);
+  $('proofChecked').textContent='Last automation proof fetch FAILED: '+new Date().toISOString()+
+   ' · keeping last known recorded receipt if present';
+ }finally{proofRefreshInFlight=false;}
+ paintAutomationProof();
+}
+const repairRows=new Map();
+// Revalidate receipts on EVERY refresh. A previously fresh link must be demoted
+// after its receipt expires, and a newly verified link must be promoted without reload.
+async function classifyDemoLinks(){
+ if(linkRefreshInFlight)return;
+ linkRefreshInFlight=true;
+ try{
+  const nav=document.querySelector('.launchlinks'),repair=$('repair-links');
+  if(!nav||!repair)return;
+  if(!directoryLinks)directoryLinks=[...nav.querySelectorAll('a[href]')];
+  let receipts=[],ledgerError='verification ledger unavailable';
+  try{
+   const r=await fetch('./verified-links.json',{cache:'no-store'});
+   if(!r.ok)throw Error('HTTP '+r.status);
+   const v=await r.json();
+   if(!Array.isArray(v.links))throw Error('invalid links array');
+   receipts=v.links;ledgerError='';
+  }catch(e){ledgerError='verification ledger unavailable: '+e.message;}
+  const now=Date.now();
+  for(const link of directoryLinks){
+   const matching=receipts.filter(x=>x&&x.url===link.href);
+   const receipt=matching.find(x=>x.expectedLandingVerified===true&&x.independentCheck===true&&
+     /^[a-f0-9]{40}$/.test(x.commitSha||'')&&typeof x.receiptUrl==='string'&&x.receiptUrl.startsWith('https://github.com/')&&
+     Number.isFinite(Date.parse(x.checkedAt))&&now-Date.parse(x.checkedAt)>=0&&now-Date.parse(x.checkedAt)<3600000);
+   if(receipt){
+    link.dataset.zooVerified='true';
+    nav.appendChild(link);
+    link.title='Independently checked '+receipt.checkedAt+' · '+receipt.receiptUrl;
+    const row=repairRows.get(link);if(row)row.remove();
+   }else{
+    delete link.dataset.zooVerified;
+    let row=repairRows.get(link);
+    if(!row){
+     row=document.createElement('div');row.className='row';
+     row.appendChild(link);
+     const note=document.createElement('div');note.className='time';row.appendChild(note);
+     repairRows.set(link,row);
+    }
+    const note=row.querySelector('.time');
+    const last=matching.find(x=>Number.isFinite(Date.parse(x.checkedAt)));
+    note.textContent='Not independently verified for demo · '+(last?'last recorded check: '+last.checkedAt:'last successful check: not established')+
+      (ledgerError?' · '+ledgerError:'')+
+      ' · Owner: ZOO Dashboard Worker · Backup: ZOO Agent Hunter · Next: check endpoint, expected landing and owner access';
+    repair.appendChild(row);
+   }
+  }
+  const home=nav.querySelector('a[data-zoo-home]');
+  if(!directoryLinks.some(link=>link.parentElement===nav)){
+   if(!home){const a=document.createElement('a');a.href='/';a.dataset.zooHome='true';a.textContent='ZOO dashboard home';nav.appendChild(a);}
+  }else if(home)home.remove();
+ }finally{linkRefreshInFlight=false;}
+}
+
+let mirrorCheckInFlight=false;
+async function checkHostingMirrors(){
+ if(mirrorCheckInFlight)return;
+ mirrorCheckInFlight=true;
+ const box=$('hostMirrorRows'),stamp=$('hostMirrorChecked');
+ try{
+  const [configResponse,ownResponse]=await Promise.all([
+    fetch('./hosting-mirrors.json',{cache:'no-store'}),
+    fetch('./build-proof.json',{cache:'no-store'})
+  ]);
+  if(!configResponse.ok)throw Error('host registry unavailable: HTTP '+configResponse.status);
+  const data=await configResponse.json();
+  const myProof=ownResponse.ok?await ownResponse.json():null;
+  const expected=/^[a-f0-9]{40}$/.test(myProof?.source_commit||'')?myProof.source_commit:null;
+  const mirrors=Array.isArray(data.mirrors)?data.mirrors:[];
+  box.replaceChildren();
+  const primary=document.createElement('p');
+  primary.textContent='Primary: '+String(data.primary?.provider||'Netlify')+' · '+(ownResponse.ok?'build receipt accessible':'build receipt not available');
+  box.append(primary);
+  for(const item of mirrors){
+   const row=document.createElement('div');row.className='row';
+   const name=document.createElement('strong');name.textContent=String(item.provider||'Unnamed provider');
+   const detail=document.createElement('div');detail.className='time';
+   row.append(name,detail);
+   if(!item.url){detail.textContent='NOT CONNECTED · no mirror deployment or failover claim';box.append(row);continue;}
+   let u;try{u=new URL(item.url)}catch{detail.textContent='Invalid host address';box.append(row);continue;}
+   const privateAddress=/^(?:localhost|127\\.|10\\.|192\\.168\\.|169\\.254\\.|172\\.(?:1[6-9]|2\\d|3[01])\\.)/i.test(u.hostname)||u.hostname.startsWith('[');
+   if(u.protocol!=='https:'||u.username||u.password||u.port||!u.hostname.includes('.')||privateAddress){
+    detail.textContent='Untrusted host address';box.append(row);continue;
+   }
+   try{
+    // A green provider build receipt alone must never promote a stale or wrong mirror.
+    // Verify the exact SHA, the independently prepared manifest and real public assets.
+    const getMirrorAsset=async(path,json=false)=>{
+      const requested=new URL(path,u.origin);
+      const response=await fetch(requested,{cache:'no-store',redirect:'follow',signal:AbortSignal.timeout(8000)});
+      if(!response.ok)throw Error(path+' HTTP '+response.status);
+      const landed=new URL(response.url||requested.href);
+      if(landed.origin!==u.origin)throw Error(path+' redirected to a different host');
+      return json?response.json():response.text();
+    };
+    const [proof,manifest]=await Promise.all([
+      getMirrorAsset('/build-proof.json',true),
+      getMirrorAsset('/mirror-manifest.json',true)
+    ]);
+    if(proof.schema_version!==1||proof.build_tests!=='PASSED'||!expected||proof.source_commit!==expected)
+      throw Error('unverified or differing source SHA');
+    if(manifest.schema_version!==1||manifest.source_commit!==expected)
+      throw Error('missing, mismatched or misleading mirror manifest');
+    const html=await getMirrorAsset('/index.html');
+    if(!html.includes('id="accountability"')||(html.includes('EVIDENCE UNKNOWN')&&html.includes('ESCALATION REQUIRED')))
+      throw Error('wrong dashboard HTML on mirror');
+    const requiredAssets=[
+      ['/evidence-clock.mjs','export function evaluateEvidence'],
+      ['/automation-proof.mjs','export function evaluateAutomationProof'],
+      ['/automation-proof.json','"source": "connected_automations_peek"'],
+      ['/labs/myblock/index.html','My Block · Creator-first lab'],
+      ['/labs/myblock/logic.mjs','export function publishPost'],
+      ['/labs/yearbook3/index.html','Yearbook 3 · Student Lab'],
+      ['/labs/yearbook3/logic.mjs','export function submitEntry']
+    ];
+    for(const [path,needle] of requiredAssets){
+      if(!(await getMirrorAsset(path)).includes(needle))throw Error('missing or stale mirror asset: '+path);
+    }
+    const a=document.createElement('a');a.href=u.origin+'/';a.target='_blank';a.rel='noopener noreferrer';a.textContent='Open static-source-verified mirror';
+    row.append(a);
+    detail.textContent='SOURCE BUILD MATCHED · STATIC ASSETS CHECKED · '+expected.slice(0,12)+' · browser journey/DNS failover not verified';
+   }catch(e){detail.textContent='RECOVERING · '+String(e.message||'host check failed').slice(0,100);}
+   box.append(row);
+  }
+  stamp.textContent='Host checks attempted '+new Date().toLocaleString()+' · independent receipts required';
+ }catch(e){
+  box.textContent='WORK IN PROGRESS · host registry or release receipt not available';
+  stamp.textContent='Next step: recover host registry and exact SHA · '+String(e.message||'error').slice(0,110);
+ }finally{mirrorCheckInFlight=false;}
+}
 const fmt=t=>{const d=Math.max(0,Date.now()-Date.parse(t)),m=Math.floor(d/60000);return m<1?'just now':m<60?m+'m ago':Math.floor(m/60)+'h '+m%60+'m ago'};
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-async function api(path){const r=await fetch(root+path,{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});if(!r.ok)throw Error('GitHub API '+r.status);return r.json()}
+async function api(path){const r=await fetch(root+path,{headers:{Accept:'application/vnd.github+json'},cache:'no-store',signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('GitHub API '+r.status);return r.json()}
 // Never advertise a lab as live from a GitHub file alone. Confirm both deployed HTML and JS on this exact host.
 async function checkMyBlockLab(){
  const status=$('myblock-live'),link=$('myblock-source');
@@ -81,13 +309,29 @@ async function loadQueue(){
  $('queue-heartbeat').textContent='UNKNOWN · NO WORKER FEED';
 }
 async function update(){
- $('checked').textContent='Last checked '+new Date().toLocaleTimeString();
+ if(updateInFlight)return; // manual and interval refresh share one bounded source check
+ updateInFlight=true;
+ try{
+ $('checked').textContent='Last attempted source check '+new Date().toLocaleTimeString();
+ classifyDemoLinks().catch(()=>{});
+ refreshAutomationProof().catch(()=>{runFeedFetchError='Unexpected proof refresh error';paintAutomationProof()});
+ checkHostingMirrors().catch(()=>{});
  checkMyBlockLab();
  checkYB3Lab();
  loadQueue().catch(()=>{$('queue-heartbeat').textContent='UNKNOWN';});
  const [commits,runs]=await Promise.allSettled([api('/commits?sha='+encodeURIComponent(branch)+'&per_page=100'),api('/actions/runs?branch='+encodeURIComponent(branch)+'&per_page=30')]);
  const errors=[];
  const latest=commits.status==='fulfilled'?commits.value[0]:null;
+ if(commits.status==='fulfilled'||runs.status==='fulfilled'){
+   $('dashboardEvidenceRefresh').textContent='Dashboard evidence refresh: '+new Date().toISOString()+
+     ' · GitHub API response (commits '+(commits.status==='fulfilled'?'OK':'UNAVAILABLE')+
+     ', Actions '+(runs.status==='fulfilled'?'OK':'UNAVAILABLE')+')';
+ }
+ if(commits.status==='fulfilled'){
+   $('sourceSuccess').textContent='Last successful GitHub commit endpoint response: '+new Date().toLocaleString()+
+     ' · source receipt is not proof of active worker or live deployment';
+ }
+
  let detail=null;
  if(latest)try{detail=await api('/commits/'+encodeURIComponent(latest.sha))}catch(e){errors.push('Exact commit diff: '+e.message)}
  const d=runs.status==='fulfilled'?(runs.value.workflow_runs||[]):null;
@@ -112,15 +356,36 @@ async function update(){
   $('queue-verified').textContent=evidenceState.exactHeadCiAt?'EXACT-HEAD CI PASS · REVIEW UNKNOWN':'UNKNOWN · NO EXACT-HEAD PASS';
   $('runs').innerHTML=d.slice(0,30).map(x=>'<div class="row"><div class="time">'+escapeHtml(new Date(x.created_at).toLocaleString())+'</div><a target="_blank" rel="noopener" href="'+escapeHtml(x.html_url)+'">'+escapeHtml(x.name)+'</a> — '+escapeHtml(x.status)+' / '+escapeHtml(x.conclusion??'pending')+'</div>').join('')||'<div class="bad">NO WORKFLOW RUNS RECORDED</div>';
  }else{errors.push('Actions: '+runs.reason.message);$('ci').textContent='UNKNOWN';$('queue-verified').textContent='UNKNOWN · CI UNAVAILABLE';$('runs').textContent='CI evidence unavailable'}
- $('errors').textContent=errors.join(' | ');
+ $('errors').textContent=errors.length
+    ? 'Work continues. Source connections needing recovery: '+errors.join(' | ')
+    : 'GitHub source endpoints returned. Independent work and deployment verification are tracked separately.';
+
+ }finally{updateInFlight=false;}
 }
 function tickClock(){
- if(!evidenceState?.lastVerifiedCodeAt){$('lastAge').textContent='UNKNOWN';$('state').textContent='EVIDENCE UNKNOWN · ESCALATION REQUIRED';$('state').className='status warn';return}
- const at=evidenceState.lastVerifiedCodeAt,mins=(Date.now()-Date.parse(at))/60000;
- $('lastAge').textContent=fmt(at);
- $('state').textContent=mins>=5?'ESCALATION DUE — VERIFIED WORK STALE':'VERIFIED WITHIN 5 MINUTES';
- $('state').className='status '+(mins>=5?'bad':'good');
+ paintAutomationProof();
+  // A missing independent reviewer must not erase authentic GitHub source observations.
+  // Also never recast a commit or CI success as authenticated autonomous worker movement.
+  if(!evidenceState?.lastVerifiedCodeAt){
+    const observed=evidenceState?.lastCodeAt||evidenceState?.lastCommitAt;
+    $('lastAge').textContent=observed?fmt(observed):'Not established';
+    $('state').textContent='WORK IN PROGRESS · SOURCE RECOVERY';
+    $('state').className='status warn';
+    $('accountabilityStatus').textContent='WORK IN PROGRESS · GitHub evidence and worker verification are separate';
+    $('accountabilityProof').textContent=observed
+      ?'Most recent GitHub code/commit receipt: '+new Date(observed).toLocaleString()+' · independent review / active worker heartbeat NOT established'
+      :'GitHub source receipt unavailable. Existing assignments continue; do not infer zero agents or fabricated progress.';
+    $('accountabilityNext').textContent='Automatic retry every 30 seconds; Dashboard Worker investigates actual source, Agent Hunter is backup, Keeper owns deployment integration.';
+    return;
+  }
+  const at=evidenceState.lastVerifiedCodeAt,mins=Math.max(0,(Date.now()-Date.parse(at))/60000);
+  $('lastAge').textContent=fmt(at);
+  $('state').textContent=mins>=5?'WORK IN PROGRESS · VERIFIED PROOF AGING':'WORK IN PROGRESS · VERIFIED PROOF CURRENT';
+  $('state').className='status '+(mins>=5?'warn':'good');
+  $('accountabilityStatus').textContent=mins>=5?'WORK IN PROGRESS · Last verified proof needs refresh':'WORK IN PROGRESS · Last verified proof recorded';
+  $('accountabilityProof').textContent='Last independently reviewed exact-SHA code evidence: '+new Date(at).toLocaleString();
+  $('accountabilityNext').textContent='Keep builders active; refresh source evidence and verify actual deployed host independently.';
 }
 $('refresh').addEventListener('click',update);
 update();setInterval(update,30000);setInterval(tickClock,1000);
-</script></body></html>
+</script><script type="module" src="./priority-watch.mjs"></script></body></html>

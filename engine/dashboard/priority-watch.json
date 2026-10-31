@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "source": "authenticated_github_connector_read",
+  "observed_at": "2026-10-31T01:25:19.042Z",
+  "publication_scope": "Sanitized public metadata only; private code, test data and credentials excluded.",
+  "privacy": "No private repo body, test payload, session URL or credentials.",
+  "priority": {
+    "id": "TRANSENDIQ-PR-787",
+    "asset": "TransendIQ",
+    "pr_url": "https://github.com/london4216-hue/TransendIQ/pull/787",
+    "stage": "DRAFT_PR_OPEN_CONFLICTED",
+    "stage_source": "Authenticated GitHub PR #787 read; draft=true, mergeable=false",
+    "responsible_worker": "UNKNOWN — PR author not an authenticated active worker",
+    "source_head_sha": "86b854a1ac2e54fe703ec1ad7e320423c6a740cc",
+    "source_commit_url": "https://github.com/london4216-hue/TransendIQ/commit/86b854a1ac2e54fe703ec1ad7e320423c6a740cc",
+    "pr_opened_at": "2026-10-28T14:56:09Z",
+    "last_meaningful_update_at": "2026-10-28T18:41:49Z",
+    "last_meaningful_update_basis": "PR #787 source head remains 86b854a; metadata update is not new task execution; separate reconciliation PR #1070 has its own commit.",
+    "last_test": {
+      "state": "UNKNOWN",
+      "description": "PR author reports 8 passing tests in PR description; no independently retrieved test execution receipt for this run",
+      "test_url": null
+    },
+    "conflict": {
+      "pr_url": "https://github.com/london4216-hue/TransendIQ/pull/782",
+      "status": "PR #782 reports mergeable=false; PR #787 describes shared import-line conflict requiring manual reconciliation; exact merge outcome unverified",
+      "required_import": "gradKpis, cohortYearOf, isGrad, POPULATION_CAVEAT"
+    },
+    "interaction": {
+      "pr_url": "https://github.com/london4216-hue/TransendIQ/pull/788",
+      "status": "Separate date-boundary change; PR #787 describes merge-tree as clean, not independently retested"
+    },
+    "next_action": "Keeper/Implementation: run targeted Playwright on draft reconciliation #1070 (source readback verified), compare #782/#787/#788 behavior and protected checks; no merge/deploy claim.",
+    "owner": "ZOO Implementation Lead",
+    "backup": "ZOO Keeper",
+    "last_pr_metadata_updated_at": "2026-10-30T23:47:01Z",
+    "related_reconciliation": {
+      "pr_url": "https://github.com/london4216-hue/TransendIQ/pull/1070",
+      "stage": "DRAFT_PR_OPEN_MERGEABLE_TRUE_TESTS_UNKNOWN",
+      "head_sha": "963e5ef68885e6e2711dca028ea7d0e028dddacd",
+      "source_blob_sha": "f04dae55b5f9365ae3a9a7840d19ab160235b5f1",
+      "source_checks": "Readback confirmed outcomes.filter(isGrad), cohortYearOf and parseCalendarDate; hosted Playwright/CI UNKNOWN",
+      "opened_at": "2026-10-30T23:46:49Z",
+      "merged": false,
+      "deployed": false,
+      "last_metadata_updated_at": "2026-10-31T01:07:11Z"
+    }
+  },
+  "sara": {
+    "id": "SARA-UI-URL-DISCOVERY",
+    "issue_url": "https://github.com/london4216-hue/Zoodo/issues/24",
+    "url": null,
+    "state": "UNKNOWN",
+    "last_verified_at": null,
+    "observed_at": "2026-10-31T01:25:19.042Z",
+    "owner": "ZOO Agent Hunter",
+    "backup": "ZOO Dashboard Lead",
+    "next_action": "Inspect actual owner-controlled deployments and Sara-related PRs, verify expected new UI/UX landing, redirect, access and mobile; only then publish URL"
+  },
+  "dashboard": {
+    "source_pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "production_verified": false,
+    "reason": "Netlify preview status succeeded at source head e82b7cce, but direct preview and production HTTP/DNS inaccessible from available runtimes; production site ID/deploy mapping, actual live content and mobile remain UNKNOWN.",
+    "next_action": "Read authorized Netlify site/deploy mapping and exact SHA, then browser verify source-linked row and refresh; retain rollback",
+    "latest_source_only_sha": "e82b7cceb1ef3e62c4469a7a721bf464722e85de"
+  },
+  "hourly_movement": [
+    {
+      "hour_utc": "2026-10-30T23:00Z",
+      "hour_et": "2026-10-30 19:00 EDT",
+      "repo": "london4216-hue/Zoodo",
+      "pr_url": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "prior_status": "PR #787 not explicitly tracked in prominent dashboard row",
+      "new_status": "Source-only priority feed authored; hosted status UNKNOWN until deployed",
+      "source_sha": null,
+      "worker": "ZOO Dashboard Lead",
+      "gap_detected_at": "2026-10-30T23:34:16Z",
+      "fixed_at": null,
+      "verified_live_at": null,
+      "latency_minutes": null
+    },
+    {
+      "hour_utc": "2026-10-31T00:00Z",
+      "hour_et": "2026-10-30 20:00 EDT",
+      "repo": "london4216-hue/Zoodo",
+      "pr_url": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "prior_status": "Figma original/alternate and Prestige comparison rows not separately visible in canonical dashboard source",
+      "new_status": "Six additive source-only rows, no old href removed; live verification UNKNOWN",
+      "source_sha": "d6eb2a2cb97ee18159ea25c7f2cd6a7d74f2e691",
+      "worker": "ZOO Dashboard Lead",
+      "gap_detected_at": "2026-10-30T23:37:15Z",
+      "fixed_at": null,
+      "verified_live_at": null,
+      "latency_minutes": null
+    },
+    {
+      "hour_utc": "2026-10-31T01:00Z",
+      "hour_et": "2026-10-30 21:00 EDT",
+      "repo": "london4216-hue/Zoodo",
+      "pr_url": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "prior_status": "Authenticated priority snapshot from 00:23 UTC; PR #787 source head unchanged",
+      "new_status": "Authenticated re-read: #787 still draft/conflicted, #782 and #788 still open, #1070 draft mergeable true but tests UNKNOWN; Sara URL UNKNOWN; no reset of PR #787 meaningful-work timestamp",
+      "source_sha": "e82b7cceb1ef3e62c4469a7a721bf464722e85de",
+      "worker": "ZOO Dashboard Lead",
+      "gap_detected_at": "2026-10-30T23:34:16Z",
+      "fixed_at": null,
+      "verified_live_at": null,
+      "latency_minutes": null
+    }
+  ],
+  "timing": {
+    "pr787_open_to_observed_seconds": 204020,
+    "pr787_review_at": null,
+    "pr787_fix_at": null,
+    "pr787_tests_at": null,
+    "pr787_merge_at": null,
+    "pr787_deploy_at": null,
+    "pr787_verified_at": null,
+    "claim_to_fix_seconds": null,
+    "fix_to_pr_seconds": null,
+    "pr_to_deploy_seconds": null
+  }
+}

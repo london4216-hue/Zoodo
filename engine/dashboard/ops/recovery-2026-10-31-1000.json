@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "task_id": "ZOO-DASHBOARD-1023-20261031-1000",
+  "status": "RECOVERING",
+  "observed_at": "2026-10-31T10:02:42.390Z",
+  "from": "Dashboard Lead",
+  "to": "Implementation Lead",
+  "decision": "REVISE",
+  "owner": "ZOO Dashboard Worker",
+  "backup": "ZOO Agent Hunter",
+  "integration_authority": "Sole ZOO Keeper",
+  "repo": "london4216-hue/Zoodo",
+  "branch": "fix/zoo-live-dashboard-accountability-20261030",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+  "source_commit": "7da4a42148062a80c97569c58206d537735078b9",
+  "source_snapshot": "https://github.com/london4216-hue/Zoodo/blob/fix/zoo-live-dashboard-accountability-20261030/engine/dashboard/automation-proof.json",
+  "checks": {
+    "authenticated_automation_snapshot": {
+      "observed_at": "2026-10-31T10:02:05.937Z",
+      "source": "connected_automations_peek",
+      "schema_assertions_passed": 9,
+      "conditional_blob_write": true,
+      "readback_verified": true,
+      "active_workers_verified": false,
+      "overdue_roles": [
+        "ZOO Agent Hunter",
+        "ZOO Dashboard Worker"
+      ],
+      "current_dashboard_run_id": "4f552f32-2abc-832a-9ad5-2d99c4664639",
+      "current_dashboard_run_status": "in_progress"
+    },
+    "github_actions": {
+      "run_id": 41191091035,
+      "job_id": 124507857477,
+      "job_status": "completed",
+      "job_conclusion": "failure",
+      "job_steps": 0,
+      "logs": "not_verified",
+      "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41191091035",
+      "classification": "startup_failure_recovery_event",
+      "followup_run_id": 41191129195,
+      "followup_job_id": 124507971351,
+      "followup_conclusion": "failure",
+      "followup_steps": "job step data absent; earlier run 41191091035 had zero steps"
+    },
+    "netlify": {
+      "source": "GitHub combined commit status",
+      "deploy_preview_status": "success",
+      "preview_url": "https://deploy-preview-16--zoo-live-dashboard.netlify.app",
+      "preview_http_verified": false,
+      "production_url": "https://zoo-live-dashboard.netlify.app/",
+      "production_dns_check": "could_not_resolve_host",
+      "production_deploy_id": null,
+      "production_sha": null,
+      "production_site_mapping": "UNKNOWN"
+    },
+    "other_models": {
+      "deepseek": "NO_AUTHENTICATED_INVOCATION_RECEIPT",
+      "claude": "NO_AUTHENTICATED_INVOCATION_RECEIPT",
+      "gemini": "NO_AUTHENTICATED_INVOCATION_RECEIPT",
+      "copilot": "NO_AUTHENTICATED_INVOCATION_RECEIPT",
+      "pro_codex": "NO_AUTHENTICATED_INVOCATION_RECEIPT"
+    },
+    "source_href_parity": {
+      "base_blob": "1b149db56e670dec02cb5ba02a2aef51676c16fe",
+      "candidate_blob": "9bbc74b34f13663d234852f0e10ab1ea9f80fb6e",
+      "base_href_count": 24,
+      "candidate_href_count": 42,
+      "base_unique": 23,
+      "candidate_unique": 37,
+      "missing": 0,
+      "known_dead_beautypaths_primary_anchor_present": false,
+      "scope": "source HTML only; no live endpoint or owner auth verification"
+    }
+  },
+  "attempted_repairs": [
+    "Read actual authenticated run records for four scheduler roles and validate recorded timestamps",
+    "Refresh single-writer GitHub proof snapshot using conditional blob SHA and readback",
+    "Quarantine newly observed pre-schedule completions and preserve prior valid runs",
+    "Inspect exact-head GitHub Actions job and confirm zero steps",
+    "Read GitHub Netlify deploy-preview status for exact commit",
+    "Probe production dashboard and proof feed HTTP from independent runtime; DNS unavailable",
+    "Rechecked current base-vs-PR HTML link parity: all 23 unique base hrefs retained in 37 unique PR hrefs; no known dead Beautypaths owner link in PR anchors",
+    "Confirmed consecutive exact-head GitHub Actions startup failures; no evidence of executed test steps"
+  ],
+  "next_executable_steps": [
+    "Implementation Lead: diagnose zero-step GitHub Actions startup failure 41191091035, qualify independent authorized test runner and post exact-head test receipt",
+    "ZOO Agent Hunter: identify existing Netlify site ID, preview deploy ID, source mapping and rollback using authorized provider access; perform actual HTTP/expected landing verification",
+    "Dashboard Lead: on next recorded completion, publish validated proof snapshot, keep anomalies visible and run stale-to-recovery test",
+    "ZOO Keeper: maintain durable queue and integrate only evidence-backed reversible fixes"
+  ],
+  "next_trigger": "Next authorized worker execution or event-driven handoff; current dashboard run is in progress",
+  "release_gates": {
+    "production_publication": "NOT_PERFORMED",
+    "owner_demo_email": "NOT_SENT",
+    "link_parity": "SOURCE_BASELINE_PRESERVED_23_UNIQUE_LINKS; LIVE_UNVERIFIED",
+    "mobile_viewport": "UNKNOWN",
+    "auth_gate": "UNKNOWN",
+    "production_live_refresh": "UNKNOWN"
+  },
+  "hourly_movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T10:00:00Z",
+      "repo": "london4216-hue/Zoodo",
+      "asset": "ZOO dashboard proof",
+      "pr": 16,
+      "prior_status": "stale published scheduler snapshot",
+      "new_status": "freshly published scheduler metadata; hosted production still UNKNOWN",
+      "commit": "7da4a42148062a80c97569c58206d537735078b9",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/7da4a42148062a80c97569c58206d537735078b9",
+      "worker": "ZOO Dashboard Worker"
+    },
+    {
+      "hour_utc": "2026-10-31T10:00:00Z",
+      "repo": "london4216-hue/Zoodo",
+      "asset": "ZOO dashboard recovery handoff",
+      "pr": 16,
+      "prior_status": "unpublished run checkpoint",
+      "new_status": "durable issue comments and source parity verified; production still UNKNOWN",
+      "commit": "9aac2ced0caaa22c8b79ac60c2e09d29138ed22a",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/9aac2ced0caaa22c8b79ac60c2e09d29138ed22a",
+      "worker": "ZOO Dashboard Worker"
+    }
+  ],
+  "stage_times": {
+    "detected_at": null,
+    "detected_date": "2026-10-30",
+    "proof_published_at": "2026-10-31T10:02:05.937Z",
+    "reviewed_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_live_at": null
+  },
+  "cycle_times": {
+    "gap_detection_to_fix": "UNKNOWN",
+    "pr_open_to_review": "UNKNOWN",
+    "pr_to_merge": "UNKNOWN",
+    "merge_to_deploy": "UNKNOWN",
+    "deploy_to_verified": "UNKNOWN"
+  },
+  "agent_execution_proof_matrix": {
+    "hunter": "UNKNOWN_NOT_PRODUCTION_VERIFIED",
+    "dashboard": "UNKNOWN_NOT_PRODUCTION_VERIFIED",
+    "implementation": "UNKNOWN_NOT_PRODUCTION_VERIFIED",
+    "keeper": "UNKNOWN_NOT_PRODUCTION_VERIFIED"
+  },
+  "last_reconciled_at": "2026-10-31T10:03:29.323Z"
+}
