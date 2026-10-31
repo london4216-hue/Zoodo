@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-31T04:09:22.699Z",
+  "observed_at": "2026-10-31T05:04:32.101Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Agent Hunter",
@@ -14,23 +14,23 @@
   "workers": [
     {
       "role": "ZOO Keeper",
-      "run_id": "fe7a0158-bb68-8333-bd0d-7f4037202bc7",
+      "run_id": "bb44a81f-be90-832a-99a3-af47b0801433",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T03:45:30Z",
-      "completed_at": "2026-10-31T03:53:20.599010Z",
+      "scheduled_for": "2026-10-31T04:45:30Z",
+      "completed_at": "2026-10-31T04:48:41.156250Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
       "receipt_source": "run_details.last_run"
     },
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "2c00892f-8644-832d-bd40-e3641d52fc80",
+      "run_id": "68975351-d554-8324-8c62-65ccd810b251",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T02:45:58Z",
-      "completed_at": "2026-10-31T02:50:20.169378Z",
+      "scheduled_for": "2026-10-31T03:45:58Z",
+      "completed_at": "2026-10-31T04:10:54.387296Z",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/17",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
-      "receipt_source": "run_details.latest_result"
+      "receipt_source": "run_details.latest_result + prior recorded scheduled_for"
     },
     {
       "role": "ZOO Asset Restoration",
@@ -46,10 +46,10 @@
   "in_progress_runs": [
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "68975351-d554-8324-8c62-65ccd810b251",
+      "run_id": "ba36cb39-8a70-832f-a83c-05803df09a25",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-31T03:45:58Z",
-      "started_at": "2026-10-31T04:08:31.011579Z",
+      "scheduled_for": "2026-10-31T04:45:58Z",
+      "started_at": "2026-10-31T05:02:40.900177Z",
       "completed_at": null
     }
   ],
@@ -57,14 +57,22 @@
     {
       "role": "ZOO Agent Hunter",
       "kind": "completion_before_scheduled_for",
-      "run_id": "ddcc89bd-31a8-832f-8c55-d27bd2a43e7d",
-      "scheduled_for": "2026-10-31T03:21:25Z",
-      "completed_at": "2026-10-31T02:53:58.817204Z",
+      "run_id": "0bde120d-c504-8331-9f02-bef37d4a6473",
+      "scheduled_for": "2026-10-31T05:21:25Z",
+      "completed_at": "2026-10-31T04:55:01.790809Z",
+      "action": "quarantined_not_counted_as_verified_scheduler_completion"
+    },
+    {
+      "role": "ZOO Asset Restoration",
+      "kind": "completion_before_scheduled_for",
+      "run_id": "8fdfdf60-e050-8330-8c7a-16b3d44df4d8",
+      "scheduled_for": "2026-10-31T04:24:51Z",
+      "completed_at": "2026-10-31T04:23:20.949021Z",
       "action": "quarantined_not_counted_as_verified_scheduler_completion"
     }
   ],
   "prior_snapshot": {
-    "observed_at": "2026-10-31T02:49:03.559Z",
+    "observed_at": "2026-10-31T04:09:22.699Z",
     "previously_quarantined_anomalies": 1,
     "note": "Historical anomalies preserved in prior Git commits; current anomalies remain visible."
   }
