@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: migration is atomic and scoped to ZOO operations tables
+ok 1 - migration is atomic and scoped to ZOO operations tables
+  ---
+  duration_ms: 1.014431
+  type: 'test'
+  ...
+# Subtest: leased and uncertain tickets require an attributable worker and fencing token
+ok 2 - leased and uncertain tickets require an attributable worker and fencing token
+  ---
+  duration_ms: 0.143899
+  type: 'test'
+  ...
+# Subtest: completed tickets cannot have null or malformed SHA and test receipt
+ok 3 - completed tickets cannot have null or malformed SHA and test receipt
+  ---
+  duration_ms: 0.197312
+  type: 'test'
+  ...
+# Subtest: native completion, dispatch and non-execution events cannot omit evidence
+ok 4 - native completion, dispatch and non-execution events cannot omit evidence
+  ---
+  duration_ms: 0.201861
+  type: 'test'
+  ...
+# Subtest: leased outbox events require fencing token and expiry
+ok 5 - leased outbox events require fencing token and expiry
+  ---
+  duration_ms: 0.119309
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 72.2715
