@@ -1,0 +1,43 @@
+{
+  "schema": "zoo.pr-closure-evidence.v1",
+  "date_utc": "2026-10-31",
+  "pr": 96,
+  "issue": 77,
+  "scope": "single-writer local pilot queue; no distributed database/host claims",
+  "source": "engine/src/durable-queue.mjs",
+  "test": "engine/test/identity-alias-fence.test.mjs",
+  "defect": "Leading/trailing whitespace in worker, provider or reviewer identity aliases bypasses strict-equality active-worker, prior-invocation and independent-review fences",
+  "repair": "Reject noncanonical identity strings before any journal append, preserving existing strict exact identity semantics",
+  "baseline": {
+    "commit": "3687a738aac2df19f24beb951e46c3da757c4348",
+    "source_blob": "2c3584115e6a6bcdc562f3ea67069fdf1cbd281a",
+    "new_test_blob": "d34b3cddf8ce38c06c1f9d9f8ad6d54e607b599f",
+    "command": "node --test engine/test/identity-alias-fence.test.mjs",
+    "passed": 0,
+    "failed": 4
+  },
+  "patched": {
+    "source_commit": "e116b0fe499921609d1e13b7cb57717d67fa7882",
+    "source_blob": "5d52f3f34cf06c21545afc2756f37c8b5ac06bb6",
+    "test_commit": "c61a22f170a7ca013c64d7cd4cf96a420c82a58a",
+    "test_blob": "d34b3cddf8ce38c06c1f9d9f8ad6d54e607b599f",
+    "existing_test_blobs": {
+      "engine/test/single-worker-active-lease.test.mjs": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79",
+      "engine/test/invalid-review-verdict.test.mjs": "22e178601838f62162f3b2bb324efd5c08922867"
+    },
+    "command": "node --test engine/test/identity-alias-fence.test.mjs engine/test/single-worker-active-lease.test.mjs engine/test/invalid-review-verdict.test.mjs",
+    "passed": 8,
+    "failed": 0,
+    "node": "v22.16.0",
+    "local_git_blob_hashes_match_authenticated_github": true
+  },
+  "limitations": {
+    "hosted_CI": "UNKNOWN until inspected; no CI PASS claimed",
+    "postgresql": "not exercised",
+    "distributed_queue": "not exercised",
+    "native_external_model": "not invoked",
+    "durable_db_lease": "not acquired",
+    "merged": false,
+    "deployed": false
+  }
+}
