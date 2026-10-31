@@ -1,0 +1,131 @@
+{
+  "schema": "zoo.agent-hunter.host-qualification.v1",
+  "recorded_at_utc": "2026-10-31T14:11:36Z",
+  "lane": "independent-host-worker-qualification",
+  "repository": "london4216-hue/Zoodo",
+  "reconciled_issues": [
+    78,
+    77,
+    76,
+    74,
+    67,
+    80
+  ],
+  "stack": {
+    "pr68": "merged into configured stack base",
+    "pr81": "merged into #73 branch",
+    "pr73": "closed unmerged; all changed paths reported identical to main by PR-closure lane",
+    "main_source_head_at_branch_creation": "1e48d594d24e3790c55766332b1ba220cb1cb2ec",
+    "supabase_migrations_applied": "UNKNOWN"
+  },
+  "actual_access": {
+    "github": {
+      "type": "authenticated source-control API",
+      "callable": true,
+      "proof": "https://github.com/london4216-hue/Zoodo/pull/91",
+      "native_provider_model": false
+    },
+    "trigger_dev": {
+      "type": "host candidate; historical local project reference",
+      "callable": false,
+      "reason": "No Trigger.dev runtime adapter, project/deployment ID, run ID or invocation credential exposed to this run",
+      "request_id": null
+    },
+    "netlify": {
+      "type": "host candidate",
+      "callable": false,
+      "reason": "No authenticated runtime-management adapter/credential exposed; DNS lookup of api.netlify.com and production Netlify site failed in execution container",
+      "request_id": null
+    },
+    "supabase": {
+      "type": "durable state candidate",
+      "callable": false,
+      "reason": "No Supabase runtime-management adapter or ZOO service-role credential exposed to this run; migrations not independently verified",
+      "request_id": null
+    },
+    "vercel": {
+      "type": "alternate host candidate",
+      "callable": false,
+      "reason": "No Vercel runtime adapter/credential exposed",
+      "request_id": null
+    },
+    "external_coding_models": {
+      "type": "Claude/DeepSeek/Gemini/Copilot historical/configured",
+      "native_invocations": 0,
+      "request_ids": [],
+      "current_capacity": "UNKNOWN"
+    }
+  },
+  "local_runtime_environment": {
+    "checked_variable_names_only": true,
+    "credential_prefixes_checked": [
+      "NETLIFY",
+      "TRIGGER",
+      "SUPABASE",
+      "VERCEL",
+      "GITHUB",
+      "DEEPSEEK",
+      "ANTHROPIC",
+      "GEMINI"
+    ],
+    "matching_names": [],
+    "dns_errors": [
+      "zoo-live-dashboard.netlify.app: temporary failure in name resolution",
+      "api.netlify.com: temporary failure in name resolution",
+      "api.trigger.dev: temporary failure in name resolution",
+      "api.github.com: temporary failure in name resolution"
+    ],
+    "note": "GitHub connector worked independently of container DNS"
+  },
+  "source_repair": {
+    "draft_pr": "https://github.com/london4216-hue/Zoodo/pull/91",
+    "branch": "hunter/20261031-hosted-outbox-webhook-probe",
+    "test_commit_sha": "de593c46fa55983546f35ce1b8da03db8931839e",
+    "files": {
+      "engine/ops/relay/outbox-http.mjs": "9419232df9198f22d14230741012a3c49c387c7c",
+      "engine/dashboard/netlify/functions/zoo-outbox.mjs": "98088bcecb22823dbe2e96539fed82a6a106a968",
+      "engine/test/outbox-http.test.mjs": "cabbd0ba8ac70a27896bbdaafb77a6032a5ae757"
+    },
+    "test_command": "node --test engine/test/outbox-http.test.mjs",
+    "test_runtime": "Node v22.16.0",
+    "tests_passed": 6,
+    "tests_failed": 0,
+    "source_readback_matches_local_hash": true,
+    "scope": "isolated local unit tests and source syntax only; no hosted function execution",
+    "implementation": "Authenticated one-shot Netlify outbox drain entrypoint; strict POST envelope, bearer comparison, bounded 1-2 worker roster; recovery_required cannot report HTTP success"
+  },
+  "hosted_probe": {
+    "attempted": false,
+    "reason": "No usable host invocation credential and DNS failed; do not send unauthenticated synthetic event to live production",
+    "native_request_id": null,
+    "source_runtime_sha": null,
+    "provider_timestamp": null,
+    "latency_ms": "UNKNOWN",
+    "cost_usd": "UNKNOWN",
+    "durable_two_ticket_handoffs": 0,
+    "forced_failure_recoveries": 0,
+    "hosted_dashboard_readback": "UNKNOWN"
+  },
+  "capacity": {
+    "currently_qualified_independent_hosted_workers": 0,
+    "verified_backup_workers": 0,
+    "model_cadence": "UNKNOWN",
+    "host_concurrency": "UNKNOWN",
+    "verified_failover": false
+  },
+  "handoffs": [
+    {
+      "to": "Existing Trigger.dev implementation lane / PR integration worker",
+      "issue": "https://github.com/london4216-hue/Zoodo/issues/80",
+      "next": "Recover existing Trigger.dev project ID/deployment/run and authorized runtime adapter; verify isolated Supabase 001/002; if Trigger route unavailable, test draft #91 Netlify event endpoint with existing secrets in host runtime; capture provider-native run ID and exact SHA, two ticket NEXT handoffs, forced non-started recovery."
+    },
+    {
+      "to": "Dashboard Lead",
+      "issue": "https://github.com/london4216-hue/Zoodo/issues/67",
+      "next": "Independently verify Netlify site-source mapping, function deploy ID and public readback after owner-authorized publication; do not treat preview as execution."
+    }
+  ],
+  "disposition": "RECOVERING; SOURCE_FIX_TESTED; HOSTED_PROOF_BLOCKED_BY_RUNTIME_ACCESS",
+  "production_deployed": false,
+  "paid_signup": false
+}
