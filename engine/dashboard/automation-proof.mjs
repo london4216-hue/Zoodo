@@ -1,7 +1,7 @@
 // Public view of authenticated automation-run snapshots. The record is a
 // provenance claim from the ZOO publisher, NOT a signature or live worker ping.
 const DATE = s=>typeof s==='string'&&Number.isFinite(Date.parse(s));
-const RUN=/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i;
+const RUN=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export function evaluateAutomationProof(feed, now=Date.now(), dueMs=75*60000){
  const unknown=(reason)=>({state:'UNKNOWN',reason,lastRunAt:null,observedAt:null,workerCount:0,overdue:[],activeWorkersVerified:false});
  if(feed?.schema_version!==1||feed?.source!=='connected_automations_peek'||!DATE(feed.observed_at)||
