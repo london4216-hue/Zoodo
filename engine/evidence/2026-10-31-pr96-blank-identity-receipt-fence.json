@@ -1,0 +1,58 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "date_utc": "2026-10-31",
+  "lane": "PR_INTEGRATE",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 96,
+  "branch": "fix/zoo-single-active-worker-lease-20261031",
+  "baseline_head_sha": "e5498d461fc402950d3ca58bdbe9c586810c7ba0",
+  "code_commit_sha": "2d54823e9464cff38b0db86507ab3b323569fa90",
+  "test_commit_sha": "8b888b954181b3404dcf00a846a137c2908c2bde",
+  "exact_tested_head_sha": "8b888b954181b3404dcf00a846a137c2908c2bde",
+  "source_blob_sha_before": "6ff5452fc18805eb4856a9658d138e6c97d20f25",
+  "tested_git_blobs": {
+    "engine/src/durable-queue.mjs": "7cee10cf9680b951958785b292eeab91a82126e9",
+    "engine/test/blank-identity-receipt.test.mjs": "401aaa3c7108d66fe7ba475472574ad0a2b35f97",
+    "engine/test/reused-worker-identity-fence.test.mjs": "e729dfad03fda8756a1173c9fd8533c8c9f2c950",
+    "engine/test/single-worker-active-lease.test.mjs": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79"
+  },
+  "defect": "The pilot journal accepted whitespace-only worker/provider identities and review/test evidence; these were recorded as if valid and could falsely support claim or completion provenance.",
+  "repair": "Reject whitespace-only values through shared bounded-string validator before appending a journal event.",
+  "fail_first_local_node_22_16_0": {
+    "command": "node --test engine/test/blank-identity-receipt.test.mjs",
+    "passed": 0,
+    "failed": 3
+  },
+  "after_fix_local_node_22_16_0": {
+    "command": "node --test engine/test/*.test.mjs",
+    "passed": 6,
+    "failed": 0,
+    "scope": "three new regression tests and three previously committed worker-identity/lease tests, all exact source/test blob hashes verified"
+  },
+  "github_actions": {
+    "run_id": 41233164528,
+    "conclusion": "failure",
+    "job": "lab-tests",
+    "executed_steps": null,
+    "classification": "INFRASTRUCTURE_UNKNOWN_NOT_CI_PASS"
+  },
+  "branch_protection": "403 Resource not accessible by integration",
+  "combined_commit_statuses": [],
+  "durable_private_queue_lease": "NOT_VERIFIED; local pilot journal only",
+  "provider_native_invocations": 0,
+  "hosted_handoffs": 0,
+  "merges": 0,
+  "deployments": 0,
+  "ownership": "PR closure edited only engine/src/durable-queue.mjs and engine/test/blank-identity-receipt.test.mjs on existing #96 branch; product and dashboard files untouched",
+  "next": {
+    "pr": 92,
+    "head_sha": "3ae813d16bc64bd01953a6e564d8615cef329209",
+    "action": "Reconcile 003/004 with #93 005–009 on disposable PostgreSQL and verify protected required checks; do not merge draft without gates"
+  },
+  "original_stack": {
+    "outbox": "Zoodo #68 merged intermediate; #73 closed unmerged; #81 merged into #73 branch",
+    "callback": "Zoodo #65→#69→#72 intermediate merges",
+    "dashboard": "Zoodo #16→#71 intermediate merges; live Netlify deployment unverified"
+  },
+  "disposition": "LOCAL_TESTED_DRAFT_ONLY"
+}
