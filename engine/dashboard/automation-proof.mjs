@@ -29,10 +29,11 @@ export function evaluateAutomationProof(feed, now=Date.now(), dueMs=75*60000){
  const anomalies=Array.isArray(feed.source_anomalies)?feed.source_anomalies:[];
  // Keep historical invalid receipts visible for audit, but a later valid
  // completion by the SAME role resolves the active recovery condition.
- // An anomaly without a trustworthy scheduled_for stays unresolved.
+ // An anomaly without a trustworthy completed_at stays unresolved.
+ // Compare actual completion times; scheduled_for may be the anomalous field.
  const unresolvedAnomalies=anomalies.filter(a=>!valid.some(w=>
-  w.role===a?.role&&DATE(a?.scheduled_for)&&
-  Date.parse(w.completed_at)>Date.parse(a.scheduled_for)));
+  w.role===a?.role&&DATE(a?.completed_at)&&
+  Date.parse(w.completed_at)>Date.parse(a.completed_at)));
  // The publisher declares the expected worker roster. Missing roles cannot
  // turn a partial scheduler feed into a misleading all-clear.
  const expected=feed.expected_roles===undefined?[]:feed.expected_roles;
