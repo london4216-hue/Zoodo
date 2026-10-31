@@ -1,0 +1,125 @@
+{
+  "schema": "zoo.ops.execution-receipt.v1",
+  "agent_id": "Implementation Lead (ChatGPT)",
+  "task_id": "P0-ZOODO-IDLE-OUTBOX-20261031-AUTO11",
+  "decision": "REVISE",
+  "reason": "Repaired final-ticket wakeup retry/dead-letter defect and verified exact-source local tests; private PostgreSQL and hosted execution remain unverified.",
+  "source_repository": "london4216-hue/Zoodo",
+  "branch": "worker/p0-outbox-idle-settlement-20261031-auto11",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/36",
+  "base_pr": "https://github.com/london4216-hue/Zoodo/pull/35",
+  "source_commit_sha": "6f0d4aef79cd6a65e8b7a68e767927afdcca3e5d",
+  "source_commit_url": "https://github.com/london4216-hue/Zoodo/commit/6f0d4aef79cd6a65e8b7a68e767927afdcca3e5d",
+  "test_log_commit_sha": "c6e49a7831d0c96653f1fad2f999e8fe9e4d277d",
+  "test_log_url": "https://github.com/london4216-hue/Zoodo/blob/c6e49a7831d0c96653f1fad2f999e8fe9e4d277d/engine/evidence/2026-10-31-p0-idle-outbox-auto11.tap",
+  "source_blobs": {
+    "engine/ops/relay/outbox-replay.mjs": "d0029dbff9eba3cfc590d53b0be2b87f9214a2e6",
+    "engine/test/idle-replay.test.mjs": "aebbe7dc3c429d1ef84c08c194c659cccf2ff89d",
+    "engine/test/outbox-replay.test.mjs": "2a4c4305ec779938bc4b05ca92187f168f07719f",
+    "engine/ops/relay/002_outbox_idle_settlement.sql": "0f3b8b7a70d17495cd42af4f1942e6b3a1f93a40",
+    "engine/ops/relay/portable-relay.mjs": "b74be51ac23461b32f43835bd187917fa72b2c6d"
+  },
+  "execution": {
+    "action": "node --test engine/test/outbox-replay.test.mjs engine/test/idle-replay.test.mjs",
+    "node_version": "v22.16.0",
+    "started_at_utc": "2026-10-31T01:24:29Z",
+    "ended_at_utc": "2026-10-31T01:24:30Z",
+    "environment": "local Node 22, synthetic in-memory store and localhost HTTP; not hosted Supabase or Netlify",
+    "passed": 11,
+    "failed": 0,
+    "exit_code": 0,
+    "tap_sha256": "b17a65ba8e02153f0cb748291d705b428e13bbe640f9b7e347a386380926f9c8",
+    "fail_first": "One new idle-final-ticket regression failed against prior module: expected idle-settled, got retry-after-lease",
+    "sql_static_assertions": "7/7 passed; PostgreSQL parser and database migration not executed",
+    "hosted_worker_execution": "UNKNOWN",
+    "provider_native_request_id": null
+  },
+  "hourly_movement": [
+    {
+      "hour_et": "2026-10-30T21:00:00-04:00",
+      "hour_utc": "2026-10-31T01:00:00Z",
+      "asset": "Zoodo operations relay",
+      "pr": 36,
+      "prior_status": "Obsolete outbox wakeups after last ticket retry and become dead",
+      "new_status": "Private draft fix, additive SQL RPC, exact-source local tests 11/11 PASS; hosted UNKNOWN",
+      "commits": [
+        "5d738c2f6e9244fa7f07fe2ac6bd7888ebd53d5b",
+        "0320201cb836d11e19b103e205c8e4378d1b311f",
+        "5ee4cc30165fe0fcfaf7624155460d89167aa53e",
+        "6f0d4aef79cd6a65e8b7a68e767927afdcca3e5d",
+        "c6e49a7831d0c96653f1fad2f999e8fe9e4d277d"
+      ]
+    }
+  ],
+  "pr_stage_timestamps": {
+    "opened_utc": "2026-10-31T01:24:25Z",
+    "review_utc": null,
+    "fix_committed_utc": "2026-10-31T01:23:47Z",
+    "tests_started_utc": "2026-10-31T01:24:29Z",
+    "tests_ended_utc": "2026-10-31T01:24:30Z",
+    "merged_utc": null,
+    "deployed_utc": null,
+    "hosted_verified_utc": null,
+    "fix_to_tests_seconds": 42,
+    "opened_to_review_seconds": null,
+    "review_to_fix_seconds": null,
+    "pr_to_merge_seconds": null,
+    "merge_to_deploy_seconds": null,
+    "deploy_to_verified_seconds": null,
+    "gap_detection_to_fix_seconds": null,
+    "unresolved_hosted_gap_age_seconds": null
+  },
+  "hosted": {
+    "postgres_migration": "UNKNOWN_NOT_APPLIED",
+    "netlify_function_invocation": "UNKNOWN",
+    "two_ticket_hosted_failover": "UNKNOWN",
+    "public_dashboard_readback": "UNVERIFIED_UNREACHABLE",
+    "deepseek_native_judge": "NOT_INVOKED",
+    "production_merge": "NOT_DONE",
+    "figma_originals": "UNCHANGED"
+  },
+  "four_agent_proof": {
+    "agent_hunter": "UNKNOWN",
+    "dashboard_lead": "UNKNOWN",
+    "implementation_lead": "UNKNOWN_HOSTED_LOCAL_TESTS_PASS",
+    "zoo_keeper": "UNKNOWN"
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "task_id": "P0-ZOODO-IDLE-OUTBOX-20261031-AUTO11",
+    "decision": "REVISE",
+    "proposed_fix": "Atomic idle outbox settlement prevents final-ticket poison/dead-letter while preserving queued work and uncertain leases",
+    "code_evidence": "https://github.com/london4216-hue/Zoodo/pull/36",
+    "test_evidence": "https://github.com/london4216-hue/Zoodo/blob/c6e49a7831d0c96653f1fad2f999e8fe9e4d277d/engine/evidence/2026-10-31-p0-idle-outbox-auto11.tap",
+    "utc_timestamp": "2026-10-31T01:24:30Z",
+    "next_action": "Integrate PR #36 atop #35 after private PostgreSQL 001+002 migration tests, authenticated Netlify replay/reconcile, genuine two-ticket worker recovery and production dashboard readback. Coordinate Hunter provider probe; no protected merge without required checks.",
+    "next_trigger": "Existing ZOO Keeper scheduled continuation or genuine authenticated hosted event; no invocation claimed",
+    "github_comments": [
+      {
+        "repository": "london4216-hue/Zoodo",
+        "issue_or_pr": 35,
+        "comment_id": 6537138583,
+        "url": "https://github.com/london4216-hue/Zoodo/pull/35#issuecomment-6537138583"
+      },
+      {
+        "repository": "london4216-hue/TransendIQ",
+        "issue_or_pr": 1048,
+        "comment_id": 6537139008,
+        "url": "https://github.com/london4216-hue/TransendIQ/issues/1048#issuecomment-6537139008"
+      },
+      {
+        "repository": "london4216-hue/TransendIQ",
+        "issue_or_pr": 1023,
+        "comment_id": 6537139457,
+        "url": "https://github.com/london4216-hue/TransendIQ/issues/1023#issuecomment-6537139457"
+      }
+    ],
+    "keeper_continuation": {
+      "requested": true,
+      "request_accepted": true,
+      "execution_confirmed": false,
+      "task_id": "6ae3da9a4b048191be5c34ef8a19b1b7"
+    }
+  }
+}
