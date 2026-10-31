@@ -6,6 +6,7 @@
 .lab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0 24px}.lab-card{border:1px solid #34465e;border-radius:14px;padding:18px;background:linear-gradient(145deg,#1c2b41,#101b2b)}.lab-card h3{margin:0 0 8px;font-size:18px}.lab-card p{font-size:13px;color:#a9b9d0;min-height:38px}.lab-card a{display:inline-block;padding:10px 14px;border-radius:8px;background:#294c70;text-decoration:none}.lab-card .pending{color:#ffd47c;font-size:13px}.lab-card .live{color:#6ee7b7;font-size:13px}.lab-card .kind{font-size:11px;letter-spacing:.1em;color:#a5c8e9;text-transform:uppercase;margin-bottom:9px}.queue-meta{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.queue-pill{background:#22344a;border:1px solid #39516e;border-radius:9px;padding:9px 12px;font-size:12px}.queue-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}.queue-list .row{padding:12px;border:1px solid #314159;border-radius:10px}.queue-state{font-size:12px;color:#ffd47c;margin-top:7px}
 .accountability{margin:14px 0 18px;padding:18px;border:1px solid #597699;background:#112339;border-radius:14px}
 .accountability h2{margin:0 0 10px;color:#f8d2a3;font-size:17px}
+.review-panel{margin:0 0 18px;overflow-wrap:anywhere}.review-panel .review-counts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.review-panel .review-counts strong{display:block;margin-top:8px;font-size:16px}.review-panel p{font-size:13px;line-height:1.5}.review-panel #reviewStatus{font-weight:700;font-size:18px}.review-panel #reviewIdentity{font-size:12px}@media(max-width:600px){.review-panel .review-counts{grid-template-columns:1fr}}
 .accountability .owners{display:flex;flex-wrap:wrap;gap:9px 24px;font-size:14px;margin-bottom:8px}
 .accountability .next{color:#b8cce3;font-size:13px;margin:8px 0 0;overflow-wrap:anywhere}
 .accountability .receipt{color:#d1e3f4;font-size:13px;margin:8px 0 0;overflow-wrap:anywhere}
@@ -55,6 +56,23 @@
     <div class="kpi"><div class="caption">Most recent BP report score</div><strong id="kpiLast">Not retrieved</strong><a href="https://github.com/london4216-hue/TransendIQ/blob/main/ops/scorecard-ledger.jsonl" target="_blank" rel="noopener">Review last source receipt</a></div>
   </div>
   <p class="time">Scores and active-agent totals are not inferred from GitHub branches, queued jobs, or old grades. The evidence source is separate from page refresh.</p>
+</section>
+<section class="panel review-panel" id="trigger-review" aria-label="Trigger.dev recurring review accountability">
+ <h2>RECURRING REVIEW / TRIGGER.DEV</h2>
+ <div id="reviewStatus" class="receipt warn" role="status" aria-live="polite">UNKNOWN</div>
+ <p id="reviewReason" class="muted">Connecting sanitized review receipts. No passing result is assumed.</p>
+ <p id="reviewExecution">Task execution: UNKNOWN · review outcome: UNKNOWN</p>
+ <div class="review-counts">
+  <div class="kpi"><span class="caption">Intent checks</span><strong id="reviewIntent">Not measured</strong></div>
+  <div class="kpi"><span class="caption">Public live workflow checks</span><strong id="reviewLive">Not measured</strong></div>
+ </div>
+ <p id="reviewTimes" class="time">Last completed review: UNKNOWN</p>
+ <p id="reviewIdentity" class="time">Run and tested source commit: UNKNOWN</p>
+ <p id="reviewCoverage" class="muted">Expected coverage: eight intent suites and BeautyPath public desktop/mobile workflows.</p>
+ <p class="muted">Scheduled cadence: every 15 minutes. This panel reads evidence every 30 seconds; opening or refreshing it does not start work. Receipts older than 35 minutes are stale. Other assets and authenticated workflows remain unverified.</p>
+ <p class="muted">Completed PRs / deployed fixes: UNKNOWN from this review feed. Existing GitHub, CI and link panels below remain the source evidence; a scheduler completion does not prove a fix, a merge, a deployment, or that all agents are healthy.</p>
+ <details><summary>Recent recorded review attempts</summary><div id="reviewHistory" class="time">No historical review receipts available.</div></details>
+ <p id="reviewFetch" class="time">Review feed fetch: not attempted</p>
 </section>
 <details class="panel" id="handoff-ledger" aria-label="Source-linked recovery handoffs"><summary><strong>Recovery handoffs and unresolved automation gaps</strong> · RECOVERING</summary><p class="muted">Durable, sanitized decision and next-action receipts; a handoff request is not proof another agent executed. <a href="./handoff-ledger.json" target="_blank" rel="noopener">Open source-linked handoff ledger</a> · <a href="https://github.com/london4216-hue/Zoodo/issues/18" target="_blank" rel="noopener">Review unattended recovery ticket</a>. Missing live verification remains UNKNOWN.</p></details>
 <details class="panel" id="hostingFailover" aria-label="Independent hosting recovery">
@@ -406,4 +424,4 @@ function tickClock(){
 }
 $('refresh').addEventListener('click',update);
 update();setInterval(update,GITHUB_SOURCE_POLL_MS);setInterval(refreshAutomationProof,AUTOMATION_PROOF_POLL_MS);setInterval(tickClock,1000);
-</script><script type="module" src="./priority-watch.mjs"></script></body></html>
+</script><script type="module" src="./priority-watch.mjs"></script><script type="module" src="./review-panel.mjs"></script></body></html>
