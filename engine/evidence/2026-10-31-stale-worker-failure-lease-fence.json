@@ -1,0 +1,60 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "task_id": "Zoodo-76-stale-worker-failure-lease-fence",
+  "related_issues": [
+    76,
+    77,
+    78,
+    74,
+    67
+  ],
+  "executor": "temporary-coordinator/GitHub-connector-plus-local-Node22",
+  "provider_native_external_agent_invoked": false,
+  "branch": "fix/zoo-stale-worker-fail-lease-20261031",
+  "base_pr": 96,
+  "base_sha": "b6e94d3bcd11b962ef29a21ecfed6d3c3247ee07",
+  "test_commit": "cc5d3fb6d028ffb2565025fea1ba81b74850d2b6",
+  "fix_commit": "59830bdbfc5fb05d880d6f6dd21c811fcf1d236d",
+  "executed_at_utc": "2026-10-31T15:50:30Z",
+  "files": [
+    {
+      "path": "engine/src/durable-queue.mjs",
+      "git_blob_sha": "ba747ef228682d5d086ea942ec514e2ce300ddab"
+    },
+    {
+      "path": "engine/test/stale-fail-lease.test.mjs",
+      "git_blob_sha": "1414536aedef87399c7e935e8d75a4931ebb1838"
+    },
+    {
+      "path": "engine/test/durable-queue.test.mjs",
+      "git_blob_sha": "eecd9a930d5e3a0a6d381b5b601684822eee6728",
+      "unchanged": true
+    },
+    {
+      "path": "engine/test/single-worker-active-lease.test.mjs",
+      "git_blob_sha": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79",
+      "unchanged": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "fail-first regression against exact PR96 source",
+      "result": "EXPECTED_FAIL",
+      "passed": 1,
+      "failed": 1,
+      "description": "2 test cases, 1 expected failure before patch"
+    },
+    {
+      "name": "local Node 22.16.0 three-file queue regression",
+      "command": "node --test engine/test/durable-queue.test.mjs engine/test/single-worker-active-lease.test.mjs engine/test/stale-fail-lease.test.mjs",
+      "result": "PASS",
+      "passed": 12,
+      "failed": 0
+    }
+  ],
+  "scope": "single-writer local pilot queue only; not a distributed lease or hosted autonomous dispatch",
+  "hosted_ci": "UNVERIFIED",
+  "deployment_id": null,
+  "merge_sha": null,
+  "next_action": "PR closure worker: test and integrate PR96 then this stacked PR if permitted; Hunter continue authenticated hosted executor proof; dashboard lane independent."
+}
