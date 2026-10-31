@@ -1,0 +1,97 @@
+{
+  "schema": "zoo-ops-execution-receipt/v1",
+  "agent_id": "Implementation Lead (ChatGPT)",
+  "task_id": "P0-OUTBOX-REPLAY-20261031",
+  "decision": "REVISE",
+  "decision_reason": "Durable outbox replay code and isolated local tests verified; no authenticated hosted queue or worker invocation proven.",
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "visibility": "public",
+    "branch": "worker/p0-durable-outbox-replay-20261031-auto11",
+    "base_pr": 32,
+    "pr": 35,
+    "code_commit": "a904b81ca9945c6cf223a761086389f555c69570",
+    "code_url": "https://github.com/london4216-hue/Zoodo/commit/a904b81ca9945c6cf223a761086389f555c69570",
+    "module_blob": "150cd96fcc9b1eee795c8c3423dc5c3dd35d3c25",
+    "test_blob": "20b56ccd5050581a91d82a48daca2917359ce911",
+    "relay_blob": "de3ee5eb79890b96ec3048d86cfa57946c6d7a79"
+  },
+  "execution": {
+    "kind": "local-node-unit-tests",
+    "command": "node --test engine/test/outbox-replay.test.mjs",
+    "node_version": "v22.16.0",
+    "started_at_utc": "2026-10-31T00:46:57Z",
+    "ended_at_utc": "2026-10-31T00:46:57Z",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "tap_sha256": "9ee614b7a5719601be0ff73f9812c200becd3c29725afbff8adb359ab3b7c694",
+    "tap_path": "engine/evidence/2026-10-31-p0-outbox-replay-auto11.tap",
+    "limitations": "Simulated store and worker. Exact committed module and test blob SHAs match locally executed files. Existing complete portable-relay suite and PostgreSQL migration were not executed in this run."
+  },
+  "fail_first": {
+    "base_commit": "f04581db20e33e5a3eb1da329ae29feaa3e44803",
+    "missing_before": [
+      "outbox_claim RPC",
+      "outbox_ack RPC",
+      "outbox_recover RPC",
+      "authenticated replay intake"
+    ],
+    "present_after": 4,
+    "kind": "source-contract assertions, not runtime tests"
+  },
+  "hourly_movement": [
+    {
+      "hour_et": "2026-10-30 20",
+      "hour_utc": "2026-10-31 00",
+      "asset": "Zoodo relay",
+      "prior": "Outbox SQL existed but portable relay could not consume it",
+      "new": "Outbox consumer, authenticated replay and reconciliation committed",
+      "pr": 35,
+      "code_commit": "a904b81ca9945c6cf223a761086389f555c69570",
+      "tests": "6/6 local Node",
+      "provider_deploy": "UNKNOWN",
+      "hosted_execution": "UNKNOWN"
+    }
+  ],
+  "pr_stages": {
+    "opened_utc": "2026-10-31T00:47:05Z",
+    "reviewed_utc": null,
+    "fixed_utc": null,
+    "tests_completed_utc": "2026-10-31T00:46:57Z",
+    "merged_utc": null,
+    "deployed_utc": null,
+    "verified_hosted_utc": null,
+    "elapsed_open_to_merge_ms": null,
+    "elapsed_merge_to_deploy_ms": null,
+    "gap_detection_to_fix_ms": null,
+    "gap_age_ms": null
+  },
+  "four_agent_hosted_proof": {
+    "agent_hunter": "UNKNOWN",
+    "dashboard_lead": "UNKNOWN",
+    "implementation_lead": "UNKNOWN",
+    "zoo_keeper": "UNKNOWN"
+  },
+  "hosted_proof": {
+    "supabase_migration": "UNKNOWN",
+    "netlify_function_invocation": "UNKNOWN",
+    "worker_replacement_two_ticket": "UNKNOWN",
+    "production_dashboard_readback": "UNKNOWN",
+    "deepseek_provider_receipt": "NOT CONNECTED/NOT INVOKED"
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "task_id": "P0-OUTBOX-REPLAY-HOSTED",
+    "decision": "REVISE",
+    "next_action": "Integrate stacked PRs only after private PostgreSQL migration and authenticated Netlify replay/reconcile endpoint probe; execute two distinct tickets with failure recovery and publish provider-native receipts. Hunter should probe available host credentials; Dashboard Lead must keep hosted status UNKNOWN.",
+    "next_trigger": "Existing scheduled Keeper reconciliation or authenticated durable relay event; not claimed invoked."
+  },
+  "security": {
+    "private_tickets_committed": false,
+    "credentials_committed": false,
+    "production_merge": false,
+    "provider_deploy": false
+  }
+}
