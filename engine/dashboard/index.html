@@ -84,6 +84,7 @@ import {evaluateEvidence} from './evidence-clock.mjs';
 import {evaluateAutomationProof} from './automation-proof.mjs';
 import {selectSourceIdentity} from './source-identity.mjs';
 import {GITHUB_SOURCE_POLL_MS,AUTOMATION_PROOF_POLL_MS} from './refresh-policy.mjs';
+import {countRecentCommits} from './commit-window.mjs';
 const owner='london4216-hue',repo='Zoodo',fallbackBranch='autonomous-engine-replacement-2026-10-29';
 let sourceIdentity=selectSourceIdentity(null,fallbackBranch),sourceIdentityError='build receipt not read';
 const root='https://api.github.com/repos/'+owner+'/'+repo;
@@ -365,7 +366,7 @@ async function update(){
  ' · authenticated heartbeat: '+(evidenceState.lastAuthenticatedHeartbeatAt??'UNKNOWN');
  if(commits.status==='fulfilled'){
   const data=commits.value;
-  $('commitsHour').textContent=data.filter(c=>Date.now()-Date.parse(c.commit.committer.date)<3600000).length;
+  $('commitsHour').textContent=countRecentCommits(data);
   $('commits').innerHTML=data.slice(0,35).map(c=>'<div class="row"><div class="time">'+escapeHtml(new Date(c.commit.committer.date).toLocaleString())+' · '+escapeHtml(c.sha.slice(0,9))+'</div><a target="_blank" rel="noopener" href="'+escapeHtml(c.html_url)+'">'+escapeHtml(c.commit.message.split('\n')[0])+'</a></div>').join('')||'No commits';
  }else{errors.push('Commits: '+commits.reason.message);$('commitsHour').textContent='UNKNOWN';$('commits').textContent='Commit evidence unavailable'}
  if(runs.status==='fulfilled'){
