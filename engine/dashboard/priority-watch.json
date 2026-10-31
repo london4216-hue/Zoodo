@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
   "source": "authenticated_github_connector_read",
-  "observed_at": "2026-10-31T00:23:01.182Z",
+  "observed_at": "2026-10-31T01:25:19.042Z",
   "publication_scope": "Sanitized public metadata only; private code, test data and credentials excluded.",
   "privacy": "No private repo body, test payload, session URL or credentials.",
   "priority": {
     "id": "TRANSENDIQ-PR-787",
     "asset": "TransendIQ",
     "pr_url": "https://github.com/london4216-hue/TransendIQ/pull/787",
-    "stage": "DRAFT_PR_OPEN",
-    "stage_source": "GitHub PR metadata authenticated read",
+    "stage": "DRAFT_PR_OPEN_CONFLICTED",
+    "stage_source": "Authenticated GitHub PR #787 read; draft=true, mergeable=false",
     "responsible_worker": "UNKNOWN — PR author not an authenticated active worker",
     "source_head_sha": "86b854a1ac2e54fe703ec1ad7e320423c6a740cc",
     "source_commit_url": "https://github.com/london4216-hue/TransendIQ/commit/86b854a1ac2e54fe703ec1ad7e320423c6a740cc",
@@ -36,13 +36,14 @@
     "last_pr_metadata_updated_at": "2026-10-30T23:47:01Z",
     "related_reconciliation": {
       "pr_url": "https://github.com/london4216-hue/TransendIQ/pull/1070",
-      "stage": "DRAFT_PR_OPEN",
+      "stage": "DRAFT_PR_OPEN_MERGEABLE_TRUE_TESTS_UNKNOWN",
       "head_sha": "963e5ef68885e6e2711dca028ea7d0e028dddacd",
       "source_blob_sha": "f04dae55b5f9365ae3a9a7840d19ab160235b5f1",
       "source_checks": "Readback confirmed outcomes.filter(isGrad), cohortYearOf and parseCalendarDate; hosted Playwright/CI UNKNOWN",
       "opened_at": "2026-10-30T23:46:49Z",
       "merged": false,
-      "deployed": false
+      "deployed": false,
+      "last_metadata_updated_at": "2026-10-31T01:07:11Z"
     }
   },
   "sara": {
@@ -51,7 +52,7 @@
     "url": null,
     "state": "UNKNOWN",
     "last_verified_at": null,
-    "observed_at": "2026-10-31T00:23:01.182Z",
+    "observed_at": "2026-10-31T01:25:19.042Z",
     "owner": "ZOO Agent Hunter",
     "backup": "ZOO Dashboard Lead",
     "next_action": "Inspect actual owner-controlled deployments and Sara-related PRs, verify expected new UI/UX landing, redirect, access and mobile; only then publish URL"
@@ -60,9 +61,9 @@
     "source_pr": "https://github.com/london4216-hue/Zoodo/pull/16",
     "production_url": "https://zoo-live-dashboard.netlify.app/",
     "production_verified": false,
-    "reason": "This run's web read and container DNS both failed to access Netlify; actual site/deploy/source mapping and live content remain UNKNOWN, not proof of outage.",
+    "reason": "Netlify preview status succeeded at source head e82b7cce, but direct preview and production HTTP/DNS inaccessible from available runtimes; production site ID/deploy mapping, actual live content and mobile remain UNKNOWN.",
     "next_action": "Read authorized Netlify site/deploy mapping and exact SHA, then browser verify source-linked row and refresh; retain rollback",
-    "latest_source_only_sha": "d6eb2a2cb97ee18159ea25c7f2cd6a7d74f2e691"
+    "latest_source_only_sha": "e82b7cceb1ef3e62c4469a7a721bf464722e85de"
   },
   "hourly_movement": [
     {
@@ -89,6 +90,20 @@
       "source_sha": "d6eb2a2cb97ee18159ea25c7f2cd6a7d74f2e691",
       "worker": "ZOO Dashboard Lead",
       "gap_detected_at": "2026-10-30T23:37:15Z",
+      "fixed_at": null,
+      "verified_live_at": null,
+      "latency_minutes": null
+    },
+    {
+      "hour_utc": "2026-10-31T01:00Z",
+      "hour_et": "2026-10-30 21:00 EDT",
+      "repo": "london4216-hue/Zoodo",
+      "pr_url": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "prior_status": "Authenticated priority snapshot from 00:23 UTC; PR #787 source head unchanged",
+      "new_status": "Authenticated re-read: #787 still draft/conflicted, #782 and #788 still open, #1070 draft mergeable true but tests UNKNOWN; Sara URL UNKNOWN; no reset of PR #787 meaningful-work timestamp",
+      "source_sha": "e82b7cceb1ef3e62c4469a7a721bf464722e85de",
+      "worker": "ZOO Dashboard Lead",
+      "gap_detected_at": "2026-10-30T23:34:16Z",
       "fixed_at": null,
       "verified_live_at": null,
       "latency_minutes": null
