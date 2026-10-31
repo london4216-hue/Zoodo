@@ -33,7 +33,7 @@ export function makeStore({origin,serviceRoleKey,fetchImpl=fetch}){
   recoverOutbox:()=>rpc('outbox_recover',{})
  };
 }
-export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now()}){
+export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),nextDeadlineMs=7500}){
  if(!store||!Array.isArray(workers)||!workers.length)throw Error('Durable store and worker pool required');
  const pool=new Map();
  for(const w of workers){
@@ -84,7 +84,7 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now()}){
  async function nextAfterTransition(worker){
   // NEXT can hang after the prior transition was committed. Do not hang the
   // completion callback or infer that a late dispatch did not occur.
-  return nextWithDeadline(()=>next(worker));
+  return nextWithDeadline(()=>next(worker),{timeoutMs:nextDeadlineMs});
  }
  async function completed(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
