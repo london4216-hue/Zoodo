@@ -5,14 +5,18 @@ export async function nextWithDeadline(run, {timeoutMs = 7500} = {}) {
     throw Error('Valid NEXT callback and bounded deadline required');
   }
   let timer;
+  const controller = new AbortController();
   const deadline = new Promise(resolve => {
-    timer = setTimeout(() => resolve({
+    timer = setTimeout(() => {
+      controller.abort();
+      resolve({
       state: 'next-unconfirmed',
       reason: 'NEXT deadline exceeded; durable outbox reconciliation required'
-    }), timeoutMs);
+      });
+    }, timeoutMs);
   });
   try {
-    const attempt = Promise.resolve().then(run).catch(() => ({
+    const attempt = Promise.resolve().then(() => run(controller.signal)).catch(() => ({
       state: 'recovery_required',
       reason: 'NEXT dispatch failed; durable outbox retry required'
     }));

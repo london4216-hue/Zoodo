@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "agent_id": "Implementation Lead / ChatGPT",
+  "task_id": "ZOO-P0-NEXT-DEADLINE-FENCE-20261031-0623",
+  "decision": "REVISE",
+  "decision_reason": "Test-first fix committed and local two-ticket HTTP chain verified; authenticated external hosting, private durable database and production dashboard proof remain unverified.",
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "visibility": "public",
+    "branch": "worker/p0-next-abort-fence-20261031-0623",
+    "base_branch": "worker/p0-outbox-bounded-serverless-20261031-auto11",
+    "pr_url": "https://github.com/london4216-hue/Zoodo/pull/50",
+    "source_code_commit_sha": "aaf12140b76cb8ad00a78a9053bbd18ff6769de5",
+    "test_first_commit_sha": "2fb679cb43ef8b95890cc9a8d690e5acd920fdb7",
+    "source_blobs": {
+      "engine/ops/relay/next-deadline.mjs": "1c550c02523888f0be49b72ddca1012e28893816",
+      "engine/ops/relay/portable-relay.mjs": "a0d9b7cec124a55f673dec9da4d25d5cce326b00",
+      "engine/ops/relay/outbox-replay.mjs": "560d00dbbfb9b18eef1763c45bc98367ed6bcb08",
+      "engine/test/next-abort-fence.test.mjs": "a302e3a505ba8d9d1890dcd1b288131b9673c2f9"
+    }
+  },
+  "execution": {
+    "environment": "local Node.js 22.16.0 container; synthetic durable-store stub and real 127.0.0.1 HTTP server; NOT hosted",
+    "command": "node --test engine/test/next-deadline.test.mjs engine/test/next-abort-fence.test.mjs",
+    "started_utc": "2026-10-31T06:25:50Z",
+    "ended_utc": "2026-10-31T06:25:51Z",
+    "exit_code": 0,
+    "tests": 12,
+    "passed": 12,
+    "failed": 0,
+    "red_first": {
+      "before_patch": "2/4 passed; late NEXT worker and backup claim tests failed",
+      "before_replay_patch": "4/5 passed; outbox abort propagation test failed"
+    },
+    "tap_sha256": "a7e73f92d216d0681beb544b0028bfec3623a00d5506890c412153c9d06ab89a",
+    "tap_git_blob": "349da1474e646f9833a80a79382db9788af8ccac",
+    "tap_url": "https://github.com/london4216-hue/Zoodo/blob/worker/p0-next-abort-fence-20261031-0623/engine/evidence/2026-10-31-p0-next-abort-fence-12cases.tap",
+    "two_ticket_local_http": {
+      "ticket_ids": [
+        "T1",
+        "T2"
+      ],
+      "completion_triggers_next": true,
+      "accepted": [
+        "T1",
+        "T2"
+      ],
+      "durable_record_stub": [
+        "T1",
+        "T2"
+      ],
+      "provider_request_ids": [],
+      "actual_latency_ms": null,
+      "latency_note": "No instrumented timestamp receipt; only bounded test assertion under 2000ms",
+      "hosted": false,
+      "failover": {
+        "primary_worker": "dead",
+        "primary_ticket": "T1",
+        "primary_state": "uncertain leased",
+        "replacement_worker": "backup",
+        "replacement_ticket": "T2",
+        "replacement_accepted": true,
+        "duplicate_T1": false,
+        "scope": "local HTTP with synthetic database"
+      }
+    },
+    "recovery_drill": {
+      "kind": "late claim after timeout",
+      "late_worker_launches": 0,
+      "late_backup_claims": 0,
+      "outbox_acks_after_expiry": 0,
+      "scope": "local deterministic fault injection"
+    }
+  },
+  "hosting": {
+    "netlify_authenticated_invocation": "UNKNOWN",
+    "vercel_authenticated_invocation": "UNKNOWN",
+    "supabase_private_queue_migration": "UNKNOWN",
+    "deepseek_provider_native_receipt": "UNKNOWN",
+    "dashboard_production_readback": "UNKNOWN",
+    "github_actions_ci": "UNKNOWN"
+  },
+  "hourly_movement": [
+    {
+      "hour_et": "2026-10-31 02 EDT",
+      "hour_utc": "2026-10-31 06 UTC",
+      "repo": "london4216-hue/Zoodo",
+      "asset": "ZOO portable NEXT/outbox relay",
+      "pr": 50,
+      "prior_status": "deadline response bounded but late database claim could start worker or backup",
+      "new_status": "deadline AbortSignal propagated through NEXT, failover and outbox; 11 local tests pass",
+      "source_commit_sha": "aaf12140b76cb8ad00a78a9053bbd18ff6769de5",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/aaf12140b76cb8ad00a78a9053bbd18ff6769de5",
+      "worker": "Implementation Lead",
+      "provider_deploy": "UNKNOWN",
+      "independent_hosted_execution": "UNKNOWN"
+    }
+  ],
+  "pr_stages": {
+    "opened_at": "2026-10-31T06:24:22Z",
+    "review_at": null,
+    "fix_at": null,
+    "local_tests_ended_at": "2026-10-31T06:25:51Z",
+    "merged_at": null,
+    "deployed_at": null,
+    "independently_verified_at": null,
+    "opened_to_review_ms": null,
+    "review_to_fix_ms": null,
+    "fix_to_tests_ms": null,
+    "tests_to_merge_ms": null,
+    "merge_to_deploy_ms": null,
+    "deploy_to_verified_ms": null
+  },
+  "gap_metrics": {
+    "gap_detected_at": null,
+    "fix_completed_at": null,
+    "verified_locally_at": "2026-10-31T06:24:45Z",
+    "detection_to_fix_ms": null,
+    "detection_to_hosted_verification_ms": null,
+    "unresolved_gap_age_ms": null,
+    "fix_observed_no_later_than_utc": "2026-10-31T06:23:24Z"
+  },
+  "four_agent_proof_matrix": {
+    "agent_hunter": "UNKNOWN - no external provider-native receipt verified in this run",
+    "dashboard_lead": "UNKNOWN - no live production readback",
+    "implementation_lead": "UNKNOWN for hosted execution; PASS local bounded task and fault-injection tests",
+    "zoo_keeper": "UNKNOWN for event-driven hosted NEXT handoff"
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "task_id": "ZOO-P0-NEXT-DEADLINE-FENCE-20261031-0623",
+    "proposed_fix": "Integrate PR #50 after stacked #49, run full suite, test private Supabase lease/outbox and authenticated Netlify/Vercel invocation, then provider-native two-ticket recovery and dashboard readback",
+    "decision": "REVISE",
+    "timestamp_utc": "2026-10-31T06:25:51Z",
+    "next_trigger": "GitHub PR #50 comment/stack integration; existing hourly Keeper/Hunter watchdogs if no event-driven provider available"
+  },
+  "safety": {
+    "protected_branch_unchanged": true,
+    "production_deployment_performed": false,
+    "public_repo_contains_no_credentials": true,
+    "private_ticket_data_not_published": true,
+    "figma_source_untouched": true
+  }
+}

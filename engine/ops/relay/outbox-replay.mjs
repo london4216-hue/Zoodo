@@ -13,6 +13,7 @@ export function makeOutboxReplay({store, dispatch, worker, timeoutMs = 8000}) {
   }
   return async function replayOne() {
     let expired = false;
+    const controller = new AbortController();
     let timer;
     const attempt = async () => {
       const event = await store.claimOutbox();
@@ -26,7 +27,7 @@ export function makeOutboxReplay({store, dispatch, worker, timeoutMs = 8000}) {
       }
       let result;
       try {
-        result = await dispatch(worker);
+        result = await dispatch(worker, true, controller.signal);
       } catch (e) {
         return {state: 'retry-after-lease', event_id: event.id, reason: String(e?.message ?? e).slice(0, 120)};
       }
@@ -60,6 +61,7 @@ export function makeOutboxReplay({store, dispatch, worker, timeoutMs = 8000}) {
         new Promise(resolve => {
           timer = setTimeout(() => {
             expired = true;
+            controller.abort();
             resolve({state: 'replay-unconfirmed', reason: 'Replay deadline; fenced outbox recovery required'});
           }, timeoutMs);
         })

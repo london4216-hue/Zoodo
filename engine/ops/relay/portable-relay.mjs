@@ -40,27 +40,32 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),next
   if(!WORKER.test(w?.id??'')||!https(w?.url)||typeof w.token!=='string'||w.token.length<24||pool.has(w.id))throw Error('Invalid authorized worker');
   pool.set(w.id,w);
  }
- async function delegate(worker,allowReplacement,result){
-  if(!allowReplacement)return result;
+ async function delegate(worker,allowReplacement,result,signal){
+  if(!allowReplacement||signal?.aborted)return result;
   // One bounded pass, no timers and no repeat of a leased/uncertain ticket.
   for(const alternate of pool.keys()){
    if(alternate===worker)continue;
+   if(signal?.aborted)break;
    try{
-    const replacement=await next(alternate,false);
+    const replacement=await next(alternate,false,signal);
     if(replacement.state==='dispatched')return result.state==='idle'
      ? {state:'delegated',worker,replacement}:{...result,replacement};
    }catch{ /* The original result remains durable and truthful. */ }
   }
   return result;
  }
- async function next(worker,allowReplacement=true){
+ async function next(worker,allowReplacement=true,signal){
   const w=pool.get(worker);if(!w)throw Error('Unknown worker');
-  const t=await store.claim(worker);if(!t)return delegate(worker,allowReplacement,{state:'idle'});
+  if(signal?.aborted)return {state:'next-unconfirmed',reason:'NEXT deadline elapsed before claim'};
+  const t=await store.claim(worker);
+  // A late atomic claim may own a durable lease; never launch a worker after the HTTP deadline.
+  if(signal?.aborted)return {state:'next-unconfirmed',ticket:t?.id??null,reason:'NEXT deadline elapsed after claim; lease reconciliation required'};
+  if(!t)return delegate(worker,allowReplacement,{state:'idle'},signal);
   if(!ID.test(t.id??'')||!UUID.test(t.lease_token??'')||t.lease_owner!==worker)throw Error('Invalid atomic lease');
   const key='zoo:'+t.id+':'+t.lease_token;
   let result;
   try{
-   const res=await fetchImpl(w.url,{method:'POST',redirect:'error',signal:AbortSignal.timeout(6000),
+   const res=await fetchImpl(w.url,{method:'POST',redirect:'error',signal:signal?AbortSignal.any([AbortSignal.timeout(6000),signal]):AbortSignal.timeout(6000),
     headers:{authorization:'Bearer '+w.token,'content-type':'application/json','x-zoo-idempotency-key':key},
     body:JSON.stringify({ticket_id:t.id,worker,lease_token:t.lease_token,idempotency_key:key,asset:t.asset,intent:t.intent})});
    if(res.status!==202){await res.body?.cancel?.();result={state:'uncertain',ticket:t.id,reason:'worker HTTP '+res.status}}
@@ -77,14 +82,14 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now(),next
    }
   }catch(e){result={state:'uncertain',ticket:t.id,reason:String(e.message||e).slice(0,160)}}
   // The uncertain task stays leased/quarantined; only independent tickets may advance.
-  return delegate(worker,allowReplacement,result);
+  return delegate(worker,allowReplacement,result,signal);
  }
  // Keeper PR #34: preserve an already committed transition if NEXT fails.
  // The transactional outbox is the durable recovery checkpoint.
  async function nextAfterTransition(worker){
   // NEXT can hang after the prior transition was committed. Do not hang the
   // completion callback or infer that a late dispatch did not occur.
-  return nextWithDeadline(()=>next(worker),{timeoutMs:nextDeadlineMs});
+  return nextWithDeadline(signal=>next(worker,true,signal),{timeoutMs:nextDeadlineMs});
  }
  async function completed(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||

@@ -1,0 +1,82 @@
+TAP version 13
+# Subtest: deadline aborts its signal and prevents a late NEXT launch
+ok 1 - deadline aborts its signal and prevents a late NEXT launch
+  ---
+  duration_ms: 21.763068
+  type: 'test'
+  ...
+# Subtest: fast NEXT receives live signal and returns verified result
+ok 2 - fast NEXT receives live signal and returns verified result
+  ---
+  duration_ms: 1.140513
+  type: 'test'
+  ...
+# Subtest: completed T1 cannot launch T2 worker after NEXT deadline and late database claim
+ok 3 - completed T1 cannot launch T2 worker after NEXT deadline and late database claim
+  ---
+  duration_ms: 31.234277
+  type: 'test'
+  ...
+# Subtest: expired NEXT does not start alternate worker after late primary claim
+ok 4 - expired NEXT does not start alternate worker after late primary claim
+  ---
+  duration_ms: 31.877443
+  type: 'test'
+  ...
+# Subtest: outbox replay deadline aborts late dispatch claim without acknowledging event
+ok 5 - outbox replay deadline aborts late dispatch claim without acknowledging event
+  ---
+  duration_ms: 31.506303
+  type: 'test'
+  ...
+# Subtest: real localhost two-ticket NEXT chain remains immediate and durably recorded
+ok 6 - real localhost two-ticket NEXT chain remains immediate and durably recorded
+  ---
+  duration_ms: 43.866595
+  type: 'test'
+  ...
+# Subtest: real localhost replacement dispatches independent T2 after T1 worker failure
+ok 7 - real localhost replacement dispatches independent T2 after T1 worker failure
+  ---
+  duration_ms: 8.601655
+  type: 'test'
+  ...
+# Subtest: successful NEXT dispatch preserves actual receipt
+ok 8 - successful NEXT dispatch preserves actual receipt
+  ---
+  duration_ms: 1.48714
+  type: 'test'
+  ...
+# Subtest: rejected NEXT returns recovery checkpoint without throwing
+ok 9 - rejected NEXT returns recovery checkpoint without throwing
+  ---
+  duration_ms: 1.249126
+  type: 'test'
+  ...
+# Subtest: hanging NEXT cannot indefinitely block already-durable completion
+ok 10 - hanging NEXT cannot indefinitely block already-durable completion
+  ---
+  duration_ms: 21.271966
+  type: 'test'
+  ...
+# Subtest: late NEXT completion cannot be misreported as a confirmed failure
+ok 11 - late NEXT completion cannot be misreported as a confirmed failure
+  ---
+  duration_ms: 10.464123
+  type: 'test'
+  ...
+# Subtest: invalid/unbounded deadline is rejected
+ok 12 - invalid/unbounded deadline is rejected
+  ---
+  duration_ms: 2.714859
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 341.864694
