@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "agent_id": "Implementation Lead",
+  "task_id": "ZOO-P0-RETRY-TRANSIENT-RELAY-20261031-0747",
+  "repo": "london4216-hue/Zoodo",
+  "asset": "ZOO independent operations relay",
+  "target_issues": [
+    "https://github.com/london4216-hue/Zoodo/issues/18",
+    "https://github.com/london4216-hue/TransendIQ/issues/1023",
+    "https://github.com/london4216-hue/TransendIQ/issues/1048"
+  ],
+  "branch": "worker/p0-retry-transient-relay-errors-20261031-0750",
+  "base_branch": "worker/p0-fence-late-completion-20261031-0727",
+  "pr_url": "https://github.com/london4216-hue/Zoodo/pull/60",
+  "source_commit_sha": "e6ba641087d4318d0ab354b39ecebba34da1db5c",
+  "change": "Return HTTP 503 on known transient Supabase RPC 408/425/429/5xx, network failures and timeout; preserve HTTP 409 for invalid/stale callback and lease conflicts",
+  "execution": {
+    "kind": "LOCAL synthetic Node v22.16.0 exact-Git-blob helper tests, not hosted",
+    "command": "node --test engine/test/relay-error-status.test.mjs",
+    "started_at_utc": "2026-10-31T07:48:31.851Z",
+    "ended_at_utc": "2026-10-31T07:48:31.974Z",
+    "exit_code": 0,
+    "passed": 3,
+    "failed": 0,
+    "red_baseline": "ERR_MODULE_NOT_FOUND before helper implementation; not an existing-behavior assertion",
+    "test_log_url": "https://github.com/london4216-hue/Zoodo/blob/worker/p0-retry-transient-relay-errors-20261031-0750/engine/evidence/2026-10-31-transient-relay-error-3cases.tap",
+    "tap_sha256": "8c7fac1e774d0a3facdc5f8a2c41c38ec7ec1b0d6864aa6f8066a87ff78335c8",
+    "source_blobs": {
+      "helper": "38d9f7faa297f95490873efb9c227fc0c1aa3bc3",
+      "test": "d717d9162304a0cfbe22797e7bc870b91169a17a"
+    },
+    "local_source_blobs_match": true,
+    "full_integration_suite": "NOT EXECUTED; handler regression tests committed but not run"
+  },
+  "provider": {
+    "github_ci": {
+      "run_id": 41182031184,
+      "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41182031184",
+      "conclusion": "failure",
+      "job_id": 124481230608,
+      "steps": [],
+      "root_cause": "UNKNOWN; no exposed job steps; not evidence of test assertion failure"
+    },
+    "netlify_deployment": "UNKNOWN",
+    "supabase_durable_queue": "UNKNOWN",
+    "hosted_two_ticket_failover": "UNKNOWN",
+    "dashboard_production_refresh": "UNKNOWN",
+    "deepseek_native_receipt": "UNKNOWN",
+    "provider_credentials": "NOT VERIFIED; no Netlify/Vercel/Supabase management connector exposed in this runtime"
+  },
+  "decision": {
+    "stamp": "REVISE",
+    "reason": "Local isolated helper tests pass; full suite, authenticated provider invocation, hosted two-ticket recovery and dashboard proof not verified",
+    "next_action": "Keeper integrate stacked PR #60 after full suite and branch safeguards; Hunter probe authenticated Netlify runtime/Supabase; Dashboard Lead publish source-linked receipts"
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "task_id": "ZOO-P0-RETRY-TRANSIENT-RELAY-20261031-0747",
+    "timestamp_utc": "2026-10-31T07:49:04.347Z",
+    "next_trigger": "Review PR #60; run full relay integration tests and provider-native two-ticket recovery; do not merge without required checks",
+    "execution_confirmed_by_keeper": false
+  },
+  "four_agent_proof_matrix": {
+    "hunter": "HOSTED_UNKNOWN",
+    "dashboard": "HOSTED_UNKNOWN",
+    "implementation": "LOCAL_HELPER_PASS_HOSTED_UNKNOWN",
+    "keeper": "HOSTED_UNKNOWN"
+  },
+  "movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T07:00:00Z",
+      "hour_et": "2026-10-31T03:00:00-04:00",
+      "repo": "london4216-hue/Zoodo",
+      "asset": "transient RPC callback retry",
+      "pr": 60,
+      "prior_status": "Transient RPC/network callback errors returned terminal HTTP 409",
+      "new_status": "HTTP 503 classifier integrated in stacked draft; 3 exact-blob helper tests PASS; integration/hosted UNKNOWN",
+      "commit_sha": "e6ba641087d4318d0ab354b39ecebba34da1db5c",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/e6ba641087d4318d0ab354b39ecebba34da1db5c"
+    }
+  ],
+  "pr_stage_timing": {
+    "opened_at_utc": "2026-10-31T07:48:12Z",
+    "review_at_utc": null,
+    "fix_commit_at_utc": "2026-10-31T07:47:56Z",
+    "local_tests_end_utc": "2026-10-31T07:48:31.974Z",
+    "merge_at_utc": null,
+    "deploy_at_utc": null,
+    "verified_at_utc": null,
+    "opened_to_local_test_seconds": 19.974,
+    "opened_to_review_seconds": null,
+    "pr_to_merge_seconds": null,
+    "merge_to_deploy_seconds": null,
+    "gap_detected_at_utc": "UNKNOWN",
+    "gap_fix_verification_latency": "UNKNOWN",
+    "unresolved_gap_age": "UNKNOWN"
+  },
+  "safeguards": [
+    "No production merge",
+    "No credentials or private tickets committed to public Zoodo",
+    "Protected branch controls retained",
+    "No external model or provider invocation fabricated"
+  ]
+}
