@@ -28,6 +28,7 @@ export function makeStore({origin,serviceRoleKey,fetchImpl=fetch}){
   quarantine:()=>rpc('quarantine_expired',{}),
   claimOutbox:async()=>{const r=await rpc('outbox_claim',{});if(!Array.isArray(r)||r.length>1)throw Error('Invalid outbox claim');return r[0]??null},
   ackOutbox:(id,token)=>rpc('outbox_ack',{p_id:id,p_token:token}),
+  settleIdleOutbox:(id,token)=>rpc('outbox_settle_idle',{p_id:id,p_token:token}),
   recoverOutbox:()=>rpc('outbox_recover',{})
  };
 }
