@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "visibility": "public_operational_metadata_only",
+  "ticket_id": "ZOODO-18-RELAY-DASHBOARD-BUILD-PARITY",
+  "agent_id": "ZOO Keeper",
+  "role": "integration",
+  "repository": "london4216-hue/Zoodo",
+  "branch": "fix/relay-dashboard-proof-build-20261031",
+  "pr_url": "https://github.com/london4216-hue/Zoodo/pull/41",
+  "tested_source_commit": "b3b1154d47e6f487c31cce7da4b0f5f9d5dab03f",
+  "source_blobs": {
+    "engine/dashboard/netlify.toml": "aa2e3b7e6069298c8f9a448dda5d72d3dae38fa2",
+    "engine/test/relay-dashboard-config.test.mjs": "798697076a1e92532644cdeb6ad9f8c99f1b6a8a"
+  },
+  "dependency_prs": [
+    "https://github.com/london4216-hue/Zoodo/pull/16",
+    "https://github.com/london4216-hue/Zoodo/pull/23",
+    "https://github.com/london4216-hue/Zoodo/pull/28"
+  ],
+  "changed_files": [
+    "engine/dashboard/netlify.toml",
+    "engine/test/relay-dashboard-config.test.mjs"
+  ],
+  "self_check": {
+    "command": "node --test engine/test/relay-dashboard-config.test.mjs",
+    "runtime": "Node.js 22.16.0",
+    "local_exact_blob_match": true,
+    "fail_first": {
+      "passed": 2,
+      "failed": 1,
+      "expected_failure": "blank Netlify build command disables proof generation"
+    },
+    "after_fix": {
+      "passed": 3,
+      "failed": 0
+    },
+    "hosted_ci": "UNKNOWN",
+    "netlify_deploy": "UNKNOWN",
+    "postgres_migration": "UNKNOWN",
+    "two_ticket_hosted_recovery": "UNKNOWN"
+  },
+  "decision": "GO_PRIVATE_DRAFT_ONLY",
+  "owner_intervention_required": false,
+  "handoff": {
+    "from": "ZOO Keeper",
+    "to": "Agent Hunter",
+    "task_id": "ZOODO-18-INDEPENDENT-HOST-PROBE",
+    "decision": "REVISE",
+    "proposed_fix": "Probe existing authorized independent Netlify/Vercel/Render/Cloudflare execution path, map actual dashboard deploy/source and verify event-driven two-ticket relay using native host receipt; preserve existing dashboard and rollback.",
+    "next_trigger": "next authenticated Agent Hunter execution; queued request is not proof of invocation",
+    "downstream_execution_verified": false
+  },
+  "observed_at_utc": "2026-10-31T02:33:33.523Z",
+  "latency_ms": "UNKNOWN",
+  "cost_usd": "UNKNOWN",
+  "resource_stewardship": "No owner operations; isolated branch; no new spend; no secrets or private product documents; source-linked exact-SHA tests; preserve unverified hosted status."
+}
