@@ -1,0 +1,122 @@
+{
+  "schema": "zoo.ops.execution-receipt.v1",
+  "agent_id": "Implementation Lead (ChatGPT)",
+  "task_id": "P0-ZOODO-QUEUE-INTEGRITY-20261031-AUTO11",
+  "decision": "REVISE",
+  "reason": "Private ZOO SQL integrity migration and exact-source Node contract tests passed; PostgreSQL migration, authenticated hosted worker, and two-ticket production failover remain unverified.",
+  "repository": "london4216-hue/Zoodo",
+  "repository_visibility": "public; no private ticket rows or secrets committed",
+  "branch": "worker/p0-queue-integrity-20261031-auto11",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/39",
+  "base_pr": "https://github.com/london4216-hue/Zoodo/pull/37",
+  "source_commit_sha": "df46fdabf0535f66599a328b55f8a6c865487ec0",
+  "test_commit_sha": "d536608b10bf04fd441ccc4fa5d5297df3e48930",
+  "test_log_commit_sha": "77cecb36595bf3309123e21d5518b9f1c22a9dd2",
+  "source_blobs": {
+    "engine/ops/relay/004_queue_integrity_constraints.sql": "7664ec5b76a4d8c46a9154a8c66cad9251a3f67a",
+    "engine/test/queue-integrity-migration.test.mjs": "42d421b82c8d5c55a5e8bee93d41ea4cda7392cb",
+    "engine/evidence/2026-10-31-p0-queue-integrity-auto11.tap": "afc9737d8ea7779763cf38c20a4e22a47a11b436"
+  },
+  "test": {
+    "command": "node --test engine/test/queue-integrity-migration.test.mjs",
+    "node_version": "v22.16.0",
+    "started_at_utc": "2026-10-31T02:29:36Z",
+    "ended_at_utc": "2026-10-31T02:29:37Z",
+    "exit_code": 0,
+    "passed": 5,
+    "failed": 0,
+    "environment": "local container; exact committed source hashes matched; source-contract assertions only",
+    "fail_first": "ENOENT before 004 migration existed (exit 1); after adding migration 5/5 passed",
+    "test_log_url": "https://github.com/london4216-hue/Zoodo/blob/77cecb36595bf3309123e21d5518b9f1c22a9dd2/engine/evidence/2026-10-31-p0-queue-integrity-auto11.tap",
+    "test_log_sha256": "a7d5b7ef9e823fab2382b55375292dc27999912aadb98b2b6b5f785e835fa59f",
+    "postgres_migration_executed": false,
+    "hosted_worker_executed": false
+  },
+  "hourly_movement": [
+    {
+      "hour_et": "2026-10-30T22:00:00-04:00",
+      "hour_utc": "2026-10-31T02:00:00Z",
+      "asset": "Zoodo private operations queue schema",
+      "pr": 39,
+      "prior_status": "SQL NULL parameters could bypass regex IF guards, permitting phantom leases or unverifiable completion attempts",
+      "new_status": "Draft additive fail-closed constraints committed and exact-source 5/5 Node contract tests passed; hosted unverified",
+      "commits": [
+        "df46fdabf0535f66599a328b55f8a6c865487ec0",
+        "d536608b10bf04fd441ccc4fa5d5297df3e48930",
+        "77cecb36595bf3309123e21d5518b9f1c22a9dd2"
+      ]
+    }
+  ],
+  "pr_stage_timestamps": {
+    "opened_utc": "2026-10-31T02:29:33Z",
+    "reviewed_utc": null,
+    "fix_committed_utc": "2026-10-31T02:29:06Z",
+    "tests_started_utc": "2026-10-31T02:29:36Z",
+    "tests_completed_utc": "2026-10-31T02:29:37Z",
+    "merged_utc": null,
+    "deployed_utc": null,
+    "hosted_verified_utc": null,
+    "opened_to_tests_seconds": 4,
+    "fix_to_tests_seconds": 31,
+    "opened_to_review_seconds": null,
+    "review_to_fix_seconds": null,
+    "pr_to_merge_seconds": null,
+    "merge_to_deploy_seconds": null,
+    "deploy_to_verified_seconds": null,
+    "gap_detection_to_fix_seconds": null,
+    "unresolved_hosted_gap_age_seconds": null
+  },
+  "host": {
+    "postgres_migration": "NOT_EXECUTED",
+    "netlify_function_invocation": "UNKNOWN",
+    "authenticated_two_ticket_failover": "UNKNOWN",
+    "production_dashboard_readback": "UNVERIFIED",
+    "deepseek_provider_native_judge": "NOT_INVOKED",
+    "production_merge": "NOT_DONE"
+  },
+  "four_agent_hosted_proof": {
+    "agent_hunter": "UNKNOWN",
+    "dashboard_lead": "UNKNOWN",
+    "implementation_lead": "UNKNOWN_HOSTED; LOCAL_SOURCE_CONTRACT_TESTS_PASS",
+    "zoo_keeper": "UNKNOWN"
+  },
+  "handoff": {
+    "from": "Implementation Lead",
+    "to": "ZOO Keeper",
+    "task_id": "P0-ZOODO-QUEUE-INTEGRITY-20261031-AUTO11",
+    "decision": "REVISE",
+    "code_evidence": "https://github.com/london4216-hue/Zoodo/pull/39",
+    "test_evidence": "https://github.com/london4216-hue/Zoodo/blob/77cecb36595bf3309123e21d5518b9f1c22a9dd2/engine/evidence/2026-10-31-p0-queue-integrity-auto11.tap",
+    "utc_timestamp": "2026-10-31T02:29:37Z",
+    "next_action": "Integrate PR #39 after private PostgreSQL preflight and migration tests of 001-004; Hunter qualify authenticated Netlify/Supabase invocation; then execute two distinct hosted tickets with intentional failure, recover safely and publish dashboard proof.",
+    "next_trigger": "Existing Keeper continuation or authenticated hosted event; no execution claimed",
+    "github_comments": [
+      {
+        "repo": "london4216-hue/TransendIQ",
+        "issue": 1048,
+        "url": "https://github.com/london4216-hue/TransendIQ/issues/1048#issuecomment-6537817347"
+      },
+      {
+        "repo": "london4216-hue/TransendIQ",
+        "issue": 1023,
+        "url": "https://github.com/london4216-hue/TransendIQ/issues/1023#issuecomment-6537817666"
+      },
+      {
+        "repo": "london4216-hue/Zoodo",
+        "pr": 38,
+        "url": "https://github.com/london4216-hue/Zoodo/pull/38#issuecomment-6537818031"
+      }
+    ],
+    "keeper_continuation": {
+      "requested": true,
+      "request_accepted": true,
+      "execution_confirmed": false
+    },
+    "hunter_continuation": {
+      "requested": true,
+      "request_accepted": true,
+      "execution_confirmed": false
+    }
+  },
+  "original_figma_lanes": "UNCHANGED"
+}
