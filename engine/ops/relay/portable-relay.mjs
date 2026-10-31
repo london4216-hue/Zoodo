@@ -136,11 +136,11 @@ export function makeHandler({relay,callbackSecret,kickDeadlineMs=7500}){
    if(x.type==='kick'){const result=await kickWithDeadline(relay,x.worker,{timeoutMs:kickDeadlineMs});return send(relayResponseStatus('kick',result),result);}
    if(x.type==='completed'){
     const result=await relay.completed(x);
-    return send(result?.state==='completion-unconfirmed'?503:200,result);
+    return send(relayResponseStatus('completed',result),result);
    }
    if(x.type==='not_started'){
     const result=await relay.notStarted(x);
-    return send(result?.state==='requeue-unconfirmed'?503:200,result);
+    return send(relayResponseStatus('not_started',result),result);
    }
    if(x.type==='replay'){const result=await relay.replay();return send(relayResponseStatus('replay',result),result);}
    if(x.type==='reconcile'){const result=await relay.reconcile();return send(relayResponseStatus('reconcile',result),result);}
