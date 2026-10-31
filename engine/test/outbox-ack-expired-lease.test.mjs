@@ -15,7 +15,7 @@ test('outbox ACK override is atomic and limited to the private ops function', ()
 test('stale, mismatched and null leases cannot ACK a wake-up', () => {
   assert.match(body, /p_id IS NULL OR p_token IS NULL THEN RETURN false/);
   assert.match(body, /o\.id=p_id AND o\.state='leased' AND o\.lease_token=p_token/);
-  assert.match(body, /o\.lease_until\s*>\s*now\(\)/);
+  assert.match(body, /o\.lease_until\s*>\s*clock_timestamp\(\)/);
   assert.match(body, /RETURN FOUND;/);
 });
 
@@ -33,4 +33,14 @@ test('synthetic expired-claim race is fenced without changing a live ACK', () =>
   assert.equal(ack(row,7,'other-token',299),false);
   assert.equal(ack(row,7,'old-token',299),true);
   assert.equal(ack({...row,state:'pending'},7,'old-token',299),false);
+});
+
+test('long-running transaction cannot ACK using stale transaction-start time', () => {
+  // PostgreSQL now() is fixed at transaction start, not wall-clock time.
+  // The predicate must use the current clock after any lock wait.
+  assert.match(body, /o\.lease_until\s*>\s*clock_timestamp\(\)/);
+  assert.doesNotMatch(body, /o\.lease_until\s*>\s*now\(\)/);
+  const leaseUntil=300, transactionStarted=299, wallClock=301;
+  assert.equal(leaseUntil>transactionStarted,true, 'a stale now() would incorrectly accept');
+  assert.equal(leaseUntil>wallClock,false, 'real wall clock must reject');
 });
