@@ -82,13 +82,27 @@
 <script type="module">
 import {evaluateEvidence} from './evidence-clock.mjs';
 import {evaluateAutomationProof} from './automation-proof.mjs';
-const owner='london4216-hue',repo='Zoodo',branch='autonomous-engine-replacement-2026-10-29';
+import {selectSourceIdentity} from './source-identity.mjs';
+const owner='london4216-hue',repo='Zoodo',fallbackBranch='autonomous-engine-replacement-2026-10-29';
+let sourceIdentity=selectSourceIdentity(null,fallbackBranch),sourceIdentityError='build receipt not read';
 const root='https://api.github.com/repos/'+owner+'/'+repo;
 const $=id=>document.getElementById(id);let evidenceState=null;
 let linkRefreshInFlight=false, directoryLinks=null;
 let lastRunFeed=null, runFeedFetchError=null;
 let proofRefreshInFlight=false; // serialize manual and scheduled proof fetches
 let updateInFlight=false; // prevent stale overlapping GitHub API responses
+async function refreshSourceIdentity(){
+ try{
+  const res=await fetch('./build-proof.json?source_read='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(8000)});
+  if(!res.ok)throw Error('HTTP '+res.status);
+  sourceIdentity=selectSourceIdentity(await res.json(),fallbackBranch);
+  sourceIdentityError=sourceIdentity.providerBuildClaim?null:'build receipt missing exact SHA or passing tests';
+ }catch(e){
+  sourceIdentity=selectSourceIdentity(null,fallbackBranch);
+  sourceIdentityError='build source mapping unavailable: '+String(e.message||e);
+ }
+}
+
 function paintAutomationProof(){
  const proof=evaluateAutomationProof(lastRunFeed);
  const status=runFeedFetchError?'RECOVERY REQUIRED':proof.state;
@@ -312,6 +326,7 @@ async function update(){
  if(updateInFlight)return; // manual and interval refresh share one bounded source check
  updateInFlight=true;
  try{
+ await refreshSourceIdentity();
  $('checked').textContent='Last attempted source check '+new Date().toLocaleTimeString();
  classifyDemoLinks().catch(()=>{});
  refreshAutomationProof().catch(()=>{runFeedFetchError='Unexpected proof refresh error';paintAutomationProof()});
@@ -319,7 +334,7 @@ async function update(){
  checkMyBlockLab();
  checkYB3Lab();
  loadQueue().catch(()=>{$('queue-heartbeat').textContent='UNKNOWN';});
- const [commits,runs]=await Promise.allSettled([api('/commits?sha='+encodeURIComponent(branch)+'&per_page=100'),api('/actions/runs?branch='+encodeURIComponent(branch)+'&per_page=30')]);
+ const [commits,runs]=await Promise.allSettled([api('/commits?sha='+encodeURIComponent(sourceIdentity.ref)+'&per_page=100'),api('/actions/runs?branch='+encodeURIComponent(sourceIdentity.branch)+'&per_page=30')]);
  const errors=[];
  const latest=commits.status==='fulfilled'?commits.value[0]:null;
  if(commits.status==='fulfilled'||runs.status==='fulfilled'){
@@ -329,6 +344,7 @@ async function update(){
  }
  if(commits.status==='fulfilled'){
    $('sourceSuccess').textContent='Last successful GitHub commit endpoint response: '+new Date().toLocaleString()+
+     (sourceIdentity.providerBuildClaim?' · provider build receipt SHA '+sourceIdentity.sourceCommit+' (NOT live deploy proof)':' · deployed SHA UNKNOWN; '+sourceIdentityError)+
      ' · source receipt is not proof of active worker or live deployment';
  }
 
@@ -338,7 +354,9 @@ async function update(){
  // No authenticated provider review/heartbeat or deployment receipt is currently connected.
  evidenceState=evaluateEvidence({head:latest,detail,runs:d,review:null,deployment:null,heartbeat:null});
  tickClock();
- $('lastSha').textContent=latest?'Latest commit '+latest.sha.slice(0,9):'Latest commit UNKNOWN';
+ $('lastSha').textContent=sourceIdentity.providerBuildClaim?
+  'Provider build SHA '+sourceIdentity.sourceCommit.slice(0,9)+' · actual deployed SHA UNKNOWN':
+  (latest?'Latest fallback-branch commit '+latest.sha.slice(0,9)+' · deployed SHA UNKNOWN':'Latest commit UNKNOWN · deployed SHA UNKNOWN');
  $('proof-details').textContent='Last commit: '+(evidenceState.lastCommitAt??'UNKNOWN')+
  ' · latest head code diff: '+(evidenceState.lastCodeAt??'UNKNOWN')+
  ' · exact-head CI: '+(evidenceState.exactHeadCiAt??'UNKNOWN')+
