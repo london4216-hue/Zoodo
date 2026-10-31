@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "task_id": "ZOO-DASHBOARD-SOURCE-IDENTITY-20261031-1041",
+  "status": "RECOVERING",
+  "observed_at": "2026-10-31T10:42:00.556Z",
+  "from": "Dashboard Lead",
+  "to": "Implementation Lead",
+  "next_handoff": "ZOO Keeper",
+  "decision": "REVISE",
+  "owner": "ZOO Dashboard Worker",
+  "backup": "ZOO Agent Hunter",
+  "integration_authority": "Sole ZOO Keeper",
+  "source_repository": "london4216-hue/Zoodo",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+  "fix_pr": "https://github.com/london4216-hue/Zoodo/pull/71",
+  "tested_code_commit": "67f4372600b7722c89528cd811c2cbc8ba789f4f",
+  "proof_snapshot_commit": "13bc42104ef3d5ee35b4b25416552e09c10c8269",
+  "observed_defect": "Dashboard used hardcoded October 29 branch for GitHub source evidence even when provider build receipt could identify a different exact SHA.",
+  "attempted_repair": "Added exact build-SHA identity selection with explicit unverified fallback; source checks use exact SHA, Actions use build branch; no production changes.",
+  "tests": {
+    "local_node_version": "v22.16.0",
+    "command": "node --test source-identity.test.mjs",
+    "passed": 4,
+    "failed": 0,
+    "inline_module_syntax": "PASS",
+    "candidate_unique_hrefs": 39,
+    "removed_hrefs": 0,
+    "github_source_readback": "PASS",
+    "ci_exact_sha": "UNKNOWN_NO_RUN",
+    "ci_statuses": []
+  },
+  "scheduler": {
+    "source": "authenticated_connected_automations_peek",
+    "snapshot_observed_at": "2026-10-31T10:40:41.796Z",
+    "in_progress_roles": [
+      "ZOO Agent Hunter",
+      "ZOO Dashboard Worker",
+      "ZOO Asset Restoration"
+    ],
+    "latest_result_pre_scheduled_anomaly": "ZOO Dashboard Worker 2026-10-31T10:34:59.730110Z completion for 10:45:58Z scheduled; quarantined",
+    "active_productive_agents": "UNKNOWN_NOT_DERIVED_FROM_SCHEDULER"
+  },
+  "github_actions": {
+    "previous_run_id": 41193304587,
+    "previous_job_id": 124514315409,
+    "conclusion": "failure",
+    "job_steps": 0,
+    "logs": "404 BlobNotFound",
+    "exact_new_sha_runs": 0,
+    "classification": "CI_STARTUP_FAILURE_RECOVERY_EVENT"
+  },
+  "netlify": {
+    "url": "https://zoo-live-dashboard.netlify.app/",
+    "http": "DNS_UNRESOLVED_FROM_THIS_ENVIRONMENT",
+    "site_id": null,
+    "deploy_id": null,
+    "deployed_sha": null,
+    "manual_refresh_receipt": null,
+    "auto_refresh_receipt": null,
+    "owner_auth_check": null,
+    "mobile_check": null
+  },
+  "release_gates": {
+    "production_publish": "NOT_PERFORMED",
+    "owner_demo_email": "NOT_SENT",
+    "hosted_two_ticket_relay": "UNKNOWN",
+    "independent_external_model_invocations": "UNKNOWN"
+  },
+  "next_executable_steps": [
+    "Implementation Lead: validate PR #71 in independently callable Node/provider build and diagnose GitHub Actions zero-step failure without infinite identical retries",
+    "Agent Hunter: obtain authenticated existing Netlify site/deploy/source mapping and perform read-only live endpoint/browser checks; do not replace production",
+    "Dashboard Lead: reconcile new build SHA and source provenance in live preview; verify 30-second polling, manual refresh, recovery banner, and navigation parity",
+    "ZOO Keeper: integrate tested source identity fix into PR #16 only after independent test receipt; preserve queue and owner-only production publication"
+  ],
+  "next_trigger": "Next actual worker completion, provider test receipt, or scheduled recovery execution",
+  "hourly_movement_ledger": [
+    {
+      "hour_utc": "2026-10-31T10:00:00Z",
+      "asset": "ZOO dashboard source evidence",
+      "repo": "london4216-hue/Zoodo",
+      "pr": 71,
+      "prior_status": "hardcoded branch may misattribute provider build",
+      "new_status": "exact-SHA source identity code committed and local tests passed; live remains UNKNOWN",
+      "sha": "67f4372600b7722c89528cd811c2cbc8ba789f4f",
+      "worker": "Dashboard Lead",
+      "stage": "CODE_COMMITTED_LOCAL_TESTS_PASS_NO_CI_NO_DEPLOY"
+    }
+  ],
+  "stage_times": {
+    "pr_opened_at": "2026-10-31T10:41:47Z",
+    "local_tests_at": "2026-10-31T10:41:00Z",
+    "code_committed_at": null,
+    "reviewed_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_live_at": null
+  },
+  "cycle_times": {
+    "pr_to_merge": "UNKNOWN",
+    "merge_to_deploy": "UNKNOWN",
+    "deploy_to_verified": "UNKNOWN",
+    "gap_detected_to_verified": "UNKNOWN"
+  }
+}
