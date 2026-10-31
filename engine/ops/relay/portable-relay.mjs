@@ -34,24 +34,44 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now()}){
   if(!WORKER.test(w?.id??'')||!https(w?.url)||typeof w.token!=='string'||w.token.length<24||pool.has(w.id))throw Error('Invalid authorized worker');
   pool.set(w.id,w);
  }
- async function next(worker){
+ async function delegate(worker,allowReplacement,result){
+  if(!allowReplacement)return result;
+  // One bounded pass, no timers and no repeat of a leased/uncertain ticket.
+  for(const alternate of pool.keys()){
+   if(alternate===worker)continue;
+   try{
+    const replacement=await next(alternate,false);
+    if(replacement.state==='dispatched')return result.state==='idle'
+     ? {state:'delegated',worker,replacement}:{...result,replacement};
+   }catch{ /* The original result remains durable and truthful. */ }
+  }
+  return result;
+ }
+ async function next(worker,allowReplacement=true){
   const w=pool.get(worker);if(!w)throw Error('Unknown worker');
-  const t=await store.claim(worker);if(!t)return {state:'idle'};
+  const t=await store.claim(worker);if(!t)return delegate(worker,allowReplacement,{state:'idle'});
   if(!ID.test(t.id??'')||!UUID.test(t.lease_token??'')||t.lease_owner!==worker)throw Error('Invalid atomic lease');
   const key='zoo:'+t.id+':'+t.lease_token;
+  let result;
   try{
    const res=await fetchImpl(w.url,{method:'POST',redirect:'error',signal:AbortSignal.timeout(6000),
     headers:{authorization:'Bearer '+w.token,'content-type':'application/json','x-zoo-idempotency-key':key},
     body:JSON.stringify({ticket_id:t.id,worker,lease_token:t.lease_token,idempotency_key:key,asset:t.asset,intent:t.intent})});
-   if(res.status!==202){await res.body?.cancel?.();return {state:'uncertain',ticket:t.id,reason:'worker HTTP '+res.status}}
-   const raw=await res.text();if(raw.length>4096)throw Error('Oversized acceptance');
-   const ack=JSON.parse(raw);
-   if(ack.accepted!==true||ack.ticket_id!==t.id||ack.idempotency_key!==key||!https(ack.receipt_url))
-    return {state:'uncertain',ticket:t.id,reason:'Invalid worker acceptance'};
-   if(await store.record({ticket_id:t.id,worker,lease_token:t.lease_token,receipt_url:ack.receipt_url})!==true)
-    throw Error('Dispatch receipt not durably recorded');
-   return {state:'dispatched',ticket:t.id,worker,receipt_url:ack.receipt_url};
-  }catch(e){return {state:'uncertain',ticket:t.id,reason:String(e.message||e).slice(0,160)}}
+   if(res.status!==202){await res.body?.cancel?.();result={state:'uncertain',ticket:t.id,reason:'worker HTTP '+res.status}}
+   else {
+    const raw=await res.text();if(raw.length>4096)throw Error('Oversized acceptance');
+    const ack=JSON.parse(raw);
+    if(ack.accepted!==true||ack.ticket_id!==t.id||ack.idempotency_key!==key||!https(ack.receipt_url))
+     result={state:'uncertain',ticket:t.id,reason:'Invalid worker acceptance'};
+    else {
+     if(await store.record({ticket_id:t.id,worker,lease_token:t.lease_token,receipt_url:ack.receipt_url})!==true)
+      throw Error('Dispatch receipt not durably recorded');
+     return {state:'dispatched',ticket:t.id,worker,receipt_url:ack.receipt_url};
+    }
+   }
+  }catch(e){result={state:'uncertain',ticket:t.id,reason:String(e.message||e).slice(0,160)}}
+  // The uncertain task stays leased/quarantined; only independent tickets may advance.
+  return delegate(worker,allowReplacement,result);
  }
  async function completed(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
