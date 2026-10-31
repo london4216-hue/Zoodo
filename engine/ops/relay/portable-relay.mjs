@@ -2,6 +2,7 @@
  * All ticket data/leases live in a private Supabase project. */
 import {timingSafeEqual} from 'node:crypto';
 import {makeOutboxReplay} from './outbox-replay.mjs';
+import {nextWithDeadline} from './next-deadline.mjs';
 const ID=/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const SHA=/^[a-f0-9]{40}$/;
 const UUID=/^[a-f0-9-]{36}$/i;
@@ -81,8 +82,9 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now()}){
  // Keeper PR #34: preserve an already committed transition if NEXT fails.
  // The transactional outbox is the durable recovery checkpoint.
  async function nextAfterTransition(worker){
-  try{return await next(worker)}
-  catch{return {state:'recovery_required',reason:'NEXT dispatch unavailable; durable outbox retry required'}}
+  // NEXT can hang after the prior transition was committed. Do not hang the
+  // completion callback or infer that a late dispatch did not occur.
+  return nextWithDeadline(()=>next(worker));
  }
  async function completed(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
