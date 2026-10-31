@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { makeHostProbe } from '../netlify/functions/zoo-host-probe.mjs';
+const secret = 'x'.repeat(40);
+const nonce = 'synthetic_preview_20261031';
+const req = (auth=secret) => ({ httpMethod: 'POST', headers: { authorization: 'Bearer ' + auth }, body: JSON.stringify({task:'synthetic-hash',nonce}) });
+const parse = async (fn, event) => { const r = await fn(event); return {code:r.statusCode, data:JSON.parse(r.body)}; };
+test('unconfigured preview rejects execution',async()=>{ const r=await parse(makeHostProbe({}),req());assert.equal(r.code,503); });
+test('wrong authorization fails closed',async()=>{ const r=await parse(makeHostProbe({token:secret}),req('wrong'));assert.equal(r.code,401); });
+test('only bounded synthetic payload executes',async()=>{ const r=await parse(makeHostProbe({token:secret}),{...req(),body:JSON.stringify({task:'real-ticket',nonce})});assert.equal(r.code,422); });
+test('valid synthetic task returns exact hash and no durable claim',async()=>{ const r=await parse(makeHostProbe({token:secret,commitRef:'a'.repeat(40),id:()=> 'fixture-id'}),req());assert.equal(r.code,200);assert.equal(r.data.output_sha256,createHash('sha256').update('zoo-host-probe-v1:'+nonce).digest('hex'));assert.equal(r.data.durable_queue_verified,false);assert.equal(r.data.source_commit_sha,'a'.repeat(40)); });
+test('invalid source SHA is never invented',async()=>{ const r=await parse(makeHostProbe({token:secret,commitRef:'unknown'}),req());assert.equal(r.data.source_commit_sha,null); });

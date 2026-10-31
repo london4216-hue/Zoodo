@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "agent_id": "zoo-agent-hunter",
+  "task_id": "zoodo-host-runner-qualification",
+  "observed_at_utc": "2026-10-31T09:19:01.845Z",
+  "decision": "REVISE",
+  "source_repo": "london4216-hue/Zoodo",
+  "source_branch": "hunter/direct-netlify-provider-preview-20261031",
+  "tested_source_commit_sha": "0e7ef0964c66c886fbd277cc7eba25cf065a7bd1",
+  "changes": [
+    {
+      "path": "engine/dashboard/scripts/stamp-netlify-build.mjs",
+      "blob_sha": "9724736c5587be16aea88d7d79109bd1f3a18fb5"
+    },
+    {
+      "path": "engine/dashboard/netlify/functions/zoo-build-meta.mjs",
+      "blob_sha": "d23a6b007002fb1fd301507f35158b7e5434a4ba"
+    },
+    {
+      "path": "engine/dashboard/tests/stamp-netlify-build.test.mjs",
+      "blob_sha": "a68529de31a6dc54ca1e6316b3f257f2640ae560"
+    },
+    {
+      "path": "engine/dashboard/netlify.toml",
+      "blob_sha": "0588337e53f65b3e6dd83cd34a02e611a5c809d0"
+    },
+    {
+      "path": "engine/dashboard/netlify/functions/zoo-host-probe.mjs",
+      "blob_sha": "bf2b0e5e5ecee65675591cf1a5f2aa9d4431b4a1"
+    }
+  ],
+  "execution": {
+    "type": "local_node_source_test",
+    "command": "node --check scripts/stamp-netlify-build.mjs && node --test tests/stamp-netlify-build.test.mjs",
+    "node_tests_passed": 4,
+    "node_tests_failed": 0,
+    "build_cli_probe": "COMMIT_REF=<synthetic 40-char sha> node scripts/stamp-netlify-build.mjs",
+    "build_cli_result": "source SHA recorded; generated module matched input",
+    "independent_provider_execution": false
+  },
+  "provider_status": {
+    "provider": "netlify",
+    "kind": "github_commit_status",
+    "state": "pending",
+    "target_url": "https://app.netlify.com/projects/zoo-live-dashboard/deploys/6ae5b2748d39fbc775bc7a52",
+    "native_invocation_id": null,
+    "hosted_function_invoked": false,
+    "source_sha_verified_in_runtime": false
+  },
+  "root_cause": "Netlify COMMIT_REF is a build-time variable, not a guaranteed runtime Function variable; old probe could return null source SHA even after successful deploy. Build-time stamp added to preview branch.",
+  "qualification": {
+    "qualified_independent_runners": 0,
+    "host_execution_verified": false,
+    "durable_two_ticket_chain_verified": false,
+    "external_model_votes": 0,
+    "new_authenticated_productive_agents_this_run": 0
+  },
+  "handoff": {
+    "from": "Agent Hunter",
+    "to": "Dashboard Lead",
+    "secondary": "Implementation Lead",
+    "next_action": "Verify new Netlify preview build and invoke allowlisted synthetic POST with existing authorized token; capture x-nf-request-id and exact stamped SHA, then run durable two-ticket relay/failover test. Keep dashboard proof single-writer.",
+    "trigger": "new provider deploy status or existing authorized host adapter available"
+  }
+}

@@ -1,6 +1,6 @@
 [build]
   publish = "."
-  command = ""
+  command = "node scripts/stamp-netlify-build.mjs"
 
 [[redirects]]
   from = "/dashboard"

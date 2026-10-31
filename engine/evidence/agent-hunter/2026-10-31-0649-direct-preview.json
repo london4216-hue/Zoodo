@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "agent_id": "ZOO Agent Hunter",
+  "task_id": "Zoodo#18/direct-netlify-preview",
+  "status": "RECOVERING",
+  "decision": "REVISE",
+  "repo": "london4216-hue/Zoodo",
+  "pr_url": "https://github.com/london4216-hue/Zoodo/pull/57",
+  "source_sha": "4e0fd513a0e524f479f12e5fa66a78a5839acd12",
+  "provider_status": {
+    "provider": "Netlify",
+    "source": "GitHub commit status",
+    "id": 57733829294,
+    "state": "success",
+    "context": "netlify/zoo-live-dashboard/deploy-preview",
+    "at_utc": "2026-10-31T06:49:04Z",
+    "url": "https://deploy-preview-57--zoo-live-dashboard.netlify.app"
+  },
+  "local_tests": {
+    "passed": 5,
+    "failed": 0,
+    "source_blob": "dd386e9004d722ee8d129f17c6fd02b4b7321040",
+    "test_blob": "37317cdb34f47ca9f9ae5c1810ffca7191d54f06"
+  },
+  "hosted_function_invocation": "UNKNOWN",
+  "two_ticket_hosted_chain": "UNKNOWN",
+  "external_panel_native_votes": 0,
+  "production_publication": false,
+  "next": "Dashboard Lead preserves truthful feed; Implementation Lead verifies authenticated function invocation and durable two-ticket NEXT; Keeper integrates."
+}
