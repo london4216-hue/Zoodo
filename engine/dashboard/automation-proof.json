@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-31T06:22:22.987Z",
+  "observed_at": "2026-10-31T06:24:36.452Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Agent Hunter",
@@ -45,6 +45,22 @@
   ],
   "in_progress_runs": [
     {
+      "role": "ZOO Keeper",
+      "run_id": "02d944ad-ffdc-8328-98e3-1696c0839ebc",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-10-31T06:23:52.781152Z",
+      "started_at": "2026-10-31T06:24:00.244074Z",
+      "completed_at": null
+    },
+    {
+      "role": "ZOO Agent Hunter",
+      "run_id": "fe0e2e72-8c58-832a-8c1b-7d09351d1088",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-10-31T06:23:52.854136Z",
+      "started_at": "2026-10-31T06:23:53.867884Z",
+      "completed_at": null
+    },
+    {
       "role": "ZOO Dashboard Worker",
       "run_id": "f9ae072b-5438-8331-b0b0-aad552459552",
       "recorded_status": "in_progress",
@@ -72,9 +88,9 @@
     }
   ],
   "prior_snapshot": {
-    "observed_at": "2026-10-31T05:54:25.926Z",
+    "observed_at": "2026-10-31T06:22:22.987Z",
     "previously_quarantined_anomalies": 1,
-    "note": "Prior anomalies preserved in previous Git commits; no timestamps synthesized."
+    "note": "In-progress records are not completed task receipts; historical anomalies retained in Git history."
   },
   "recovery_handoff": {
     "status": "RECOVERING",
