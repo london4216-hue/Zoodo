@@ -2,25 +2,25 @@ TAP version 13
 # Subtest: receipt persisted before deadline returns dispatched
 ok 1 - receipt persisted before deadline returns dispatched
   ---
-  duration_ms: 1.61463
+  duration_ms: 1.065626
   type: 'test'
   ...
 # Subtest: external deadline during durable record never returns a false dispatched state
 ok 2 - external deadline during durable record never returns a false dispatched state
   ---
-  duration_ms: 0.527014
+  duration_ms: 0.286632
   type: 'test'
   ...
 # Subtest: failed durable receipt never becomes dispatch success
 ok 3 - failed durable receipt never becomes dispatch success
   ---
-  duration_ms: 1.846259
+  duration_ms: 1.634052
   type: 'test'
   ...
 # Subtest: store exception is not a successful dispatch
 ok 4 - store exception is not a successful dispatch
   ---
-  duration_ms: 0.339491
+  duration_ms: 0.23924
   type: 'test'
   ...
 1..4
@@ -31,4 +31,4 @@ ok 4 - store exception is not a successful dispatch
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 71.575601
+# duration_ms 67.865184
