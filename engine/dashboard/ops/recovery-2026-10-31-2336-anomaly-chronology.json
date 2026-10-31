@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "kind": "bounded_dashboard_source_repair",
+  "observed_at": "2026-10-31T23:35:51.606Z",
+  "source_repo": "london4216-hue/Zoodo",
+  "base_branch": "autonomous-engine-replacement-2026-10-29",
+  "source_path": "engine/dashboard/automation-proof.mjs",
+  "source_blob_before": "c725c5edde618eb356ee8628188e3c9ab72140a2",
+  "source_blob_after": "4f19ccbe5dadc2b99b24507b5a6ef89e18ef4f6c",
+  "source_commit": "25242fd56ef80a56b02e412a64c0ba7d06ba2ffb",
+  "test_commit": "1058668115604b0426dc1efb92424391d5eff13c",
+  "test_blob": "e184ef30e20c17204095bc4e7e48916c85cfd3d3",
+  "test_command": "node --test engine/dashboard/tests/automation-proof-anomaly-order.test.mjs",
+  "test_environment": "Node.js v22.16.0 local",
+  "fail_first": {
+    "passed": 3,
+    "failed": 1
+  },
+  "after_fix": {
+    "passed": 4,
+    "failed": 0
+  },
+  "scope": "Only anomaly resolution chronology, one new regression test file, and this receipt; no HTML, navigation, authentication, or deployment config changed",
+  "pr16": "merged into canonical feature branch",
+  "pr71": "merged into former PR16 feature branch; canonical classifier still lacked anomaly chronology fix",
+  "scheduler_receipt_commit": "9995e881f7028c76a2eb11ce34c873fa87c8a47d",
+  "github_actions": "not yet independently verified for this PR",
+  "netlify_preview": "not yet independently verified",
+  "netlify_production": "not published or independently verified",
+  "production_deploy_sha": null,
+  "rollback_mapping": null,
+  "owner_auth_browser_check": "not performed",
+  "next_action": "Keeper review and safely integrate this isolated change after exact-head CI or qualified provider build and rollback verification; Hunter replacement/qualified probe checks host separately"
+}
