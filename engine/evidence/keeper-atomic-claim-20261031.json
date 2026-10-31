@@ -1,0 +1,52 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "taskId": "Zoodo#18/atomic-claim-safety",
+  "agentId": "ZOO Keeper tool-connected execution",
+  "provider": "ChatGPT GitHub connector + local Node runtime",
+  "branch": "fix/zoo-atomic-journal-20261031",
+  "codeCommit": "5ff3e38e907a174384dc88f39e7a6db2c4c754ba",
+  "codeUrl": "https://github.com/london4216-hue/Zoodo/commit/5ff3e38e907a174384dc88f39e7a6db2c4c754ba",
+  "pullRequest": "https://github.com/london4216-hue/Zoodo/pull/46",
+  "base": "fix/zoo-live-dashboard-accountability-20261030",
+  "changedFiles": [
+    "engine/src/atomic-journal.mjs",
+    "engine/src/durable-queue.mjs",
+    "engine/test/atomic-journal.test.mjs",
+    "engine/test/durable-queue-race.test.mjs"
+  ],
+  "testCommand": "node --test engine/test/atomic-journal.test.mjs engine/test/durable-queue-race.test.mjs",
+  "testOutcome": {
+    "passed": 6,
+    "failed": 0,
+    "location": "local container",
+    "hostedCi": "UNKNOWN",
+    "deployed": "NO",
+    "twoTicketChain": "NOT TESTED"
+  },
+  "testedGitBlobHashes": {
+    "engine/src/atomic-journal.mjs": "43fae858d1dfccf63c132d6b72821790b1c227c0",
+    "engine/src/durable-queue.mjs": "c9e79336fffb8c595a8c090f673b43acbb4d4549",
+    "engine/test/atomic-journal.test.mjs": "e5bc7de7ab35586bf1daec901535a530d8f6a674"
+  },
+  "decision": "GO for reversible draft only",
+  "limitations": [
+    "Single-filesystem lock, not a distributed lease",
+    "Orphaned lock needs controlled recovery",
+    "No independently invoked provider or hosted runner verified"
+  ],
+  "capacityLedger": {
+    "qualifiedExternalWorker": "UNKNOWN",
+    "activeAuthenticatedWork": "GitHub connector write",
+    "cost": "UNKNOWN",
+    "otherLanes": "not assessed in this receipt"
+  },
+  "nextAction": "Identify currently authorized persistent host and transactional store; test authenticated event ingress, two independently claimed tasks, lease-expiry replacement, and deployed proof feed.",
+  "checkpoint": "Draft PR #46; no merge or production deployment",
+  "handoff": {
+    "from": "ZOO Keeper",
+    "to": "Agent Hunter",
+    "status": "REQUESTED NOT INVOKED",
+    "nextTrigger": "Next actual authenticated worker availability"
+  },
+  "ownerOperationalActionRequired": false
+}
