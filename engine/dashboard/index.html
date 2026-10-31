@@ -87,6 +87,7 @@ const root='https://api.github.com/repos/'+owner+'/'+repo;
 const $=id=>document.getElementById(id);let evidenceState=null;
 let linkRefreshInFlight=false, directoryLinks=null;
 let lastRunFeed=null, runFeedFetchError=null;
+let proofRefreshInFlight=false; // serialize manual and scheduled proof fetches
 let updateInFlight=false; // prevent stale overlapping GitHub API responses
 function paintAutomationProof(){
  const proof=evaluateAutomationProof(lastRunFeed);
@@ -103,9 +104,11 @@ function paintAutomationProof(){
  $('proofRecovery').style.display=status==='RECORDED RUNS CURRENT'?'none':'block';
 }
 async function refreshAutomationProof(){
+ if(proofRefreshInFlight)return;
+ proofRefreshInFlight=true;
  $('proofChecked').textContent='Last automation proof fetch attempted: '+new Date().toISOString();
  try{
-  const res=await fetch('./automation-proof.json?proof_read='+Date.now(),{cache:'no-store'});
+  const res=await fetch('./automation-proof.json?proof_read='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(10000)});
   if(!res.ok)throw Error('HTTP '+res.status);
   const next=await res.json();
   const tested=evaluateAutomationProof(next);
@@ -118,7 +121,7 @@ async function refreshAutomationProof(){
   runFeedFetchError='Run proof feed inaccessible or invalid: '+String(e.message||e);
   $('proofChecked').textContent='Last automation proof fetch FAILED: '+new Date().toISOString()+
    ' · keeping last known recorded receipt if present';
- }
+ }finally{proofRefreshInFlight=false;}
  paintAutomationProof();
 }
 const repairRows=new Map();
