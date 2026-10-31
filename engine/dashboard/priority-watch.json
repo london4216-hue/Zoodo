@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "authenticated_github_connector_read",
-  "observed_at": "2026-10-30T23:36:29.150Z",
+  "observed_at": "2026-10-31T00:23:01.182Z",
   "publication_scope": "Sanitized public metadata only; private code, test data and credentials excluded.",
   "privacy": "No private repo body, test payload, session URL or credentials.",
   "priority": {
@@ -15,7 +15,7 @@
     "source_commit_url": "https://github.com/london4216-hue/TransendIQ/commit/86b854a1ac2e54fe703ec1ad7e320423c6a740cc",
     "pr_opened_at": "2026-10-28T14:56:09Z",
     "last_meaningful_update_at": "2026-10-28T18:41:49Z",
-    "last_meaningful_update_basis": "Last authenticated PR updated_at; not proof of new code/test execution",
+    "last_meaningful_update_basis": "PR #787 source head remains 86b854a; metadata update is not new task execution; separate reconciliation PR #1070 has its own commit.",
     "last_test": {
       "state": "UNKNOWN",
       "description": "PR author reports 8 passing tests in PR description; no independently retrieved test execution receipt for this run",
@@ -30,9 +30,20 @@
       "pr_url": "https://github.com/london4216-hue/TransendIQ/pull/788",
       "status": "Separate date-boundary change; PR #787 describes merge-tree as clean, not independently retested"
     },
-    "next_action": "Implementation Lead: rebase/reconcile #787 against #782, test #787 and #788 together on isolated branch, attach exact-SHA test receipt and update draft PR; do not merge without applicable protected-branch checks",
+    "next_action": "Keeper/Implementation: run targeted Playwright on draft reconciliation #1070 (source readback verified), compare #782/#787/#788 behavior and protected checks; no merge/deploy claim.",
     "owner": "ZOO Implementation Lead",
-    "backup": "ZOO Keeper"
+    "backup": "ZOO Keeper",
+    "last_pr_metadata_updated_at": "2026-10-30T23:47:01Z",
+    "related_reconciliation": {
+      "pr_url": "https://github.com/london4216-hue/TransendIQ/pull/1070",
+      "stage": "DRAFT_PR_OPEN",
+      "head_sha": "963e5ef68885e6e2711dca028ea7d0e028dddacd",
+      "source_blob_sha": "f04dae55b5f9365ae3a9a7840d19ab160235b5f1",
+      "source_checks": "Readback confirmed outcomes.filter(isGrad), cohortYearOf and parseCalendarDate; hosted Playwright/CI UNKNOWN",
+      "opened_at": "2026-10-30T23:46:49Z",
+      "merged": false,
+      "deployed": false
+    }
   },
   "sara": {
     "id": "SARA-UI-URL-DISCOVERY",
@@ -40,7 +51,7 @@
     "url": null,
     "state": "UNKNOWN",
     "last_verified_at": null,
-    "observed_at": "2026-10-30T23:36:29.150Z",
+    "observed_at": "2026-10-31T00:23:01.182Z",
     "owner": "ZOO Agent Hunter",
     "backup": "ZOO Dashboard Lead",
     "next_action": "Inspect actual owner-controlled deployments and Sara-related PRs, verify expected new UI/UX landing, redirect, access and mobile; only then publish URL"
@@ -49,8 +60,9 @@
     "source_pr": "https://github.com/london4216-hue/Zoodo/pull/16",
     "production_url": "https://zoo-live-dashboard.netlify.app/",
     "production_verified": false,
-    "reason": "Live Netlify HTTP/DNS inaccessible from two independent request paths; source-to-deploy mapping unavailable",
-    "next_action": "Read authorized Netlify site/deploy mapping and exact SHA, then browser verify source-linked row and refresh; retain rollback"
+    "reason": "This run's web read and container DNS both failed to access Netlify; actual site/deploy/source mapping and live content remain UNKNOWN, not proof of outage.",
+    "next_action": "Read authorized Netlify site/deploy mapping and exact SHA, then browser verify source-linked row and refresh; retain rollback",
+    "latest_source_only_sha": "d6eb2a2cb97ee18159ea25c7f2cd6a7d74f2e691"
   },
   "hourly_movement": [
     {
@@ -63,6 +75,20 @@
       "source_sha": null,
       "worker": "ZOO Dashboard Lead",
       "gap_detected_at": "2026-10-30T23:34:16Z",
+      "fixed_at": null,
+      "verified_live_at": null,
+      "latency_minutes": null
+    },
+    {
+      "hour_utc": "2026-10-31T00:00Z",
+      "hour_et": "2026-10-30 20:00 EDT",
+      "repo": "london4216-hue/Zoodo",
+      "pr_url": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "prior_status": "Figma original/alternate and Prestige comparison rows not separately visible in canonical dashboard source",
+      "new_status": "Six additive source-only rows, no old href removed; live verification UNKNOWN",
+      "source_sha": "d6eb2a2cb97ee18159ea25c7f2cd6a7d74f2e691",
+      "worker": "ZOO Dashboard Lead",
+      "gap_detected_at": "2026-10-30T23:37:15Z",
       "fixed_at": null,
       "verified_live_at": null,
       "latency_minutes": null
