@@ -45,6 +45,6 @@ test('late atomic claim after kick timeout is fenced before dispatch', async () 
 });
 
 test('kick rejects invalid callback and unbounded deadline', async () => {
-  await assert.rejects(()=>kickWithDeadline({},'w'),/NEXT relay required/);
+  assert.throws(()=>kickWithDeadline({},'w'),/NEXT relay required/);
   await assert.rejects(()=>kickWithDeadline({next:async()=>({state:'idle'})},'w',{timeoutMs:Infinity}),/bounded deadline/);
 });
