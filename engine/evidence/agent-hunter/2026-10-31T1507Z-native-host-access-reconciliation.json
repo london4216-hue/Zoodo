@@ -1,0 +1,164 @@
+{
+  "schema": "zoo.agent-hunter.host-qualification.v1",
+  "observed_at_utc": "2026-10-31T15:07:02Z",
+  "lane": "independent-host-worker-qualification",
+  "decision": "RECOVERING_NO_AUTHENTICATED_HOST_ROUTE",
+  "repository": "london4216-hue/Zoodo",
+  "issues_reconciled": [
+    78,
+    77,
+    76,
+    74,
+    67,
+    80
+  ],
+  "governance_update": "Issue #77 replaces permanent Keeper/Hunter decision roles with deterministic unified queue; this scheduled Hunter lane is a qualification function, not a production dispatcher.",
+  "source": {
+    "main_commit_sha": "ec34e44c5460f675374328f2aca56b65ba948c6a",
+    "pr91": {
+      "url": "https://github.com/london4216-hue/Zoodo/pull/91",
+      "head_sha": "a0c0c664e7028a4dd4c66038a6629a49064b54b4",
+      "state": "open draft",
+      "scope": "reversible authenticated Netlify outbox entrypoint; source-only"
+    },
+    "pr68": "merged into configured intermediate stack",
+    "pr73": "closed unmerged; SQL 002 present on main",
+    "pr81": {
+      "url": "https://github.com/london4216-hue/Zoodo/pull/81",
+      "state": "merged into intermediate stack",
+      "tested_receipt_blob_sha": "3068702ec6f4b59c8d5fbcc617898c3eace35c0a",
+      "receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+      "test_scope": "16/16 reported local synthetic Node tests; no hosted run"
+    },
+    "current_main_blobs": {
+      "outbox_store": "dcdb842d021d98eaba8ff4f18f2d1136f8c25f58",
+      "outbox_drainer": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+      "sql_001": "c76707cdcb785e22fa14e0758e511ec19af2a0e0",
+      "sql_002": "82db86bc110e8b44ef98d67f5fa399f5ac159805"
+    },
+    "recent_main_change": "PR #89 merged callback-envelope guard at main commit ec34e44c5460f675374328f2aca56b65ba948c6a"
+  },
+  "access": {
+    "github": {
+      "type": "authenticated source-control connector",
+      "currently_callable": true,
+      "repo_permissions": {
+        "pull": true,
+        "push": true,
+        "admin": true
+      },
+      "hosted_executor": false,
+      "external_coding_model": false
+    },
+    "trigger_dev": {
+      "type": "existing historical host candidate",
+      "currently_callable": false,
+      "reason": "No connected Trigger.dev runtime adapter, project/deployment/run ID, invocation token or local CLI in this runtime",
+      "native_run_id": null
+    },
+    "netlify": {
+      "type": "existing host candidate; draft PR #91 alternate",
+      "currently_callable": false,
+      "reason": "No connected Netlify runtime adapter or invocation credential; api.netlify.com and zoo-live-dashboard.netlify.app DNS resolution failed",
+      "native_request_id": null
+    },
+    "supabase": {
+      "type": "durable state candidate",
+      "currently_callable": false,
+      "reason": "No authorized ZOO Supabase URL/service-role credential in runtime; SQL application status unverified"
+    },
+    "vercel": {
+      "type": "existing host candidate",
+      "currently_callable": false,
+      "reason": "No Vercel runtime adapter or token in runtime"
+    },
+    "external_models": {
+      "type": "historical/configured Claude, DeepSeek, Gemini, Copilot and other candidates",
+      "currently_native_callable": "UNKNOWN",
+      "native_invocation_ids": [],
+      "provider_votes": 0
+    }
+  },
+  "environment_probe": {
+    "runtime": "Node.js v22.16.0",
+    "checked_variable_names_only": true,
+    "absent": [
+      "NETLIFY_AUTH_TOKEN",
+      "NETLIFY_ACCESS_TOKEN",
+      "TRIGGER_SECRET_KEY",
+      "TRIGGER_API_KEY",
+      "TRIGGER_PROJECT_REF",
+      "SUPABASE_URL",
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "ZOO_SUPABASE_URL",
+      "ZOO_SUPABASE_SERVICE_ROLE_KEY",
+      "ZOO_CALLBACK_SECRET",
+      "VERCEL_TOKEN",
+      "GITHUB_TOKEN",
+      "GH_TOKEN"
+    ],
+    "dns_failures": [
+      "api.netlify.com",
+      "api.trigger.dev",
+      "zoo-live-dashboard.netlify.app"
+    ],
+    "cli_absent": [
+      "trigger",
+      "netlify",
+      "vercel",
+      "psql"
+    ],
+    "no_secrets_disclosed": true
+  },
+  "native_host_probe": {
+    "attempted": false,
+    "reason": "No authenticated host credential/adapter; unauthenticated live drain would violate access boundary",
+    "provider_request_id": null,
+    "hosted_runtime_sha": null,
+    "hosted_execution": false,
+    "latency_ms": "UNKNOWN",
+    "cost_usd": "UNKNOWN"
+  },
+  "evidence_checks": {
+    "pr91_head_actions_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41209021500",
+    "lab_test_job_id": 124559907472,
+    "job_status": "failure",
+    "source_of_failure": "UNKNOWN; GitHub Actions is not independent runner",
+    "status_checks": 0
+  },
+  "qualifications": {
+    "new_hosted_workers": 0,
+    "verified_backup_workers": 0,
+    "real_ticket_next_handoffs": 0,
+    "required_handoffs": 2,
+    "forced_failure_recoveries": 0,
+    "required_recoveries": 1,
+    "capacity": "UNKNOWN",
+    "cadence": "UNKNOWN",
+    "cost": "UNKNOWN",
+    "production_dashboard_readback": "UNKNOWN"
+  },
+  "next_reversible_actions": [
+    {
+      "lane": "Existing Trigger.dev implementation worker",
+      "issue": 80,
+      "action": "Recover existing Oct 30 Trigger.dev project/deployment/run IDs via authorized host access; verify private ZOO SQL 001/002 applied; invoke one bounded synthetic hosted task and record provider-native request ID plus exact deployed SHA. Do not create a new account."
+    },
+    {
+      "lane": "Authorized alternate host worker",
+      "issue": 80,
+      "action": "If Trigger route remains inaccessible, use existing Netlify site credentials to validate draft PR #91 Function bundling and authorized POST drain; record native request/deploy IDs. Do not merge/deploy publicly without publication authority."
+    },
+    {
+      "lane": "Implementation worker",
+      "issue": 77,
+      "action": "After one native hosted success, execute two independently claimed READY tickets and one native-confirmed not-started recovery; capture lease/event IDs, UTC and source SHA. Never infer start from preview/build."
+    },
+    {
+      "lane": "Dashboard Lead",
+      "issue": 67,
+      "action": "Verify exact production Netlify source/deploy SHA and independently read back two hosted handoff/failure receipts after publication; do not edit Hunter branch."
+    }
+  ],
+  "unrelated_lanes": "PR closure, product builders and dashboard continue independently; no merges, deployments, payments, or scheduling changes in this run"
+}
