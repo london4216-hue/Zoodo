@@ -2,17 +2,18 @@
   "schema_version": 1,
   "source": {
     "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
-    "head_before_ledger": "d0494cff2d3bdc23ef95629d1bc01077f1257889",
-    "proof_blob": "c481ecea5ff572dddbc9119b4b25faa465f962cb",
-    "proof_observed_at": "2026-10-31T00:22:17.136Z",
-    "completed_scheduler_receipts": 4,
-    "in_progress_scheduler_receipts": 1,
-    "verified_productive_agents": null
+    "head_before_ledger": "29dfcc64aea7f17e57f0e56c912092d2632636db",
+    "proof_blob": "ce901c5f58cf1f95f7f8f415196e40382fca12aa",
+    "proof_observed_at": "2026-10-31T01:22:35.902Z",
+    "completed_scheduler_receipts": 2,
+    "in_progress_scheduler_receipts": 2,
+    "verified_productive_agents": null,
+    "quarantined_scheduler_anomalies": 2
   },
-  "observed_at": "2026-10-31T00:23:53.172Z",
+  "observed_at": "2026-10-31T01:24:15.486Z",
   "visibility": "sanitized_public_recovery_metadata",
   "state": "RECOVERING",
-  "note": "Source-linked checkpoint only; not a deployed/live execution receipt or an independent panel vote.",
+  "note": "Verified source repair and scheduler proof publication; GitHub Actions startup failure and production Netlify mapping remain unresolved; no hosted execution or live proof claimed.",
   "handoffs": [
     {
       "from": "Dashboard Lead",
@@ -190,32 +191,53 @@
       "timestamp_utc": "2026-10-31T00:23:34.224Z",
       "next_trigger": "Implementation Lead existing scheduled/event-driven execution; Keeper integrates; Hunter verifies Netlify mapping/alternate provider. No new automation or false downstream invocation.",
       "receipt_scope": "Actual Dashboard Lead authenticated GitHub source commits/readback, not provider-hosted task execution or live Netlify proof."
+    },
+    {
+      "from": "Dashboard Lead",
+      "to": "Implementation Lead",
+      "task_id": "ZOO-DASHBOARD-PROOF-CACHE-20261031-0123",
+      "decision": "REVISE",
+      "proposed_fix": "Read and independently test PR #16 exact head. Fix source contract false failure from embedded legacy phrase; add cache-busting proof fetch and reject regressed proof snapshot; diagnose zero-step GitHub CI startup; obtain independent exact-SHA Node test/Netlify preview; Keeper maps production deploy/rollback, Hunter qualifies independent runner.",
+      "evidence": [
+        "https://github.com/london4216-hue/Zoodo/commit/a9eb9d73e16aa5e22ff8c53cc20c0ea08590b38b",
+        "https://github.com/london4216-hue/Zoodo/commit/d6871f25761fd4b5b0a3d2e911dafac10f990fff",
+        "https://github.com/london4216-hue/Zoodo/commit/0853b368802385bacdf24c3782c81a8a9a458d0a",
+        "https://github.com/london4216-hue/Zoodo/commit/29dfcc64aea7f17e57f0e56c912092d2632636db",
+        "https://github.com/london4216-hue/Zoodo/actions/runs/41155130005"
+      ],
+      "tests": "PASS authenticated readback, 10 in-memory source contract assertions and 28/28 original hrefs preserved among 46. FAIL GitHub Actions run 41155130005 before job steps; logs 404 BlobNotFound. Netlify preview pending; live host DNS inaccessible in this runtime; Node test execution and hosted refresh UNKNOWN.",
+      "timestamp_utc": "2026-10-31T01:24:15.486Z",
+      "next_trigger": "Implementation Lead next existing run/event route; Keeper and Hunter receive durable issue checkpoints. No simulated invocation.",
+      "receipt_scope": "GitHub source and scheduler metadata write; not local Node, provider deploy or live execution."
     }
   ],
   "unresolved": [
     {
       "id": "ZOO-NETLIFY-MAPPING",
       "state": "RECOVERING",
-      "root_cause": "Production and Prestige Engage DNS resolution failed in web and container checks; not proof of outage. Exact Netlify production deploy ID/source SHA/rollback still UNKNOWN.",
-      "owner": "ZOO Keeper",
+      "root_cause": "No authorized Netlify site/deploy mapping or direct HTTP/DNS access; production source and rollback unverified",
+      "owner": "Sole ZOO Keeper",
       "backup": "ZOO Agent Hunter",
-      "next_action": "Use authorized provider site/deploy settings to map existing production, rollback, test PR preview and live mobile refresh; preserve owner-only product publication."
+      "next_action": "Keeper obtain existing site ID, deployed ID/source SHA/publish directory and rollback, then verify preview and production mobile/browser",
+      "last_checkpoint_at_utc": "2026-10-31T01:24:15.486Z"
     },
     {
       "id": "ZOO-CI-STARTUP",
       "state": "RECOVERING",
-      "root_cause": "Fresh Actions run 41149882447 for source commit d0494cff failed: job 124383620870 completed failure with no recorded steps; job log returned 404 BlobNotFound at 2026-10-31T00:23:44Z. Root runner/provisioning cause not yet established; do not claim tests passed.",
-      "owner": "ZOO Implementation Lead",
+      "root_cause": "Exact-head GitHub Actions 41155130005 failed before steps; job log 404 BlobNotFound",
+      "owner": "ZOO Asset Restoration",
       "backup": "ZOO Agent Hunter",
-      "next_action": "Implementation Lead/Hunter: inspect GitHub runner provisioning and policy; qualify independent exact-SHA provider build/test gate without identical blind retry; preserve draft PR."
+      "next_action": "Implementation inspect workflow policy/runner allocation and run independent Node contract tests with exact SHA",
+      "last_checkpoint_at_utc": "2026-10-31T01:24:15.486Z"
     },
     {
       "id": "ZOO-LIVE-PROOF",
       "state": "RECOVERING",
-      "root_cause": "Four completed scheduler metadata receipts were authenticated and committed at 2026-10-31T00:22:17Z; Dashboard current run still in progress, not counted completed. No production Netlify deploy/browser proof or actual live productive agent proof. Production DNS inaccessible from web and container.",
+      "root_cause": "Public proof feed is source-only; 2 scheduler completions valid, 2 anomalous before scheduled; no productive worker or hosted receipt verified",
       "owner": "ZOO Dashboard Worker",
       "backup": "ZOO Agent Hunter",
-      "next_action": "Dashboard Lead verify actual Netlify production deployment mapping, browser refresh and source-linked receipt; investigate scheduler early-completion semantics without accepting invalid timestamps."
+      "next_action": "Dashboard Lead verify Netlify production exact proof SHA after authorized deploy; Hunter qualify independent hosted worker",
+      "last_checkpoint_at_utc": "2026-10-31T01:24:15.486Z"
     },
     {
       "id": "ZOO-DEMO-LINKS",
@@ -374,6 +396,18 @@
       "evidence_url": "https://github.com/london4216-hue/Zoodo/commit/a987c315e24eb2c9a46ff6729d097766ec28d27e",
       "decision": "REVISE",
       "scope": "Actual GitHub source work and tests, not deployed live proof."
+    },
+    {
+      "agent_id": "ZOO Dashboard Lead",
+      "task_id": "ZOO-DASHBOARD-PROOF-CACHE-20261031-0123",
+      "source_commit_sha": "29dfcc64aea7f17e57f0e56c912092d2632636db",
+      "command_action": "Authenticated GitHub PR #16 source read; 4 connected Automations run_details reads; conditional automation-proof.json update; surgical index.html and accountability test commits; GitHub readback, link parity and exact-head CI inspection; attempted production HTTP from isolated runtime",
+      "started_at_utc": "2026-10-31T01:21:53.186Z",
+      "completed_at_utc": "2026-10-31T01:24:15.486Z",
+      "test_api_result": "PASS 10 in-memory source checks; 28/28 original hrefs preserved; 2 valid scheduler completions, 2 completion-before-schedule anomalies quarantined. GitHub Actions run 41155130005 failure, 0 steps, job log 404; preview pending; production DNS failed; no hosted Node test or live refresh verified.",
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/commit/29dfcc64aea7f17e57f0e56c912092d2632636db",
+      "decision": "REVISE",
+      "scope": "Actual authenticated GitHub file writes and source checks, not production deployment or independent hosted execution."
     }
   ],
   "agent_proof_matrix": {
@@ -385,10 +419,10 @@
       "reason": "Private provider-status check and checkpoint reported; no authenticated external replacement runner invocation; scheduler timestamp anomaly"
     },
     "dashboard_lead": {
-      "lane_execution": "PASS_SOURCE_READBACK_ONLY",
+      "lane_execution": "PASS_AUTHENTICATED_SOURCE_WRITE",
       "production_display": "UNKNOWN",
-      "evidence_url": "https://github.com/london4216-hue/Zoodo/commit/a987c315e24eb2c9a46ff6729d097766ec28d27e",
-      "reason": "Source-linked P0 row and authenticated scheduler snapshot updated, tested locally; no Netlify production browser or hosted worker receipt."
+      "evidence_url": "https://github.com/london4216-hue/Zoodo/commit/29dfcc64aea7f17e57f0e56c912092d2632636db",
+      "reason": "Source code and proof snapshot committed/read back, 10 in-memory checks; CI failed before steps, Netlify live mapping and hosted proof unknown."
     },
     "implementation_lead": {
       "lane_execution": "PASS_PRIVATE_SOURCE_ONLY",
@@ -499,19 +533,35 @@
       "hosted_browser": "UNKNOWN",
       "production": "UNKNOWN",
       "verified_claims": 0
+    },
+    {
+      "hour_et": "2026-10-30 21:00 EDT",
+      "hour_utc": "2026-10-31 01:00 UTC",
+      "repo_asset": "london4216-hue/Zoodo engine/dashboard",
+      "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "prior_status": "Draft source PR; stale scheduler snapshot; historical source contract contains legacy phrase; Netlify production UNKNOWN",
+      "new_status": "Draft source PR repaired with cache-busted scheduler feed, monotonic snapshot check, corrected regression tests; 2 valid scheduler completions and 2 quarantined anomalies; production remains RECOVERING",
+      "exact_commit_sha": "29dfcc64aea7f17e57f0e56c912092d2632636db",
+      "commit_url": "https://github.com/london4216-hue/Zoodo/commit/29dfcc64aea7f17e57f0e56c912092d2632636db",
+      "worker": "ZOO Dashboard Lead",
+      "source_tests": "PASS 10 in-memory source assertions, GitHub readback, original 28/28 hrefs preserved among 46; Node tests UNKNOWN",
+      "provider_preview": "PENDING (Netlify status at exact head)",
+      "hosted_browser": "UNKNOWN (DNS inaccessible)",
+      "production": "UNKNOWN; not deployed by this run",
+      "verified_claims": null
     }
   ],
   "pr_stage_timing": {
     "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
     "opened_at_utc": "2026-10-30T15:34:21Z",
     "review_at_utc": null,
-    "fix_at_utc": null,
-    "tests_at_utc": "2026-10-30T21:55:52.257Z",
-    "tests_scope": "last recorded local exact-blob Node tests; not rerun in this execution",
+    "fix_at_utc": "2026-10-31T01:23:31Z",
+    "tests_at_utc": "2026-10-31T01:24:15.486Z",
+    "tests_scope": "In-memory source contracts and authenticated readback only; Node/CI tests unverified",
     "merge_at_utc": null,
     "deploy_at_utc": null,
     "verified_at_utc": null,
-    "opened_to_observation_seconds": 29037,
+    "opened_to_source_patch_seconds": 35350,
     "opened_to_review_seconds": null,
     "review_to_fix_seconds": null,
     "fix_to_tests_seconds": null,
@@ -531,7 +581,12 @@
       "created_at_utc": "2026-10-30T06:33:28Z",
       "age_seconds_at_observation": 61134
     },
-    "proof_refresh_since_previous_observation_seconds": 419
+    "proof_refresh_since_previous_observation_seconds": 419,
+    "observation_at_utc": "2026-10-31T01:24:15.486Z",
+    "unresolved_gap_age_seconds": 43921,
+    "source_patch_at_utc": "2026-10-31T01:23:31Z",
+    "live_verified_at_utc": null,
+    "detection_to_live_verification_seconds": null
   },
   "cross_model_panel": {
     "scope": "Authenticated native model invocations only",
