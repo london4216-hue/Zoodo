@@ -56,6 +56,11 @@ export class DurableQueue {
     const t=this.get(id);if(!t||t.status!=='queued')fail('Ticket not queued');
     if(!valid(worker)||!valid(provider))fail('Real worker identity and provider required');
     if(t.attempts>=this.maxAttempts)fail('Retry budget exhausted');
+    // A worker value is an invocation identity, not a reusable provider name.
+    // Reusing it on this ticket would let a late callback from the prior lease
+    // impersonate the replacement: #active only sees ticket + worker.
+    if(t.history.some(e=>e.type==='claim' && e.worker===worker))
+      fail('Fresh worker invocation required for retry');
     // This journal is single-writer; refuse a second active lease for the same
     // worker, including an expired lease until recover() explicitly releases it.
     if([...this.items.values()].some(other => other.id!==id && other.worker===worker &&
