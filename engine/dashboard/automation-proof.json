@@ -58,7 +58,8 @@
       "receipt_source": "connected_automations_peek.run_details",
       "automation_title": "ZOO Agent Hunter — host and worker qualification",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
-      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt"
+      "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
+      "enabled": false
     },
     {
       "role": "ZOO PR Closure",
