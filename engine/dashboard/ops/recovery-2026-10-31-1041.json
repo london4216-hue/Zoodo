@@ -88,12 +88,13 @@
   ],
   "stage_times": {
     "pr_opened_at": "2026-10-31T10:41:47Z",
-    "local_tests_at": "2026-10-31T10:41:00Z",
+    "local_tests_at": null,
     "code_committed_at": null,
     "reviewed_at": null,
     "merged_at": null,
     "deployed_at": null,
-    "verified_live_at": null
+    "verified_live_at": null,
+    "local_tests_timestamp_note": "Exact test command completed during this run; native UTC timestamp not captured; no estimated timestamp claimed."
   },
   "cycle_times": {
     "pr_to_merge": "UNKNOWN",
