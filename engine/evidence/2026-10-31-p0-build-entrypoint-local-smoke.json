@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "agent_id": "Implementation Lead",
+  "task_id": "ZOO-P0-20261031-NETLIFY-BUILD-ENTRYPOINT",
+  "execution_scope": "LOCAL ISOLATED SANDBOX ONLY",
+  "source_commit_sha": "dfe7dfc1d09c45fb3470acf1546be32eb3a75d4f",
+  "command": "cd engine/dashboard && CONTEXT=deploy-preview COMMIT_REF=<source SHA> BRANCH=<branch> node scripts/build-proof.mjs",
+  "start_utc": "2026-10-31T04:22:59Z",
+  "end_utc": "2026-10-31T04:22:59Z",
+  "exit_code": 0,
+  "tests_run": 4,
+  "tests_passed": 4,
+  "tap_sha256": "d5db871190f1211c91af0f32dc153598522630248028840f28269c491f5d100d",
+  "generated_receipt": {
+    "build_tests": "PASSED",
+    "source_commit": "dfe7dfc1d09c45fb3470acf1546be32eb3a75d4f",
+    "verified_at": "2026-10-31T04:22:59.513Z",
+    "verified_scope": "Zoodo build-time Node source tests only",
+    "browser_functionality_verified": false,
+    "independent_worker_heartbeat_verified": false,
+    "hosted_two_ticket_recovery_verified": false,
+    "production_release_verified": false
+  },
+  "limitations": "Local sandbox contains the two exact GitHub-blob-matched changed files plus the existing Netlify build config and one new regression test file. NOT the full repository suite. No provider-native deployment, database or live worker proof.",
+  "decision": "REVISE",
+  "next_assignee": "ZOO Keeper"
+}
