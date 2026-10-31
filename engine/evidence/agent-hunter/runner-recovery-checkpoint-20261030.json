@@ -26,7 +26,93 @@
     "from": "Agent Hunter",
     "to": "Dashboard Lead",
     "decision": "BLOCKED",
-    "reason": "No callable provider management/runtime adapter in this session; scheduled runs are not hosted worker proof."
+    "timestamp_utc": "2026-10-31T04:24:29.831Z",
+    "task_id": "ZOO-18",
+    "reason": "No authenticated independent host runtime invocation; PR38 has zero reported statuses and DNS probe failed in current execution environment.",
+    "next_trigger": "Implementation Lead provider-native Netlify function execution receipt, then two synthetic durable ticket claims; Keeper integration; Dashboard Lead proof publication."
   },
-  "no_production_publish": true
+  "no_production_publish": true,
+  "latest_observation_utc": "2026-10-31T04:24:29.831Z",
+  "host_probe": {
+    "pr": 38,
+    "head_sha": "5d391c807e7c71fa2803a83f6ca08e3dfacdd44b",
+    "function_blob_sha": "dd386e9004d722ee8d129f17c6fd02b4b7321040",
+    "netlify_combined_status_count": 0,
+    "provider_native_invocation_id": null,
+    "hosted_qualified": false,
+    "probe_runtime_http": "UNKNOWN_DNS_FROM_EXECUTION_ENV",
+    "next_action": "Obtain authenticated Netlify preview for PR38 exact head and invoke synthetic-hash POST with privately configured ZOO_HOST_PROBE_TOKEN; retain provider request ID and SHA."
+  },
+  "comparison": {
+    "dashboard_pr_16_head": "a590cb526c69eb9db531212bf64a290f619a913b",
+    "netlify_preview_status": "success",
+    "preview_url": "https://deploy-preview-16--zoo-live-dashboard.netlify.app",
+    "scope": "Netlify reported preview status; not proof of runner or accessible endpoint"
+  },
+  "private_ops_inspected": [
+    "ops/team-roster.json",
+    "ops/model-routes.json",
+    "ops/helpers.json",
+    "ops/sockets.json",
+    ".mcp.json"
+  ],
+  "private_mcp_observation": "Only TestSprite MCP declared; no native DeepSeek, Claude, Gemini, Copilot, Codex, Netlify, Vercel, Render, Cloudflare, or Supabase execution adapter exposed in this automation tool session.",
+  "external_panel": {
+    "native_votes": 0,
+    "invocation_receipts": [],
+    "status": "UNKNOWN_UNCALLABLE_FROM_THIS_SESSION"
+  },
+  "automation_health": {
+    "hunter": "enabled; in-progress run recorded at 2026-10-31T04:23:20.537998Z",
+    "keeper": "enabled; in-progress run recorded at 2026-10-31T04:23:13.393435Z",
+    "dashboard": "enabled; completed run recorded at 2026-10-31T04:10:54.387296Z",
+    "scope": "scheduler metadata, not productive agent proof"
+  },
+  "provider_matrix": {
+    "github_source_api": {
+      "callable": true,
+      "authenticated": true,
+      "scope": "source read/write only",
+      "native_receipt": "GitHub commit",
+      "qualified_for_runner": false
+    },
+    "netlify": {
+      "preview_pr16_status": "success",
+      "probe_pr38_statuses": 0,
+      "authenticated_management_api": false,
+      "hosted_runner_qualified": false
+    },
+    "vercel": {
+      "authenticated_management_api": false,
+      "qualified": false
+    },
+    "render": {
+      "authenticated_management_api": false,
+      "qualified": false
+    },
+    "cloudflare": {
+      "authenticated_management_api": false,
+      "qualified": false
+    },
+    "deepseek": {
+      "authenticated_invoke": false,
+      "qualified": false
+    },
+    "copilot": {
+      "authenticated_invoke": false,
+      "qualified": false
+    },
+    "claude": {
+      "authenticated_invoke": false,
+      "qualified": false
+    },
+    "gemini": {
+      "authenticated_invoke": false,
+      "qualified": false
+    },
+    "codex": {
+      "authenticated_invoke": false,
+      "qualified": false
+    }
+  }
 }
