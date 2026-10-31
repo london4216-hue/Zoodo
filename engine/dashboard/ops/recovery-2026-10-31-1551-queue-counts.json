@@ -28,14 +28,15 @@
     "source_readback": "VERIFIED"
   },
   "live_search_observation": {
-    "observed_during_cycle_utc": "2026-10-31T15:50:00Z",
     "repository": "london4216-hue/Zoodo",
     "open_issues": 24,
     "open_prs": 54,
     "incomplete_results": false,
     "issue_search_url": "https://github.com/london4216-hue/Zoodo/issues?q=is%3Aissue%20is%3Aopen",
     "pr_search_url": "https://github.com/london4216-hue/Zoodo/pulls?q=is%3Apr%20is%3Aopen",
-    "scope": "GitHub Search results, NOT verified rendered on Netlify production"
+    "scope": "GitHub Search results, NOT verified rendered on Netlify production",
+    "recorded_at": "2026-10-31T15:51:18.863Z",
+    "timestamp_note": "Counts read during this execution; recorded_at is the checkpoint time, not the precise GitHub API response time."
   },
   "workflow": {
     "prior_run_id": 41215588292,
@@ -59,7 +60,6 @@
   },
   "scheduler": {
     "source": "authenticated connected Automations peek",
-    "observed_during_cycle_utc": "2026-10-31T15:49:00Z",
     "roles_in_progress": [
       "ZOO Keeper",
       "ZOO Agent Hunter",
@@ -68,7 +68,8 @@
     ],
     "completed_current_runs": 0,
     "last_valid_public_snapshot": "2026-10-31T15:34:49.619Z",
-    "note": "In-progress scheduler records do not prove productive agent execution; no fake heartbeat."
+    "note": "In-progress scheduler records do not prove productive agent execution; no fake heartbeat.",
+    "timestamp_note": "Authenticated peeks performed during this execution; individual run timestamps are in the connected scheduler records."
   },
   "handoff": {
     "from": "ZOO Dashboard Lead",
@@ -83,7 +84,7 @@
     "pr": "https://github.com/london4216-hue/Zoodo/pull/94"
   },
   "reporting": {
-    "source_commit_at": "UNKNOWN",
+    "source_commit_at": "2026-10-31T15:50:39Z",
     "pr_opened_at": "2026-10-31T15:12:00Z",
     "review_at": "UNKNOWN",
     "merge_at": "UNKNOWN",
@@ -91,6 +92,8 @@
     "live_verified_at": "UNKNOWN",
     "issue_detection_to_fix_ms": "UNKNOWN",
     "code_to_live_ms": "UNKNOWN",
-    "note": "No cycle latency invented from absent timestamps"
+    "note": "No cycle latency invented from absent timestamps",
+    "pr_open_to_this_fix_seconds": 2319,
+    "pr_open_to_this_fix_basis": "PR #94 opened 2026-10-31T15:12:00Z; latest code fix committed 2026-10-31T15:50:39Z"
   }
 }
