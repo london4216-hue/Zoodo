@@ -7,6 +7,7 @@ import {reconcileWithDeadline} from './reconcile-bounded.mjs';
 import {confirmDispatchReceipt} from './dispatch-receipt-fence.mjs';
 import {kickWithDeadline} from './bounded-kick.mjs';
 import {confirmTransitionWithinDeadline} from './transition-fence.mjs';
+import {classifyRelayError} from './relay-error-status.mjs';
 const ID=/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const SHA=/^[a-f0-9]{40}$/;
 const UUID=/^[a-f0-9-]{36}$/i;
@@ -143,6 +144,6 @@ export function makeHandler({relay,callbackSecret,kickDeadlineMs=7500}){
    if(x.type==='replay')return send(200,await relay.replay());
    if(x.type==='reconcile')return send(200,await relay.reconcile());
    return send(422,{error:'unsupported event'});
-  }catch(e){return send(409,{error:String(e.message||e).slice(0,160)})}
+  }catch(e){const {statusCode,message}=classifyRelayError(e);return send(statusCode,{error:message})}
  };
 }
