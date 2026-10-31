@@ -23,6 +23,14 @@ export function makeOutboxReplay({store, dispatch, worker}) {
     }
     const dispatched = result?.state === 'dispatched' || result?.state === 'delegated' ||
       result?.replacement?.state === 'dispatched';
+    if (result?.state === 'idle') {
+      // A worker reporting idle may still have work leased. Only the private
+      // database can atomically confirm no eligible queued tickets remain.
+      if (typeof store.settleIdleOutbox === 'function' &&
+          await store.settleIdleOutbox(event.id, event.lease_token) === true) {
+        return {state: 'idle-settled', event_id: event.id};
+      }
+    }
     if (!dispatched) {
       // A busy/uncertain worker is not proof that this wake-up was delivered.
       // The outbox lease is recovered on a subsequent authenticated reconcile.
