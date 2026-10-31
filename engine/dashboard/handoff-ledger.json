@@ -2,14 +2,14 @@
   "schema_version": 1,
   "source": {
     "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
-    "head_before_ledger": "99e329868cb0f7493a205e460007660a91cb9412",
-    "proof_blob": "ba5f14b60a7fc79b334675f7339da541c43c56f6",
-    "proof_observed_at": "2026-10-30T23:37:29.100Z",
+    "head_before_ledger": "d0494cff2d3bdc23ef95629d1bc01077f1257889",
+    "proof_blob": "c481ecea5ff572dddbc9119b4b25faa465f962cb",
+    "proof_observed_at": "2026-10-31T00:22:17.136Z",
     "completed_scheduler_receipts": 4,
     "in_progress_scheduler_receipts": 1,
     "verified_productive_agents": null
   },
-  "observed_at": "2026-10-30T23:40:06.078Z",
+  "observed_at": "2026-10-31T00:23:34.224Z",
   "visibility": "sanitized_public_recovery_metadata",
   "state": "RECOVERING",
   "note": "Source-linked checkpoint only; not a deployed/live execution receipt or an independent panel vote.",
@@ -168,6 +168,27 @@
         "productive_execution_verified": false,
         "note": "A worker run was already in progress at the pre-request read. Accepted run_now did not prove a new run or task; do not count duplicate."
       }
+    },
+    {
+      "from": "Dashboard Lead",
+      "to": "Implementation Lead",
+      "task_id": "ZOO-DASHBOARD-FIGMA-PROOF-20261031-0023",
+      "decision": "REVISE",
+      "proposed_fix": "Use PR #16 additive six-row original-vs-alternate display and authenticated four-role scheduler snapshot; execute actual hosted tests, map Netlify production deploy and rollback, then independently verify mobile live evidence. Implement #25/#27 lanes without substituting original Figma.",
+      "evidence": [
+        "https://github.com/london4216-hue/Zoodo/commit/5fd919fbf6206e31abafeb10575e8e031112a148",
+        "https://github.com/london4216-hue/Zoodo/commit/d6eb2a2cb97ee18159ea25c7f2cd6a7d74f2e691",
+        "https://github.com/london4216-hue/Zoodo/commit/5586254620c8df3e6e1263ba6e33d489ff4f1d0e",
+        "https://github.com/london4216-hue/Zoodo/commit/d0494cff2d3bdc23ef95629d1bc01077f1257889",
+        "https://github.com/london4216-hue/Zoodo/issues/25",
+        "https://github.com/london4216-hue/Zoodo/issues/27",
+        "https://github.com/london4216-hue/TransendIQ/pull/1070",
+        "https://github.com/london4216-hue/Zoodo/actions/runs/41149882447"
+      ],
+      "tests": "PASS authenticated GitHub readback of 4 modified files, six source lanes, 40 prior href occurrences all preserved among 46; 4 completed scheduler records and 1 in-progress accurately separated. CI run 41149882447 queued at read; Netlify preview pending deploy ID 6ae534f1c59ce91c75d6222e. Hosted tests and production browser UNKNOWN.",
+      "timestamp_utc": "2026-10-31T00:23:34.224Z",
+      "next_trigger": "Implementation Lead existing scheduled/event-driven execution; Keeper integrates; Hunter verifies Netlify mapping/alternate provider. No new automation or false downstream invocation.",
+      "receipt_scope": "Actual Dashboard Lead authenticated GitHub source commits/readback, not provider-hosted task execution or live Netlify proof."
     }
   ],
   "unresolved": [
@@ -189,8 +210,8 @@
     },
     {
       "id": "ZOO-LIVE-PROOF",
-      "state": "UNKNOWN",
-      "root_cause": "Authenticated scheduler snapshot 2026-10-30T23:05:25.384Z: two valid historical completions, one Dashboard in-progress, Keeper and Hunter completed-before-scheduled anomalies quarantined. Production Netlify HTTP DNS unresolved in test environment.",
+      "state": "RECOVERING",
+      "root_cause": "Four completed scheduler metadata receipts were authenticated and committed at 2026-10-31T00:22:17Z; Dashboard current run still in progress, not counted completed. No production Netlify deploy/browser proof or actual live productive agent proof. Production DNS inaccessible from web and container.",
       "owner": "ZOO Dashboard Worker",
       "backup": "ZOO Agent Hunter",
       "next_action": "Dashboard Lead verify actual Netlify production deployment mapping, browser refresh and source-linked receipt; investigate scheduler early-completion semantics without accepting invalid timestamps."
@@ -222,10 +243,10 @@
     {
       "id": "ZOO-PR787-DRIFT",
       "state": "RECOVERING",
-      "root_cause": "PR #787 draft last metadata update 2026-10-28T18:41:49Z; source head 86b854a1ac2e54fe703ec1ad7e320423c6a740cc; no independently verified new test. #782 mergeable=false and documented shared import conflict; #788 separate change.",
+      "root_cause": "Original PR #787 head remains 86b854a1; new separate draft reconciliation PR #1070 at 963e5ef has verified primary file blob f04dae55 and 3 source checks; hosted Playwright/CI/merge/deploy still UNKNOWN. #782 conflicting import and #788 date interaction remain separate.",
       "owner": "ZOO Implementation Lead",
       "backup": "ZOO Keeper",
-      "next_action": "Isolated branch reconcile #787/#782/#788 and run actual exact-SHA tests; attach PR receipt; preserve draft until requirements met."
+      "next_action": "Implementation Lead: run targeted exact-head Playwright on #1070 and verify #782/#787/#788 functional integration; keep all drafts and protected checks intact."
     },
     {
       "id": "ZOO-SARA-NEW-UI-URL",
@@ -234,6 +255,22 @@
       "owner": "ZOO Agent Hunter",
       "backup": "ZOO Dashboard Lead",
       "next_action": "Inspect owner-controlled deployments, identify new UI/UX landing, verify endpoint/auth/mobile, publish URL only with receipt."
+    },
+    {
+      "id": "ZOO-PRESTIGE-ALT-25",
+      "state": "RECOVERING",
+      "root_cause": "Prestige baseline URL owner-recorded but HTTP/DNS checks failed in this runtime; alternate comparison URL, tests and client feedback receipts UNKNOWN. Source-only row now in PR #16.",
+      "owner": "ZOO Implementation Lead",
+      "backup": "ZOO Agent Hunter",
+      "next_action": "Self-claim Zoodo #25; preserve baseline, implement distinct preview with functional parity, verify two URLs and independent client metrics."
+    },
+    {
+      "id": "ZOO-FIGMA-ORIGINAL-27",
+      "state": "RECOVERING",
+      "root_cause": "Canonical My Block and YB3 original Figma frames not authenticated in this run. Four distinct source-only dashboard lanes now exist; no fidelity, live URLs or scores claimed.",
+      "owner": "ZOO Asset Restoration",
+      "backup": "ZOO Keeper",
+      "next_action": "Recover authorized Figma/SOW and create separate original-vs-Gold Standard branches for My Block and YB3 per Zoodo #27; publish receipts only after verified previews."
     }
   ],
   "safety": {
