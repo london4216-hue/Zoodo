@@ -121,3 +121,16 @@ test('two distinct configured providers with same source SHA pass static checks,
  assert.equal(out.source_matched_distinct_configured_providers,2);
  assert.equal(out.fully_automated_failover_verified,false);
 });
+
+test('dashboard mirror includes the live accountability and worker roster dependencies',()=>{
+ const source=readFileSync(resolve(root,'scripts/prepare-mirror.mjs'),'utf8');
+ for(const asset of [
+  'accountability.html','priority-watch.mjs','priority-watch.json',
+  'worker-feed-panel.mjs','worker-feed.mjs','worker-feed.json',
+  'source-identity.mjs','refresh-policy.mjs'
+ ])assert.ok(source.includes("'"+asset+"'"),'mirror missing '+asset);
+ assert.match(source,/normalizeQueueSnapshot\(JSON\.parse\(/);
+ assert.match(source,/mirroredFiles\.push\('board\.json'\)/);
+ assert.match(source,/file_count:mirroredFiles\.length/);
+ assert.match(source,/writeFileSync\(join\(out,'board\.json'\),JSON\.stringify\(clean,null,2\)/);
+});
