@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-11-01T00:43:49.754Z",
+  "observed_at": "2026-11-01T02:48:50.680Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Dashboard Worker",
@@ -9,16 +9,16 @@
     "ZOO Agent Hunter",
     "ZOO PR Closure"
   ],
-  "publication_scope": "Four enabled task run_details read directly at publication; Hunter remains disabled from prior scheduler snapshot and was not independently re-peeked. Historical completions do not prove productive execution. Dashboard current run is in progress; its prior completion with invalid scheduled chronology is quarantined.",
+  "publication_scope": "Five individual connected automation peeks. Only valid completed receipts counted; historical receipts retained for in-progress or anomalous roles. Hunter disabled. Scheduler completion is not proof of productive worker execution. Source publisher cannot verify Netlify production.",
   "refresh_policy": "Single Dashboard Worker publisher; GitHub blob SHA conditional update; browser polling cannot wake agents.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
     {
       "role": "ZOO Keeper",
-      "run_id": "e6c93664-950c-8323-98a3-0cbb4a970172",
+      "run_id": "2c00e052-9fa0-8326-829e-431867d33734",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T23:45:30Z",
-      "completed_at": "2026-10-31T23:46:36.128662Z",
+      "scheduled_for": "2026-11-01T02:45:30Z",
+      "completed_at": "2026-11-01T02:46:14.675510Z",
       "receipt_source": "connected_automations_peek.run_details.last_run",
       "automation_title": "ZOO Keeper — portfolio execution enforcement",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
@@ -27,11 +27,11 @@
     },
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "65230e9a-5f90-8320-9104-21c071bf6c46",
+      "run_id": "c790b328-5e88-832a-84be-f35e71532c29",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T22:50:25.077292Z",
-      "completed_at": "2026-10-31T22:53:52.796063Z",
-      "receipt_source": "connected_automations_peek.latest_result",
+      "scheduled_for": "2026-11-01T01:43:49.673831Z",
+      "completed_at": "2026-11-01T01:47:10.010169Z",
+      "receipt_source": "connected_automations_peek.run_details.last_run",
       "automation_title": "ZOO Dashboard — live repair and hourly grades",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
@@ -63,10 +63,10 @@
     },
     {
       "role": "ZOO PR Closure",
-      "run_id": "0ee190ba-2130-832f-896d-e0204e4ec1e5",
+      "run_id": "7ab0150b-7d8c-8332-878d-c985909f1c00",
       "recorded_status": "completed",
-      "scheduled_for": "2026-11-01T00:10:39Z",
-      "completed_at": "2026-11-01T00:16:16.542659Z",
+      "scheduled_for": "2026-11-01T02:46:25.709504Z",
+      "completed_at": "2026-11-01T02:48:40.292785Z",
       "receipt_source": "connected_automations_peek.run_details.last_run",
       "automation_title": "ZOO PR closure — eligible fixes and merges",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
@@ -77,10 +77,10 @@
   "in_progress_runs": [
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "10163af8-b7f8-8329-acd6-d846c28b749d",
+      "run_id": "538d2cda-36d8-8320-a7d6-a6b88986e151",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-11-01T00:45:58Z",
-      "started_at": "2026-11-01T00:41:40.132967Z",
+      "scheduled_for": "2026-11-01T02:46:25.527083Z",
+      "started_at": "2026-11-01T02:46:41.847215Z",
       "timing_note": "in_progress_not_completed_or_productive_worker_proof"
     }
   ],
@@ -269,6 +269,14 @@
       "scheduled_for": "2026-10-31T23:45:58Z",
       "completed_at": "2026-10-31T23:37:04.139087Z",
       "action": "quarantined_not_counted_as_verified_completion"
+    },
+    {
+      "role": "ZOO Asset Restoration",
+      "kind": "completion_before_scheduled_for_or_invalid",
+      "run_id": "ebde1503-6e44-832c-9c92-47da495e02d6",
+      "scheduled_for": "2026-11-01T02:24:51Z",
+      "completed_at": "2026-11-01T02:23:11.610946Z",
+      "action": "quarantined_not_counted_as_verified_scheduler_completion"
     }
   ],
   "prior_snapshot": {
