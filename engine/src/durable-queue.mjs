@@ -103,6 +103,7 @@ export class DurableQueue {
   approve(id,{reviewer,provider,commit,evidence,approved}){
     const t=this.get(id);if(!t||t.status!=='review')fail('Not awaiting review');
     if(!validIdentity(reviewer)||!validIdentity(provider)||!valid(evidence)||provider===t.provider||reviewer===t.worker||commit!==t.commit)fail('Independent exact-commit review required');
+    if(typeof approved!=='boolean')fail('Boolean review verdict required');
     if(approved!==true)return this.#record('requeue',id,{reason:'Independent reviewer rejected',reviewer,reviewProvider:provider,evidence,dead:t.attempts>=this.maxAttempts});
     return this.#record('approve',id,{reviewer,reviewProvider:provider,commit,evidence});
   }
