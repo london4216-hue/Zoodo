@@ -34,9 +34,12 @@ function verifiedDispatch(r, worker, qualifiedWorkers, state) {
 function safeErrorMessage(error) {
   try {
     const name = error?.name;
-    return typeof name === 'string' &&
-      /^(Error|TypeError|RangeError|SyntaxError|ReferenceError|TimeoutError|AbortError)$/.test(name)
-      ? name : 'error detail redacted';
+    if (typeof name === 'string' &&
+        /^(Error|TypeError|RangeError|SyntaxError|ReferenceError|TimeoutError|AbortError)$/.test(name))
+      return name;
+    // Probe printability without persisting any untrusted diagnostic text.
+    try { String(error); } catch { return 'unprintable error'; }
+    return 'error detail redacted';
   } catch { return 'unprintable error'; }
 }
 // One monotonic deadline bounds the entire drain. A timed-out worker may
@@ -73,7 +76,8 @@ export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000})
   const event = await withinDeadline(() => store.claimOutbox(), deadline);
   if (event === null) return {state:'empty'};
   if (!event || !Number.isSafeInteger(event.id) || event.id < 1 ||
-      !TICKET.test(event.ticket_id ?? '') || !UUID.test(event.lease_token ?? ''))
+      typeof event.ticket_id !== 'string' || !TICKET.test(event.ticket_id) ||
+      typeof event.lease_token !== 'string' || !UUID.test(event.lease_token))
     throw Error('Invalid durable outbox lease');
   // Freeze the validated lease identity before invoking any untrusted async callback.
   const eventId = event.id;
