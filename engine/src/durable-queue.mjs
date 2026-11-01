@@ -1,7 +1,7 @@
 // ZOO single-writer durable pilot queue. Journal is local, append-only JSONL.
 // A production multi-runner deployment MUST add transactional storage / distributed locking.
-import {appendFileSync,existsSync,readFileSync,mkdirSync} from 'node:fs';
-import {dirname} from 'node:path';
+import {existsSync,readFileSync} from 'node:fs';
+import {appendJournalEvent} from './atomic-journal.mjs';
 import {randomUUID} from 'node:crypto';
 
 const valid = s => typeof s === 'string' && s.length > 0 && s.length <= 256;
@@ -52,8 +52,9 @@ export class DurableQueue {
   }
   #record(type,id,fields={},atMs=this.now()){
     const e={eventId:randomUUID(),type,id,at:new Date(atMs).toISOString(),...fields};
-    mkdirSync(dirname(this.file),{recursive:true});
-    appendFileSync(this.file,JSON.stringify(e)+'\n',{encoding:'utf8',mode:0o600,flag:'a'});
+    // Compare against the durable tail while holding an exclusive local filesystem lock.
+    // A stale queue instance must not append a competing claim or heartbeat.
+    appendJournalEvent(this.file,e,this.events.length,this.events.at(-1)?.eventId??null);
     this.#apply(e);this.events.push(e);return snapshot(this.items.get(id));
   }
   get(id){const t=this.items.get(id);return t?snapshot(t):null}
