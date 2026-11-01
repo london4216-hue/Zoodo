@@ -56,7 +56,7 @@ const boardPath=join(root,'board.json');
 if(existsSync(boardPath)){
   try{
     const clean=normalizeQueueSnapshot(JSON.parse(readFileSync(boardPath,'utf8')));
-    writeFileSync(join(out,'board.json'),JSON.stringify(clean,null,2)+'\\n');
+    writeFileSync(join(out,'board.json'),JSON.stringify(clean,null,2)+'\n');
     mirroredFiles.push('board.json');
   }catch(error){
     console.warn('ZOO MIRROR: board receipt omitted (UNKNOWN): '+error.message);
