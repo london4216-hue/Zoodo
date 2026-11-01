@@ -142,5 +142,20 @@
     ],
     "grades": "deferred until Wednesday",
     "ordinary_email_sent": false
+  },
+  "canonical_feeds": {
+    "priority_watch": {
+      "observed_at": "2026-10-31T01:25:19.042Z",
+      "source_blob": "535edb37936fe88b26b13cf97abf14a6fa47dc96",
+      "age_minutes_at_receipt": 1628,
+      "fresh": false
+    },
+    "automation_proof": {
+      "observed_at": "2026-10-31T10:40:41.796Z",
+      "source_blob": "d581e140d19bb89c0dce6a341f5ba0a21760af29",
+      "age_minutes_at_receipt": 1073,
+      "fresh": false
+    },
+    "note": "Canonical main feed timestamps are stale; draft code repair does not refresh feed publisher or establish production deployment."
   }
 }
