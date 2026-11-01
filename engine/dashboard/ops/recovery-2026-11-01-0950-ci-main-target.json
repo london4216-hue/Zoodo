@@ -7,7 +7,6 @@
   "base_branch": "main",
   "base_sha": "f0a8ef3e97ac23590469054dfae8376b37cab76f",
   "repair_branch": "fix/zoo-dashboard-contract-main-target-20261101-0951",
-  "repair_head_sha": "b69e7ab5687ae6c71efd7630c798e28a0615a5e4",
   "pull_request": "https://github.com/london4216-hue/Zoodo/pull/122",
   "defect": "Dashboard contract workflow excluded main from pull_request target branches, leaving current main-targeted dashboard PRs without that workflow trigger.",
   "fix": "Add main to pull_request branches while preserving historic PR #16/#71 targets, path filter, read-only permissions, native Node source tests and owner-only production gate.",
@@ -96,5 +95,7 @@
     ],
     "grading": "Wednesday only",
     "ordinary_email_sent": false
-  }
+  },
+  "code_change_commit_sha": "b69e7ab5687ae6c71efd7630c798e28a0615a5e4",
+  "receipt_predecessor_commit_sha": "26ad93c99a5e3b5ac1d34aaa83ef020b51276862"
 }
