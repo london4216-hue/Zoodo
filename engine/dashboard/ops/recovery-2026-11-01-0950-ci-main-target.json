@@ -27,7 +27,16 @@
       "test_blob_sha": "9fb8967bf7cd02ccbbef1972538ec96a3a42f7bf",
       "source_matches_tested_change": true
     },
-    "hosted_ci": "UNKNOWN_NO_EXACT_HEAD_RUN_RETURNED"
+    "hosted_ci": "FAILED_BEFORE_RECORDED_STEPS",
+    "hosted_ci_observation": {
+      "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41294834611",
+      "workflow": "ZOO dashboard source and link safety",
+      "observed_commit_sha": "cd750c49f0fdf0e9ef9ca5a35766188828ac4ae9",
+      "conclusion": "failure",
+      "job": "dashboard-contract",
+      "job_steps": null,
+      "scope": "Workflow trigger now observed; runner startup remains unresolved. Newer receipt commits may generate additional runs."
+    }
   },
   "reconciliation": {
     "historical_pr16": {
@@ -61,10 +70,10 @@
       "worker_heartbeats_verified": false
     },
     "github_actions": {
-      "latest_inspected_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41294564050",
+      "latest_inspected_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41294834611",
       "latest_inspected_conclusion": "failure",
       "job_step_records": "null",
-      "interpretation": "No step records returned; this repair fixes workflow targeting, not runner startup"
+      "interpretation": "Dashboard contract workflow now triggered on main-target PR #122, but job failed before any steps were reported; account/runner startup remains unresolved."
     },
     "netlify": {
       "preview_status": "UNKNOWN",
