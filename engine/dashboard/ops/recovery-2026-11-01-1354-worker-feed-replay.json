@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "receipt_type": "dashboard_worker_feed_replay_guard",
+  "observed_at": "2026-11-01T13:54:03Z",
+  "repository": "london4216-hue/Zoodo",
+  "base_main_sha": "1b7b468121c8bc975b59e5511c0a0c73d8a14fff",
+  "source_branch": "fix/zoo-worker-feed-replay-20261101",
+  "pull_request": "https://github.com/london4216-hue/Zoodo/pull/133",
+  "tested_files": {
+    "engine/dashboard/worker-feed-panel.mjs": "026b97cadd6fa287ec11f0d8f4823a88804f44ff",
+    "engine/dashboard/worker-feed-panel.test.mjs": "654a2de2798d02af9949ad934a68df258100ea8a"
+  },
+  "tests": {
+    "kind": "isolated_native_node",
+    "command": "node --test worker-feed-panel.test.mjs",
+    "before": {
+      "passed": 2,
+      "failed": 1
+    },
+    "after": {
+      "passed": 3,
+      "failed": 0
+    },
+    "syntax": "node --check worker-feed-panel.mjs PASS",
+    "github_source_readback": "both blob hashes matched local tested files",
+    "github_actions": "UNVERIFIED",
+    "hosted_preview": "UNVERIFIED",
+    "production": "UNVERIFIED"
+  },
+  "native_two_ticket_loop": {
+    "state": "NOT_PROVEN",
+    "claim_id": null,
+    "worker_run_id": null,
+    "next_claim_id": null,
+    "live_dashboard_readback": "UNVERIFIED"
+  },
+  "provider_deploy": {
+    "netlify_deploy_id": null,
+    "source_sha": null,
+    "rollback_id": null
+  },
+  "safety": {
+    "original_links_changed": false,
+    "owner_auth_changed": false,
+    "hosting_config_changed": false,
+    "product_sites_changed": false
+  },
+  "next": "Sole Keeper reconcile draft #133 with existing dashboard PRs; authorized host probe must map exact Netlify deploy ID/SHA and verify browser readback. Existing queue/runner publisher must supply native claim->complete->automatic NEXT receipts; do not publish launch link until proven."
+}
