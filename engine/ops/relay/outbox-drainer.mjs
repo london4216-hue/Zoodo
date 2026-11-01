@@ -10,12 +10,13 @@ function validReceipt(r, worker) {
     return url.protocol === 'https:' && !url.username && !url.password && !url.hash;
   } catch { return false; }
 }
-function confirmedDispatch(r, worker) {
+function confirmedDispatch(r, worker, qualifiedWorkers) {
   if (r?.state === 'dispatched') return validReceipt(r, worker);
   if (r?.state !== 'delegated' || r.worker !== worker) return false;
   const replacement = r.replacement;
   return replacement?.state === 'dispatched' &&
     typeof replacement.worker === 'string' && WORKER.test(replacement.worker) && replacement.worker !== worker &&
+    qualifiedWorkers.includes(replacement.worker) &&
     validReceipt(replacement, replacement.worker);
 }
 export async function drainOne({store,relay,workerIds}) {
@@ -46,7 +47,7 @@ export async function drainOne({store,relay,workerIds}) {
         continue;
       }
       if (r?.state === 'dispatched' || r?.state === 'delegated') {
-        if (!confirmedDispatch(r, worker))
+        if (!confirmedDispatch(r, worker, qualifiedWorkers))
           return {state:'recovery_required',reason:'dispatch receipt not confirmed',eventId:event.id,attempts};
         // Once dispatch is confirmed, an ambiguous ACK is never a reason to
         // dispatch another worker. Reconciliation must inspect the durable lease.
