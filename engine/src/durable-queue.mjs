@@ -41,6 +41,9 @@ export class DurableQueue {
     if(e.type==='verify')t.status='verified';
     if(e.type==='done')t.status='done';
     if(e.type==='requeue'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null;t.commit=null;t.releaseProof=null}
+    // A malformed persisted deadline cannot prove the old invocation stopped.
+    // Keep its identity reserved, but isolate this ticket from automatic NEXT.
+    if(e.type==='quarantine'){t.status='blocked';t.leaseUntil=null}
     t.history.push(e);
   }
   #record(type,id,fields={}){
@@ -70,7 +73,7 @@ export class DurableQueue {
     // This journal is single-writer; refuse a second active lease for the same
     // worker, including an expired lease until recover() explicitly releases it.
     if([...this.items.values()].some(other => other.id!==id && other.worker===worker &&
-      ['assigned','running'].includes(other.status)))fail('Worker already has active ticket');
+      ['assigned','running','blocked'].includes(other.status)))fail('Worker already has active ticket');
     return this.#record('claim',id,{worker,provider,leaseUntil:this.now()+this.leaseMs});
   }
   #active(id,worker){const t=this.get(id);if(!t||t.worker!==worker||!['assigned','running'].includes(t.status)||!Number.isSafeInteger(t.leaseUntil)||t.leaseUntil<=this.now())fail('No active lease');return t}
@@ -93,5 +96,16 @@ export class DurableQueue {
   verify(id,{evidence}){const t=this.get(id);if(!t||t.status!=='test'||!t.tests?.passed||!valid(evidence)||t.releaseRequired&&!t.releaseProof)fail('Tests and authorized release evidence required');return this.#record('verify',id,{evidence})}
   done(id){const t=this.get(id);if(!t||t.status!=='verified')fail('Not verified');return this.#record('done',id)}
   fail(id,{worker,reason}){const t=this.get(id);if(!t||!['assigned','running'].includes(t.status)||t.worker!==worker||!valid(reason))fail('Active worker failure evidence required');this.#active(id,worker);return this.#record('requeue',id,{reason,worker,provider:t.provider,dead:t.attempts>=this.maxAttempts})}
-  recover(){const recovered=[];for(const t of this.items.values())if(['assigned','running'].includes(t.status)&&t.leaseUntil<=this.now())recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts}));return recovered}
+  recover(){
+    const recovered=[];
+    for(const t of this.items.values()){
+      if(!['assigned','running'].includes(t.status))continue;
+      if(!Number.isSafeInteger(t.leaseUntil)){
+        recovered.push(this.#record('quarantine',t.id,{reason:'Malformed lease deadline; execution uncertain',worker:t.worker,provider:t.provider}));
+      }else if(t.leaseUntil<=this.now()){
+        recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts}));
+      }
+    }
+    return recovered;
+  }
 }
