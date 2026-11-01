@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-11-01T10:48:14Z",
+  "lane": "sole_dashboard_lead",
+  "scope": "source-only; not a Netlify publication",
+  "finding": "Sara URL was labeled Verified when URL and last_verified_at were merely nonempty, even for javascript: URLs, stale receipts and UNKNOWN state.",
+  "change": "Require explicit VERIFIED state, valid nonfuture source/verification chronology, <=75 minute receipt age and HTTPS URL without embedded credentials; label accepted URL as source-reported, never independently browser-verified.",
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "branch": "fix/zoo-sara-url-receipt-20261101-1052",
+    "original_blob_sha": "3bebf42807d810cc76dbea25239c9e4725f50d97",
+    "patched_blob_sha": "8782900c679bd70f485793c9b2fb94b9a4444b0f",
+    "test_blob_sha": "4129e594075d1d08b8d65d0d870e9cbdc489ed15",
+    "index_html_blob_sha": "82fa64fc52cbc8379f3f2ec8bd3073972271b617",
+    "workflow_blob_sha": "889858a4a944d6474a50aaa0ecf57130e883645f"
+  },
+  "tests": {
+    "command": "node --test engine/dashboard/tests/sara-verification.test.mjs",
+    "runtime": "Node v22.16.0",
+    "original_source_fail_first": {
+      "passed": 0,
+      "failed": 4
+    },
+    "patched_exact_source": {
+      "passed": 6,
+      "failed": 0
+    },
+    "syntax_check": "node --check engine/dashboard/priority-watch.mjs passed",
+    "environment": "local; GitHub Actions not executed"
+  },
+  "source_counts": {
+    "as_of": "2026-11-01T10:47Z",
+    "open_zoodo_prs": 76,
+    "open_zoodo_issues": 25,
+    "scope": "GitHub search returned all matches; not verified dashboard display",
+    "prs_url": "https://github.com/london4216-hue/Zoodo/pulls?q=is%3Apr+is%3Aopen",
+    "issues_url": "https://github.com/london4216-hue/Zoodo/issues?q=is%3Aissue+is%3Aopen"
+  },
+  "historical_prs": [
+    {
+      "number": 16,
+      "merged": true,
+      "base": "autonomous-engine-replacement-2026-10-29",
+      "open_to_merge": "21h21m50s",
+      "production_unverified": true
+    },
+    {
+      "number": 71,
+      "merged": true,
+      "base": "fix/zoo-live-dashboard-accountability-20261030",
+      "open_to_merge": "2h14m32s",
+      "production_unverified": true
+    }
+  ],
+  "scheduler": {
+    "source": "connected automations peek; scheduler execution metadata only",
+    "builder": {
+      "status": "completed",
+      "completed_at": "2026-11-01T10:26:44.611350Z"
+    },
+    "pr_closure": {
+      "status": "completed",
+      "completed_at": "2026-11-01T10:47:32.204502Z"
+    },
+    "keeper": {
+      "status": "completed but chronology anomaly; completed before scheduled_for",
+      "completed_at": "2026-11-01T10:43:00.452909Z",
+      "scheduled_for": "2026-11-01T10:45:30Z"
+    },
+    "dashboard": {
+      "status": "in_progress",
+      "started_at": "2026-11-01T10:46:28.233521Z"
+    },
+    "hunter": {
+      "status": "disabled"
+    },
+    "productive_autonomous_work": "not independently verified"
+  },
+  "feeds": {
+    "priority_watch_canonical_observed_at": "2026-10-31T01:25:19.042Z",
+    "automation_proof_canonical_observed_at": "2026-10-31T10:40:41.796Z",
+    "publisher_restart": "not performed"
+  },
+  "ci": {
+    "prior_exact_head_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41294882278",
+    "prior_status": "failed; no recorded job steps",
+    "new_head_ci": "not yet observed"
+  },
+  "hosting": {
+    "netlify_preview": "not independently read back",
+    "netlify_production": "browser readback failed from available web runtime",
+    "production_deploy_sha": null,
+    "production_deploy_id": null,
+    "rollback_mapping": null,
+    "deploy_latency": null,
+    "test_to_deploy_latency": null
+  },
+  "guardrails": {
+    "owner_authentication": "unchanged",
+    "index_html": "unchanged",
+    "links": "unchanged",
+    "hosting_configuration": "unchanged",
+    "production_publish": false,
+    "keeper_integration_only": true,
+    "hunter_host_probe": true,
+    "other_lanes_unblocked": true,
+    "grades": "deferred until Wednesday",
+    "ordinary_email": false
+  }
+}
