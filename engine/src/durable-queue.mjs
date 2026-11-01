@@ -7,7 +7,7 @@ import {randomUUID} from 'node:crypto';
 const valid = s => typeof s === 'string' && s.length > 0 && s.length <= 256;
 // Worker, provider and reviewer IDs must have one canonical spelling.
 // Reject invisible controls, Unicode normalization aliases and padded identities.
-const validIdentity = s => valid(s) && s === s.trim() && s.normalize('NFC') === s && !/[\p{Cc}\p{Cf}]/u.test(s);
+const validIdentity = s => valid(s) && s === s.trim() && s.normalize('NFC') === s && !/[\p{Cc}\p{Cf}\p{Zs}\p{Zl}\p{Zp}]/u.test(s);
 const fail = message => {throw new Error(message)};
 const snapshot = x => structuredClone(x);
 export class DurableQueue {
