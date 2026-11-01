@@ -4,7 +4,7 @@ import {evaluateAutomationProof} from '../automation-proof.mjs';
 const now=Date.parse('2026-10-30T16:30:00Z');
 const good={schema_version:1,source:'connected_automations_peek',observed_at:'2026-10-30T16:25:00Z',
  workers:[{role:'ZOO Keeper',run_id:'60a78be7-d2f8-832f-a788-25876c50adc2',
- recorded_status:'completed',scheduled_for:'2026-10-30T16:00:00Z',completed_at:'2026-10-30T16:05:00Z'}]};
+ recorded_status:'completed',scheduled_for:'2026-10-30T16:00:00Z',completed_at:'2026-10-30T16:05:00Z'}],expected_roles:['ZOO Keeper']};
 test('actual completed execution is not misrepresented as a live worker heartbeat',()=>{
  const p=evaluateAutomationProof(good,now);
  assert.equal(p.state,'RECORDED RUNS CURRENT');assert.equal(p.activeWorkersVerified,false);
@@ -83,4 +83,14 @@ test('newer unresolved anomaly still triggers recovery even with old valid compl
  const p=evaluateAutomationProof({...good,source_anomalies:[anomaly]},now);
  assert.equal(p.state,'RECOVERY REQUIRED');
  assert.deepEqual(p.overdue,['ZOO Keeper']);
+});
+
+test('omitted or empty roster cannot claim current scheduler coverage',()=>{
+ assert.equal(evaluateAutomationProof({...good,expected_roles:undefined},now).state,'UNKNOWN');
+ assert.equal(evaluateAutomationProof({...good,expected_roles:[]},now).state,'UNKNOWN');
+});
+test('undeclared worker cannot inflate scheduler completions',()=>{
+ const extra={...good.workers[0],role:'ZOO Agent Hunter',run_id:'33333333-aaaa-4bbb-8ccc-aaaaaaaaaaaa'};
+ const p=evaluateAutomationProof({...good,workers:[good.workers[0],extra]},now);
+ assert.equal(p.state,'UNKNOWN');assert.equal(p.workerCount,0);
 });
