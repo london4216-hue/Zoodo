@@ -30,6 +30,15 @@ function verifiedDispatch(r, worker, qualifiedWorkers) {
       !validReceipt(receipt, receipt.worker)) return null;
   return {state:'delegated',worker,replacement:receipt};
 }
+// Never persist provider error messages: they can contain authorization headers.
+function safeErrorMessage(error) {
+  try {
+    const name = error?.name;
+    return typeof name === 'string' &&
+      /^(Error|TypeError|RangeError|SyntaxError|ReferenceError|TimeoutError|AbortError)$/.test(name)
+      ? name : 'error detail redacted';
+  } catch { return 'unprintable error'; }
+}
 // One monotonic deadline bounds the entire drain. A timed-out worker may
 // have started remotely, so a timeout requires recovery, never a second dispatch.
 function withinDeadline(operation, deadline) {
@@ -80,7 +89,7 @@ export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000})
           if (await withinDeadline(() => store.ackOutbox(event.id,event.lease_token), deadline) === true)
             return {state:'acknowledged',eventId:event.id,dispatch,attempts};
         } catch (error) {
-          attempts.push({worker,state:'ack_error',reason:String(error?.message||error).slice(0,120)});
+          attempts.push({worker,state:'ack_error',reason:safeErrorMessage(error)});
         }
         return {state:'recovery_required',reason:'outbox ack not confirmed',eventId:event.id,attempts};
       }
@@ -89,7 +98,7 @@ export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000})
       return {state:'recovery_required',eventId:event.id,attempts,
         reason:'worker dispatch not confirmed; await native non-started receipt'};
     } catch (error) {
-      attempts.push({worker,state:'error',reason:String(error?.message||error).slice(0,120)});
+      attempts.push({worker,state:'error',reason:safeErrorMessage(error)});
       // A thrown transport error cannot prove the worker did not start.
       return {state:'recovery_required',eventId:event.id,attempts,
         reason:'worker invocation outcome uncertain; await native non-started receipt'};
