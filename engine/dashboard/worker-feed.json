@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "source": "zoo-worker-receipts",
+  "observed_at": null,
+  "workers": [],
+  "publication_scope": "No authenticated Aider/other provider-native run has been published. UNKNOWN is intentional; a page refresh is not execution evidence."
+}
