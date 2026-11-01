@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "record_type": "bounded_dashboard_repair",
+  "observed_at_utc": "2026-11-01T09:49:55.742Z",
+  "scope": "source_only_no_production_write",
+  "repository": "london4216-hue/Zoodo",
+  "base_branch": "main",
+  "base_sha": "f0a8ef3e97ac23590469054dfae8376b37cab76f",
+  "repair_branch": "fix/zoo-dashboard-contract-main-target-20261101-0951",
+  "repair_head_sha": "b69e7ab5687ae6c71efd7630c798e28a0615a5e4",
+  "pull_request": "https://github.com/london4216-hue/Zoodo/pull/122",
+  "defect": "Dashboard contract workflow excluded main from pull_request target branches, leaving current main-targeted dashboard PRs without that workflow trigger.",
+  "fix": "Add main to pull_request branches while preserving historic PR #16/#71 targets, path filter, read-only permissions, native Node source tests and owner-only production gate.",
+  "test": {
+    "kind": "native_node",
+    "reproduction": {
+      "total": 3,
+      "passed": 2,
+      "failed": 1
+    },
+    "after": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    "github_readback": {
+      "workflow_blob_sha": "889858a4a944d6474a50aaa0ecf57130e883645f",
+      "test_blob_sha": "9fb8967bf7cd02ccbbef1972538ec96a3a42f7bf",
+      "source_matches_tested_change": true
+    },
+    "hosted_ci": "UNKNOWN_NO_EXACT_HEAD_RUN_RETURNED"
+  },
+  "reconciliation": {
+    "historical_pr16": {
+      "url": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "merged": true,
+      "base": "autonomous-engine-replacement-2026-10-29",
+      "open_to_merge_seconds": 76910
+    },
+    "historical_pr71": {
+      "url": "https://github.com/london4216-hue/Zoodo/pull/71",
+      "merged": true,
+      "base": "fix/zoo-live-dashboard-accountability-20261030",
+      "open_to_merge_seconds": 8072
+    },
+    "github_open_prs": 75,
+    "github_open_issues": 25,
+    "github_counts_scope": "authenticated GitHub search, not production dashboard readback",
+    "scheduler": {
+      "recorded_completed_latest": [
+        "ZOO Keeper",
+        "ZOO Builder — EZ Move and BeautyPath"
+      ],
+      "in_progress_latest": [
+        "ZOO PR closure — eligible fixes and merges",
+        "ZOO Dashboard — live repair and hourly grades"
+      ],
+      "disabled": [
+        "ZOO Agent Hunter — host and worker qualification"
+      ],
+      "productive_completed_tasks_verified": null,
+      "worker_heartbeats_verified": false
+    },
+    "github_actions": {
+      "latest_inspected_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41294564050",
+      "latest_inspected_conclusion": "failure",
+      "job_step_records": "null",
+      "interpretation": "No step records returned; this repair fixes workflow targeting, not runner startup"
+    },
+    "netlify": {
+      "preview_status": "UNKNOWN",
+      "production_url": "https://zoo-live-dashboard.netlify.app/",
+      "production_browser_readback": "DNS_FAILURE_FROM_AVAILABLE_RUNTIME",
+      "production_deploy_sha": null,
+      "production_deploy_id": null,
+      "cache_headers": null,
+      "rollback_mapping": null,
+      "deploy_latency_seconds": null,
+      "test_to_deploy_latency_seconds": null
+    }
+  },
+  "preservation": {
+    "dashboard_html_modified": false,
+    "existing_links_modified": false,
+    "owner_auth_modified": false,
+    "netlify_config_modified": false,
+    "production_deployed": false
+  },
+  "handoff": {
+    "integration_authority": "sole ZOO Keeper",
+    "host_probe": "qualified Hunter replacement or Keeper",
+    "independent_lanes": [
+      "PR Closure",
+      "EZ Move",
+      "BeautyPath"
+    ],
+    "grading": "Wednesday only",
+    "ordinary_email_sent": false
+  }
+}
