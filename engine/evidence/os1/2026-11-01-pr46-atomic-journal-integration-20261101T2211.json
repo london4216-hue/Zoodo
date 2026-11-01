@@ -1,0 +1,76 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-01T22:11:37.398Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "historical_pr81": {
+    "url": "https://github.com/london4216-hue/Zoodo/pull/81",
+    "merged": true,
+    "merged_into_stacked_base": true,
+    "mainline_release_not_proven": true,
+    "receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "test_report": "16/16 local Node tests in historical receipt; not rerun this cycle"
+  },
+  "issue77": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "stacks": {
+    "s65_69_72": "merged successively into stacked branches, not proof of main",
+    "s68_73_81": "68 and 81 merged into stacked bases; 73 closed unmerged",
+    "dashboard16_71": "merged into stacked dashboard branches; deployed SHA not verified"
+  },
+  "source_pr46": "https://github.com/london4216-hue/Zoodo/pull/46",
+  "change": "Integrate single-filesystem optimistic journal append fencing from PR46 without overwriting newer OS1 queue lease/clock/retry fixes; prevent stale queue instances from double-claiming tickets or writing duplicate creates.",
+  "commits": {
+    "helper": "3cf8111e2744828bab293263e3279094b3bd5076",
+    "helper_tests": "0e68f75d6e83a05c4cdff9b1e153f7f2bd79a289",
+    "queue_wiring": "132b0e222a34d16de1b56952c06ac8af1e13a9a2",
+    "race_tests": "1c77e154d91cd91c5546fd7cdf1bdaed9e22c7b6"
+  },
+  "exact_published_blob_shas": {
+    "engine/src/atomic-journal.mjs": "e44db26351d36e0b16d8f1c41c18ee506d47905a",
+    "engine/test/atomic-journal.test.mjs": "b0ecb623d2f6b92897f9895715ea2e0194c36482",
+    "engine/src/durable-queue.mjs": "e4d8eadf951466d6d77c0a477af37c54dc5d1bd2",
+    "engine/test/durable-queue-race.test.mjs": "4acbbef0e0491fa1201c7ccfea00368e3c56bf75"
+  },
+  "tests": {
+    "runtime": "Node.js v22.16.0",
+    "command": "node --test engine/test/atomic-journal.test.mjs engine/test/durable-queue-race.test.mjs",
+    "passed": 10,
+    "failed": 0,
+    "syntax": "node --check source/test modules passed",
+    "published_blob_readback": "matches local git hash-object for all 4 files",
+    "full_suite": "NOT_EXECUTED",
+    "postgresql": "NOT_EXECUTED",
+    "github_commit_statuses": [],
+    "github_actions": "INFRASTRUCTURE_UNKNOWN"
+  },
+  "execution": {
+    "authenticated_supabase_claim": false,
+    "external_provider_native_invocation": false,
+    "hosted_two_ticket_handoff": false,
+    "production_deployment": false,
+    "local_single_filesystem_only": true,
+    "private_transendiq_access": true,
+    "private_transendiq_pr_search_sample": 20
+  },
+  "ownership": {
+    "files": [
+      "engine/src/atomic-journal.mjs",
+      "engine/src/durable-queue.mjs",
+      "engine/test/atomic-journal.test.mjs",
+      "engine/test/durable-queue-race.test.mjs"
+    ],
+    "product_files_modified": false,
+    "dashboard_files_modified": false,
+    "branches_deleted": false
+  },
+  "next": {
+    "candidate": "https://github.com/london4216-hue/Zoodo/pull/64",
+    "classification": "STACKED_SQL_REQUIRES_DISPOSABLE_POSTGRESQL",
+    "alternative": "https://github.com/london4216-hue/Zoodo/pull/70",
+    "alternative_classification": "HUNTER_OWNED_DO_NOT_OVERLAP",
+    "queue_claim": "NOT_AUTHENTICATED",
+    "action": "Continue dependency-safe PR integration; do not merge PR64 SQL until PostgreSQL migration and concurrency checks; preserve PR46 archive branch and references."
+  },
+  "disposition": "TESTED_DRAFT_CODE_PUBLISHED; NO_DISTRIBUTED_EXECUTION_PROOF"
+}
