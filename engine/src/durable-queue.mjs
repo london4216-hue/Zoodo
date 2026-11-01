@@ -77,10 +77,10 @@ export class DurableQueue {
       ['assigned','running','blocked'].includes(other.status)))fail('Worker already has active ticket');
     return this.#record('claim',id,{worker,provider,leaseUntil:this.#deadline()});
   }
-  #deadline(){const now=this.now(),deadline=now+this.leaseMs;if(!Number.isSafeInteger(now)||!Number.isSafeInteger(deadline))fail('Invalid lease deadline');return deadline}
-  #active(id,worker){const t=this.get(id),now=this.now();if(!Number.isSafeInteger(now)||!t||t.worker!==worker||!['assigned','running'].includes(t.status)||!Number.isSafeInteger(t.leaseUntil)||t.leaseUntil<=now)fail('No active lease');return t}
+  #deadline(now=this.now()){const deadline=now+this.leaseMs;if(!Number.isSafeInteger(now)||!Number.isSafeInteger(deadline))fail('Invalid lease deadline');return deadline}
+  #active(id,worker,now=this.now()){const t=this.get(id);if(!Number.isSafeInteger(now)||!t||t.worker!==worker||!['assigned','running'].includes(t.status)||!Number.isSafeInteger(t.leaseUntil)||t.leaseUntil<=now)fail('No active lease');return t}
   start(id,worker){const t=this.#active(id,worker);if(t.status!=='assigned')fail('Not assigned');return this.#record('start',id)}
-  heartbeat(id,worker){const t=this.#active(id,worker);return this.#record('heartbeat',id,{leaseUntil:Math.max(t.leaseUntil,this.#deadline())})}
+  heartbeat(id,worker){const now=this.now(),t=this.#active(id,worker,now);return this.#record('heartbeat',id,{leaseUntil:Math.max(t.leaseUntil,this.#deadline(now))})}
   submit(id,worker,{commit,evidence}){const t=this.#active(id,worker);if(t.status!=='running')fail('Not running');if(typeof commit!=='string'||!/^[a-f0-9]{40}$/.test(commit)||!valid(evidence))fail('Exact commit SHA and evidence required');return this.#record('submit',id,{commit,evidence})}
   approve(id,{reviewer,provider,commit,evidence,approved}){
     const t=this.get(id);if(!t||t.status!=='review')fail('Not awaiting review');
