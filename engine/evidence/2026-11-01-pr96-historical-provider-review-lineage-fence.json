@@ -1,0 +1,83 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-01T03:16:04.566Z",
+  "workstream": "PR_INTEGRATE",
+  "task": "Zoodo PR #96",
+  "advisory_claim_issue_comment_id": 6552749180,
+  "advisory_scope_correction_comment_id": 6552755104,
+  "executor": {
+    "identity": "ChatGPT GitHub-connector PR-closure builder",
+    "provider_native_external_model_invoked": false,
+    "durable_database_lease_claimed": false
+  },
+  "baseline": {
+    "head_sha": "c9d70e9ad7ef4759c8e63a1d73e1951ed4e3caf7",
+    "source_blob_sha": "611fabb24a85847609a4540ea9dd4b747146b0aa",
+    "finding": "Historical builder provider could approve a replacement builder's exact commit, despite current provider/worker independence checks.",
+    "fail_first": {
+      "source_execution": "V8 with in-memory Node fs/test/assert shims",
+      "tests_passed": 1,
+      "tests_failed": 2,
+      "test_blob_sha": "f79409a244406ddb2bfb6f13df5d3853a9f75576"
+    }
+  },
+  "change": {
+    "test_commit_sha": "b92fabcfd614b1f78218a16864bea5b85b54a5e4",
+    "source_fix_commit_sha": "9adad27fc99c1b31e7c1fb490909af0699b524e6",
+    "source_path": "engine/src/durable-queue.mjs",
+    "source_blob_sha": "5c10a65f92a00b63ece24eb795570a31aaead215",
+    "regression_path": "engine/test/prior-provider-reviewer-lineage-fence.test.mjs",
+    "regression_blob_sha": "f79409a244406ddb2bfb6f13df5d3853a9f75576",
+    "fix": "Reject a reviewer if any historical claim on this ticket used the same worker identity OR provider; allow independent third provider."
+  },
+  "checks": {
+    "source_readback": "Authenticated GitHub exact blob SHAs above",
+    "v8_source_executed": {
+      "tests_passed": 35,
+      "tests_failed": 0,
+      "test_files": 13,
+      "environment": "V8 with in-memory Node fs/test/assert shims; NOT Node.js test runner or PostgreSQL integration"
+    },
+    "node_runner": "NOT EXECUTED",
+    "github_actions": {
+      "run_id": 41268419225,
+      "job_id": 124735982046,
+      "job": "lab-tests",
+      "conclusion": "failure",
+      "executed_steps": null,
+      "classification": "INFRASTRUCTURE_UNKNOWN_NOT_CI_PASS"
+    }
+  },
+  "integration": {
+    "pr_draft": true,
+    "pr_merged": false,
+    "production_deployed": false,
+    "security_protections_changed": false
+  },
+  "next": {
+    "task": "Zoodo PR #112",
+    "status": "READ_ONLY_INSPECTED_NOT_DURABLY_CLAIMED",
+    "head_sha": "cbde9a53d4e392ea79b2ef6630c0f7d37e12c9cd",
+    "source_blob_sha": "fd8beace4ccb20740527534109209bfc8646cccf",
+    "checks": {
+      "v8_source_executed_passed": 26,
+      "failed": 0,
+      "environment": "V8 with simplified URL shim; NOT Node.js URL parser or hosted CI"
+    },
+    "pr_draft": true,
+    "pr_merged": false
+  },
+  "historical_stacks": {
+    "callback": "#65→#69→#72 closed/merged into intermediate branch; not proof of main deployment",
+    "outbox": "#68→#73→#81: #68 and #81 merged into intermediate branches, #73 closed unmerged; reconcile ancestry before main integration",
+    "dashboard": "#16→#71 closed/merged intermediate branch; production SHA not proven"
+  },
+  "limitations": [
+    "No exact Node.js execution in this run",
+    "No hosted CI test steps",
+    "No Supabase lease, database migration or autonomous NEXT",
+    "No merge or deployment",
+    "No native Copilot/Gemini/DeepSeek invocation",
+    "No product/dashboard/SQL files modified"
+  ]
+}
