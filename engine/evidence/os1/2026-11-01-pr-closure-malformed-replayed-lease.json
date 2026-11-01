@@ -1,0 +1,64 @@
+{
+  "schema": "zoo.pr-closure-source-receipt.v1",
+  "recorded_date_utc": "2026-11-01",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "scope": "single-writer local pilot queue; no private database or production host mutation",
+  "historical_inputs": {
+    "pr81": "https://github.com/london4216-hue/Zoodo/pull/81",
+    "receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "issue77": "https://github.com/london4216-hue/Zoodo/issues/77",
+    "stacks": {
+      "65-69-72": "merged into intermediate branches; not evidence of mainline release",
+      "68-73-81": "73 closed unmerged; 81 merged into intermediate stack",
+      "16-71": "dashboard intermediate branches; deployment not verified"
+    }
+  },
+  "finding": "Replayed journal claim with malformed active leaseUntil (null, numeric string, object) was treated as expired by JavaScript coercion, releasing a potentially active worker and appending requeue events. One malformed entry could cause partial recovery.",
+  "repair": "Preflight all active leases for safe-integer leaseUntil before any recovery append; reject malformed entries without changing journal; retain normal expired/unexpired recovery.",
+  "source": {
+    "path": "engine/src/durable-queue.mjs",
+    "baseline_blob": "b5396c1f3a133fdbf4dcf00d21204551596ba010",
+    "repaired_blob": "ae674ca1640ebf094995418de8b854c20c8bb33c",
+    "commit": "ec76afef59dc726e9cef8795914dddb4b3810269"
+  },
+  "test": {
+    "path": "engine/test/recovery-corrupt-lease-fence.test.mjs",
+    "blob": "62719bb7aed3ba1d6be90f00da58a29c89101498",
+    "commit": "c82ee032238a331b2a483318a26f25cc7ba7b89a"
+  },
+  "verification": {
+    "environment": "V8 source-execution harness using exact GitHub readback and in-memory append-only journal mocks; not Node native test runner",
+    "baseline": "3 malformed lease cases prematurely requeued tickets and wrote journal",
+    "after": {
+      "cases": 5,
+      "passed": 5,
+      "failed": 0,
+      "scenarios": [
+        "null deadline blocked without journal change",
+        "numeric string deadline blocked without journal change",
+        "object deadline blocked without journal change",
+        "valid expired pair recovered",
+        "valid unexpired pair retained"
+      ]
+    },
+    "github_blob_readback": true,
+    "native_node_test": "NOT_EXECUTED",
+    "postgresql": "NOT_EXECUTED",
+    "github_ci": "UNKNOWN"
+  },
+  "execution": {
+    "authenticated_supabase_claim": false,
+    "provider_native_worker": false,
+    "production_deployment": false,
+    "unattended_two_ticket_next": false,
+    "merge": false
+  },
+  "next": {
+    "candidate_pr": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "work": "Run disposable PostgreSQL migration chain and concurrent claim/ACK/lease recovery; compare with OS 1.0 before integrating",
+    "status": "INSPECTED_NOT_CLAIMED"
+  },
+  "preservation": "No product or dashboard files changed; no historical branches deleted."
+}
