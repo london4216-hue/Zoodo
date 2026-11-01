@@ -39,6 +39,9 @@ export class DurableQueue {
     if(e.type==='verify')t.status='verified';
     if(e.type==='done')t.status='done';
     if(e.type==='requeue'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null}
+    // Preserve the invocation identity when a replayed lease is malformed.
+    // This ticket must not be dispatched again without explicit resolution.
+    if(e.type==='quarantine'){t.status='blocked';t.leaseUntil=null}
     t.history.push(e);
   }
   #record(type,id,fields={},atMs=this.now()){
@@ -99,15 +102,17 @@ export class DurableQueue {
     // An invalid or advancing clock must not prematurely reassign a live lease.
     const now=this.now();
     if(!Number.isSafeInteger(now))fail('Invalid recovery clock');
-    // Preflight every active lease before any append. A malformed replayed
-    // deadline (including null or a numeric string) is not proof of expiry.
-    // Never release an uncertain worker or partially recover the journal.
-    const active=[...this.items.values()].filter(t=>['assigned','running'].includes(t.status));
-    if(active.some(t=>!Number.isSafeInteger(t.leaseUntil)))fail('Invalid active lease deadline');
     const recovered=[];
-    for(const t of active)if(t.leaseUntil<=now)
-      // Persist the same validated clock used for lease-expiry decisions.
-      recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts},now));
+    for(const t of this.items.values()){
+      if(!['assigned','running'].includes(t.status))continue;
+      if(!Number.isSafeInteger(t.leaseUntil)){
+        // An unknown deadline is not proof of worker expiry. Quarantine only
+        // this ticket, preserving its worker identity and unrelated progress.
+        recovered.push(this.#record('quarantine',t.id,{reason:'Malformed lease deadline; execution uncertain',worker:t.worker,provider:t.provider},now));
+      }else if(t.leaseUntil<=now){
+        recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts},now));
+      }
+    }
     return recovered;
   }
 }
