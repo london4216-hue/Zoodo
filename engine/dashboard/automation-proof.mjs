@@ -37,9 +37,12 @@ export function evaluateAutomationProof(feed, now=Date.now(), dueMs=75*60000){
   Date.parse(w.completed_at)>Date.parse(a.completed_at)));
  // The publisher declares the expected worker roster. Missing roles cannot
  // turn a partial scheduler feed into a misleading all-clear.
- const expected=feed.expected_roles===undefined?[]:feed.expected_roles;
- if(!Array.isArray(expected)||expected.some(r=>typeof r!=='string'||!r.trim())||
-    new Set(expected).size!==expected.length)return unknown('Invalid expected scheduler roster');
+ const expected=feed.expected_roles;
+ if(!Array.isArray(expected)||!expected.length||
+    expected.some(r=>typeof r!=='string'||!r.trim())||
+    new Set(expected).size!==expected.length||
+    feed.workers.some(w=>!expected.includes(w.role)))
+  return unknown('Missing or inconsistent expected scheduler roster');
  const overdue=[...new Set([
   ...expected.filter(role=>!valid.some(w=>w.role===role)),
   ...feed.workers.filter(w=>!valid.includes(w)||now-Date.parse(w.completed_at)>dueMs)
