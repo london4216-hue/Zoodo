@@ -71,7 +71,7 @@ test('rejects unsubstantiated dispatch/delegation without ACK',async()=>{
 });
 test('delegated dispatch ACK requires complete alternate receipt',async()=>{
  const f=fixture({result:{state:'delegated',worker:'workerA',replacement:{state:'dispatched',ticket:'T2',worker:'workerB',receipt_url:'https://runner.example/receipts/T2'}}});
- assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'acknowledged');
+ assert.equal((await drainOne({...f,workerIds:['workerA','workerB']})).state,'acknowledged');
 });
 test('ambiguous durable ACK exception never triggers second worker dispatch',async()=>{
  const f=fixture({result:w=>({state:'dispatched',ticket:'T1',worker:w,receipt_url:'https://runner.example/receipts/T1'})});
