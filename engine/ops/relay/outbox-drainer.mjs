@@ -34,7 +34,7 @@ function safeErrorMessage(error) {
 export async function drainOne({store,relay,workerIds}) {
   if (!store || typeof store.claimOutbox !== 'function' || typeof store.ackOutbox !== 'function' ||
       !relay || typeof relay.next !== 'function' || !Array.isArray(workerIds) || !workerIds.length ||
-      workerIds.some(w => typeof w !== 'string' || !WORKER.test(w)) ||
+      [...workerIds].some(w => typeof w !== 'string' || !WORKER.test(w)) ||
       new Set(workerIds).size !== workerIds.length)
     throw Error('Qualified worker roster and durable store required');
   // Snapshot the validated roster before any async store/relay callback can mutate it.
