@@ -1,0 +1,42 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_at_utc": "2026-11-01",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "source_pr": 96,
+  "source_pr_url": "https://github.com/london4216-hue/Zoodo/pull/96",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_commit": "10dbe8bef55f3317c7cac6ee4135cd26acebd491",
+  "test_commit": "cf7b844e602b95cc4c6bd0c4584b7c82b6448e6d",
+  "source_blob_sha": "75de2cc0bb7b91fb37b49cf7db97187d2ec0cd96",
+  "test_blob_sha": "22e178601838f62162f3b2bb324efd5c08922867",
+  "test_port": "Exact original PR #96 test content, unchanged",
+  "defect": "Nonboolean approved values silently rejected and requeued a submitted ticket, even if caller did not provide a valid verdict.",
+  "repair": "Reject nonboolean verdict before any journal write; preserve explicit true/false behavior.",
+  "tests": {
+    "runner": "V8 executing exact GitHub-published source with mocked filesystem",
+    "before": {
+      "passed": 0,
+      "failed": 7,
+      "scope": "invalid input cases"
+    },
+    "after": {
+      "passed": 9,
+      "failed": 0,
+      "scope": "7 invalid inputs plus explicit true/false"
+    },
+    "native_node": "NOT_RUN",
+    "postgresql": "NOT_RUN",
+    "github_ci": "NO_SUCCESS_REPORTED"
+  },
+  "scope": "local single-writer queue only; no additional judge, approval gate or Wednesday dependency",
+  "next": {
+    "pr": 96,
+    "task": "Reconcile remaining unported historical invocation/provider lineage safeguards only if compatible; PR #64 SQL outbox stack requires disposable PostgreSQL test."
+  },
+  "authenticated_supabase_claim": false,
+  "provider_native_external_worker_invoked": false,
+  "hosted_two_ticket_handoff": false,
+  "deployed": false,
+  "merged": false
+}
