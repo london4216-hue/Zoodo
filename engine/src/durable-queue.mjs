@@ -99,8 +99,13 @@ export class DurableQueue {
     // An invalid or advancing clock must not prematurely reassign a live lease.
     const now=this.now();
     if(!Number.isSafeInteger(now))fail('Invalid recovery clock');
+    // Preflight every active lease before any append. A malformed replayed
+    // deadline (including null or a numeric string) is not proof of expiry.
+    // Never release an uncertain worker or partially recover the journal.
+    const active=[...this.items.values()].filter(t=>['assigned','running'].includes(t.status));
+    if(active.some(t=>!Number.isSafeInteger(t.leaseUntil)))fail('Invalid active lease deadline');
     const recovered=[];
-    for(const t of this.items.values())if(['assigned','running'].includes(t.status)&&t.leaseUntil<=now)
+    for(const t of active)if(t.leaseUntil<=now)
       // Persist the same validated clock used for lease-expiry decisions.
       recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts},now));
     return recovered;
