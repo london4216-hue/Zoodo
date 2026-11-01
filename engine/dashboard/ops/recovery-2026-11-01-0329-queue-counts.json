@@ -97,11 +97,12 @@
     "production_independent_readback": "UNVERIFIED_DNS_FAILURE",
     "preview_url": "https://deploy-preview-117--zoo-live-dashboard.netlify.app",
     "preview_provider_status": "UNKNOWN",
-    "preview_independent_readback": "UNVERIFIED_NOT_PROBED",
+    "preview_independent_readback": "UNVERIFIED_DNS_FAILURE",
     "production_sha": null,
     "deploy_id": null,
     "rollback_mapping": null,
-    "owner_authenticated_browser_readback": null
+    "owner_authenticated_browser_readback": null,
+    "host_probe_note": "Direct HTTPS requests to preview and production failed DNS resolution from execution environment; not proof site is down."
   },
   "latencies": {
     "merge_seconds": {
