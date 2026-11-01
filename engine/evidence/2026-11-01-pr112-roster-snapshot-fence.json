@@ -1,0 +1,50 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-01T02:48:10Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 112,
+  "branch": "integrate/p0-outbox-ambiguous-state-fence-20261031",
+  "baseline_head": "6f335855d6423a90b810ee1e32a0199915d40570",
+  "regression_commit": "f37f09b03aa8f9b44692f7e309a787477bdc4cff",
+  "source_fix_commit": "818dcf876827742ec1031b768f82356b17eba666",
+  "original_source_blob": "87c6db7c8a6a4686b2744be499306a96a50fde1e",
+  "fixed_source_blob": "fd8beace4ccb20740527534109209bfc8646cccf",
+  "committed_test_blob": "60d6583f4b024c2b1fe015d62d102a155e928d6d",
+  "test_command": "node --test engine/test/outbox-roster-snapshot-fence-committed.test.mjs (local filename is byte-identical to committed engine/test/outbox-roster-snapshot-fence.test.mjs)",
+  "baseline_regression": {
+    "passed": 0,
+    "failed": 2
+  },
+  "after_fix_committed_regression": {
+    "passed": 2,
+    "failed": 0
+  },
+  "after_fix_local_expanded_smoke": {
+    "passed": 7,
+    "failed": 0,
+    "notes": "Includes same two committed regressions plus five additional uncommitted local synthetic behavior checks; not full PR suite"
+  },
+  "local_node_version": "22.16.0",
+  "github_blob_readback_matches_local": true,
+  "defect": "Mutable workerIds array can be appended during asynchronous claimOutbox or relay.next after validation; live for-of iterator then dispatches an unqualified or unapproved worker",
+  "fix": "Copy validated workerIds to qualifiedWorkers before first await and iterate only snapshot",
+  "github_actions": {
+    "run_id": 41266642165,
+    "job_id": 124730706685,
+    "job_name": "lab-tests",
+    "conclusion": "failure",
+    "steps": null,
+    "interpretation": "infrastructure UNKNOWN; zero tests executed in GitHub Actions"
+  },
+  "integration": {
+    "draft": true,
+    "merged": false,
+    "deployed": false,
+    "postgresql_tested": false,
+    "hosted_tested": false,
+    "durable_db_lease_claimed": false,
+    "provider_native_external_model_invoked": false
+  },
+  "ownership": "advisory single-writer claim recorded in issue #77 comment 6552504373; release after receipt and handoff",
+  "next": "Inspect PR #96 exact current head and unblocked isolated Node tests; #92/#93 still require disposable PostgreSQL concurrency verification"
+}
