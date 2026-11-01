@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "receipt_type": "dashboard_worker_feed_mount",
+  "observed_at": "2026-11-01T14:00:46Z",
+  "repository": "london4216-hue/Zoodo",
+  "branch": "fix/zoo-worker-feed-replay-20261101",
+  "pull_request": "https://github.com/london4216-hue/Zoodo/pull/133",
+  "code_commit": "5d843df39fc477fb3b8439d69be083b8d8dd39bc",
+  "test_commit": "dbe15cf644c5fb6c4ac16e9e78302c89ae491799",
+  "source_files": {
+    "engine/dashboard/index.html": "6b0264f1e8235cf819b032cce77e02cbc0d18ecd",
+    "engine/dashboard/worker-feed-mount.test.mjs": "3aa425c28ba9c70214f9ac8b70bfde703610e6bd",
+    "engine/dashboard/worker-feed.json": "a148527eca90f25ab498f3902b3d53d8e28779e5"
+  },
+  "tests": {
+    "source_contract_assertions": {
+      "passed": 7,
+      "failed": 0
+    },
+    "native_node": "NOT_EXECUTED",
+    "github_actions": {
+      "run_id": 41313986797,
+      "conclusion": "failure",
+      "job_id": 124870064976,
+      "recorded_steps": 0,
+      "logs": "UNAVAILABLE"
+    }
+  },
+  "preservation": {
+    "original_href_count": 46,
+    "original_href_order": "UNCHANGED",
+    "owner_auth": "UNCHANGED",
+    "hosting_config": "UNCHANGED",
+    "product_sites": "UNCHANGED",
+    "rollback": "CLOSE_DRAFT_NO_PRODUCTION_CHANGE"
+  },
+  "feed": {
+    "published_observed_at": null,
+    "published_worker_count": 0,
+    "authenticated_provider_receipts": "NOT_PUBLISHED",
+    "queue_claim_receipts": "NOT_PUBLISHED",
+    "first_two_ticket_automatic_next": "NOT_PROVEN"
+  },
+  "deployment": {
+    "netlify_deploy_id": null,
+    "source_sha": null,
+    "live_browser_readback": "UNVERIFIED",
+    "other_host_readback": "UNVERIFIED"
+  },
+  "handoffs": {
+    "keeper_issue": 18,
+    "keeper_comment_id": 6558962648,
+    "hunter_issue": 17,
+    "hunter_comment_id": 6558963062
+  },
+  "parallel_execution": {
+    "keeper": "IMMEDIATE_RUN_REQUEST_ACCEPTED",
+    "pr_closure": "IMMEDIATE_RUN_REQUEST_ACCEPTED",
+    "ezmove_beautypath_builder": "IMMEDIATE_RUN_REQUEST_ACCEPTED",
+    "provider_native_workers": "NOT_INVOKED_BY_DASHBOARD_LEAD"
+  },
+  "next": "Keeper reconcile and integrate after safe tests; authorized worker publish real claim->complete->automatic next native IDs to durable queue; authorized host verify deploy and browser readback; no owner dashboard launch URL before proof."
+}
