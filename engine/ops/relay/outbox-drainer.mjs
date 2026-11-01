@@ -19,6 +19,10 @@ function confirmedDispatch(r, worker, qualifiedWorkers) {
     qualifiedWorkers.includes(replacement.worker) &&
     validReceipt(replacement, replacement.worker);
 }
+function safeErrorMessage(error) {
+  try { return String(error?.message || error).slice(0,120); }
+  catch { return 'unprintable error'; }
+}
 export async function drainOne({store,relay,workerIds}) {
   if (!store || typeof store.claimOutbox !== 'function' || typeof store.ackOutbox !== 'function' ||
       !relay || typeof relay.next !== 'function' || !Array.isArray(workerIds) || !workerIds.length ||
@@ -56,7 +60,7 @@ export async function drainOne({store,relay,workerIds}) {
           if (await store.ackOutbox(event.id,event.lease_token) === true)
             return {state:'acknowledged',eventId:event.id,dispatch:r,attempts};
         } catch (error) {
-          attempts.push({worker,state:'ack_error',reason:String(error?.message||error).slice(0,120)});
+          attempts.push({worker,state:'ack_error',reason:safeErrorMessage(error)});
         }
         return {state:'recovery_required',reason:'outbox ack not confirmed',eventId:event.id,attempts};
       }
@@ -66,7 +70,7 @@ export async function drainOne({store,relay,workerIds}) {
       return {state:'recovery_required',eventId:event.id,attempts,
         reason:'worker dispatch not confirmed; await native non-started receipt'};
     } catch (error) {
-      attempts.push({worker,state:'error',reason:String(error?.message||error).slice(0,120)});
+      attempts.push({worker,state:'error',reason:safeErrorMessage(error)});
       // A thrown transport error cannot prove the worker did not start.
       return {state:'recovery_required',eventId:event.id,attempts,
         reason:'worker invocation outcome uncertain; await native non-started receipt'};
