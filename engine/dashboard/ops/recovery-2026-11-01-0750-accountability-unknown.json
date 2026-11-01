@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-11-01T07:50:16.089Z",
+  "scope": "source-only bounded accountability evidence correction; no production release",
+  "repo": "london4216-hue/Zoodo",
+  "base_branch": "main",
+  "pr_url": "https://github.com/london4216-hue/Zoodo/pull/120",
+  "source_file": "engine/dashboard/accountability.html",
+  "source_blob_sha": "2d5112f02a6676ac168b3dbf1df0ab58c244113a",
+  "source_change_commit": "6a2deafc589cd4b6ede6f66b40aa0a0979f5f650",
+  "test_file": "engine/dashboard/tests/accountability-freshness.test.mjs",
+  "test_blob_sha": "51ab42d171c6812e79b306ca9c24d75773c46366",
+  "test_commit": "5aa66d0c8f2d54f800d4d33318ce54947d7e08c0",
+  "verification": {
+    "fail_first_checks": 6,
+    "fail_first_failed": 6,
+    "source_readback_v8_assertions": 7,
+    "source_readback_v8_passed": 7,
+    "node_regression_cases_committed": 5,
+    "node_regression_cases_executed": null,
+    "github_actions_exact_head_runs": 0,
+    "github_actions_exact_head_status": "UNKNOWN",
+    "last_inspected_actions_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41274481869",
+    "last_inspected_actions_job_steps": 0,
+    "existing_hrefs_preserved": 4,
+    "owner_auth_html_changed": false
+  },
+  "queue_snapshot": {
+    "observed_at": "2026-11-01T07:50:16.089Z",
+    "open_prs": 74,
+    "open_issues": 25,
+    "source": "authenticated GitHub repository search; not production dashboard readback",
+    "verified_productive_tasks": null
+  },
+  "historical_prs": [
+    {
+      "pr": 16,
+      "merged_at": "2026-10-31T12:56:11Z",
+      "target_branch": "autonomous-engine-replacement-2026-10-29",
+      "open_to_merge_seconds": 76910
+    },
+    {
+      "pr": 71,
+      "merged_at": "2026-10-31T12:56:19Z",
+      "target_branch": "fix/zoo-live-dashboard-accountability-20261030",
+      "open_to_merge_seconds": 8072
+    }
+  ],
+  "scheduler": {
+    "source": "authenticated Automations peek",
+    "keeper": {
+      "enabled": true,
+      "status": "completed",
+      "scheduled_for": "2026-11-01T07:45:30Z",
+      "completed_at": "2026-11-01T07:46:50.155094Z"
+    },
+    "builder": {
+      "enabled": true,
+      "status": "completed",
+      "scheduled_for": "2026-11-01T07:24:51Z",
+      "completed_at": "2026-11-01T07:27:46.023690Z"
+    },
+    "pr_closure": {
+      "enabled": true,
+      "status": "in_progress",
+      "started_at": "2026-11-01T07:47:04.635666Z"
+    },
+    "dashboard": {
+      "enabled": true,
+      "status": "in_progress",
+      "started_at": "2026-11-01T07:47:19.918088Z"
+    },
+    "hunter": {
+      "enabled": false,
+      "status": "disabled",
+      "last_completion_quarantined": "2026-10-31T18:01:41.851473Z",
+      "scheduled_for": "2026-10-31T18:21:25Z"
+    },
+    "verified_productive_worker_execution": null
+  },
+  "hosting": {
+    "netlify_production_url": "https://zoo-live-dashboard.netlify.app/",
+    "production_sha": null,
+    "provider_deploy_id": null,
+    "provider_preview_status": "UNKNOWN",
+    "production_browser_readback": "UNVERIFIED_DNS_FAILURE_FROM_RUNTIME",
+    "preview_browser_readback": "UNVERIFIED_DNS_FAILURE_FROM_RUNTIME",
+    "owner_authenticated_readback": null,
+    "rollback_mapping": null,
+    "merge_to_deploy_latency_seconds": null,
+    "test_to_deploy_latency_seconds": null
+  },
+  "integration": {
+    "authority": "sole ZOO Keeper",
+    "host_probe": "qualified Hunter replacement or Keeper while Hunter disabled",
+    "no_owner_routine_operations": true,
+    "no_ordinary_emails": true,
+    "grades": "deferred until Wednesday",
+    "parallel_lanes_unblocked": [
+      "PR Closure",
+      "EZ Move",
+      "BeautyPath",
+      "Hunter"
+    ]
+  }
+}
