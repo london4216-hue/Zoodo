@@ -1,0 +1,62 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "date_utc": "2026-11-01",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "handoff": "https://github.com/london4216-hue/Zoodo/issues/77#issuecomment-6560231923",
+  "task": "Fix claimed outbox event identity getter mutation between validation and ACK; reconcile two unsafe legacy regression assertions",
+  "source_head_before": "9861c1aba93dbbe136a39c0340be037ddd505eb1",
+  "source_blob_before": "2fa4e29607928bd21271c84a11b2d4917e0a7232",
+  "source_fix_commit": "99adddf113b9b533dea61ac357f0133ea4c73438",
+  "new_regression_commit": "11506ed7395daa628f69e1c622630e602f08e59d",
+  "legacy_test_repair_commit": "d06a17098c6a8fb1551d9a4c43bf6a3fa74e7f88",
+  "exact_git_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "624a1fdb9bf2050b581e61a07e4df5d4aa637a5e",
+    "engine/test/outbox-claim-identity-snapshot-fence.test.mjs": "88290fe5374528d835bde24c7ec4107b03678255",
+    "engine/test/outbox-drainer.test.mjs": "3aa274db678b263c7a0fcd12c8c1322abd095718",
+    "engine/test/outbox-lease-snapshot-fence.test.mjs": "a3c44441cbcd89d675e153887bb1d1fc49f9db27",
+    "engine/test/outbox-receipt-ticket-type-fence.test.mjs": "0d9901a6c40856547eac623857ba2204bc0f1fd1",
+    "engine/test/outbox-async-deadline-fence.test.mjs": "272da94f5260814a30ab22297095327b3c4b47dd"
+  },
+  "environment": "Native local Node.js 22.16.0, reconstructed exact source/test blobs and new authored test, no network in test harness",
+  "fail_first_new_regression": {
+    "passed": 0,
+    "failed": 3,
+    "total": 3
+  },
+  "legacy_suite_before_test_reconciliation": {
+    "passed": 14,
+    "failed": 2,
+    "total": 16
+  },
+  "after_fix": {
+    "passed": 30,
+    "failed": 0,
+    "total": 30,
+    "command": "node --test engine/test/*.test.mjs",
+    "focused_test_files": 5,
+    "source_syntax_check": "PASS"
+  },
+  "readback": "Authenticated GitHub source and test blob SHA readback matched locally tested Git hashes",
+  "stack_status": {
+    "zoodo_65_69_72": "all merged into successive non-main branches",
+    "zoodo_68_73_81": "68 and 81 merged into stacked bases; 73 closed unmerged",
+    "dashboard_16_71": "merged on non-main stacked branches; no live deployment claimed"
+  },
+  "remaining": {
+    "github_actions": "UNKNOWN; zero-step startup failures are not test passes",
+    "native_full_repo_suite": "NOT RUN",
+    "postgresql_92_93": "NOT RUN",
+    "distributed_lease": "NOT VERIFIED",
+    "provider_native_worker": "NOT INVOKED",
+    "hosted_two_ticket_handoff": "NOT VERIFIED",
+    "dashboard_readback": "NOT VERIFIED",
+    "merge": "NO",
+    "deployment": "NO"
+  },
+  "next": {
+    "ticket": "Zoodo PR #92 / #93",
+    "task": "Run disposable PostgreSQL migration and concurrent claim/ACK/idle tests against exact SQL SHAs before OS1 integration; also run complete native repository test suite",
+    "status": "QUEUED_NOT_CLAIMED"
+  },
+  "rollback": "Revert commits 99adddf, 11506ed and d06a170 on OS1 integration branch; main and product/dashboard branches untouched"
+}
