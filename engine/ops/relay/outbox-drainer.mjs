@@ -7,7 +7,10 @@ function validReceipt(r, worker) {
       typeof r.receipt_url !== 'string' || r.receipt_url.length > 2048) return false;
   try {
     const url = new URL(r.receipt_url);
-    return url.protocol === 'https:' && !url.username && !url.password && !url.hash;// Return only verified receipt fields. Raw provider objects can contain cyclic,
+    return url.protocol === 'https:' && !url.username && !url.password && !url.hash;
+  } catch { return false; }
+}
+// Return only verified receipt fields. Raw provider objects can contain cyclic,
 // oversized, or mutable metadata that must not enter durable evidence.
 function verifiedDispatch(r, worker, qualifiedWorkers) {
   if (r?.state === 'dispatched') {
@@ -23,8 +26,6 @@ function verifiedDispatch(r, worker, qualifiedWorkers) {
       receipt.worker === worker || !qualifiedWorkers.includes(receipt.worker) ||
       !validReceipt(receipt, receipt.worker)) return null;
   return {state:'delegated',worker,replacement:receipt};
-}
-cement, replacement.worker);
 }
 function safeErrorMessage(error) {
   try { return String(error?.message || error).slice(0,120); }
