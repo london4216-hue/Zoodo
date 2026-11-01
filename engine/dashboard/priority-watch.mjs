@@ -1,15 +1,20 @@
 // ZOO P0 priority feed. This public view consumes sanitized authenticated snapshots,
 // never private GitHub API tokens or page-load timestamps as worker evidence.
 const $=id=>document.getElementById(id);
-let lastGood=null;
+let lastGood=null,refreshInFlight=false; // one source check at a time; avoid stale response races
 function age(iso){const t=Date.parse(iso||'');if(!Number.isFinite(t))return 'UNKNOWN';const diff=Date.now()-t;if(diff<0)return 'INVALID FUTURE TIMESTAMP';return Math.floor(diff/3600000)+'h '+Math.floor((diff%3600000)/60000)+'m';}
 async function refreshPriority(){
+ if(refreshInFlight)return;
+ refreshInFlight=true;
  try{
-  const response=await fetch('./priority-watch.json?read='+Date.now(),{cache:'no-store'});
+  const response=await fetch('./priority-watch.json?read='+Date.now(),{cache:'no-store',
+   signal:typeof AbortSignal==='undefined'?undefined:AbortSignal.timeout(10000)});
   if(!response.ok)throw Error('HTTP '+response.status);
   const d=await response.json();
   if(d.schema_version!==1||d.source!=='authenticated_github_connector_read'||!d.priority||!d.sara)throw Error('invalid source schema');
   if(!Number.isFinite(Date.parse(d.observed_at))||Date.parse(d.observed_at)>Date.now()+60000)throw Error('invalid source timestamp');
+  // A delayed CDN response must never roll back the last authenticated snapshot.
+  if(lastGood&&Date.parse(d.observed_at)<Date.parse(lastGood.observed_at))throw Error('priority feed snapshot regressed');
   lastGood=d;
   const p=d.priority,s=d.sara;
   $('zoo787stage').textContent=p.stage||'UNKNOWN';
@@ -22,7 +27,7 @@ async function refreshPriority(){
   $('zoo787stage').textContent='RECOVERING';
   $('zooSaraState').textContent='UNKNOWN';
   $('zooPriorityReceipt').textContent='PRIORITY FEED UNAVAILABLE: '+String(e.message||e)+' · last valid snapshot '+(lastGood?.observed_at||'UNKNOWN')+' · next: repair same-origin feed and verify Netlify deploy.';
- }
+ }finally{refreshInFlight=false;}
 }
 $('refresh')?.addEventListener('click',refreshPriority);
 refreshPriority();
