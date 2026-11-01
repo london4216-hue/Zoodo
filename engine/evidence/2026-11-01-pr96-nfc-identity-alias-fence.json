@@ -1,0 +1,78 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-01T13:10:54Z",
+  "scope": "Zoodo PR #96 local pilot identity canonicalization only; no private product or dashboard changes",
+  "required_first_inspection": {
+    "pr_81": "https://github.com/london4216-hue/Zoodo/pull/81",
+    "fleet_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "historical_source_blob": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+    "historical_test_blob": "76b1fcb63dd7baebe71e30ae20462510b8d6c408",
+    "handoff_issue": "https://github.com/london4216-hue/Zoodo/issues/77",
+    "historical_stacks": "65→69→72 and 68→73→81 and dashboard 16→71 merged only to intermediate branches; #73 closed unmerged; not production"
+  },
+  "task": {
+    "type": "PR_INTEGRATE",
+    "pr": 96,
+    "branch": "fix/zoo-single-active-worker-lease-20261031",
+    "baseline_head": "50496c66d8255ff05f5423326f9f46e562b43534",
+    "test_commit": "c06769ddf87d4036f7579ea9cbcef42d9fe214c6",
+    "source_fix_commit": "6cf7411502c5d1abe57bcbee04b040549c617322",
+    "baseline_source_blob": "dbb9fef30c73c8376038c2c63d394fecf898b8e5",
+    "patched_source_blob": "dee5ef17e333c9aa9032f15b29a7e1c9bd2fd9b0",
+    "new_test_blob": "9a0e7a503893b4986ab70436305b68f6c0d2cfa2",
+    "existing_test_blobs": {
+      "engine/test/durable-queue.test.mjs": "eecd9a930d5e3a0a6d381b5b601684822eee6728",
+      "engine/test/invisible-identity-review-fence.test.mjs": "20a0e6b3dc579796fc63919853fca5ae8313f56c"
+    },
+    "defect": "NFC and NFD Unicode strings can be visually identical but compare unequal; decomposed worker/provider/reviewer IDs could bypass active worker lease and review independence identity comparisons.",
+    "fix": "Reject non-NFC worker/provider/reviewer IDs before journaling; keep canonical visible Unicode supported.",
+    "files": [
+      "engine/src/durable-queue.mjs",
+      "engine/test/unicode-normalization-identity-fence.test.mjs"
+    ]
+  },
+  "tests": {
+    "runtime": "native Node.js v22.16.0",
+    "scope": "local single-process journal, synthetic fixtures; exact GitHub blob-matched source and tests; not PostgreSQL or hosted CI",
+    "fail_first": {
+      "command": "node --test engine/test/unicode-normalization-identity-fence.test.mjs",
+      "passed": 1,
+      "failed": 4,
+      "exit_code": 1,
+      "tap_sha256": "042a59f3d5eeadb21a62247eb98e6f881fdec96b384963e8dc2af050b0e105a0"
+    },
+    "after_fix": {
+      "command": "node --test engine/test/durable-queue.test.mjs engine/test/invisible-identity-review-fence.test.mjs engine/test/unicode-normalization-identity-fence.test.mjs",
+      "passed": 19,
+      "failed": 0,
+      "exit_code": 0,
+      "tap_sha256": "25a0aaa4330ebfda8bcd1bfceaa2db5ae1bf9fdb249423a26e5944f256ca771a"
+    },
+    "github_blob_readback_matches_local_git_hash_object": true
+  },
+  "ci": {
+    "run_id": 41309975697,
+    "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41309975697",
+    "conclusion": "failure",
+    "lab_tests_job_steps": null,
+    "interpretation": "ZERO_STEP_INFRASTRUCTURE_UNKNOWN; no hosted test execution proof",
+    "commit_statuses": []
+  },
+  "integration": {
+    "draft": true,
+    "merged": false,
+    "deployed": false,
+    "branch_protection_required_checks": "NOT_INDEPENDENTLY_VERIFIED",
+    "distributed_database_lease": "NOT_VERIFIED",
+    "provider_native_external_ai_invocation": "NOT_VERIFIED",
+    "production_handoff": "NOT_VERIFIED"
+  },
+  "refuted_candidate": {
+    "pr": 112,
+    "hypothesis": "dispatch receipt ticket must equal wake-up outbox ticket_id",
+    "disposition": "REFUTED_BY_EXISTING_TEST",
+    "reason": "outbox-drainer.test.mjs intentionally ACKs a T2 dispatch on a T1 wake-up after an idle worker; shared queue wake-up is not ticket-specific",
+    "code_changed": false
+  },
+  "next": "Reinspect #112 exact current head and its nonoverlapping outbox regression; #92/#93 SQL require disposable PostgreSQL concurrency tests; no forced merges."
+}
