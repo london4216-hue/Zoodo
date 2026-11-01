@@ -41,9 +41,11 @@ export async function drainOne({store,relay,workerIds}) {
   const qualifiedWorkers = [...workerIds];
   const event = await store.claimOutbox();
   if (event === null) return {state:'empty'};
-  if (!event || !Number.isSafeInteger(event.id) || event.id < 1 ||
-      typeof event.ticket_id !== 'string' || !TICKET.test(event.ticket_id) ||
-      typeof event.lease_token !== 'string' || !UUID.test(event.lease_token))
+  // Keep the validated lease identity stable across awaited worker callbacks.
+  const claimed = event && {id:event.id,ticket_id:event.ticket_id,lease_token:event.lease_token};
+  if (!claimed || !Number.isSafeInteger(claimed.id) || claimed.id < 1 ||
+      typeof claimed.ticket_id !== 'string' || !TICKET.test(claimed.ticket_id) ||
+      typeof claimed.lease_token !== 'string' || !UUID.test(claimed.lease_token))
     throw Error('Invalid durable outbox lease');
   const attempts = [];
   for (const worker of qualifiedWorkers) {
@@ -55,35 +57,35 @@ export async function drainOne({store,relay,workerIds}) {
         // An idle worker does not prove the shared queue is empty. Only a
         // transactional store check may settle the wake-up without dispatch.
         if (typeof store.settleIdleOutbox === 'function' &&
-            await store.settleIdleOutbox(event.id,event.lease_token) === true)
-          return {state:'idle-settled',eventId:event.id,attempts};
+            await store.settleIdleOutbox(claimed.id,claimed.lease_token) === true)
+          return {state:'idle-settled',eventId:claimed.id,attempts};
         continue;
       }
       if (r?.state === 'dispatched' || r?.state === 'delegated') {
         const dispatch = verifiedDispatch(r, worker, qualifiedWorkers);
         if (!dispatch)
-          return {state:'recovery_required',reason:'dispatch receipt not confirmed',eventId:event.id,attempts};
+          return {state:'recovery_required',reason:'dispatch receipt not confirmed',eventId:claimed.id,attempts};
         // Once dispatch is confirmed, an ambiguous ACK is never a reason to
         // dispatch another worker. Reconciliation must inspect the durable lease.
         try {
-          if (await store.ackOutbox(event.id,event.lease_token) === true)
-            return {state:'acknowledged',eventId:event.id,dispatch,attempts};
+          if (await store.ackOutbox(claimed.id,claimed.lease_token) === true)
+            return {state:'acknowledged',eventId:claimed.id,dispatch,attempts};
         } catch (error) {
           attempts.push({worker,state:'ack_error',reason:safeErrorMessage(error)});
         }
-        return {state:'recovery_required',reason:'outbox ack not confirmed',eventId:event.id,attempts};
+        return {state:'recovery_required',reason:'outbox ack not confirmed',eventId:claimed.id,attempts};
       }
       // Only a confirmed idle claim can safely try another worker. Any other
       // result, including recovery_required/failed/unknown, may hide a started
       // worker; a status string is not native proof of non-execution.
-      return {state:'recovery_required',eventId:event.id,attempts,
+      return {state:'recovery_required',eventId:claimed.id,attempts,
         reason:'worker dispatch not confirmed; await native non-started receipt'};
     } catch (error) {
       attempts.push({worker,state:'error',reason:safeErrorMessage(error)});
       // A thrown transport error cannot prove the worker did not start.
-      return {state:'recovery_required',eventId:event.id,attempts,
+      return {state:'recovery_required',eventId:claimed.id,attempts,
         reason:'worker invocation outcome uncertain; await native non-started receipt'};
     }
   }
-  return {state:'recovery_required',eventId:event.id,attempts,reason:'no confirmed eligible dispatch'};
+  return {state:'recovery_required',eventId:claimed.id,attempts,reason:'no confirmed eligible dispatch'};
 }
