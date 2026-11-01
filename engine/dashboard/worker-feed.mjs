@@ -32,6 +32,7 @@ export function evaluateWorkerFeed(feed, now=Date.now(), maxAgeMs=15*60*1000) {
     return missing('No valid published worker receipt feed');
   const observed = Date.parse(feed.observed_at);
   if (observed > now + 60000) return missing('Feed timestamp is in the future');
+  if (feed.workers.length === 0) return missing('No worker receipts published');
   const stale = now - observed > maxAgeMs;
   const ids = new Set();
   const workers = [];
