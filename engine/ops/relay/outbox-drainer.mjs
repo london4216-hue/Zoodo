@@ -4,20 +4,27 @@ const TICKET = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const WORKER = /^[A-Za-z0-9_-]{1,64}$/;
 function validReceipt(r, worker) {
   if (!r || typeof r.ticket !== 'string' || !TICKET.test(r.ticket) || r.worker !== worker ||
-      typeof r.receipt_url !== 'string') return false;
+      typeof r.receipt_url !== 'string' || r.receipt_url.length > 2048) return false;
   try {
     const url = new URL(r.receipt_url);
-    return url.protocol === 'https:' && !url.username && !url.password && !url.hash;
-  } catch { return false; }
-}
-function confirmedDispatch(r, worker, qualifiedWorkers) {
-  if (r?.state === 'dispatched') return validReceipt(r, worker);
-  if (r?.state !== 'delegated' || r.worker !== worker) return false;
+    return url.protocol === 'https:' && !url.username && !url.password && !url.hash;// Return only verified receipt fields. Raw provider objects can contain cyclic,
+// oversized, or mutable metadata that must not enter durable evidence.
+function verifiedDispatch(r, worker, qualifiedWorkers) {
+  if (r?.state === 'dispatched') {
+    const receipt = {state:'dispatched',ticket:r.ticket,worker:r.worker,receipt_url:r.receipt_url};
+    return validReceipt(receipt, worker) ? receipt : null;
+  }
+  if (r?.state !== 'delegated' || r.worker !== worker) return null;
   const replacement = r.replacement;
-  return replacement?.state === 'dispatched' &&
-    typeof replacement.worker === 'string' && WORKER.test(replacement.worker) && replacement.worker !== worker &&
-    qualifiedWorkers.includes(replacement.worker) &&
-    validReceipt(replacement, replacement.worker);
+  const receipt = {state:'dispatched',ticket:replacement?.ticket,
+    worker:replacement?.worker,receipt_url:replacement?.receipt_url};
+  if (replacement?.state !== 'dispatched' ||
+      typeof receipt.worker !== 'string' || !WORKER.test(receipt.worker) ||
+      receipt.worker === worker || !qualifiedWorkers.includes(receipt.worker) ||
+      !validReceipt(receipt, receipt.worker)) return null;
+  return {state:'delegated',worker,replacement:receipt};
+}
+cement, replacement.worker);
 }
 function safeErrorMessage(error) {
   try { return String(error?.message || error).slice(0,120); }
@@ -52,13 +59,14 @@ export async function drainOne({store,relay,workerIds}) {
         continue;
       }
       if (r?.state === 'dispatched' || r?.state === 'delegated') {
-        if (!confirmedDispatch(r, worker, qualifiedWorkers))
+        const dispatch = verifiedDispatch(r, worker, qualifiedWorkers);
+        if (!dispatch)
           return {state:'recovery_required',reason:'dispatch receipt not confirmed',eventId:event.id,attempts};
         // Once dispatch is confirmed, an ambiguous ACK is never a reason to
         // dispatch another worker. Reconciliation must inspect the durable lease.
         try {
           if (await store.ackOutbox(event.id,event.lease_token) === true)
-            return {state:'acknowledged',eventId:event.id,dispatch:r,attempts};
+            return {state:'acknowledged',eventId:event.id,dispatch,attempts};
         } catch (error) {
           attempts.push({worker,state:'ack_error',reason:safeErrorMessage(error)});
         }
