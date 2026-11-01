@@ -76,7 +76,7 @@ export class DurableQueue {
     // A string/NaN clock or safe-integer overflow must never persist an invalid claim.
     const now=this.now(),leaseUntil=now+this.leaseMs;
     if(!Number.isSafeInteger(now)||!Number.isSafeInteger(leaseUntil))fail('Invalid lease deadline');
-    return this.#record('claim',id,{worker,provider,leaseUntil});
+    return this.#record('claim',id,{worker,provider,leaseUntil},now);
   }
   #active(id,worker,now=this.now()){const t=this.get(id);if(!Number.isSafeInteger(now)||!t||t.worker!==worker||!['assigned','running'].includes(t.status)||!Number.isSafeInteger(t.leaseUntil)||t.leaseUntil<=now)fail('No active lease');return t}
   start(id,worker){const now=this.now(),t=this.#active(id,worker,now);if(t.status!=='assigned')fail('Not assigned');return this.#record('start',id,{},now)}
@@ -85,7 +85,7 @@ export class DurableQueue {
     const now=this.now(),t=this.#active(id,worker,now);
     const leaseUntil=Math.max(t.leaseUntil,now+this.leaseMs);
     if(!Number.isSafeInteger(leaseUntil))fail('Invalid lease deadline');
-    return this.#record('heartbeat',id,{leaseUntil});
+    return this.#record('heartbeat',id,{leaseUntil},now);
   }
   submit(id,worker,{commit,evidence}){const now=this.now(),t=this.#active(id,worker,now);if(t.status!=='running')fail('Not running');if(!/^[a-f0-9]{40}$/.test(commit)||!valid(evidence))fail('Exact commit SHA and evidence required');return this.#record('submit',id,{commit,evidence},now)}
   approve(id,{reviewer,provider,commit,evidence,approved}){
