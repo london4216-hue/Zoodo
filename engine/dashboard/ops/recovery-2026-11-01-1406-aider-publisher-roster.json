@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "receipt_type": "zoo_dashboard_aider_publisher_roster_preservation",
+  "observed_at": "2026-11-01T14:06:11Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/134",
+  "branch": "fix/zoo-publisher-preserve-roster-20261101-0903",
+  "base_main_sha": "4bb4f3ad8d47b4cf26effe12da7a5f75cf32e8c4",
+  "code_commit": "8c93c48197a6e813b7e76322b4e26ff381c14ffa",
+  "test_commit": "e72702898093a1ce7e744218ebf1d0c9e4572f09",
+  "files": {
+    "engine/dashboard/scripts/publish-worker-feed.mjs": "cb74f5a6460070b5460426be61aa2c40b06cbec0",
+    "engine/dashboard/scripts/publish-worker-feed.test.mjs": "c35f24f5eda2aac9790c68f4da3185807dfab648"
+  },
+  "test_evidence": {
+    "runner": "isolated_native_node",
+    "command": "node --test engine/dashboard/scripts/publish-worker-feed.test.mjs",
+    "baseline": {
+      "passed": 1,
+      "failed": 3,
+      "baseline_source_blob": "c1a84d4553839f7645db49bdf8d7caa90b06b412"
+    },
+    "after": {
+      "passed": 4,
+      "failed": 0
+    },
+    "syntax": "node --check PASS",
+    "exact_git_blob_readback": true,
+    "hosted_ci": "UNVERIFIED"
+  },
+  "scope": {
+    "fixed": [
+      "Aider publisher no longer erases other provider entries",
+      "Older or duplicate Aider receipts refused",
+      "Invalid existing roster refused rather than overwritten",
+      "Published observation timestamp never regresses"
+    ],
+    "not_fixed": [
+      "Concurrent multi-process publisher serialization",
+      "Authenticated worker claim/complete/automatic NEXT",
+      "Provider-native model invocation",
+      "Netlify deploy identity/browser readback",
+      "Durable queue publishing credentials"
+    ]
+  },
+  "proof": {
+    "first_two_ticket_loop": "NOT_PROVEN",
+    "live_dashboard": "UNVERIFIED",
+    "netlify_deploy_id": null,
+    "production_sha": null
+  },
+  "safety": {
+    "dashboard_html_unchanged": true,
+    "original_links_unchanged": true,
+    "owner_auth_unchanged": true,
+    "hosting_config_unchanged": true,
+    "rollback": "draft PR can be closed without production change"
+  },
+  "next": "Sole Keeper reconcile PR #134 with TransendIQ #1181 Aider queue pump, use a single-writer publisher or atomic lock on authorized host, verify real queue claim and automatic NEXT with native IDs, publish sanitized feed through existing authorized deployment and independently read back browser; Hunter/qualified replacement probes Netlify. No launch link until proof."
+}
