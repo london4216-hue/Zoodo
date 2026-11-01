@@ -24,6 +24,8 @@ export async function drainOne({store,relay,workerIds}) {
       workerIds.some(w => typeof w !== 'string' || !WORKER.test(w)) ||
       new Set(workerIds).size !== workerIds.length)
     throw Error('Qualified worker roster and durable store required');
+  // Snapshot the validated roster before any async store/relay callback can mutate it.
+  const qualifiedWorkers = [...workerIds];
   const event = await store.claimOutbox();
   if (event === null) return {state:'empty'};
   if (!event || !Number.isSafeInteger(event.id) || event.id < 1 ||
@@ -31,7 +33,7 @@ export async function drainOne({store,relay,workerIds}) {
       typeof event.lease_token !== 'string' || !UUID.test(event.lease_token))
     throw Error('Invalid durable outbox lease');
   const attempts = [];
-  for (const worker of workerIds) {
+  for (const worker of qualifiedWorkers) {
     try {
       const r = await relay.next(worker);
       attempts.push({worker,state:r?.state ?? 'unknown'});
