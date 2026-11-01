@@ -9,9 +9,10 @@
     "repository": "london4216-hue/Zoodo",
     "branch": "fix/zoo-code-movement-clock-20261101-0818",
     "source_blob_sha": "1d92d10e8da4a4cf9d6293cf52296c1f819abc88",
-    "test_blob_sha": "299c27bf649379eb98aed38534c7ae65df3a289a",
+    "test_blob_sha": "52a9653906c6e82b794c0de2cdfe51bf1a367e95",
     "base_branch": "main",
-    "base_head_at_read": "f0a8ef3e97ac23590469054dfae8376b37cab76f"
+    "base_head_at_read": "f0a8ef3e97ac23590469054dfae8376b37cab76f",
+    "pr_url": "https://github.com/london4216-hue/Zoodo/pull/121"
   },
   "tests": {
     "original_source_regressions_failed": 4,
