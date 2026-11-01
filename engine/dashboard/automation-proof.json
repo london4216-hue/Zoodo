@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-11-01T15:47:48.752Z",
+  "observed_at": "2026-11-01T18:08:57.878Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Agent Hunter",
@@ -9,7 +9,7 @@
     "ZOO PR Closure",
     "ZOO Asset Restoration"
   ],
-  "publication_scope": "Connected scheduler metadata only; completed scheduler runs are not productive ticket completions or provider-native agent invocations. Hunter scheduler is disabled. Queue/NEXT/Netlify remain unverified.",
+  "publication_scope": "Connected scheduler records only. Four scheduler executions were in progress when observed; none establishes a running AI worker or native ticket completion. Hunter scheduler disabled. Queue, NEXT and Netlify remain unverified.",
   "refresh_policy": "Single dashboard publisher, compare-and-swap GitHub blob SHA; browser refresh does not run workers.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
@@ -60,11 +60,44 @@
   ],
   "in_progress_runs": [
     {
-      "role": "ZOO Dashboard Worker",
-      "run_id": "8c8c903e-bfa8-8330-8c94-fddf40d87e16",
+      "role": "ZOO Keeper",
+      "run_id": "407c5ba9-cb84-832d-a713-1917dd69c78f",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-11-01T15:45:58Z",
-      "started_at": "2026-11-01T15:46:37.676640Z",
+      "scheduled_for": "2026-11-01T18:07:18.173938Z",
+      "started_at": "2026-11-01T18:07:49.693697Z",
+      "completed_at": null,
+      "receipt_source": "connected_automations_peek.run_details.last_run",
+      "evidence_url": null,
+      "evidence_url_scope": "native_scheduler_record_not_public_url"
+    },
+    {
+      "role": "ZOO Dashboard Worker",
+      "run_id": "b81c36af-9e38-8332-b15d-aac35e902e65",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-11-01T17:45:58Z",
+      "started_at": "2026-11-01T18:06:01.636666Z",
+      "completed_at": null,
+      "receipt_source": "connected_automations_peek.run_details.last_run",
+      "evidence_url": null,
+      "evidence_url_scope": "native_scheduler_record_not_public_url"
+    },
+    {
+      "role": "ZOO PR Closure",
+      "run_id": "3a8f3cae-19cc-8324-8f14-0461fee45446",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-11-01T18:07:18.941580Z",
+      "started_at": "2026-11-01T18:07:33.512884Z",
+      "completed_at": null,
+      "receipt_source": "connected_automations_peek.run_details.last_run",
+      "evidence_url": null,
+      "evidence_url_scope": "native_scheduler_record_not_public_url"
+    },
+    {
+      "role": "ZOO Asset Restoration",
+      "run_id": "55cfaac1-faec-832a-8793-a27fc3148cdf",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-11-01T18:07:18.504539Z",
+      "started_at": "2026-11-01T18:07:20.789980Z",
       "completed_at": null,
       "receipt_source": "connected_automations_peek.run_details.last_run",
       "evidence_url": null,
@@ -130,16 +163,16 @@
     }
   ],
   "prior_snapshot": {
-    "observed_at": "2026-11-01T14:47:46.548Z",
+    "observed_at": "2026-11-01T15:47:48.752Z",
     "previously_quarantined_anomalies": 7,
-    "note": "Previous snapshot remains in Git history; refreshed from direct connected scheduler metadata."
+    "note": "Previous snapshot remains in Git history; refreshed from connected scheduler records."
   },
   "recovery_handoff": {
     "status": "RECOVERING",
     "owner": "ZOO Dashboard Worker",
     "backup": "ZOO Agent Hunter",
     "integration_authority": "Sole ZOO Keeper",
-    "next_action": "No authenticated Netlify deployment action/token; independent HTTP readback failed DNS. Hunter scheduler paused after credential qualification failure. Keeper to prove real queue claim -> code/test -> persisted completion -> automatic next claim with native run IDs. Do not treat scheduler completions as agent productivity.",
+    "next_action": "Immediate Keeper, PR Closure and Builder runs accepted and observed in progress; this is scheduler-only. On existing authorized host, execute real Supabase queue claim -> code/test -> published PR -> ACK -> automatic NEXT with native IDs. Publish authentic board and worker receipts. Netlify deployment access remains unavailable; independent site/API probes failed DNS from this runtime. Preserve existing owner links and rollback.",
     "issues": [
       "https://github.com/london4216-hue/Zoodo/issues/17",
       "https://github.com/london4216-hue/Zoodo/issues/18"
@@ -166,12 +199,12 @@
       "role": "ZOO Agent Hunter",
       "state": "SCHEDULER_DISABLED",
       "last_recorded_run_id": "4ea5c369-55f0-8325-8789-e70479766f3e",
-      "note": "Paused scheduler is not a quota or worker-capacity assertion"
+      "note": "Disabled scheduler is not a provider quota or worker-capacity assertion"
     }
   ],
   "source_context": {
     "canonical_repo": "london4216-hue/Zoodo",
-    "pre_update_source_merge_sha": "8edfcd8fe597356fbb35d6b472924a6b92d7bec5",
+    "pre_update_source_merge_sha": "35fd377c2dbc414a02715f7e770caece66439679",
     "worker_feed_observed_at": null,
     "worker_feed_native_provider_receipts": 0,
     "first_two_ticket_loop": "NOT_PROVEN",
@@ -180,7 +213,7 @@
     "independent_live_readback": "UNVERIFIED"
   },
   "publication_observation": {
-    "checked_at": "2026-11-01T15:47:48.752Z",
+    "checked_at": "2026-11-01T18:08:57.878Z",
     "scope": "connected_automations_peek",
     "scheduler_roles_checked": 5,
     "recorded_completed_roles": [
@@ -190,7 +223,10 @@
       "ZOO Asset Restoration"
     ],
     "in_progress_roles": [
-      "ZOO Dashboard Worker"
+      "ZOO Keeper",
+      "ZOO Dashboard Worker",
+      "ZOO PR Closure",
+      "ZOO Asset Restoration"
     ],
     "disabled_scheduler_roles": [
       "ZOO Agent Hunter"
@@ -200,6 +236,7 @@
     "first_automatic_two_ticket_loop": "NOT_PROVEN",
     "netlify_deploy_id": null,
     "production_source_sha": null,
-    "independent_browser_readback": "UNVERIFIED"
+    "independent_browser_readback": "UNVERIFIED",
+    "source_commit_at_observation": "35fd377c2dbc414a02715f7e770caece66439679"
   }
 }
