@@ -1,0 +1,54 @@
+{
+  "schema": "zoo.pr-integration-source-receipt.v1",
+  "date_utc": "2026-11-01",
+  "repo": "london4216-hue/Zoodo",
+  "task": "PR_INTEGRATE #96 SQL ticket-key parity",
+  "advisory_claim": "https://github.com/london4216-hue/Zoodo/issues/77#issuecomment-6554109774",
+  "durable_database_lease_verified": false,
+  "baseline_head": "13ab03249e430c173b6dd5192e3bdad146bdec78",
+  "baseline_source_blob": "c34083464c226c7d1cbfb4afc08d65c94bc96ddb",
+  "regression_commit": "baffe2bcfab500e224fdd10b6310f6c085187f56",
+  "fix_commit": "90198176768e88e3bbdedcfd9c931f70d0f0700b",
+  "exact_github_readback": {
+    "engine/src/durable-queue.mjs": "e31f24012ebf1557858d79a624fb530921c162c1",
+    "engine/test/sql-ticket-id-contract-fence.test.mjs": "64e21103d2af6b0c37a581f13e83b12da64eae74"
+  },
+  "defect": "Pilot DurableQueue.create accepted newline, carriage return, internal-space, #, and >120-character ticket IDs rejected by private 001_ticket_directory.sql canonical ticket ID constraint. This permits locally durable IDs that cannot be enqueued in SQL control plane.",
+  "change": "Validate only create() ticket ID against SQL 001 regex ^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$; preserve worker/provider/reviewer identity rules and existing journal replay.",
+  "fail_first": {
+    "environment": "V8 exact-source execution with in-memory Node fs and structuredClone shims",
+    "checks": 13,
+    "passed": 8,
+    "failed": 5,
+    "expected_failures": 5
+  },
+  "after_fix": {
+    "environment": "V8 exact committed GitHub source/test with in-memory Node fs and structuredClone shims",
+    "manual_precommit": {
+      "passed": 13,
+      "total": 13
+    },
+    "committed_source_id_probes": {
+      "passed": 8,
+      "total": 8
+    },
+    "committed_regression_tests": {
+      "passed": 2,
+      "total": 2
+    },
+    "committed_lifecycle_checks": {
+      "passed": 5,
+      "total": 5
+    }
+  },
+  "limits": [
+    "No native Node.js test runner execution of exact repository tree",
+    "No PostgreSQL migration/concurrency execution",
+    "No hosted CI pass",
+    "No database lease",
+    "No external model-native invocation",
+    "No merge or deployment"
+  ],
+  "next": "Native Node 22 node --test engine/test/sql-ticket-id-contract-fence.test.mjs plus full relevant queue suite on exact head; required checks and protected merge. NEXT #112 read-only or #92/#93 PostgreSQL capable runner.",
+  "owner_email_sent": false
+}
