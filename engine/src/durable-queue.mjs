@@ -77,7 +77,7 @@ export class DurableQueue {
     return this.#record('claim',id,{worker,provider,leaseUntil});
   }
   #active(id,worker,now=this.now()){const t=this.get(id);if(!Number.isSafeInteger(now)||!t||t.worker!==worker||!['assigned','running'].includes(t.status)||!Number.isSafeInteger(t.leaseUntil)||t.leaseUntil<=now)fail('No active lease');return t}
-  start(id,worker){const t=this.#active(id,worker);if(t.status!=='assigned')fail('Not assigned');return this.#record('start',id)}
+  start(id,worker){const now=this.now(),t=this.#active(id,worker,now);if(t.status!=='assigned')fail('Not assigned');return this.#record('start',id,{},now)}
   heartbeat(id,worker){
     // One validated time sample controls both lease eligibility and renewal.
     const now=this.now(),t=this.#active(id,worker,now);
@@ -85,7 +85,7 @@ export class DurableQueue {
     if(!Number.isSafeInteger(leaseUntil))fail('Invalid lease deadline');
     return this.#record('heartbeat',id,{leaseUntil});
   }
-  submit(id,worker,{commit,evidence}){const t=this.#active(id,worker);if(t.status!=='running')fail('Not running');if(!/^[a-f0-9]{40}$/.test(commit)||!valid(evidence))fail('Exact commit SHA and evidence required');return this.#record('submit',id,{commit,evidence})}
+  submit(id,worker,{commit,evidence}){const now=this.now(),t=this.#active(id,worker,now);if(t.status!=='running')fail('Not running');if(!/^[a-f0-9]{40}$/.test(commit)||!valid(evidence))fail('Exact commit SHA and evidence required');return this.#record('submit',id,{commit,evidence},now)}
   approve(id,{reviewer,provider,commit,evidence,approved}){
     const t=this.get(id);if(!t||t.status!=='review')fail('Not awaiting review');
     if(!validIdentity(reviewer)||!validIdentity(provider)||!valid(evidence)||provider===t.provider||reviewer===t.worker||commit!==t.commit)fail('Independent exact-commit review required');
@@ -96,7 +96,7 @@ export class DurableQueue {
   release(id,{authorized,evidence}){const t=this.get(id);if(!t||t.status!=='test'||!t.tests?.passed||!t.releaseRequired)fail('Release not eligible');if(authorized!==true||!valid(evidence))fail('Explicit release authorization and proof required');return this.#record('release',id,{evidence})}
   verify(id,{evidence}){const t=this.get(id);if(!t||t.status!=='test'||!t.tests?.passed||!valid(evidence)||t.releaseRequired&&!t.releaseProof)fail('Tests and authorized release evidence required');return this.#record('verify',id,{evidence})}
   done(id){const t=this.get(id);if(!t||t.status!=='verified')fail('Not verified');return this.#record('done',id)}
-  fail(id,{worker,reason}){const t=this.get(id);if(!t||!['assigned','running'].includes(t.status)||t.worker!==worker||!valid(reason))fail('Active worker failure evidence required');this.#active(id,worker);return this.#record('requeue',id,{reason,worker,provider:t.provider,dead:t.attempts>=this.maxAttempts})}
+  fail(id,{worker,reason}){const t=this.get(id);if(!t||!['assigned','running'].includes(t.status)||t.worker!==worker||!valid(reason))fail('Active worker failure evidence required');const now=this.now();this.#active(id,worker,now);return this.#record('requeue',id,{reason,worker,provider:t.provider,dead:t.attempts>=this.maxAttempts},now)}
   recover(){
     // One validated clock snapshot governs the entire recovery pass.
     // An invalid or advancing clock must not prematurely reassign a live lease.
