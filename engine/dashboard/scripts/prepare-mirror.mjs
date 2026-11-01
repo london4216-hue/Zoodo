@@ -4,11 +4,20 @@
 import { cpSync, copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { normalizeQueueSnapshot } from './publish-board-github.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const out = resolve(root, 'mirror-dist');
 const allowedFiles = [
   'index.html',
+  'accountability.html',
+  'priority-watch.mjs',
+  'priority-watch.json',
+  'worker-feed-panel.mjs',
+  'worker-feed.mjs',
+  'worker-feed.json',
+  'source-identity.mjs',
+  'refresh-policy.mjs',
   'evidence-clock.mjs',
   'automation-proof.mjs',
   'automation-proof.json',
@@ -39,10 +48,24 @@ for (const relative of allowedFiles) {
   mkdirSync(dirname(dest),{recursive:true});
   copyFileSync(from,dest);
 }
+// A durable queue receipt is optional. Never mirror arbitrary raw queue rows:
+// validate freshness/schema and publish only the publisher's sanitized allowlist.
+// When absent or invalid, leave /board.json missing so the UI says UNKNOWN.
+const mirroredFiles=[...allowedFiles];
+const boardPath=join(root,'board.json');
+if(existsSync(boardPath)){
+  try{
+    const clean=normalizeQueueSnapshot(JSON.parse(readFileSync(boardPath,'utf8')));
+    writeFileSync(join(out,'board.json'),JSON.stringify(clean,null,2)+'\\n');
+    mirroredFiles.push('board.json');
+  }catch(error){
+    console.warn('ZOO MIRROR: board receipt omitted (UNKNOWN): '+error.message);
+  }
+}
 const manifest={
   schema_version:1,
-  file_count:allowedFiles.length,
-  allowlisted_files:allowedFiles,
+  file_count:mirroredFiles.length,
+  allowlisted_files:mirroredFiles,
   source_commit:proof.source_commit,
   build_verified_at:proof.verified_at,
   source_repo:'london4216-hue/Zoodo',
