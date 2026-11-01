@@ -44,6 +44,8 @@ async function refreshQueueSummary(){
   if(!s||!['total','queued','running','blocked','completed_last_24h'].every(k=>whole(s[k]))||
      s.queued+s.running+s.blocked>s.total||d.completed_window_hours!==24)
    throw Error('Queue counts/window not verified');
+  for(const id of ['open','completed','races','blocks','q-oldest'])set(id,'UNKNOWN');
+  set('queue-groups','Asset / priority grouping: UNKNOWN');
   for(const [id,key] of [['q-total','total'],['q-queued','queued'],['q-running','running'],['q-blocked','blocked'],['q-completed24','completed_last_24h']])
    set(id,s[key].toLocaleString());
   if(whole(s.open))set('open',s.open.toLocaleString());
