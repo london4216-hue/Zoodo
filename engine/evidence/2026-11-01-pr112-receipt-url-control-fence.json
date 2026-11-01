@@ -1,0 +1,45 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_date_utc": "2026-11-01",
+  "ticket": "Zoodo#77 PR_INTEGRATE",
+  "pull_request": 112,
+  "repository": "london4216-hue/Zoodo",
+  "branch": "integrate/p0-outbox-ambiguous-state-fence-20261031",
+  "baseline_head_sha": "09d4ec1875f998a7f990ed3570dba5d6ca6e6b08",
+  "test_commit_sha": "24104fa813628ee307797c2b96b8c3e40fdf9f14",
+  "source_fix_commit_sha": "975c9ed8ed0e78c07cdd5681a7e74ddf14f7dd1c",
+  "exact_git_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "889cf586a3a2a0cebc7772d42287aeed8f4e6ea6",
+    "engine/test/outbox-receipt-url-control-fence.test.mjs": "dfd69012068f92c36433604afcdae5fa2877e03f",
+    "engine/test/outbox-drainer.test.mjs": "970adf150ba734e580858e9f01273ea145595ee6"
+  },
+  "defect": "Node URL() silently trims raw tabs/newlines and encodes Unicode bidi format markers. Untrusted receipt_url containing these characters passed HTTPS validation and triggered durable ACK; raw noncanonical URL was copied into evidence.",
+  "fix": "Reject raw Cc/Cf Unicode control/format code points and leading/trailing whitespace in receipt_url before URL parsing, for both direct and delegated dispatch. Percent-encoded URLs remain allowed.",
+  "fail_first": {
+    "runtime": "native Node.js 22.16.0",
+    "command": "node --test engine/test/outbox-receipt-url-control-fence.test.mjs",
+    "passed": 1,
+    "failed": 5
+  },
+  "after_fix": {
+    "runtime": "native Node.js 22.16.0",
+    "command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-receipt-url-control-fence.test.mjs",
+    "passed": 22,
+    "failed": 0,
+    "source_and_tests_reconstructed_from_exact_GitHub_blobs": true
+  },
+  "readback_matches_local_git_blob_hashes": true,
+  "historical_stacks": {
+    "65_69_72": "merged into intermediate branch only",
+    "68_73_81": "#68 and #81 intermediate-branch merges; #73 closed unmerged",
+    "dashboard_16_71": "intermediate-branch merge; dashboard deployment not established"
+  },
+  "disposition": "DRAFT_SOURCE_FIX_COMMITTED_NOT_MERGED",
+  "hosted_CI": "UNKNOWN: no executed test steps verified for this fix",
+  "distributed_database_lease_verified": false,
+  "provider_native_external_worker_invoked": false,
+  "autonomous_two_ticket_handoff_verified": false,
+  "production_deployment_verified": false,
+  "ownership": "advisory single-writer scope released after commit and readback; no distributed lease claimed",
+  "next": "Inspect exact head of independent PR #96 and PRs #92/#93 PostgreSQL migration gate; do not overlap product/dashboard lanes"
+}
