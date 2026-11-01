@@ -1,0 +1,42 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_at_utc": "2026-11-01T20:08:20.561Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "scope": "Local durable pilot queue creation input integrity; no product/dashboard file changes",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "historical_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "archive_manifest": "engine/evidence/os1/zoodo-open-pr-archive-2026-11-01.json",
+  "defect": "Nonboolean releaseRequired was silently coerced with Boolean(...): string 'false' became true and null/0 became false, silently changing release policy.",
+  "fix": "Reject nonboolean releaseRequired before journal mutation; preserve valid boolean behavior and idempotency.",
+  "commits": {
+    "test": "b8ab133a6a65161a3181a1d27112fa07c860ddff",
+    "source": "1314b4b6c617f102d4ecde83333a0b508a3588c6"
+  },
+  "readback_git_blob_sha": {
+    "engine/src/durable-queue.mjs": "2ae48e28beb2ed80aac4dab3a056c5679af5b3c1",
+    "engine/test/release-policy-boolean-fence.test.mjs": "d560c2ab3dce4f69589f8450ec01eb4ca335969d"
+  },
+  "tests": {
+    "baseline": "7 of 7 invalid inputs silently accepted; reproduced with exact-source V8 harness",
+    "after": "11/11 exact-source V8 synthetic scenarios passed, 0 failed",
+    "native_node": "NOT_EXECUTED",
+    "postgresql": "NOT_EXECUTED",
+    "github_ci": "UNKNOWN"
+  },
+  "lease_claim": "NOT_AUTHENTICATED; no Supabase connector or production queue claim",
+  "provider_native_invocation": "NOT_VERIFIED",
+  "deployment": "NOT_PERFORMED",
+  "merge": "NOT_PERFORMED",
+  "next": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/92",
+    "status": "INSPECTED_NOT_CLAIMED",
+    "task": "Review independent main-based queue integrity migrations and run disposable PostgreSQL concurrency tests before integration"
+  },
+  "other_dependent": {
+    "pr93": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "status": "Requires disposable PostgreSQL 001→002→005→006 migration/concurrency verification"
+  },
+  "preservation": "No branch deleted, no stacked draft blindly merged, no dashboard/product files touched"
+}
