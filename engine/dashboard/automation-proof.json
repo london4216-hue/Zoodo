@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-10-31T23:35:33.809Z",
+  "observed_at": "2026-11-01T00:43:49.754Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Dashboard Worker",
@@ -9,17 +9,17 @@
     "ZOO Agent Hunter",
     "ZOO PR Closure"
   ],
-  "publication_scope": "Authenticated scheduler metadata only. Hunter disabled; latest Hunter completion inconsistent and quarantined. Dashboard in-progress record has future scheduled_for; not counted. Completion receipts do not establish productive work, CI, host, or live heartbeat.",
+  "publication_scope": "Four enabled task run_details read directly at publication; Hunter remains disabled from prior scheduler snapshot and was not independently re-peeked. Historical completions do not prove productive execution. Dashboard current run is in progress; its prior completion with invalid scheduled chronology is quarantined.",
   "refresh_policy": "Single Dashboard Worker publisher; GitHub blob SHA conditional update; browser polling cannot wake agents.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
     {
       "role": "ZOO Keeper",
-      "run_id": "830e523c-748c-832c-bee5-33e8420c7395",
+      "run_id": "e6c93664-950c-8323-98a3-0cbb4a970172",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T22:45:30Z",
-      "completed_at": "2026-10-31T22:50:38.183981Z",
-      "receipt_source": "connected_automations_peek.latest_result",
+      "scheduled_for": "2026-10-31T23:45:30Z",
+      "completed_at": "2026-10-31T23:46:36.128662Z",
+      "receipt_source": "connected_automations_peek.run_details.last_run",
       "automation_title": "ZOO Keeper — portfolio execution enforcement",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
@@ -39,11 +39,11 @@
     },
     {
       "role": "ZOO Asset Restoration",
-      "run_id": "167d2c63-f978-8329-8a83-3fffa1f365da",
+      "run_id": "c407fbe1-180c-832a-880e-170961a71fec",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T23:24:51Z",
-      "completed_at": "2026-10-31T23:27:00.942574Z",
-      "receipt_source": "connected_automations_peek.latest_result",
+      "scheduled_for": "2026-11-01T00:24:51Z",
+      "completed_at": "2026-11-01T00:29:47.571340Z",
+      "receipt_source": "connected_automations_peek.run_details.last_run",
       "automation_title": "ZOO Builder — EZ Move and BeautyPath",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
@@ -63,11 +63,11 @@
     },
     {
       "role": "ZOO PR Closure",
-      "run_id": "7ac49d46-bc80-832e-b4eb-743fac40e536",
+      "run_id": "0ee190ba-2130-832f-896d-e0204e4ec1e5",
       "recorded_status": "completed",
-      "scheduled_for": "2026-10-31T23:10:39Z",
-      "completed_at": "2026-10-31T23:19:27.233360Z",
-      "receipt_source": "connected_automations_peek.latest_result",
+      "scheduled_for": "2026-11-01T00:10:39Z",
+      "completed_at": "2026-11-01T00:16:16.542659Z",
+      "receipt_source": "connected_automations_peek.run_details.last_run",
       "automation_title": "ZOO PR closure — eligible fixes and merges",
       "evidence_url": "https://github.com/london4216-hue/Zoodo/issues/18",
       "evidence_url_scope": "recovery_handoff_not_direct_automation_receipt",
@@ -77,11 +77,11 @@
   "in_progress_runs": [
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "3af46e2d-655c-8328-a170-c8dca0e5e830",
+      "run_id": "10163af8-b7f8-8329-acd6-d846c28b749d",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-10-31T23:45:58Z",
-      "started_at": "2026-10-31T23:33:41.414749Z",
-      "timing_note": "scheduled_for_in_future_relative_to_observation_not_completion_proof"
+      "scheduled_for": "2026-11-01T00:45:58Z",
+      "started_at": "2026-11-01T00:41:40.132967Z",
+      "timing_note": "in_progress_not_completed_or_productive_worker_proof"
     }
   ],
   "source_anomalies": [
@@ -261,18 +261,26 @@
       "scheduled_for": "2026-10-31T18:21:25Z",
       "completed_at": "2026-10-31T18:01:41.851473Z",
       "action": "quarantined_not_counted"
+    },
+    {
+      "role": "ZOO Dashboard Worker",
+      "kind": "completion_before_scheduled_for_or_invalid",
+      "run_id": "3af46e2d-655c-8328-a170-c8dca0e5e830",
+      "scheduled_for": "2026-10-31T23:45:58Z",
+      "completed_at": "2026-10-31T23:37:04.139087Z",
+      "action": "quarantined_not_counted_as_verified_completion"
     }
   ],
   "prior_snapshot": {
-    "observed_at": "2026-10-31T20:53:59.957Z",
-    "note": "Corrected Dashboard last valid completed run from latest_result while current run remains in_progress."
+    "observed_at": "2026-10-31T23:35:33.809Z",
+    "note": "Previous canonical publication retained for chronological audit; new peek covers four enabled automations, not Hunter."
   },
   "recovery_handoff": {
     "status": "RECOVERING",
     "owner": "ZOO Dashboard Worker",
-    "backup": "ZOO Agent Hunter (automation disabled; not a qualified active fallback)",
+    "backup": "ZOO Agent Hunter disabled; Keeper to qualify alternative host probe",
     "integration_authority": "Sole ZOO Keeper",
-    "next_action": "Keeper coordinate qualified host probe while Hunter disabled; Implementation Lead diagnose zero-step Actions; Keeper integrate independent dashboard draft fixes; dashboard remains source-only until Netlify deploy ID/SHA and browser readback verified."
+    "next_action": "Keeper review draft PR #114 and existing #99/#105/#107/#113; independent Netlify production source SHA/deploy/rollback readback remains required. Implementation Lead owns zero-step Actions startup. Do not block product or PR closure."
   },
   "recovery_events": [
     {
