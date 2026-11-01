@@ -18,7 +18,10 @@ export class DurableQueue {
     this.file=file;this.now=now;this.leaseMs=leaseMs;this.maxAttempts=maxAttempts;
     this.items=new Map();this.events=[];
     if(existsSync(file)){
-      const lines=readFileSync(file,'utf8').split('\n').filter(Boolean);
+      const raw=readFileSync(file,'utf8');
+      if(raw && !raw.endsWith('\n'))fail('Incomplete journal record; recovery required');
+      const lines=raw?raw.slice(0,-1).split('\n'):[];
+      if(lines.some(line=>!line))fail('Empty journal record; recovery required');
       for(const line of lines){const event=JSON.parse(line);this.#apply(event);this.events.push(event)}
     }
   }
