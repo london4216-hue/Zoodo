@@ -27,8 +27,10 @@
   "native_runtime": "Node.js 22.16.0",
   "fail_first": {
     "command": "node --test engine/test/{invisible-identity-review-fence,unicode-normalization-identity-fence,identity-alias-fence}.test.mjs",
-    "pass": 1,
-    "expected_fail": 13
+    "pass": 2,
+    "expected_fail": 12,
+    "baseline_sha_verified": "69ec8e80279ecf41d8ea4b124e292624492c4c06",
+    "note": "Exact original source and all three SHA-matched test files rerun; initial 1/13 provisional count included a local transcription error and is superseded by verified 2/12."
   },
   "after_fix": {
     "command": "node --test engine/test/{single-worker-active-lease,heartbeat-single-clock-snapshot,invisible-identity-review-fence,unicode-normalization-identity-fence,identity-alias-fence}.test.mjs",
