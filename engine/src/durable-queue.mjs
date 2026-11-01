@@ -41,8 +41,8 @@ export class DurableQueue {
     if(e.type==='requeue'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null}
     t.history.push(e);
   }
-  #record(type,id,fields={}){
-    const e={eventId:randomUUID(),type,id,at:new Date(this.now()).toISOString(),...fields};
+  #record(type,id,fields={},atMs=this.now()){
+    const e={eventId:randomUUID(),type,id,at:new Date(atMs).toISOString(),...fields};
     mkdirSync(dirname(this.file),{recursive:true});
     appendFileSync(this.file,JSON.stringify(e)+'\n',{encoding:'utf8',mode:0o600,flag:'a'});
     this.#apply(e);this.events.push(e);return snapshot(this.items.get(id));
@@ -101,7 +101,8 @@ export class DurableQueue {
     if(!Number.isSafeInteger(now))fail('Invalid recovery clock');
     const recovered=[];
     for(const t of this.items.values())if(['assigned','running'].includes(t.status)&&t.leaseUntil<=now)
-      recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts}));
+      // Persist the same validated clock used for lease-expiry decisions.
+      recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts},now));
     return recovered;
   }
 }
