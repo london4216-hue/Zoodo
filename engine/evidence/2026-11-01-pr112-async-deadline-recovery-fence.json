@@ -1,0 +1,45 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-01T13:27:00Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 112,
+  "branch": "integrate/p0-outbox-ambiguous-state-fence-20261031",
+  "baseline_head": "e7d404bfc92b2228bdf1eafe0c3dcfe9e24c4e62",
+  "baseline_source_blob": "889cf586a3a2a0cebc7772d42287aeed8f4e6ea6",
+  "test_first_commit": "1562a2eeda893117aa84e6bf8c26cc7f109ba4e9",
+  "source_fix_commit": "b1a8c6ae6a821d8134b1afbe28145f08b34573cf",
+  "exact_git_blob_shas": {
+    "engine/ops/relay/outbox-drainer.mjs": "3e95007fc1454e1a465490197a1aa09b9db3a12e",
+    "engine/test/outbox-async-deadline-fence.test.mjs": "272da94f5260814a30ab22297095327b3c4b47dd",
+    "engine/test/outbox-drainer.test.mjs": "970adf150ba734e580858e9f01273ea145595ee6"
+  },
+  "defect": "An unresolved asynchronous relay.next, ackOutbox, settleIdleOutbox or claimOutbox promise could indefinitely hold the one-shot outbox drainer. No durable ACK or safe NEXT/recovery handoff was possible while pending.",
+  "repair": "One monotonic 12-second default whole-drain deadline (configurable 1..30000 ms). Timed-out relay/ACK/settlement is recovery_required and never evidence of non-start; timeout on claim rejects before any worker dispatch. Late remote completions remain uncertain and require durable lease reconciliation.",
+  "fail_first": {
+    "command": "node --test engine/test/outbox-async-deadline-fence.test.mjs",
+    "passed": 0,
+    "failed": 5,
+    "scope": "native Node.js v22.16.0, local exact baseline source blob"
+  },
+  "after_fix": {
+    "command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-async-deadline-fence.test.mjs",
+    "passed": 21,
+    "failed": 0,
+    "tap_sha256": "600b6bca146de882dcfca95c00b973bd467775b24ecaf0125e4d55b14a121023",
+    "scope": "native Node.js v22.16.0, local exact GitHub source/test blobs"
+  },
+  "historical_required_readback": {
+    "pr": 81,
+    "receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "source_blob": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+    "test_blob": "76b1fcb63dd7baebe71e30ae20462510b8d6c408"
+  },
+  "ci": "UNKNOWN; no workflow runs returned for fix commit; no hosted test pass claimed",
+  "distributed_queue_lease": false,
+  "provider_native_external_model_invoked": false,
+  "hosted_two_ticket_next_verified": false,
+  "merged": false,
+  "deployed": false,
+  "ownership": "Advisory single-writer PR #112 outbox scope; #96 durable queue, #92/#93 SQL, dashboard, private product excluded",
+  "next": "Inspect PR #96 exact head and SQL PR #92/#93 dependency order without changing independently owned paths; only merge when all applicable protections and checks permit."
+}
