@@ -32,13 +32,14 @@ function safeErrorMessage(error) {
   catch { return 'unprintable error'; }
 }
 export async function drainOne({store,relay,workerIds}) {
+  // Read each roster entry exactly once. Re-reading array getters during
+  // validation and snapshotting can admit an unqualified/duplicate worker.
+  const qualifiedWorkers = Array.isArray(workerIds) ? [...workerIds] : [];
   if (!store || typeof store.claimOutbox !== 'function' || typeof store.ackOutbox !== 'function' ||
-      !relay || typeof relay.next !== 'function' || !Array.isArray(workerIds) || !workerIds.length ||
-      [...workerIds].some(w => typeof w !== 'string' || !WORKER.test(w)) ||
-      new Set(workerIds).size !== workerIds.length)
+      !relay || typeof relay.next !== 'function' || !qualifiedWorkers.length ||
+      qualifiedWorkers.some(w => typeof w !== 'string' || !WORKER.test(w)) ||
+      new Set(qualifiedWorkers).size !== qualifiedWorkers.length)
     throw Error('Qualified worker roster and durable store required');
-  // Snapshot the validated roster before any async store/relay callback can mutate it.
-  const qualifiedWorkers = [...workerIds];
   const event = await store.claimOutbox();
   if (event === null) return {state:'empty'};
   // Keep the validated lease identity stable across awaited worker callbacks.
