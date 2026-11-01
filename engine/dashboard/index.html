@@ -379,11 +379,9 @@ async function update(){
  const [commits,runs]=await Promise.allSettled([api('/commits?sha='+encodeURIComponent(sourceIdentity.ref)+'&per_page=100'),api('/actions/runs?branch='+encodeURIComponent(sourceIdentity.branch)+'&per_page=30')]);
  const errors=[];
  const latest=commits.status==='fulfilled'?commits.value[0]:null;
- if(commits.status==='fulfilled'||runs.status==='fulfilled'){
-   $('dashboardEvidenceRefresh').textContent='Dashboard evidence refresh: '+new Date().toISOString()+
-     ' · GitHub API response (commits '+(commits.status==='fulfilled'?'OK':'UNAVAILABLE')+
-     ', Actions '+(runs.status==='fulfilled'?'OK':'UNAVAILABLE')+')';
- }
+ $('dashboardEvidenceRefresh').textContent='Dashboard evidence check attempted: '+new Date().toISOString()+
+   ' · GitHub API response (commits '+(commits.status==='fulfilled'?'OK':'UNAVAILABLE')+
+   ', Actions '+(runs.status==='fulfilled'?'OK':'UNAVAILABLE')+')';
  if(commits.status==='fulfilled'){
    $('sourceSuccess').textContent='Last successful GitHub commit endpoint response: '+new Date().toLocaleString()+
      (sourceIdentity.providerBuildClaim?' · provider build receipt SHA '+sourceIdentity.sourceCommit+' (NOT live deploy proof)':' · deployed SHA UNKNOWN; '+sourceIdentityError)+
