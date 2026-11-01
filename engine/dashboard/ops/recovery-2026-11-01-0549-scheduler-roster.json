@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "kind": "zoo_dashboard_bounded_repair_receipt",
+  "observed_at": "2026-11-01T05:48:30.851Z",
+  "scope": "Data-only repair of stale canonical five-role scheduler feed; no product, auth, navigation or deploy changes.",
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "base_branch": "main",
+    "repair_branch": "fix/zoo-scheduler-feed-current-20261101-0548",
+    "changed_path": "engine/dashboard/automation-proof.json",
+    "repair_commit": "22f6fac9e5e8f38c4e36b94ce2e65eea7e0ecc88",
+    "new_blob_sha": "1ebbf4d1e995663e13e616b45ddb8cfe511d2c56",
+    "previous_blob_sha": "d581e140d19bb89c0dce6a341f5ba0a21760af29",
+    "dashboard_html_blob_sha_unchanged": "82fa64fc52cbc8379f3f2ec8bd3073972271b617"
+  },
+  "tests": {
+    "runtime": "V8 source-readback assertions, not GitHub Actions",
+    "fail_first": {
+      "passed": 0,
+      "failed": 4
+    },
+    "post_fix": {
+      "passed": 14,
+      "failed": 0
+    },
+    "hosted_ci": "UNVERIFIED"
+  },
+  "live_counts": {
+    "source": "authenticated GitHub search",
+    "observed_approx_utc": "2026-11-01T05:47:00Z",
+    "open_prs": 72,
+    "open_issues": 25,
+    "source_urls": [
+      "https://github.com/london4216-hue/Zoodo/pulls",
+      "https://github.com/london4216-hue/Zoodo/issues"
+    ]
+  },
+  "scheduler": {
+    "source": "connected automations scheduler metadata",
+    "roles": 5,
+    "valid_recorded_completions": 2,
+    "completed_roles": [
+      "ZOO Builder — EZ Move and BeautyPath",
+      "ZOO PR Closure"
+    ],
+    "in_progress_roles": [
+      "ZOO Keeper",
+      "ZOO Dashboard Worker"
+    ],
+    "disabled_roles": [
+      "ZOO Agent Hunter"
+    ],
+    "quarantined_chronology_anomalies": 3,
+    "productive_tasks_verified": null,
+    "heartbeat_verified": false
+  },
+  "merged_pr_reconciliation": [
+    {
+      "pr": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "merged": true,
+      "merged_into": "autonomous-engine-replacement-2026-10-29",
+      "open_to_merge_seconds": 76910
+    },
+    {
+      "pr": "https://github.com/london4216-hue/Zoodo/pull/71",
+      "merged": true,
+      "merged_into": "fix/zoo-live-dashboard-accountability-20261030",
+      "open_to_merge_seconds": 8072
+    }
+  ],
+  "github_actions": {
+    "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41274481869",
+    "result": "failure",
+    "job_steps": 0,
+    "job_logs": "404 BlobNotFound",
+    "root_cause": "UNKNOWN"
+  },
+  "hosting": {
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "production_dns_probe": "FAILED_IN_THIS_RUNTIME",
+    "preview_dns_probe": "FAILED_IN_THIS_RUNTIME",
+    "provider_deploy_status": "UNKNOWN",
+    "production_sha": "UNKNOWN",
+    "deploy_id": "UNKNOWN",
+    "rollback_mapping": "UNKNOWN",
+    "independent_browser_readback": "NOT_VERIFIED"
+  },
+  "latencies": {
+    "pr16_open_to_merge_seconds": 76910,
+    "pr71_open_to_merge_seconds": 8072,
+    "source_to_deploy_seconds": null,
+    "test_to_deploy_seconds": null,
+    "deploy_to_browser_verify_seconds": null
+  },
+  "handoff": {
+    "keeper": "Sole integration authority; reconcile source/deploy SHA and host mapping before any publication",
+    "hunter": "Disabled; Keeper or qualified replacement handles host probe",
+    "implementation": "Diagnose zero-step GitHub Actions; no assumed fix",
+    "other_lanes": "PR Closure, EZ Move and BeautyPath remain independent"
+  },
+  "notification": "No ordinary email; Wednesday grades deferred."
+}
