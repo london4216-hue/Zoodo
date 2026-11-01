@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-01T13:47:26.113Z",
+  "kind": "bounded_dashboard_mirror_asset_repair",
+  "repository": "london4216-hue/Zoodo",
+  "pull_request": "https://github.com/london4216-hue/Zoodo/pull/130",
+  "base_branch": "main",
+  "base_commit": "3b8942edae4230e15e745ff86d8fea6c208f814a",
+  "repair_head_before_receipt": "1823cac42d1ae864091486bd2808b0a87df68950",
+  "defect": "Portable mirror allowlist omitted two existing dashboard-local links: accountability.html (iframe) and handoff-ledger.json (evidence link).",
+  "fix": "Include both already-public source assets in mirror-dist allowlist; no changes to dashboard HTML, owner authentication, Netlify config, product destinations or production.",
+  "source_blobs": {
+    "mirror_builder_before": "46c560559bf6dfd48e201611f4bd7ab98d6ec9ec",
+    "mirror_builder_after": "79f1d14f004bf8500714a54bec79e5e9b78f4b23",
+    "regression_test": "60fb1491197774073a7d81b74500079cea1463bd",
+    "dashboard_html_unchanged": "82fa64fc52cbc8379f3f2ec8bd3073972271b617",
+    "netlify_config_unchanged": "aa2e3b7e6069298c8f9a448dda5d72d3dae38fa2"
+  },
+  "tests": {
+    "fail_first_missing_asset_count": 2,
+    "exact_github_source_assertions_passed": 12,
+    "exact_github_source_assertions_total": 12,
+    "native_node_regression_committed": true,
+    "native_node_regression_executed": false,
+    "hosted_ci_verified": false
+  },
+  "integration": {
+    "sole_authority": "ZOO Keeper",
+    "pr98": "https://github.com/london4216-hue/Zoodo/pull/98",
+    "pr98_base": "autonomous-engine-replacement-2026-10-29",
+    "pr98_covers": "source-identity.mjs, refresh-policy.mjs, priority-watch.mjs, priority-watch.json, queue-counts.mjs; not yet on main",
+    "pr126": "https://github.com/london4216-hue/Zoodo/pull/126",
+    "pr126_scope": "separate priority feed stale-detail repair",
+    "pr16": {
+      "url": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "merged_to": "autonomous-engine-replacement-2026-10-29",
+      "merge_commit": "aee4815ac2f22ebde5d26dc082cf9c962f0191b4"
+    },
+    "pr71": {
+      "url": "https://github.com/london4216-hue/Zoodo/pull/71",
+      "merged_to": "fix/zoo-live-dashboard-accountability-20261030",
+      "merge_commit": "78b9ee078deb185706de67eba93080cd27873bc5"
+    }
+  },
+  "repository_snapshot": {
+    "open_pull_requests": 80,
+    "open_issues": 27,
+    "source": "GitHub REST Search total_count on 2026-11-01",
+    "verified_production_display": false
+  },
+  "ci": {
+    "inspected_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41311793176",
+    "inspected_commit": "7c9da4974ac46005fd1eb54c95f6beb5bd3887e8",
+    "conclusion": "failure",
+    "recorded_steps": 0,
+    "root_cause": "UNKNOWN"
+  },
+  "scheduler": {
+    "source": "connected scheduler metadata",
+    "keeper": "enabled; latest completed run recorded, newer run in progress at observation",
+    "dashboard": "enabled; run in progress",
+    "pr_closure": "enabled; latest completed run recorded, newer run in progress",
+    "builder": "enabled; latest completed run recorded",
+    "hunter": "disabled",
+    "productive_autonomous_execution_verified": false
+  },
+  "host_inventory": {
+    "primary": {
+      "url": "https://zoo-live-dashboard.netlify.app/",
+      "status": "OWNER_ACCEPTED_URL; exact provider deployment identity and independent readback UNKNOWN"
+    },
+    "recorded_product_and_demo_destinations": [
+      "https://beautypaths.io/app",
+      "https://beautypaths.io/super",
+      "https://beautypaths.io/tour",
+      "https://beautypaths.io/enter",
+      "https://beautypaths.io/links",
+      "https://beautypath-grad.netlify.app/",
+      "https://ez-move-transcendiq.netlify.app/demo",
+      "https://wonup2.transendtiq2.com/login",
+      "https://wonup2.transendtiq2.com/demo?as=student",
+      "https://wonup2.transendtiq2.com/demo?as=school_admin",
+      "https://prestigeengage-demo.netlify.app/",
+      "https://transcendiq-control-panel.netlify.app/pitch/control-panel.html"
+    ],
+    "historical_owner_directory": "https://github.com/london4216-hue/TransendIQ/blob/main/docs/URL_DIRECTORY.md",
+    "additional_owner_recorded_not_probed": [
+      "https://beauty-world.base44.app/",
+      "https://won-up-2-ccca51a9.base44.app/",
+      "https://transendtiq2.com/",
+      "https://transend-iq-lkyx.vercel.app/"
+    ],
+    "mirror_registry": "https://github.com/london4216-hue/Zoodo/blob/main/engine/dashboard/hosting-mirrors.json",
+    "mirror_provider_status": "Vercel, Render, Cloudflare dashboard mirrors NOT_CONNECTED in canonical registry; other product sites are NOT to be repurposed",
+    "scope_limit": "Source-linked inventory, NOT exhaustive authenticated Netlify/Vercel account inventory. No provider credential or site/deploy API access available in this run."
+  },
+  "deployment": {
+    "netlify_preview_id": null,
+    "netlify_production_deploy_id": null,
+    "production_source_sha": null,
+    "provider_deploy_status": "UNKNOWN",
+    "independent_browser_readback": "UNVERIFIED; DNS resolution failed in this runtime",
+    "cache_headers": "UNKNOWN",
+    "rollback_identity": "UNKNOWN",
+    "deployment_latency_seconds": null
+  },
+  "remaining": "Merge or port PR #98 assets into main alongside #130, reconcile PR #126 separately; Keeper to integrate. Hunter replacement or Keeper to establish provider site/deploy SHA and independent browser readback. No live changes or ordinary emails."
+}
