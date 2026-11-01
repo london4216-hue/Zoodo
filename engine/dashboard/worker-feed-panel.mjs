@@ -22,11 +22,25 @@ function render(result){
     table.append(tr);
   }
 }
+let lastObservedAt = null;
+let refreshInFlight = false;
 async function refresh(){
+  if(refreshInFlight)return;
+  refreshInFlight = true;
   try{
     const res=await fetch('./worker-feed.json?read='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(8000)});
-    if(!res.ok)throw Error('Worker feed unavailable');
-    render(evaluateWorkerFeed(await res.json()));
-  }catch{render(evaluateWorkerFeed(null))}
+    if(!res.ok)throw Error('HTTP '+res.status);
+    const result=evaluateWorkerFeed(await res.json());
+    if(result.state==='UNKNOWN')throw Error(result.reason);
+    const observed=Date.parse(result.observed_at);
+    if(!Number.isFinite(observed))throw Error('Invalid worker feed timestamp');
+    if(lastObservedAt!==null && observed<lastObservedAt)throw Error('Worker feed timestamp regressed');
+    lastObservedAt=observed;
+    render(result);
+  }catch(e){
+    // A failed or replayed read cannot establish that a worker remains running.
+    render({state:'RECOVERY REQUIRED',reason:'Worker feed unverified: '+String(e?.message||e).slice(0,100),
+      observed_at:lastObservedAt===null?null:new Date(lastObservedAt).toISOString(),workers:[]});
+  }finally{refreshInFlight=false}
 }
 refresh();setInterval(refresh,30000);

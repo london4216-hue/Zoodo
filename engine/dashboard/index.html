@@ -20,6 +20,14 @@
 .zoo-p0{margin:16px 0;border:1px solid #e0ae56}.zoo-p0-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.zoo-p0-grid>div{min-width:0;border:1px solid #344256;border-radius:10px;padding:12px}.zoo-p0 p{overflow-wrap:anywhere;margin:8px 0}.zoo-p0 strong{font-size:15px}@media(max-width:680px){.zoo-p0-grid{grid-template-columns:1fr}.zoo-p0{padding:12px}}
 </style></head><body>
 <header><div><h1>ZOO <span style="color:#69e2b2">/ EXECUTION PROOF</span></h1><small>GitHub-backed evidence, never simulated activity</small></div><div><span id="state" class="status warn">CONNECTING</span> <button id="refresh">Refresh now</button><div class="time" id="checked"></div></div></header>
+<section class="panel" id="worker-receipts" aria-label="ZOO worker receipt roster" style="margin-top:18px">
+<h2>WORKER RECEIPTS · SOURCE-REPORTED, NOT INDEPENDENT ACTIVE PROOF</h2>
+<p class="muted" id="worker-feed-status" role="status" aria-live="polite">UNKNOWN · Awaiting a valid, recent published worker feed. A static snapshot is not an authenticated heartbeat.</p>
+<div style="overflow-x:auto"><table style="width:100%;min-width:560px;text-align:left;border-collapse:collapse">
+<thead><tr><th scope="col">Agent</th><th scope="col">Reported state</th><th scope="col">Proof level</th><th scope="col">Ticket</th><th scope="col">Last receipt</th><th scope="col">Last result</th></tr></thead>
+<tbody id="worker-feed-rows"><tr><td colspan="6">UNKNOWN · no verified receipt loaded</td></tr></tbody>
+</table></div>
+</section>
 <section class="panel" id="accountability" aria-label="Agent accountability and ticket queue" style="margin-top:18px">
 <h2>AGENT ACCOUNTABILITY · TICKET QUEUE</h2>
 <p class="muted">Consolidated view. Historical snapshot is labeled until the live ledger feed is available. <a href="./accountability.html">Open full accountability view</a>.</p>
@@ -416,4 +424,4 @@ update();
 setInterval(update,GITHUB_SOURCE_POLL_MS);
 setInterval(()=>refreshAutomationProof().catch(()=>{runFeedFetchError='Unexpected proof refresh error';paintAutomationProof()}),AUTOMATION_PROOF_POLL_MS);
 setInterval(tickClock,1000);
-</script><script type="module" src="./priority-watch.mjs"></script></body></html>
+</script><script type="module" src="./priority-watch.mjs"></script><script type="module" src="./worker-feed-panel.mjs"></script></body></html>
