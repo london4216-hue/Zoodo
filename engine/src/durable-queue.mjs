@@ -54,6 +54,8 @@ export class DurableQueue {
   list(){return [...this.items.values()].map(snapshot)}
   create({id,repo,description,releaseRequired=false}){
     if(!valid(id)||!valid(repo)||!valid(description))fail('Ticket needs id, repo and bounded description');
+    // Fail closed: truthy strings and null must not silently change release policy.
+    if(typeof releaseRequired!=='boolean')fail('Release requirement must be boolean');
     const t=this.get(id);
     if(t){if(t.repo!==repo||t.description!==description||t.releaseRequired!==releaseRequired)fail('Idempotency collision');return t}
     return this.#record('create',id,{repo,description,releaseRequired:Boolean(releaseRequired)});
