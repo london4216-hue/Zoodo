@@ -78,7 +78,7 @@ export class DurableQueue {
     return this.#record('claim',id,{worker,provider,leaseUntil:this.#deadline()});
   }
   #deadline(){const now=this.now(),deadline=now+this.leaseMs;if(!Number.isSafeInteger(now)||!Number.isSafeInteger(deadline))fail('Invalid lease deadline');return deadline}
-  #active(id,worker){const t=this.get(id);if(!t||t.worker!==worker||!['assigned','running'].includes(t.status)||!Number.isSafeInteger(t.leaseUntil)||t.leaseUntil<=this.now())fail('No active lease');return t}
+  #active(id,worker){const t=this.get(id),now=this.now();if(!Number.isSafeInteger(now)||!t||t.worker!==worker||!['assigned','running'].includes(t.status)||!Number.isSafeInteger(t.leaseUntil)||t.leaseUntil<=now)fail('No active lease');return t}
   start(id,worker){const t=this.#active(id,worker);if(t.status!=='assigned')fail('Not assigned');return this.#record('start',id)}
   heartbeat(id,worker){const t=this.#active(id,worker);return this.#record('heartbeat',id,{leaseUntil:Math.max(t.leaseUntil,this.#deadline())})}
   submit(id,worker,{commit,evidence}){const t=this.#active(id,worker);if(t.status!=='running')fail('Not running');if(typeof commit!=='string'||!/^[a-f0-9]{40}$/.test(commit)||!valid(evidence))fail('Exact commit SHA and evidence required');return this.#record('submit',id,{commit,evidence})}
@@ -99,12 +99,14 @@ export class DurableQueue {
   done(id){const t=this.get(id);if(!t||t.status!=='verified')fail('Not verified');return this.#record('done',id)}
   fail(id,{worker,reason}){const t=this.get(id);if(!t||!['assigned','running'].includes(t.status)||t.worker!==worker||!valid(reason))fail('Active worker failure evidence required');this.#active(id,worker);return this.#record('requeue',id,{reason,worker,provider:t.provider,dead:t.attempts>=this.maxAttempts})}
   recover(){
+    const now=this.now();
+    if(!Number.isSafeInteger(now))fail('Invalid recovery clock');
     const recovered=[];
     for(const t of this.items.values()){
       if(!['assigned','running'].includes(t.status))continue;
       if(!Number.isSafeInteger(t.leaseUntil)){
         recovered.push(this.#record('quarantine',t.id,{reason:'Malformed lease deadline; execution uncertain',worker:t.worker,provider:t.provider}));
-      }else if(t.leaseUntil<=this.now()){
+      }else if(t.leaseUntil<=now){
         recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts}));
       }
     }
