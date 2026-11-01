@@ -50,7 +50,7 @@ async function refreshQueueSummary(){
   set('active',s.running.toLocaleString());
   if(whole(s.completed))set('completed',s.completed.toLocaleString());
   if(whole(s.races))set('races',s.races.toLocaleString());
-  set('blocks',s.blocked.toLocaleString());
+  if(whole(s.blocks_logged))set('blocks',s.blocks_logged.toLocaleString());
   set('queue-scope','Scope: '+d.scope+' · source: '+d.source);
   set('queue-refresh','Last durable queue publication: '+d.observed_at+' · freshness: '+Math.floor((now-at)/60000)+' minutes');
   if(iso(d.oldest_pending_at)&&Date.parse(d.oldest_pending_at)<=now)
@@ -71,7 +71,7 @@ async function refreshQueueSummary(){
    const groups=d.groups.filter(g=>g&&typeof g.asset==='string'&&typeof g.priority==='string'&&whole(g.total));
    if(groups.length)set('queue-groups','By asset / priority: '+groups.slice(0,15).map(g=>g.asset.slice(0,35)+' / '+g.priority.slice(0,20)+' '+g.total).join(' · '));
   }
-  set('freshness','Verified fresh queue snapshot: '+d.observed_at+' · queue claims are not worker-native execution proof');
+  set('freshness','Source-reported queue snapshot: '+d.observed_at+' · native execution and publisher authentication require independent proof');
  }catch(e){
   set('freshness','UNKNOWN · fresh, scoped durable queue feed unavailable: '+String(e.message||e).slice(0,100));
   set('queue-refresh','Last durable queue publication: UNKNOWN · no verified freshness');
