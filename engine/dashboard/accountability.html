@@ -7,6 +7,7 @@
 <div class="tiles"><div class="tile"><b id="open">UNKNOWN</b>Open tickets</div><div class="tile"><b id="active">UNKNOWN</b>In work</div><div class="tile"><b id="completed">UNKNOWN</b>Completed</div><div class="tile"><b id="races">UNKNOWN</b>Races</div><div class="tile"><b id="blocks">UNKNOWN</b>Blocks logged</div></div>
 <section aria-label="Phone-first durable queue summary" id="queue-summary">
 <h2>QUEUE SUMMARY · durable queue only</h2>
+<button type="button" id="queue-refresh-button" aria-label="Refresh durable queue snapshot">Refresh queue</button>
 <p class="dim" id="queue-scope">Scope: UNKNOWN · No verified durable queue publisher</p>
 <div class="tiles">
 <div class="tile"><b id="q-total">UNKNOWN</b>Total tickets</div>
@@ -84,4 +85,6 @@ async function refreshQueueSummary(){
  }
 }
 refreshQueueSummary();
+document.getElementById('queue-refresh-button').addEventListener('click',refreshQueueSummary);
+setInterval(refreshQueueSummary,30000);
 </script><script type="module" src="./worker-feed-panel.mjs"></script></body></html>
