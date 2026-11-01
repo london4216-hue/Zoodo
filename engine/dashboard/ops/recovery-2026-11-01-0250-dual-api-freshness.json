@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-01T02:49:07.165Z",
+  "owner": "ZOO Dashboard Worker",
+  "issue": "https://github.com/london4216-hue/Zoodo/issues/18",
+  "pull_request": "https://github.com/london4216-hue/Zoodo/pull/116",
+  "change": "Always refresh GitHub API attempt timestamp and both endpoint states, including simultaneous failures; do not retain stale successful response label.",
+  "test_source_commit": "3c13b0bd894d2fd819fcb437d3c9fc7a46bf5e0b",
+  "source_file": "engine/dashboard/index.html",
+  "test_file": "engine/dashboard/github-api-refresh.test.mjs",
+  "source_tests": {
+    "environment": "V8 exact GitHub-readback source statement",
+    "fail_first": "Original simultaneous commits/Actions failure left prior successful status unchanged",
+    "after_fix": {
+      "passed": 4,
+      "total": 4,
+      "scenarios": [
+        "both fulfilled",
+        "commits fulfilled Actions rejected",
+        "commits rejected Actions fulfilled",
+        "both rejected"
+      ]
+    },
+    "committed_node_tests": 5,
+    "github_ci_executed": false
+  },
+  "source_safety": {
+    "href_attributes_preserved": true,
+    "href_count": 60,
+    "owner_authentication_changed": false,
+    "netlify_configuration_changed": false,
+    "production_published": false
+  },
+  "reconciliation": {
+    "pr_16": {
+      "state": "merged",
+      "target": "autonomous-engine-replacement-2026-10-29",
+      "open_to_merge_seconds": 76910
+    },
+    "pr_71": {
+      "state": "merged",
+      "target": "fix/zoo-live-dashboard-accountability-20261030",
+      "open_to_merge_seconds": 8072
+    },
+    "open_zoodo_prs": 70,
+    "open_zoodo_issues": 25,
+    "counts_source": "authenticated GitHub searches",
+    "production_display_verified": false
+  },
+  "scheduler": {
+    "canonical_feed_commit": "5a7534f22d043b1e33f3fdb215d123d21e2f0b20",
+    "observed_at": "2026-11-01T02:48:50.680Z",
+    "expected_roles": 5,
+    "historical_valid_completed_receipts": 5,
+    "active_productive_worker_count": null,
+    "hunter_enabled": false,
+    "classification": "RECOVERY REQUIRED",
+    "note": "Latest anomalous Builder/Hunter completion timestamps quarantined; PR Closure and Keeper valid completions; Dashboard in progress. Scheduler receipt is not a productive worker heartbeat."
+  },
+  "hosting": {
+    "netlify_preview_provider_status": "success",
+    "preview_url": "https://deploy-preview-116--zoo-live-dashboard.netlify.app",
+    "independent_preview_readback": "UNVERIFIED_DNS_RESOLUTION_FAILED",
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "independent_production_readback": "UNVERIFIED_DNS_RESOLUTION_FAILED",
+    "production_sha": null,
+    "deploy_id": null,
+    "rollback_mapping": null,
+    "owner_authenticated_readback": null
+  },
+  "ci": {
+    "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41266677428",
+    "run_id": 41266677428,
+    "conclusion": "failure",
+    "job_steps": 0
+  },
+  "latencies": {
+    "merge_seconds": {
+      "pr16": 76910,
+      "pr71": 8072
+    },
+    "test_to_deploy_seconds": null,
+    "deploy_seconds": null
+  },
+  "handoff": {
+    "integration": "Sole ZOO Keeper",
+    "host_probe": "Qualified Hunter replacement or Keeper; Hunter currently disabled",
+    "zero_step_ci": "Implementation Lead",
+    "product_lanes": "Independent; no block"
+  },
+  "wednesday_grades": "deferred",
+  "ordinary_email_sent": false
+}
