@@ -56,6 +56,10 @@ export class DurableQueue {
     const t=this.get(id);if(!t||t.status!=='queued')fail('Ticket not queued');
     if(!valid(worker)||!valid(provider))fail('Real worker identity and provider required');
     if(t.attempts>=this.maxAttempts)fail('Retry budget exhausted');
+    // This journal is single-writer: preserve worker identity across active leases.
+    // Expiry alone is not recovery; recover() must release the old claim first.
+    if([...this.items.values()].some(other => other.id!==id && other.worker===worker &&
+      ['assigned','running','blocked'].includes(other.status)))fail('Worker already has active ticket');
     return this.#record('claim',id,{worker,provider,leaseUntil:this.now()+this.leaseMs});
   }
   #active(id,worker){const t=this.get(id);if(!t||t.worker!==worker||!['assigned','running'].includes(t.status)||t.leaseUntil<=this.now())fail('No active lease');return t}
