@@ -8,6 +8,7 @@ const branches=workflow.match(/^[ \t]+branches:\s*\[([^\]]+)\]/m)?.[1].split(','
 test('dashboard contract CI runs for canonical and stacked dashboard PR bases',()=>{
  assert.ok(branches.includes('autonomous-engine-replacement-2026-10-29'),'canonical PR #16 target missing');
  assert.ok(branches.includes('fix/zoo-live-dashboard-accountability-20261030'),'stacked PR #71 target missing');
+ assert.ok(branches.includes('main'),'current dashboard PRs to main must trigger contract CI');
 });
 
 test('workflow retains path trigger and Node source tests',()=>{
