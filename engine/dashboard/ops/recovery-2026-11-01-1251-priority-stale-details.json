@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "kind": "bounded_dashboard_source_repair",
+  "recorded_at": "2026-11-01T12:50:53Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/126",
+  "base": "main",
+  "finding": "After a valid priority snapshot, HTTP/network/invalid-schema failures retained stale PR SHA, test PASS and Sara verified URL detail while top-level state was RECOVERING/UNKNOWN.",
+  "change": "Clear all dependent priority and Sara detail text on fetch/schema failure; preserve last-good observed_at only as historical receipt.",
+  "source": {
+    "base_sha": "3b8942edae4230e15e745ff86d8fea6c208f814a",
+    "original_blob": "3bebf42807d810cc76dbea25239c9e4725f50d97",
+    "patched_blob": "d1548e96be114321cbe63bc6c06ce48aa4ea41c5",
+    "source_commit": "3902a92131d2a42a4c8452e8e821a1ae53cd9819",
+    "test_commit": "bd54d19b7ad3b308d52c3ca0dff5bd899829e522",
+    "test_blob": "85863c433ec64dd9d91e709f36a1e8f6d1d345b0",
+    "html_blob_unchanged": "82fa64fc52cbc8379f3f2ec8bd3073972271b617",
+    "netlify_config_blob_unchanged": "aa2e3b7e6069298c8f9a448dda5d72d3dae38fa2"
+  },
+  "tests": {
+    "local_node_fail_first": {
+      "passed": 0,
+      "failed": 3
+    },
+    "local_node_after": {
+      "passed": 3,
+      "failed": 0
+    },
+    "syntax": "node --check passed",
+    "github_blob_readback_matched": true,
+    "ci_native_executed": false
+  },
+  "queue": {
+    "open_prs": 79,
+    "open_issues": 25,
+    "source": "authenticated GitHub searches",
+    "live_display_verified": false,
+    "productive_completed_tasks_verified": null
+  },
+  "historical_merges": {
+    "pr16": {
+      "merged_at": "2026-10-31T12:56:11Z",
+      "target": "autonomous-engine-replacement-2026-10-29",
+      "merge_seconds": 76910
+    },
+    "pr71": {
+      "merged_at": "2026-10-31T12:56:19Z",
+      "target": "fix/zoo-live-dashboard-accountability-20261030",
+      "merge_seconds": 8072
+    }
+  },
+  "feeds": {
+    "priority_watch_observed_at": "2026-10-31T01:25:19.042Z",
+    "automation_proof_observed_at": "2026-10-31T10:40:41.796Z",
+    "publisher_restarted": false
+  },
+  "scheduler": {
+    "source": "connected automations peek; scheduler records, not productive worker heartbeat",
+    "keeper": {
+      "status": "completed",
+      "scheduled_for": "2026-11-01T12:45:30Z",
+      "completed_at": "2026-11-01T12:49:24.668561Z"
+    },
+    "builder": {
+      "status": "completed",
+      "scheduled_for": "2026-11-01T12:24:51Z",
+      "completed_at": "2026-11-01T12:31:48.586157Z"
+    },
+    "pr_closure": {
+      "status": "in_progress",
+      "scheduled_for": "2026-11-01T12:49:02.686918Z"
+    },
+    "dashboard": {
+      "status": "in_progress",
+      "scheduled_for": "2026-11-01T12:49:03.468318Z"
+    },
+    "hunter": {
+      "enabled": false,
+      "last_historical_completion": "2026-10-31T18:01:41.851473Z"
+    },
+    "productive_worker_heartbeat_verified": false
+  },
+  "ci": {
+    "head_before_receipt": "bd54d19b7ad3b308d52c3ca0dff5bd899829e522",
+    "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41308419774",
+    "conclusion": "failure",
+    "job_steps": null,
+    "zero_steps_proven": false,
+    "source_local_tests_separate": true
+  },
+  "hosting": {
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "preview_url": "https://deploy-preview-126--zoo-live-dashboard.netlify.app/",
+    "provider_deploy_status": "UNKNOWN",
+    "production_readback": "UNVERIFIED_WEB_TOOL_NOT_ACCESSIBLE",
+    "preview_readback": "UNVERIFIED_WEB_TOOL_NOT_ACCESSIBLE",
+    "production_sha": null,
+    "deploy_id": null,
+    "rollback_mapping": null,
+    "owner_authenticated_readback": null,
+    "production_published": false
+  },
+  "latencies": {
+    "pr16_merge_seconds": 76910,
+    "pr71_merge_seconds": 8072,
+    "test_to_deploy_seconds": null,
+    "source_to_deploy_seconds": null
+  },
+  "safety": {
+    "dashboard_links_unchanged": true,
+    "owner_auth_unchanged": true,
+    "netlify_config_unchanged": true,
+    "keeper_only_integration": true,
+    "hunter_host_probe_independent": true,
+    "pr_closure_ezmove_beautypath_unblocked": true,
+    "grades": "deferred_until_wednesday",
+    "ordinary_email_sent": false
+  },
+  "integration_note": "Keeper must reconcile this isolated priority-watch.mjs change with draft PR #118 replay protection and PR #124 Sara URL verification before merging."
+}
