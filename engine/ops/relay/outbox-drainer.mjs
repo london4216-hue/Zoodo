@@ -5,7 +5,8 @@ const WORKER = /^[A-Za-z0-9_-]{1,64}$/;
 const SAFE_STATES = new Set(['idle','dispatched','delegated','failed','uncertain','recovery_required','not_started']);
 function validReceipt(r, worker) {
   if (!r || typeof r.ticket !== 'string' || !TICKET.test(r.ticket) || r.worker !== worker ||
-      typeof r.receipt_url !== 'string' || r.receipt_url.length > 2048) return false;
+      typeof r.receipt_url !== 'string' || r.receipt_url.length > 2048 ||
+      r.receipt_url !== r.receipt_url.trim() || /[\p{Cc}\p{Cf}]/u.test(r.receipt_url)) return false;
   try {
     const url = new URL(r.receipt_url);
     return url.protocol === 'https:' && !url.username && !url.password && !url.hash;
