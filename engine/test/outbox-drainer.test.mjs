@@ -27,10 +27,12 @@ test('idle with queued work or missing settle RPC never ACKs',async()=>{
  assert.equal(f.calls.some(x=>Array.isArray(x)&&x[0]==='ack'),false);
  delete f.store.settleIdleOutbox;assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'recovery_required');
 });
-test('failed worker tries qualified alternative without acking failure',async()=>{
+test('recovery-required result does not authorize an alternate worker without native non-started proof',async()=>{
  const f=fixture({result:w=>w==='workerA'?{state:'recovery_required'}:{state:'dispatched',ticket:'T2',worker:w,receipt_url:'https://runner.example/receipts/T2'}});
- const r=await drainOne({...f,workerIds:['workerA','workerB']});assert.equal(r.state,'acknowledged');
- assert.deepEqual(r.attempts,[{worker:'workerA',state:'recovery_required'},{worker:'workerB',state:'dispatched'}]);
+ const r=await drainOne({...f,workerIds:['workerA','workerB']});assert.equal(r.state,'recovery_required');
+ assert.deepEqual(r.attempts,[{worker:'workerA',state:'recovery_required'}]);
+ assert.deepEqual(f.calls.filter(x=>Array.isArray(x)&&x[0]==='next'),[['next','workerA']]);
+ assert.equal(f.calls.some(x=>Array.isArray(x)&&x[0]==='ack'),false);
 });
 test('uncertain native dispatch does not fake success or ack',async()=>{
  const f=fixture({result:{state:'uncertain',ticket:'T1'}});
@@ -69,9 +71,12 @@ test('rejects unsubstantiated dispatch/delegation without ACK',async()=>{
   assert.equal(f.calls.some(x=>Array.isArray(x)&&x[0]==='ack'),false);
  }
 });
-test('delegated dispatch ACK requires complete alternate receipt',async()=>{
+test('delegated dispatch ACK requires complete receipt and qualified replacement',async()=>{
  const f=fixture({result:{state:'delegated',worker:'workerA',replacement:{state:'dispatched',ticket:'T2',worker:'workerB',receipt_url:'https://runner.example/receipts/T2'}}});
- assert.equal((await drainOne({...f,workerIds:['workerA']})).state,'acknowledged');
+ assert.equal((await drainOne({...f,workerIds:['workerA','workerB']})).state,'acknowledged');
+ const unqualified=fixture({result:{state:'delegated',worker:'workerA',replacement:{state:'dispatched',ticket:'T2',worker:'workerB',receipt_url:'https://runner.example/receipts/T2'}}});
+ assert.equal((await drainOne({...unqualified,workerIds:['workerA']})).state,'recovery_required');
+ assert.equal(unqualified.calls.some(x=>Array.isArray(x)&&x[0]==='ack'),false);
 });
 test('ambiguous durable ACK exception never triggers second worker dispatch',async()=>{
  const f=fixture({result:w=>({state:'dispatched',ticket:'T1',worker:w,receipt_url:'https://runner.example/receipts/T1'})});
