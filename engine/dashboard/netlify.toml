@@ -7,6 +7,12 @@
   node_bundler = "esbuild"
 
 [[redirects]]
+  from = "/"
+  to = "/mission-control.html"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/dashboard"
   to = "/index.html"
   status = 200
