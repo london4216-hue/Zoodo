@@ -26,7 +26,7 @@ function corruptClaim(file,id,leaseUntil) {
   writeFileSync(file,events.map(e=>JSON.stringify(e)).join('\n')+'\n');
 }
 
-for (const malformed of [null,'1100',Infinity]) {
+for (const malformed of [null,'1100',{}]) {
   test('recovery fails closed on malformed active lease '+String(malformed),()=>fixture(file=>{
     corruptClaim(file,'A',malformed);
     const q=new DurableQueue(file,{now:()=>1100,leaseMs:100});
