@@ -37,7 +37,8 @@ export async function drainOne({store,relay,workerIds}) {
   for (const worker of qualifiedWorkers) {
     try {
       const r = await relay.next(worker);
-      attempts.push({worker,state:r?.state ?? 'unknown'});
+      const state = r?.state;
+      attempts.push({worker,state:typeof state === 'string' && state.length > 0 && state.length <= 64 ? state : 'unknown'});
       if (r?.state === 'idle') {
         // An idle worker does not prove the shared queue is empty. Only a
         // transactional store check may settle the wake-up without dispatch.
