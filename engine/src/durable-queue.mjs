@@ -59,6 +59,10 @@ export class DurableQueue {
     const t=this.get(id);if(!t||t.status!=='queued')fail('Ticket not queued');
     if(!validIdentity(worker)||!validIdentity(provider))fail('Real worker identity and provider required');
     if(t.attempts>=this.maxAttempts)fail('Retry budget exhausted');
+    // A recovered or rejected ticket must use a new invocation identity.
+    // Otherwise a delayed callback from the prior attempt could impersonate NEXT.
+    if(t.history.some(e=>e.type==='claim' && e.worker===worker))
+      fail('Fresh worker invocation required for retry');
     // This journal is single-writer: preserve worker identity across active leases.
     // Expiry alone is not recovery; recover() must release the old claim first.
     if([...this.items.values()].some(other => other.id!==id && other.worker===worker &&
