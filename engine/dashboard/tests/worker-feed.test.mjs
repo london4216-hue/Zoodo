@@ -9,6 +9,12 @@ test('no publisher and future-dated snapshots never establish a worker',()=>{
  assert.equal(evaluateWorkerFeed(null,NOW).state,'UNKNOWN');
  assert.equal(evaluateWorkerFeed(feed([receipt],'2026-11-01T13:50:00Z'),NOW).state,'UNKNOWN');
 });
+test('freshly timestamped empty roster is UNKNOWN, never a worker success',()=>{
+ const r=evaluateWorkerFeed(feed([],at),NOW);
+ assert.equal(r.state,'UNKNOWN');
+ assert.equal(r.workers.length,0);
+ assert.match(r.reason,/No worker receipts published/);
+});
 test('local Aider receipt without native ID is UNKNOWN, not RUNNING',()=>{
  const r=evaluateWorkerFeed(feed(),NOW);
  assert.equal(r.workers[0].state,'unknown');assert.equal(r.workers[0].reported_status,'running');
