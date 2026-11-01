@@ -3,16 +3,83 @@
 <style>:root{color-scheme:light dark;--bg:#fff;--fg:#111;--dim:#777;--line:#ddd;--accent:#7b4fe0}@media(prefers-color-scheme:dark){:root{--bg:#111;--fg:#eee;--dim:#aaa;--line:#383838}}body{margin:0;padding:20px;max-width:1100px;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,sans-serif}h1{font-size:24px;margin:0}h2{font-size:17px;margin:24px 0 8px}.dim{color:var(--dim)}.tiles{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}.tile{border:1px solid var(--line);border-radius:10px;padding:12px 16px;min-width:125px}.tile b{display:block;font-size:26px}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:10px 6px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:12px;color:var(--dim)}a{color:inherit}nav a{margin-right:15px}small{color:var(--dim)}.status{border-left:3px solid var(--accent);padding-left:12px;margin-top:16px}</style></head><body>
 <nav><a href="./index.html">ZOO dashboard</a><a href="https://github.com/london4216-hue/Zoodo/issues">Ticket queue</a></nav>
 <h1>ZOO accountability · Claude</h1><p class="dim">Agent throughput, ticket ownership, and first-completed-fix wins.</p>
-<p class="status" id="freshness">Snapshot supplied Oct 31, 2026, 9:01 AM ET. Not a verified live feed.</p>
-<div class="tiles"><div class="tile"><b id="open">477</b>Open tickets</div><div class="tile"><b id="active">0</b>In work</div><div class="tile"><b id="completed">1</b>Completed</div><div class="tile"><b id="races">1</b>Races</div><div class="tile"><b id="blocks">0</b>Blocks logged</div></div>
+<p class="status" id="freshness">UNKNOWN · durable queue feed has not been independently verified. Historical examples below are not live.</p>
+<div class="tiles"><div class="tile"><b id="open">UNKNOWN</b>Open tickets</div><div class="tile"><b id="active">UNKNOWN</b>In work</div><div class="tile"><b id="completed">UNKNOWN</b>Completed</div><div class="tile"><b id="races">UNKNOWN</b>Races</div><div class="tile"><b id="blocks">UNKNOWN</b>Blocks logged</div></div>
+<section aria-label="Phone-first durable queue summary" id="queue-summary">
+<h2>QUEUE SUMMARY · durable queue only</h2>
+<p class="dim" id="queue-scope">Scope: UNKNOWN · No verified durable queue publisher</p>
+<div class="tiles">
+<div class="tile"><b id="q-total">UNKNOWN</b>Total tickets</div>
+<div class="tile"><b id="q-queued">UNKNOWN</b>Queued</div>
+<div class="tile"><b id="q-running">UNKNOWN</b>Running</div>
+<div class="tile"><b id="q-blocked">UNKNOWN</b>Blocked</div>
+<div class="tile"><b id="q-completed24">UNKNOWN</b>Completed / 24h</div>
+<div class="tile"><b id="q-oldest">UNKNOWN</b>Oldest pending age</div>
+</div>
+<p class="dim" id="queue-refresh">Last durable queue publication: UNKNOWN · freshness not established</p>
+<h2>Next 3–5 tickets</h2><div id="queue-next" aria-live="polite">UNKNOWN · no source-backed NEXT assignments</div>
+<p class="dim" id="queue-groups">Asset / priority grouping: UNKNOWN · waiting for scoped queue data</p>
+</section>
 <h2>Worker receipts · Aider and provider roster</h2>
 <p class="status" id="worker-feed-status" aria-live="polite">UNKNOWN · waiting for a source-linked worker receipt. No inferred bot availability.</p>
 <p class="dim">The existing durable queue and local Aider adapter are separate from this read-only display. A local receipt without a provider-native run ID stays UNKNOWN. Quota refill times are shown only when verified.</p>
 <table aria-label="ZOO worker receipt status"><thead><tr><th>Worker</th><th>Status</th><th>Proof</th><th>Task</th><th>Last event UTC</th><th>Result</th></tr></thead><tbody id="worker-feed-rows"><tr><td>Aider / Ollama (local)</td><td>UNKNOWN</td><td>NO NATIVE RECEIPT</td><td>—</td><td>—</td><td>—</td></tr></tbody></table>
-<h2>Agents</h2><table><thead><tr><th>Agent</th><th>Last completed</th><th>When</th><th>Total</th><th>Now</th></tr></thead><tbody id="agents"><tr><td>claude-sonnet</td><td><a href="https://github.com/london4216-hue/TransendIQ/issues/871">ZOO-871</a> · /admin and 15 other screens: a count of exactly one reads as plural</td><td>Oct 31, 8:52 AM ET</td><td>1</td><td>idle</td></tr><tr><td>claude-opus</td><td>nothing completed yet</td><td>—</td><td>0</td><td>idle</td></tr></tbody></table>
+<h2>Historical agent examples · Oct 31 (NOT live)</h2><table><thead><tr><th>Agent</th><th>Last completed</th><th>When</th><th>Total</th><th>Now</th></tr></thead><tbody id="agents"><tr><td>claude-sonnet</td><td><a href="https://github.com/london4216-hue/TransendIQ/issues/871">ZOO-871</a> · /admin and 15 other screens: a count of exactly one reads as plural</td><td>Oct 31, 8:52 AM ET</td><td>1</td><td>UNKNOWN · historical</td></tr><tr><td>claude-opus</td><td>nothing completed yet</td><td>—</td><td>0</td><td>UNKNOWN · historical</td></tr></tbody></table>
 <h2>Races: first completed fix wins</h2><table><thead><tr><th>Ticket</th><th>Attempts</th><th>Winner</th><th>Redirected</th></tr></thead><tbody id="race-rows"><tr><td>ZOO-871</td><td>claude-sonnet, claude-opus</td><td>claude-sonnet · Oct 31, 8:52 AM ET</td><td>claude-opus</td></tr></tbody></table>
-<p><small>Source: owner-supplied accountability snapshot. The numbers above are historical until a live ledger feed is connected. <a href="/board.json">Try board.json</a>. Never infer that an idle label means a provider is reachable.</small></p>
+<p><small>Source: owner-supplied accountability snapshot. The historical agent and race examples above are not active worker evidence; KPI tiles stay UNKNOWN without a fresh, scoped durable queue receipt. <a href="/board.json">Try board.json</a>. Never infer that an idle label means a provider is reachable.</small></p>
 <script>
-const safe=(x)=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-(async()=>{try{const response=await fetch('/board.json',{cache:'no-store'});if(!response.ok)throw Error('no board feed');const d=await response.json();if(!d||typeof d!=='object')throw Error('invalid board feed');const stats=d.stats??d.summary??{};const keys={open:['open','open_tickets'],active:['active','in_progress','in_work'],completed:['completed','done'],races:['races'],blocks:['blocks','blocked']};for(const [id,names] of Object.entries(keys)){const v=names.map(n=>stats[n]??d[n]).find(v=>Number.isFinite(Number(v)));if(v!==undefined)document.getElementById(id).textContent=Number(v).toLocaleString()}if(Array.isArray(d.agents)){document.getElementById('agents').innerHTML=d.agents.map(a=>'<tr><td>'+safe(a.name??a.id)+'</td><td>'+safe(a.last_completed??'none')+'</td><td>'+safe(a.when??'—')+'</td><td>'+safe(a.total??0)+'</td><td>'+safe(a.now??'unknown')+'</td></tr>').join('')}document.getElementById('freshness').textContent='Ledger data loaded from /board.json at '+new Date().toLocaleString()+'. Feed freshness and execution receipts must be checked independently.'}catch(e){document.getElementById('freshness').textContent='Historical snapshot only (Oct 31, 9:01 AM ET). Live /board.json is unavailable or incompatible.'}})();
+const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const whole=n=>Number.isSafeInteger(n)&&n>=0;
+const iso=x=>typeof x==='string'&&Number.isFinite(Date.parse(x));
+const set=(id,value)=>{document.getElementById(id).textContent=String(value)};
+const validIssueUrl=x=>{try{const u=new URL(x);return u.protocol==='https:'&&u.hostname==='github.com'&&u.pathname.startsWith('/london4216-hue/')&&/\/(issues|pull)\/\d+$/.test(u.pathname)}catch{return false}};
+async function refreshQueueSummary(){
+ try{
+  const response=await fetch('/board.json?read='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(8000)});
+  if(!response.ok)throw Error('HTTP '+response.status);
+  const d=await response.json(),now=Date.now(),at=Date.parse(d?.observed_at);
+  if(d?.schema_version!==1||d?.source!=='zoo-durable-queue'||!iso(d.observed_at)||at>now+60000||now-at>15*60000||typeof d.scope!=='string'||!d.scope.trim())
+   throw Error('No fresh, scoped durable queue receipt');
+  const s=d.stats;
+  if(!s||!['total','queued','running','blocked','completed_last_24h'].every(k=>whole(s[k]))||
+     s.queued+s.running+s.blocked>s.total||d.completed_window_hours!==24)
+   throw Error('Queue counts/window not verified');
+  for(const [id,key] of [['q-total','total'],['q-queued','queued'],['q-running','running'],['q-blocked','blocked'],['q-completed24','completed_last_24h']])
+   set(id,s[key].toLocaleString());
+  if(whole(s.open))set('open',s.open.toLocaleString());
+  set('active',s.running.toLocaleString());
+  if(whole(s.completed))set('completed',s.completed.toLocaleString());
+  if(whole(s.races))set('races',s.races.toLocaleString());
+  set('blocks',s.blocked.toLocaleString());
+  set('queue-scope','Scope: '+d.scope+' · source: '+d.source);
+  set('queue-refresh','Last durable queue publication: '+d.observed_at+' · freshness: '+Math.floor((now-at)/60000)+' minutes');
+  if(iso(d.oldest_pending_at)&&Date.parse(d.oldest_pending_at)<=now)
+   set('q-oldest',Math.floor((now-Date.parse(d.oldest_pending_at))/60000)+' min');
+  const next=document.getElementById('queue-next');next.replaceChildren();
+  if(Array.isArray(d.next_tickets)){
+   for(const t of d.next_tickets.slice(0,5)){
+    if(!t||!validIssueUrl(t.issue_url)||typeof t.title!=='string')continue;
+    const p=document.createElement('p'),a=document.createElement('a');
+    a.href=t.issue_url;a.target='_blank';a.rel='noopener noreferrer';
+    a.textContent=String(t.title).slice(0,70)+' · '+String(t.id??'').slice(0,35);
+    p.append(a,document.createTextNode(' · '+String(t.asset??'asset UNKNOWN').slice(0,40)+' · '+String(t.agent??'agent UNKNOWN').slice(0,40)));
+    next.append(p);
+   }
+   if(!next.childNodes.length)set('queue-next','UNKNOWN · next ticket receipts missing or invalid');
+  }else set('queue-next','UNKNOWN · no source-backed NEXT assignments');
+  if(Array.isArray(d.groups)){
+   const groups=d.groups.filter(g=>g&&typeof g.asset==='string'&&typeof g.priority==='string'&&whole(g.total));
+   if(groups.length)set('queue-groups','By asset / priority: '+groups.slice(0,15).map(g=>g.asset.slice(0,35)+' / '+g.priority.slice(0,20)+' '+g.total).join(' · '));
+  }
+  set('freshness','Verified fresh queue snapshot: '+d.observed_at+' · queue claims are not worker-native execution proof');
+ }catch(e){
+  set('freshness','UNKNOWN · fresh, scoped durable queue feed unavailable: '+String(e.message||e).slice(0,100));
+  set('queue-refresh','Last durable queue publication: UNKNOWN · no verified freshness');
+  set('queue-scope','Scope: UNKNOWN · no authenticated durable queue publisher');
+  for(const id of ['open','active','completed','races','blocks','q-total','q-queued','q-running','q-blocked','q-completed24','q-oldest'])set(id,'UNKNOWN');
+  set('queue-next','UNKNOWN · no source-backed NEXT assignments');
+  set('queue-groups','Asset / priority grouping: UNKNOWN');
+ }
+}
+refreshQueueSummary();
 </script><script type="module" src="./worker-feed-panel.mjs"></script></body></html>
