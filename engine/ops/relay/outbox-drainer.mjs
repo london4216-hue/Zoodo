@@ -15,12 +15,12 @@ function validReceipt(r, worker) {
 }
 // Snapshot only verified receipt fields; provider objects may contain cyclic,
 // oversized or mutable metadata that must not enter durable ACK evidence.
-function verifiedDispatch(r, worker, qualifiedWorkers) {
-  if (r?.state === 'dispatched') {
+function verifiedDispatch(r, worker, qualifiedWorkers, state) {
+  if (state === 'dispatched') {
     const receipt = {state:'dispatched',ticket:r.ticket,worker:r.worker,receipt_url:r.receipt_url};
     return validReceipt(receipt, worker) ? receipt : null;
   }
-  if (r?.state !== 'delegated' || r.worker !== worker) return null;
+  if (state !== 'delegated' || r.worker !== worker) return null;
   const replacement = r.replacement;
   const receipt = {state:'dispatched',ticket:replacement?.ticket,
     worker:replacement?.worker,receipt_url:replacement?.receipt_url};
@@ -93,7 +93,7 @@ export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000})
         continue;
       }
       if (state === 'dispatched' || state === 'delegated') {
-        const dispatch = verifiedDispatch(r, worker, qualifiedWorkers);
+        const dispatch = verifiedDispatch(r, worker, qualifiedWorkers, state);
         if (!dispatch)
           return {state:'recovery_required',reason:'dispatch receipt not confirmed',eventId:eventId,attempts};
         // Once dispatch is confirmed, an ambiguous ACK is never a reason to
