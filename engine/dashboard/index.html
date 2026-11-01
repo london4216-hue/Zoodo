@@ -183,6 +183,9 @@ async function classifyDemoLinks(){
      const note=document.createElement('div');note.className='time';row.appendChild(note);
      repairRows.set(link,row);
     }
+    // A promoted link leaves its reusable repair row. Move it back on every
+    // demotion so repeated verify/expire cycles never hide or lose the URL.
+    row.insertBefore(link,row.firstChild);
     const note=row.querySelector('.time');
     const last=matching.find(x=>Number.isFinite(Date.parse(x.checkedAt)));
     note.textContent='Not independently verified for demo · '+(last?'last recorded check: '+last.checkedAt:'last successful check: not established')+
