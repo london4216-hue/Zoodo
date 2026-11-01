@@ -40,6 +40,9 @@ export function evaluateAutomationProof(feed, now=Date.now(), dueMs=75*60000){
     new Set(expected).size!==expected.length)return unknown('Invalid expected scheduler roster');
  const overdue=[...new Set([
   ...expected.filter(role=>!valid.some(w=>w.role===role)),
+  // A disabled automation can have a recent historical completion, but is not
+  // an active scheduled worker. Keep its receipt, require recovery.
+  ...feed.workers.filter(w=>w.enabled===false).map(w=>w.role),
   ...feed.workers.filter(w=>!valid.includes(w)||now-Date.parse(w.completed_at)>dueMs)
    .map(w=>String(w?.role||'Unknown worker')),
   ...unresolvedAnomalies.map(a=>typeof a?.role==='string'&&a.role.trim()?a.role:'Unknown anomaly')

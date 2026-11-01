@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "kind": "bounded_dashboard_source_repair",
+  "observed_at": "2026-11-01T00:44:11.298Z",
+  "source": {
+    "repo": "london4216-hue/Zoodo",
+    "canonical_branch": "autonomous-engine-replacement-2026-10-29",
+    "draft_pr": "https://github.com/london4216-hue/Zoodo/pull/114",
+    "source_commit": "109207ae3706f77771c58d84b3b9a9861582cb22",
+    "test_commit": "a889bda0a1e333d250dc353beba9250ff9a58803",
+    "source_blob_before": "c725c5edde618eb356ee8628188e3c9ab72140a2",
+    "source_blob_after": "b4c0e6847aa3e2c1f6b19914c1940960b191ef93",
+    "test_blob": "330667243674f9e103255e3638a499f2eba5fb4f",
+    "html_blob_unchanged": "263e71a6fd40429b1b42eae9501de642e1691dff"
+  },
+  "fix": {
+    "defect": "An explicitly disabled automation with a recent historical completion was classified RECORDED RUNS CURRENT",
+    "change": "Flag enabled:false worker roles overdue while retaining historical completed receipt count; leave enabled:true and legacy missing flag behavior unchanged",
+    "source_only": true,
+    "owner_auth_changed": false,
+    "existing_links_changed": false,
+    "rollback": "Revert isolated PR commit or do not merge draft; no production deployment attempted"
+  },
+  "tests": {
+    "fail_first": {
+      "original_state": "RECORDED RUNS CURRENT",
+      "expected_state": "RECOVERY REQUIRED"
+    },
+    "v8_source_executed": {
+      "passed": 6,
+      "failed": 0
+    },
+    "node_regression_cases_committed": 6,
+    "node_regression_execution": "NOT_EXECUTED",
+    "github_actions": {
+      "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41257983642",
+      "conclusion": "failure",
+      "job_id": 124705126165,
+      "job_name": "dashboard-contract",
+      "recorded_steps": 0,
+      "root_cause": "UNKNOWN"
+    }
+  },
+  "github": {
+    "open_prs": 68,
+    "open_issues": 25,
+    "count_scope": "GitHub authenticated full open search, not live dashboard readback",
+    "pr16": {
+      "merged": true,
+      "base": "autonomous-engine-replacement-2026-10-29",
+      "open_to_merge_seconds": 76910
+    },
+    "pr71": {
+      "merged": true,
+      "base": "fix/zoo-live-dashboard-accountability-20261030",
+      "open_to_merge_seconds": 8072,
+      "canonical_inclusion": "not implied by merge into former feature branch"
+    }
+  },
+  "scheduler": {
+    "snapshot_commit": "e702c2a1b55b7ba3582944ccd9a6c8d0ffd45f2b",
+    "observed_at": "2026-11-01T00:43:49.754Z",
+    "valid_historical_completion_receipts": 5,
+    "disabled": [
+      "ZOO Agent Hunter"
+    ],
+    "current_in_progress": [
+      "ZOO Dashboard Worker"
+    ],
+    "quarantined_invalid_latest_dashboard_completion": true,
+    "source_executed_classification": "RECOVERY REQUIRED",
+    "overdue": [
+      "ZOO Agent Hunter",
+      "ZOO Dashboard Worker"
+    ],
+    "productive_worker_execution_verified": false
+  },
+  "netlify": {
+    "preview_status": "SUCCESS_PROVIDER_COMMIT_STATUS_ONLY",
+    "preview_url": "https://deploy-preview-114--zoo-live-dashboard.netlify.app",
+    "preview_browser_readback": "UNAVAILABLE",
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "production_browser_readback": "UNAVAILABLE",
+    "production_sha": null,
+    "production_deploy_id": null,
+    "owner_authenticated_browser_readback": false,
+    "rollback_mapping": null
+  },
+  "latency": {
+    "pr16_open_to_merge_seconds": 76910,
+    "pr71_open_to_merge_seconds": 8072,
+    "source_to_provider_deploy_seconds": null,
+    "test_to_merge_seconds": null,
+    "merge_to_production_seconds": null,
+    "production_to_verified_seconds": null
+  },
+  "handoff": {
+    "safe_integration": "Sole ZOO Keeper",
+    "host_probe": "Hunter disabled; Keeper to qualify alternate host probe",
+    "zero_step_ci": "Implementation Lead",
+    "independent_work": [
+      "PR Closure",
+      "EZ Move",
+      "BeautyPath"
+    ],
+    "wednesday_grades": "DEFERRED",
+    "ordinary_email_sent": false,
+    "production_published": false
+  }
+}
