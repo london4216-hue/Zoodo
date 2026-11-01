@@ -1,0 +1,71 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_date_utc": "2026-11-01",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "scope": "Two sequential nonoverlapping test-first outbox serialization defects from PR #112; no distributed database lease claimed",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "baseline_head": "56c2cdcda0e860bc3e211fbba4cc9889007f375f",
+  "first_ticket": {
+    "source_pr": 112,
+    "defect": "ACK returned raw provider dispatch objects with cyclic or unbounded metadata",
+    "fail_first": {
+      "passed": 1,
+      "failed": 2,
+      "command": "node --test engine/test/outbox-dispatch-serialization-fence.test.mjs"
+    },
+    "after_fix": {
+      "passed": 3,
+      "failed": 0
+    },
+    "source_commit": "0a70ea5468c9b87ddf655307d45c1c55137b5e77",
+    "test_commit": "20e848d23bf06eda2c25082d7ef8f5e0e4045d2e"
+  },
+  "next_ticket": {
+    "source_pr": 112,
+    "defect": "Cyclic or oversized worker state leaked into durable recovery attempts",
+    "fail_first": {
+      "passed": 0,
+      "failed": 2,
+      "command": "node --test engine/test/outbox-state-serialization-fence.test.mjs"
+    },
+    "after_fix": {
+      "passed": 2,
+      "failed": 0
+    },
+    "source_commit": "13307552386991dc91bebcf1a5825d25774e9fcd",
+    "test_commit": "373e9a59e7f93c482df14c14204da57ee7c40dcc"
+  },
+  "final_tested_head_before_receipt": "373e9a59e7f93c482df14c14204da57ee7c40dcc",
+  "native_runtime": "Node.js v22.16.0",
+  "combined_focused_tests": {
+    "command": "node --test engine/test/outbox-*.test.mjs",
+    "passed": 22,
+    "failed": 0,
+    "scope": "Six exact-source outbox test files, not full repository suite"
+  },
+  "syntax_check": "node --check engine/ops/relay/outbox-drainer.mjs PASS",
+  "exact_github_blob_readback": {
+    "engine/ops/relay/outbox-drainer.mjs": "52dc74ed4a0db36b7c6a1fe77fad07b3f2c28c94",
+    "engine/test/outbox-dispatch-serialization-fence.test.mjs": "5305199273c6555c02cde70338292ad6e492a896",
+    "engine/test/outbox-state-serialization-fence.test.mjs": "a21abca2a018a6eb074ce254c105c1f106ad57fc",
+    "engine/test/outbox-ambiguous-recovery-fence.test.mjs": "3edb1d3bcea81fcb0f6d4b40de235b43339c520d",
+    "engine/test/outbox-async-deadline-fence.test.mjs": "272da94f5260814a30ab22297095327b3c4b47dd",
+    "engine/test/outbox-delegated-roster-fence.test.mjs": "1b9e1b0cc06acd090bf6c428c1b25482fb5bf72f",
+    "engine/test/outbox-receipt-backslash-fence.test.mjs": "10bc3e52bdcba82802127e3dd1631608863706da"
+  },
+  "ci": {
+    "commit_statuses": 0,
+    "hosted_verdict": "UNKNOWN; no CI success claimed"
+  },
+  "not_proven": {
+    "distributed_lease": true,
+    "provider_native_worker": true,
+    "autonomous_two_ticket_handoff": true,
+    "dashboard_readback": true,
+    "production_deployment": true,
+    "merge": true
+  },
+  "rollback": "Revert the four narrow OS1 source/test commits; main and product/dashboard assets were not modified",
+  "next_eligible": "Inspect PR #112 provider diagnostic redaction regression, then #92/#93 PostgreSQL migration and concurrency preflight; retain single-writer ownership."
+}
