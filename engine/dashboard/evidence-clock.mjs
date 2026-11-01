@@ -21,17 +21,21 @@ export function evaluateEvidence({head,detail,runs,review,deployment,heartbeat,n
  const independent=Boolean(code&&review?.trustedVerifier===true&&review?.providerIndependent===true&&
  review?.decision==='approved'&&review?.commit===sha&&credibleDate(review?.at,now)&&
  typeof review?.receiptUrl==='string'&&/^https:\/\//.test(review.receiptUrl));
- const verified=Boolean(code&&linkedTicket&&ci&&independent);
- const receiptAt=verified?new Date(Math.max(Date.parse(ci.updated_at),Date.parse(review.at))).toISOString():null;
+ // Verification may arrive hours after the code change. Review/CI time is
+ // verification latency, not the time of substantive engineering movement.
+ // Require a credible code timestamp before publishing a verified movement age.
+ const codeAt=code&&credibleDate(detail?.commit?.committer?.date,now)?detail.commit.committer.date:null;
+ const verified=Boolean(codeAt&&linkedTicket&&ci&&independent);
+ const receiptAt=verified?new Date(codeAt).toISOString():null;
  const ageMs=receiptAt?Math.max(0,now-Date.parse(receiptAt)):null;
  const liveDeployment=Boolean(deployment?.httpVerified===true&&deployment?.functionalVerified===true&&deployment?.sha===sha&&credibleDate(deployment?.checkedAt,now));
  return {headSha:SHA.test(sha??'')?sha:null,
  lastCommitAt:credibleDate(head?.commit?.committer?.date,now)?head.commit.committer.date:null,
- lastCodeAt:code&&credibleDate(detail.commit?.committer?.date,now)?detail.commit.committer.date:null,
+ lastCodeAt:codeAt,
  changedCodePaths:changed.map(f=>f.filename),
  exactHeadCiAt:ci?.updated_at??null,independentReviewAt:independent?review.at:null,
  lastVerifiedCodeAt:receiptAt,lastVerifiedDeploymentAt:liveDeployment?deployment.checkedAt:null,
  lastAuthenticatedHeartbeatAt:heartbeat?.authenticated===true&&credibleDate(heartbeat?.at,now)?heartbeat.at:null,
  state:!verified?'UNKNOWN — VERIFIED MOVEMENT NOT ESTABLISHED':ageMs>=300000?'ESCALATION DUE — VERIFIED MOVEMENT STALE':'VERIFIED WITHIN 5 MINUTES',
- verified,missing:[!exact&&'exact commit detail',!code&&'substantive code diff',!linkedTicket&&'linked ticket',!ci&&'exact-head passing CI',!independent&&'authenticated independent-provider review'].filter(Boolean)};
+ verified,missing:[!exact&&'exact commit detail',!code&&'substantive code diff',code&&!codeAt&&'credible code timestamp',!linkedTicket&&'linked ticket',!ci&&'exact-head passing CI',!independent&&'authenticated independent-provider review'].filter(Boolean)};
 }
