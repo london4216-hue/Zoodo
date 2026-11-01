@@ -21,9 +21,12 @@
   "tests": {
     "baseline": "7 of 7 invalid inputs silently accepted; reproduced with exact-source V8 harness",
     "after": "11/11 exact-source V8 synthetic scenarios passed, 0 failed",
-    "native_node": "NOT_EXECUTED",
+    "native_node": "Node.js 22.16.0: node --test test/release-policy-boolean-fence.test.mjs -> 8 passed, 0 failed; both source/test files had Git blob SHA exactly matching published GitHub readback",
     "postgresql": "NOT_EXECUTED",
-    "github_ci": "UNKNOWN"
+    "github_ci": "UNKNOWN",
+    "native_node_syntax": "node --check regression test: passed",
+    "exact_source_sha_verified": "2ae48e28beb2ed80aac4dab3a056c5679af5b3c1",
+    "exact_test_sha_verified": "d560c2ab3dce4f69589f8450ec01eb4ca335969d"
   },
   "lease_claim": "NOT_AUTHENTICATED; no Supabase connector or production queue claim",
   "provider_native_invocation": "NOT_VERIFIED",
