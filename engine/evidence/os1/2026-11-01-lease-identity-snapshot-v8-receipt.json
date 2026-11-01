@@ -1,0 +1,44 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "date_utc": "2026-11-01",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/112",
+  "handoff_issue": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "task": "Freeze validated claimed outbox lease identity across asynchronous relay and ACK/idle callbacks",
+  "baseline_head": "5395cb992448f73c5758add2a779078efc1b183b",
+  "baseline_source_blob": "92efc2a6088416f577aa85ff919eb96215d3674e",
+  "source_test_blob": "a3c44441cbcd89d675e153887bb1d1fc49f9db27",
+  "final_source_blob": "25f278d66431c28589c6b10e5362a54c6da08be0",
+  "final_test_blob": "a3c44441cbcd89d675e153887bb1d1fc49f9db27",
+  "source_file": "engine/ops/relay/outbox-drainer.mjs",
+  "test_file": "engine/test/outbox-lease-snapshot-fence.test.mjs",
+  "fail_first": {
+    "passed": 0,
+    "failed": 3
+  },
+  "after_fix": {
+    "passed": 29,
+    "failed": 0,
+    "test_files": 8
+  },
+  "test_environment": "Isolated V8 JavaScript harness evaluating exact fetched source and test callbacks, with minimal URL shim; NOT native Node.js; NOT hosted CI",
+  "source_syntax": "V8 Function constructor compiled source successfully",
+  "hosted_ci": "UNKNOWN",
+  "distributed_lease_verified": false,
+  "provider_native_worker_invoked": false,
+  "hosted_two_ticket_handoff_verified": false,
+  "dashboard_readback_verified": false,
+  "merged": false,
+  "deployed": false,
+  "next": {
+    "source_pr": 112,
+    "task": "Snapshot and validate qualified worker roster before callbacks; reject duplicates, holes and changing getters",
+    "test_files": [
+      "outbox-roster-snapshot-fence.test.mjs",
+      "outbox-roster-getter-fence.test.mjs",
+      "outbox-duplicate-roster-fence.test.mjs",
+      "outbox-sparse-roster-fence.test.mjs"
+    ]
+  },
+  "rollback": "Revert this isolated commit on OS1 integration branch; main and private product/dashboard files untouched"
+}
