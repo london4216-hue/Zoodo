@@ -8,6 +8,8 @@ const valid = s => typeof s === 'string' && s.trim().length > 0 && s.length <= 2
 // Invocation, provider and reviewer IDs must have one canonical spelling.
 // Otherwise whitespace aliases bypass worker-lease and review independence fences.
 const validIdentity = s => valid(s) && s === s.trim();
+// Align durable pilot ticket keys with the private SQL queue's 001 ID contract.
+const validTicketId = s => typeof s === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/.test(s);
 const fail = message => {throw new Error(message)};
 const snapshot = x => structuredClone(x);
 export class DurableQueue {
@@ -50,7 +52,7 @@ export class DurableQueue {
   get(id){const t=this.items.get(id);return t?snapshot(t):null}
   list(){return [...this.items.values()].map(snapshot)}
   create({id,repo,description,releaseRequired=false}){
-    if(!validIdentity(id)||!valid(repo)||!valid(description))fail('Ticket needs id, repo and bounded description');
+    if(!validTicketId(id)||!valid(repo)||!valid(description))fail('Ticket needs id, repo and bounded description');
     if(typeof releaseRequired!=='boolean')fail('Boolean releaseRequired required');
     const t=this.get(id);
     if(t){if(t.repo!==repo||t.description!==description||t.releaseRequired!==releaseRequired)fail('Idempotency collision');return t}
