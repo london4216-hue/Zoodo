@@ -4,7 +4,9 @@ const TICKET = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const WORKER = /^[A-Za-z0-9_-]{1,64}$/;
 function validReceipt(r, worker) {
   if (!r || !TICKET.test(r.ticket ?? '') || r.worker !== worker ||
-      typeof r.receipt_url !== 'string') return false;
+      typeof r.receipt_url !== 'string' || r.receipt_url.length > 2048 ||
+      r.receipt_url !== r.receipt_url.trim() || r.receipt_url.includes('\\') ||
+      /[\p{Cc}\p{Cf}]/u.test(r.receipt_url)) return false;
   try {
     const url = new URL(r.receipt_url);
     return url.protocol === 'https:' && !url.username && !url.password && !url.hash;
