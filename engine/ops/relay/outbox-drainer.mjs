@@ -75,13 +75,16 @@ export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000})
   const deadline = performance.now() + operationTimeoutMs;
   const event = await withinDeadline(() => store.claimOutbox(), deadline);
   if (event === null) return {state:'empty'};
-  if (!event || !Number.isSafeInteger(event.id) || event.id < 1 ||
-      typeof event.ticket_id !== 'string' || !TICKET.test(event.ticket_id) ||
-      typeof event.lease_token !== 'string' || !UUID.test(event.lease_token))
-    throw Error('Invalid durable outbox lease');
-  // Freeze the validated lease identity before invoking any untrusted async callback.
+  // Snapshot each claimed identity field once, before validation. Accessors can
+  // otherwise change the lease between the check and the durable ACK/settlement.
+  if (!event) throw Error('Invalid durable outbox lease');
   const eventId = event.id;
+  const ticketId = event.ticket_id;
   const leaseToken = event.lease_token;
+  if (!Number.isSafeInteger(eventId) || eventId < 1 ||
+      typeof ticketId !== 'string' || !TICKET.test(ticketId) ||
+      typeof leaseToken !== 'string' || !UUID.test(leaseToken))
+    throw Error('Invalid durable outbox lease');
   const attempts = [];
   for (const worker of qualifiedWorkers) {
     try {
