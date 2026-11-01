@@ -8,7 +8,7 @@ const valid = s => typeof s === 'string' && s.trim().length > 0 && s.length <= 2
 // Invocation, provider and reviewer IDs must have one canonical spelling.
 // Otherwise whitespace aliases bypass worker-lease and review independence fences.
 // Reject invisible control/format code points that alias worker/provider/reviewer identities.
-const validIdentity = s => valid(s) && s === s.trim() && !/[\p{Cc}\p{Cf}]/u.test(s);
+const validIdentity = s => valid(s) && s === s.trim() && s.normalize('NFC') === s && !/[\p{Cc}\p{Cf}]/u.test(s);
 // Align durable pilot ticket keys with the private SQL queue's 001 ID contract.
 const validTicketId = s => typeof s === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/.test(s);
 const fail = message => {throw new Error(message)};
