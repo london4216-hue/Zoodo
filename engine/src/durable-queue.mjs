@@ -5,6 +5,8 @@ import {appendJournalEvent} from './atomic-journal.mjs';
 import {randomUUID} from 'node:crypto';
 
 const valid = s => typeof s === 'string' && s.length > 0 && s.length <= 256;
+// Match the durable SQL ticket directory key contract; do not alter worker identity rules.
+const validTicketId = s => typeof s === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/.test(s);
 // Worker, provider and reviewer IDs must have one canonical spelling.
 // Reject invisible controls, Unicode normalization aliases and padded identities.
 const validIdentity = s => valid(s) && s === s.trim() && s.normalize('NFC') === s && !/[\p{Cc}\p{Cf}\p{Zs}\p{Zl}\p{Zp}]/u.test(s);
@@ -63,7 +65,7 @@ export class DurableQueue {
   get(id){const t=this.items.get(id);return t?snapshot(t):null}
   list(){return [...this.items.values()].map(snapshot)}
   create({id,repo,description,releaseRequired=false}){
-    if(!valid(id)||!valid(repo)||!valid(description))fail('Ticket needs id, repo and bounded description');
+    if(!validTicketId(id)||!valid(repo)||!valid(description))fail('Ticket needs id, repo and bounded description');
     // Fail closed: truthy strings and null must not silently change release policy.
     if(typeof releaseRequired!=='boolean')fail('Release requirement must be boolean');
     const t=this.get(id);
