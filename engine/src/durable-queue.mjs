@@ -49,7 +49,7 @@ export class DurableQueue {
     if(e.type==='release')t.releaseProof=e.evidence;
     if(e.type==='verify')t.status='verified';
     if(e.type==='done')t.status='done';
-    if(e.type==='requeue'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null}
+    if(e.type==='requeue'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null;t.commit=null;t.releaseProof=null}
     // Preserve the invocation identity when a replayed lease is malformed.
     // This ticket must not be dispatched again without explicit resolution.
     if(e.type==='quarantine'){t.status='blocked';t.leaseUntil=null}
