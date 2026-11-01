@@ -1,0 +1,51 @@
+{
+  "schema": "zoo.pr-closure-receipt.v1",
+  "date_utc": "2026-10-31",
+  "repo": "london4216-hue/Zoodo",
+  "pr": 92,
+  "branch": "integrate/p0-uncertain-worker-fence-main-20261031",
+  "defect": "zoo_ops_claim assigned lease_until using transaction-start now(), which may already be expired when assignment occurs after a long transaction or lock wait",
+  "fix": "Use clock_timestamp() when assigning 45-second lease, preserving existing unique-index, advisory-lock, and worker fencing",
+  "fail_first": {
+    "command": "node --test engine/test/claim-lease-wall-clock.test.mjs",
+    "passed": 2,
+    "failed": 1
+  },
+  "after_fix": {
+    "command": "node --test engine/test/claim-lease-wall-clock.test.mjs engine/test/uncertain-worker-fencing.test.mjs engine/test/uncertain-worker-sql-syntax.test.mjs engine/test/queue-integrity-migration.test.mjs",
+    "passed": 14,
+    "failed": 0,
+    "node": "22.16.0",
+    "scope": "local Node source-contract and synthetic model tests; not PostgreSQL"
+  },
+  "source_commits": [
+    "be99371f359939cc32c9bae236188ebd4209ddbc",
+    "c19572a0de4f3440b49042ef3bf503d8917cabf5"
+  ],
+  "exact_github_blob_readback": {
+    "engine/ops/relay/003_uncertain_worker_fencing.sql": "a50191b3cabd5daa4667a8f11bd6d9996c876dd9",
+    "engine/ops/relay/004_queue_integrity_constraints.sql": "7664ec5b76a4d8c46a9154a8c66cad9251a3f67a",
+    "engine/test/claim-lease-wall-clock.test.mjs": "a234bf80c4a92fbfcb3e5b28a6b13b4bdcb46e01",
+    "engine/test/uncertain-worker-fencing.test.mjs": "557a39357307cd6ce409db9aa0f3645962b824f8",
+    "engine/test/uncertain-worker-sql-syntax.test.mjs": "9e97dc7fc0fdb157cd0dda8ce62f0e8086d11fa0",
+    "engine/test/queue-integrity-migration.test.mjs": "42d421b82c8d5c55a5e8bee93d41ea4cda7392cb"
+  },
+  "github_actions": {
+    "run_id": 41221983346,
+    "conclusion": "failure",
+    "jobs": [
+      {
+        "name": "lab-tests",
+        "conclusion": "failure",
+        "steps": null
+      }
+    ],
+    "interpretation": "zero-step infrastructure UNKNOWN, not a test failure"
+  },
+  "durable_db_lease_claimed": false,
+  "hosted_postgresql_executed": false,
+  "provider_native_agent_invoked": false,
+  "merged": false,
+  "deployed": false,
+  "next": "PR #93 additive 005/006: verify current exact-head source and PostgreSQL migration sequence; keep #64 open for unique callback work"
+}
