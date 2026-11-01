@@ -2,6 +2,7 @@
 const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
 const TICKET = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const WORKER = /^[A-Za-z0-9_-]{1,64}$/;
+const SAFE_STATES = new Set(['idle','dispatched','delegated','failed','uncertain','recovery_required','not_started']);
 function validReceipt(r, worker) {
   if (!r || typeof r.ticket !== 'string' || !TICKET.test(r.ticket) || r.worker !== worker ||
       typeof r.receipt_url !== 'string' || r.receipt_url.length > 2048) return false;
@@ -28,8 +29,15 @@ function verifiedDispatch(r, worker, qualifiedWorkers, state) {
   return {state:'delegated',worker,replacement:receipt};
 }
 function safeErrorMessage(error) {
-  try { return String(error?.message || error).slice(0,120); }
-  catch { return 'unprintable error'; }
+  try {
+    // Provider and transport errors may embed credentials or request headers.
+    // Keep only an allowlisted error class in serializable execution evidence.
+    String(error?.message || error);
+    const name = error?.name;
+    return typeof name === 'string' &&
+      /^(Error|TypeError|RangeError|SyntaxError|ReferenceError|TimeoutError|AbortError)$/.test(name)
+      ? name : 'error detail redacted';
+  } catch { return 'unprintable error'; }
 }
 export async function drainOne({store,relay,workerIds}) {
   // Read each roster entry exactly once. Re-reading array getters during
@@ -53,7 +61,7 @@ export async function drainOne({store,relay,workerIds}) {
     try {
       const r = await relay.next(worker);
       const state = r?.state;
-      attempts.push({worker,state:typeof state === 'string' && state.length > 0 && state.length <= 64 ? state : 'unknown'});
+      attempts.push({worker,state:typeof state === 'string' && SAFE_STATES.has(state) ? state : 'unknown'});
       if (state === 'idle') {
         // An idle worker does not prove the shared queue is empty. Only a
         // transactional store check may settle the wake-up without dispatch.
