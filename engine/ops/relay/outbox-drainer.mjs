@@ -2,6 +2,7 @@
 const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
 const TICKET = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const WORKER = /^[A-Za-z0-9_-]{1,64}$/;
+const SAFE_STATES = new Set(['idle','dispatched','delegated','failed','uncertain','recovery_required','not_started']);
 function validReceipt(r, worker) {
   if (!r || typeof r.ticket !== 'string' || !TICKET.test(r.ticket) || r.worker !== worker ||
       typeof r.receipt_url !== 'string' || r.receipt_url.length > 2048 ||
@@ -59,8 +60,9 @@ export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000})
   for (const worker of workerIds) {
     try {
       const r = await withinDeadline(() => relay.next(worker), deadline);
-      attempts.push({worker,state:r?.state ?? 'unknown'});
-      if (r?.state === 'idle') {
+      const state = r?.state;
+      attempts.push({worker,state:typeof state === 'string' && SAFE_STATES.has(state) ? state : 'unknown'});
+      if (state === 'idle') {
         // An idle worker does not prove the shared queue is empty. Only a
         // transactional store check may settle the wake-up without dispatch.
         if (typeof store.settleIdleOutbox === 'function' &&
@@ -68,7 +70,7 @@ export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000})
           return {state:'idle-settled',eventId:event.id,attempts};
         continue;
       }
-      if (r?.state === 'dispatched' || r?.state === 'delegated') {
+      if (state === 'dispatched' || state === 'delegated') {
         const dispatch = verifiedDispatch(r, worker, workerIds);
         if (!dispatch)
           return {state:'recovery_required',reason:'dispatch receipt not confirmed',eventId:event.id,attempts};
