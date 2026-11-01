@@ -1,0 +1,38 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-01T12:51:26Z",
+  "lane": "PR_INTEGRATE",
+  "repository": "london4216-hue/Zoodo",
+  "pull_request": 96,
+  "branch": "fix/zoo-single-active-worker-lease-20261031",
+  "baseline_head": "e0e6b772eaefc26b26ff479091ab6914d0ef93b0",
+  "regression_commit": "0ecd017fbb91af6b04ee57bd70fb856189285c88",
+  "source_fix_commit": "271c7888cd441ef33ea101926d9eadb671dc6b5c",
+  "tested_git_blobs": {
+    "engine/src/durable-queue.mjs": "dbb9fef30c73c8376038c2c63d394fecf898b8e5",
+    "engine/test/clock-type-active-lease-fence.test.mjs": "c1cc2750c22bcf1fe4cc6b9f383e6c2120dd2c19",
+    "engine/test/heartbeat-clock-rollback-fence.test.mjs": "5ad898d9b1ea520cdca789c17ea7f91314d5ef21",
+    "engine/test/single-worker-active-lease.test.mjs": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79"
+  },
+  "defect": "A nonnumeric now() return such as string '0' was coerced during lease comparison; Date('0') is valid, so an expired worker could start or submit, and recover() could silently skip expiry.",
+  "repair": "Require a safe-integer clock for active-lease validation and recover(); snapshot recovery clock once for consistent comparisons.",
+  "test_environment": "local Node.js v22.16.0; synthetic local JSONL journal, no database or external worker",
+  "test_command": "node --test engine/test/clock-type-active-lease-fence.test.mjs engine/test/heartbeat-clock-rollback-fence.test.mjs engine/test/single-worker-active-lease.test.mjs",
+  "fail_first": {
+    "passed": 1,
+    "failed": 3,
+    "scope": "new regression file only, baseline source exact blob 7546756c4523dbc8766986c5d865e614f5be434b"
+  },
+  "after_fix": {
+    "passed": 8,
+    "failed": 0,
+    "scope": "new regression plus two exact GitHub existing test files"
+  },
+  "github_readback_matches_tested_blobs": true,
+  "hosted_ci": "UNKNOWN; no workflow runs returned for source fix SHA at readback",
+  "merged": false,
+  "deployed": false,
+  "distributed_queue_lease": false,
+  "provider_native_external_model_invocation": false,
+  "next": "Inspect PR #112 exact head and source/test overlap; leave #92/#93 SQL and dashboard/product ownership isolated."
+}

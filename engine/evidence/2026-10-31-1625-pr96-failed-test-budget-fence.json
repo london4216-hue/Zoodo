@@ -1,0 +1,53 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-10-31T16:25:20Z",
+  "task": "PR_INTEGRATE #96 failed-test retry exhaustion",
+  "scope": "single-writer local JSONL pilot only; no hosted/distributed queue",
+  "pr": 96,
+  "baseline_source_blob": "d71cb3a07ffb338a57a2c323a256483031a0fc8e",
+  "fix": {
+    "source": "engine/src/durable-queue.mjs",
+    "source_blob": "27eae8d1137d3fb65b2dd0af49b2f0e7c9d649b8",
+    "source_commit": "061d3eef03dc727b84f8aa7b7a0425d0e1a2d9dc",
+    "regression": "engine/test/failed-test-retry-budget.test.mjs",
+    "regression_blob": "093ac86fd369ba21aca3f83d7ae9207fdb688a3f",
+    "regression_commit": "01fc90410774fc1e04bdfab80e1276ced6a3fdec"
+  },
+  "finding": "Failed test at maxAttempts remained queued, could never be claimed; failed test also retained stale worker/provider identity",
+  "repair": "Failed-test event now deterministically blocks exhausted attempts and clears stale worker/provider/lease/reviewer while preserving failed test evidence; under-budget failures requeue",
+  "tests": {
+    "runtime": "Node v22.16.0",
+    "command": "node --test engine/test/*.test.mjs",
+    "baseline_fail_first": {
+      "passed": 0,
+      "failed": 2,
+      "expected": true
+    },
+    "after_fix": {
+      "passed": 14,
+      "failed": 0
+    },
+    "existing_test_blobs": {
+      "engine/test/durable-queue.test.mjs": "eecd9a930d5e3a0a6d381b5b601684822eee6728",
+      "engine/test/single-worker-active-lease.test.mjs": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79",
+      "engine/test/expired-fail-lease.test.mjs": "24f0c52e417ade6c191ce9bafb857ce95b5b1061"
+    },
+    "exact_git_blob_matches_local": true,
+    "scope": "synthetic local deterministic tests; not hosted CI"
+  },
+  "next": {
+    "pr": 92,
+    "head": "aa4ed945ae803a310e8fd6f512c0441f8d3fe479",
+    "source_blobs": {
+      "engine/ops/relay/003_uncertain_worker_fencing.sql": "63e781ab6ab0249e0578af741a7d6ff6fda56c7c",
+      "engine/ops/relay/004_queue_integrity_constraints.sql": "7664ec5b76a4d8c46a9154a8c66cad9251a3f67a"
+    },
+    "gate": "Disposable PostgreSQL migrations 001→002→003→004 and concurrency tests; branch required checks UNKNOWN"
+  },
+  "merge": false,
+  "deployed": false,
+  "hosted_ci": "UNKNOWN: no new-head workflow run returned yet; prior zero-step startup failure",
+  "provider_native_invocation": false,
+  "durable_distributed_queue_lease": false,
+  "overlap": "No product, dashboard, Hunter or SQL migration files modified"
+}

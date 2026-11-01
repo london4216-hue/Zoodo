@@ -1,0 +1,49 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-10-31T15:51:29Z",
+  "task": "Zoodo PR #96 expired-worker failure transition fence",
+  "scope": "single-writer local JSONL pilot only",
+  "branch": "fix/zoo-single-active-worker-lease-20261031",
+  "source_baseline_blob": "32827556ea3aa01d0c258d4cd7f46e503b4af920",
+  "source_fixed_blob": "d71cb3a07ffb338a57a2c323a256483031a0fc8e",
+  "existing_test_blobs": {
+    "engine/test/durable-queue.test.mjs": "eecd9a930d5e3a0a6d381b5b601684822eee6728",
+    "engine/test/single-worker-active-lease.test.mjs": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79"
+  },
+  "new_test_blob": "24f0c52e417ade6c191ce9bafb857ce95b5b1061",
+  "commits": {
+    "source": "8d937f1007d616755af82e6f96ef3c176243eeaa",
+    "test": "ddc68cd53859ef06bf18a62344e914989fc64d03"
+  },
+  "fail_first": {
+    "command": "node --test engine/test/expired-fail-lease.test.mjs",
+    "passed": 1,
+    "failed": 1,
+    "expected": true,
+    "reason": "Missing expected exception on expired worker fail"
+  },
+  "after_fix": {
+    "command": "node --test engine/test/durable-queue.test.mjs engine/test/single-worker-active-lease.test.mjs engine/test/expired-fail-lease.test.mjs",
+    "passed": 12,
+    "failed": 0,
+    "node": "v22.16.0",
+    "git_blob_readback_matched": true
+  },
+  "hosted_ci": {
+    "run_id": 41216752778,
+    "job_id": 124582765228,
+    "conclusion": "failure",
+    "steps": 0,
+    "classification": "infrastructure UNKNOWN, not CI passed"
+  },
+  "permissions": {
+    "repo_push": true,
+    "branch_protection_read": "403 Resource not accessible by integration"
+  },
+  "durable_queue_lease": "NOT_CLAIMED: no authorized private queue DB access",
+  "external_provider_invocation": false,
+  "hosted_worker_execution": false,
+  "merge": false,
+  "deploy": false,
+  "next": "PR #93 exact-source tests pass 2/2; disposable PostgreSQL migration/concurrency checks and protected CI remain outstanding"
+}

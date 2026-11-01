@@ -1,0 +1,65 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-10-31T18:47:16Z",
+  "lane": "PR_INTEGRATE",
+  "repo": "london4216-hue/Zoodo",
+  "pr": 96,
+  "base": "main",
+  "branch": "fix/zoo-single-active-worker-lease-20261031",
+  "exact_tested_head": "deb5880600d888fbe9946dc9e6dd9888ffed1634",
+  "prior_head": "124d39b3c2a6ebfd1bd87a2e2d6a8aa0d2647e84",
+  "issue_77": "Time-based NEXT; no permanent Keeper, dual judge or Wednesday gate",
+  "pr_81_receipt_inspected": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "stack_reconciliation": {
+    "65→69→72": "Merged through intermediate branches; not proof of main integration",
+    "68→73→81": "#68 and #81 merged to intermediate branches; #73 closed unmerged; #81 source/receipt read",
+    "16→71": "Merged to dashboard branches; production Netlify SHA not verified"
+  },
+  "finding": "The single-writer pilot queue identifies an active worker only by ticket+worker string, not a per-claim lease token. After recovery/rejection, claiming the same ticket with the same worker string lets a late callback from the previous attempt impersonate the new invocation.",
+  "repair": "Reject reuse of a worker invocation identity on the same ticket by checking append-only claim history before journal append; permit same provider with fresh invocation ID; leave distributed queue/host paths unchanged.",
+  "commits": {
+    "source": "f2cffeefba353fc493106a8b7ef90f019d361306",
+    "test": "deb5880600d888fbe9946dc9e6dd9888ffed1634"
+  },
+  "exact_github_blob_hashes": {
+    "engine/src/durable-queue.mjs": "6ff5452fc18805eb4856a9658d138e6c97d20f25",
+    "engine/test/reused-worker-identity-fence.test.mjs": "e729dfad03fda8756a1173c9fd8533c8c9f2c950",
+    "engine/test/durable-queue.test.mjs": "eecd9a930d5e3a0a6d381b5b601684822eee6728",
+    "engine/test/single-worker-active-lease.test.mjs": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79",
+    "engine/test/expired-fail-lease.test.mjs": "24f0c52e417ade6c191ce9bafb857ce95b5b1061",
+    "engine/test/failed-test-retry-budget.test.mjs": "093ac86fd369ba21aca3f83d7ae9207fdb688a3f",
+    "engine/test/requeue-stale-commit.test.mjs": "a9270e5b32de36ce33a1ec0a084148da0a84a4f1"
+  },
+  "tests": {
+    "runtime": "Node v22.16.0",
+    "command": "node --test engine/test/*.test.mjs",
+    "baseline_new_regression": {
+      "passed": 0,
+      "failed": 2,
+      "expected": true
+    },
+    "after_fix": {
+      "passed": 18,
+      "failed": 0
+    },
+    "local_git_hash_object_matches_authenticated_github_blobs": true,
+    "scope": "single-writer local JSONL pilot, not distributed queue or hosted integration"
+  },
+  "github_actions": {
+    "run_id": 41231095150,
+    "job_id": 124625296912,
+    "conclusion": "failure",
+    "executed_steps": 0,
+    "classification": "infrastructure UNKNOWN; not CI PASS"
+  },
+  "combined_commit_statuses": 0,
+  "branch_protection": "UNKNOWN; not bypassed",
+  "private_distributed_queue_lease": "NOT_CLAIMED; no authorized private DB access",
+  "provider_native_invocations": 0,
+  "hosted_next_handoffs": 0,
+  "production_deployments": 0,
+  "merges": 0,
+  "files_owned": "engine/src/durable-queue.mjs and engine/test/reused-worker-identity-fence.test.mjs only",
+  "no_product_or_dashboard_files_changed": true,
+  "next": "Inspect #92/#93 migration dependency and disposable PostgreSQL availability; require actual SQL concurrency and required-check verification before merge"
+}

@@ -1,0 +1,61 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-11-01T02:09:08Z",
+  "lane": "PR_INTEGRATE",
+  "issue": 77,
+  "pr": 96,
+  "branch": "fix/zoo-single-active-worker-lease-20261031",
+  "baseline_head": "ec2e1243697a40fbd1c10428d6cebc25290d65b9",
+  "baseline_source_blob": "6f4fe725655724b8e5ffffe90b508e2860a3a1ba",
+  "regression_commit": "7990f88fcae2797ae0282710998064f30b63c51c",
+  "source_fix_commit": "ac6c8f852970e275bbc054bf59b08a4a0820f84f",
+  "source_fixed_blob": "611fabb24a85847609a4540ea9dd4b747146b0aa",
+  "regression_blob": "5832bc7224f942d9ebc6412d0518c4290cb61498",
+  "finding": "DurableQueue.submit used RegExp.test(commit) without a string type guard; boxed String and custom toString objects could be accepted as SHA-like identities, mutate the journal and disrupt strict exact-commit review.",
+  "fix": "Require primitive string before exact 40-character lowercase hexadecimal SHA regex and before append.",
+  "tests": {
+    "runtime": "Node.js 22.16.0",
+    "command": "node --test engine/test/nonstring-commit-sha-fence.test.mjs",
+    "baseline": {
+      "source_blob": "6f4fe725655724b8e5ffffe90b508e2860a3a1ba",
+      "pass": 0,
+      "fail": 2,
+      "exit_code": 1
+    },
+    "fixed": {
+      "source_blob": "611fabb24a85847609a4540ea9dd4b747146b0aa",
+      "pass": 2,
+      "fail": 0,
+      "exit_code": 0
+    },
+    "exact_git_blob_matches_local": true,
+    "scope": "Two local regression tests and valid primitive-SHA review path; not full PR suite, no hosted integration"
+  },
+  "hosted_ci": {
+    "run_id": 41263913014,
+    "job_id": 124722603759,
+    "conclusion": "failure",
+    "steps": null,
+    "classification": "ZERO_STEP_INFRASTRUCTURE_UNKNOWN_NOT_CI_PASS"
+  },
+  "stack_reconciliation": {
+    "65_69_72": "merged to intermediate branches, not proof of main integration",
+    "68_73_81": "68 and 81 merged to intermediate branches; 73 closed unmerged",
+    "16_71": "merged to dashboard branches, production deployment not verified"
+  },
+  "limitations": {
+    "durable_supabase_lease": "NOT_CLAIMED",
+    "external_provider_native_invocation": false,
+    "merged": false,
+    "deployed": false,
+    "branch_protection": "NOT_VERIFIED",
+    "full_suite": "NOT_EXECUTED"
+  },
+  "next": {
+    "pr": 112,
+    "status": "READ_ONLY_ELIGIBLE_NOT_CLAIMED",
+    "head": "6f335855d6423a90b810ee1e32a0199915d40570",
+    "pr92_93": "Require disposable PostgreSQL migration and concurrency tests"
+  },
+  "ownership": "Advisory file scope only; product, dashboard, SQL untouched"
+}

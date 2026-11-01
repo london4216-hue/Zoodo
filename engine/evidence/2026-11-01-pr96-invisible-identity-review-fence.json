@@ -1,0 +1,76 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-11-01T11:53:09.585Z",
+  "lane": "PR_INTEGRATE",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 96,
+  "issue": 77,
+  "branch": "fix/zoo-single-active-worker-lease-20261031",
+  "baseline_head": "50d3ad7ae9caff4b26f89c97db88b22f6ef97fbf",
+  "baseline_source_blob": "54aafde01d0ce2bfde51521670ba3d7bf828fbc9",
+  "regression_commit": "1de625e2613f48e7586336d5ae4ebe1db351f90b",
+  "source_fix_commit": "1cad97d6bac901f7d7bff62ae700b58fd933858e",
+  "exact_source_blob": "7546756c4523dbc8766986c5d865e614f5be434b",
+  "exact_test_blob": "20a0e6b3dc579796fc63919853fca5ae8313f56c",
+  "files": [
+    "engine/src/durable-queue.mjs",
+    "engine/test/invisible-identity-review-fence.test.mjs"
+  ],
+  "finding": "Pilot worker/provider/reviewer identity validation accepted embedded Unicode format and control code points; visually indistinguishable aliases bypassed strict-equality worker/reviewer independence checks.",
+  "repair": "Reject Unicode Cc and Cf code points in canonical worker/provider/reviewer identities; preserve visible Unicode names and existing workflow semantics.",
+  "fail_first": {
+    "runtime": "V8 exact GitHub source/test execution with in-memory Node API shims",
+    "new_tests": 5,
+    "passed": 1,
+    "expected_failures": 4
+  },
+  "after_fix": {
+    "runtime": "V8 exact GitHub source/test execution with in-memory Node API shims",
+    "source_files": 1,
+    "test_files": 20,
+    "passed": 59,
+    "failed": 0,
+    "scope": "single-writer local JSONL pilot only",
+    "native_node": false,
+    "hosted_ci": false
+  },
+  "hosted_actions": {
+    "run_id": 41303760144,
+    "job_id": 124839864880,
+    "conclusion": "failure",
+    "steps": null,
+    "classification": "INFRASTRUCTURE_UNKNOWN_NOT_TEST_FAILURE_OR_PASS"
+  },
+  "combined_commit_statuses": [],
+  "repository_permissions": {
+    "push": true,
+    "admin": true
+  },
+  "branch_protection_required_checks": "UNKNOWN; no authenticated protected-rule read",
+  "draft": true,
+  "merged": false,
+  "deployed": false,
+  "private_distributed_queue_lease": "NOT_CLAIMED; only issue #77 advisory ownership",
+  "provider_native_Copilot_Gemini_DeepSeek_invocations": 0,
+  "historical_stacks": {
+    "65_69_72": "merged to intermediate branches only",
+    "68_73_81": "#68/#81 intermediate merges; #73 closed unmerged; PR #81 exact tested source/test blobs matched historical receipt",
+    "16_71": "dashboard branch merges only; production SHA not inferred"
+  },
+  "next": {
+    "pr": 112,
+    "head": "09d4ec1875f998a7f990ed3570dba5d6ca6e6b08",
+    "source_blob": "72f611d75fd994284e0f0a9185f6497ba453efd8",
+    "checks": "22/22 V8 exact-source/test checks passed across 3 test files; no native Node or CI claim",
+    "status": "draft unmerged"
+  },
+  "outstanding_sql": {
+    "prs": [
+      92,
+      93
+    ],
+    "gate": "Disposable PostgreSQL ordered migrations and concurrency tests unavailable"
+  },
+  "single_writer": "No outbox, SQL, dashboard, private TransendIQ product files modified",
+  "owner_email": false
+}
