@@ -1,7 +1,7 @@
 name: ZOO dashboard source and link safety
 on:
   pull_request:
-    branches: [autonomous-engine-replacement-2026-10-29, fix/zoo-live-dashboard-accountability-20261030]
+    branches: [main, autonomous-engine-replacement-2026-10-29, fix/zoo-live-dashboard-accountability-20261030]
     paths:
       - 'engine/dashboard/**'
       - '.github/workflows/zoo-dashboard-contract.yml'
