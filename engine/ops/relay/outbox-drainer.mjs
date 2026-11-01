@@ -3,7 +3,7 @@ const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
 const TICKET = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const WORKER = /^[A-Za-z0-9_-]{1,64}$/;
 function validReceipt(r, worker) {
-  if (!r || !TICKET.test(r.ticket ?? '') || r.worker !== worker ||
+  if (!r || typeof r.ticket !== 'string' || !TICKET.test(r.ticket) || r.worker !== worker ||
       typeof r.receipt_url !== 'string' || r.receipt_url.length > 2048 ||
       r.receipt_url !== r.receipt_url.trim() || r.receipt_url.includes('\\') ||
       /[\p{Cc}\p{Cf}]/u.test(r.receipt_url)) return false;
@@ -12,14 +12,22 @@ function validReceipt(r, worker) {
     return url.protocol === 'https:' && !url.username && !url.password && !url.hash;
   } catch { return false; }
 }
-function confirmedDispatch(r, worker, qualifiedWorkers) {
-  if (r?.state === 'dispatched') return validReceipt(r, worker);
-  if (r?.state !== 'delegated' || r.worker !== worker) return false;
+// Snapshot only verified receipt fields; provider objects may contain cyclic,
+// oversized or mutable metadata that must not enter durable ACK evidence.
+function verifiedDispatch(r, worker, qualifiedWorkers) {
+  if (r?.state === 'dispatched') {
+    const receipt = {state:'dispatched',ticket:r.ticket,worker:r.worker,receipt_url:r.receipt_url};
+    return validReceipt(receipt, worker) ? receipt : null;
+  }
+  if (r?.state !== 'delegated' || r.worker !== worker) return null;
   const replacement = r.replacement;
-  return replacement?.state === 'dispatched' &&
-    WORKER.test(replacement.worker ?? '') && replacement.worker !== worker &&
-    qualifiedWorkers.includes(replacement.worker) &&
-    validReceipt(replacement, replacement.worker);
+  const receipt = {state:'dispatched',ticket:replacement?.ticket,
+    worker:replacement?.worker,receipt_url:replacement?.receipt_url};
+  if (replacement?.state !== 'dispatched' ||
+      typeof receipt.worker !== 'string' || !WORKER.test(receipt.worker) ||
+      receipt.worker === worker || !qualifiedWorkers.includes(receipt.worker) ||
+      !validReceipt(receipt, receipt.worker)) return null;
+  return {state:'delegated',worker,replacement:receipt};
 }
 // One monotonic deadline bounds the entire drain. A timed-out worker may
 // have started remotely, so a timeout requires recovery, never a second dispatch.
@@ -61,13 +69,14 @@ export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000})
         continue;
       }
       if (r?.state === 'dispatched' || r?.state === 'delegated') {
-        if (!confirmedDispatch(r, worker, workerIds))
+        const dispatch = verifiedDispatch(r, worker, workerIds);
+        if (!dispatch)
           return {state:'recovery_required',reason:'dispatch receipt not confirmed',eventId:event.id,attempts};
         // Once dispatch is confirmed, an ambiguous ACK is never a reason to
         // dispatch another worker. Reconciliation must inspect the durable lease.
         try {
           if (await withinDeadline(() => store.ackOutbox(event.id,event.lease_token), deadline) === true)
-            return {state:'acknowledged',eventId:event.id,dispatch:r,attempts};
+            return {state:'acknowledged',eventId:event.id,dispatch,attempts};
         } catch (error) {
           attempts.push({worker,state:'ack_error',reason:String(error?.message||error).slice(0,120)});
         }
