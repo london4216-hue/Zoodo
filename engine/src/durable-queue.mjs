@@ -94,5 +94,14 @@ export class DurableQueue {
   verify(id,{evidence}){const t=this.get(id);if(!t||t.status!=='test'||!t.tests?.passed||!valid(evidence)||t.releaseRequired&&!t.releaseProof)fail('Tests and authorized release evidence required');return this.#record('verify',id,{evidence})}
   done(id){const t=this.get(id);if(!t||t.status!=='verified')fail('Not verified');return this.#record('done',id)}
   fail(id,{worker,reason}){const t=this.get(id);if(!t||!['assigned','running'].includes(t.status)||t.worker!==worker||!valid(reason))fail('Active worker failure evidence required');this.#active(id,worker);return this.#record('requeue',id,{reason,worker,provider:t.provider,dead:t.attempts>=this.maxAttempts})}
-  recover(){const recovered=[];for(const t of this.items.values())if(['assigned','running'].includes(t.status)&&t.leaseUntil<=this.now())recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts}));return recovered}
+  recover(){
+    // One validated clock snapshot governs the entire recovery pass.
+    // An invalid or advancing clock must not prematurely reassign a live lease.
+    const now=this.now();
+    if(!Number.isSafeInteger(now))fail('Invalid recovery clock');
+    const recovered=[];
+    for(const t of this.items.values())if(['assigned','running'].includes(t.status)&&t.leaseUntil<=now)
+      recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts}));
+    return recovered;
+  }
 }
