@@ -12,12 +12,12 @@ function validReceipt(r, worker) {
 }
 // Return only verified receipt fields. Raw provider objects can contain cyclic,
 // oversized, or mutable metadata that must not enter durable evidence.
-function verifiedDispatch(r, worker, qualifiedWorkers) {
-  if (r?.state === 'dispatched') {
+function verifiedDispatch(r, worker, qualifiedWorkers, state) {
+  if (state === 'dispatched') {
     const receipt = {state:'dispatched',ticket:r.ticket,worker:r.worker,receipt_url:r.receipt_url};
     return validReceipt(receipt, worker) ? receipt : null;
   }
-  if (r?.state !== 'delegated' || r.worker !== worker) return null;
+  if (state !== 'delegated' || r.worker !== worker) return null;
   const replacement = r.replacement;
   const receipt = {state:'dispatched',ticket:replacement?.ticket,
     worker:replacement?.worker,receipt_url:replacement?.receipt_url};
@@ -54,7 +54,7 @@ export async function drainOne({store,relay,workerIds}) {
       const r = await relay.next(worker);
       const state = r?.state;
       attempts.push({worker,state:typeof state === 'string' && state.length > 0 && state.length <= 64 ? state : 'unknown'});
-      if (r?.state === 'idle') {
+      if (state === 'idle') {
         // An idle worker does not prove the shared queue is empty. Only a
         // transactional store check may settle the wake-up without dispatch.
         if (typeof store.settleIdleOutbox === 'function' &&
@@ -62,8 +62,8 @@ export async function drainOne({store,relay,workerIds}) {
           return {state:'idle-settled',eventId:claimed.id,attempts};
         continue;
       }
-      if (r?.state === 'dispatched' || r?.state === 'delegated') {
-        const dispatch = verifiedDispatch(r, worker, qualifiedWorkers);
+      if (state === 'dispatched' || state === 'delegated') {
+        const dispatch = verifiedDispatch(r, worker, qualifiedWorkers, state);
         if (!dispatch)
           return {state:'recovery_required',reason:'dispatch receipt not confirmed',eventId:claimed.id,attempts};
         // Once dispatch is confirmed, an ambiguous ACK is never a reason to
