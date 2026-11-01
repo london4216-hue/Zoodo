@@ -3,7 +3,7 @@ const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
 const TICKET = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const WORKER = /^[A-Za-z0-9_-]{1,64}$/;
 function validReceipt(r, worker) {
-  if (!r || !TICKET.test(r.ticket ?? '') || r.worker !== worker ||
+  if (!r || typeof r.ticket !== 'string' || !TICKET.test(r.ticket) || r.worker !== worker ||
       typeof r.receipt_url !== 'string') return false;
   try {
     const url = new URL(r.receipt_url);
@@ -15,7 +15,7 @@ function confirmedDispatch(r, worker) {
   if (r?.state !== 'delegated' || r.worker !== worker) return false;
   const replacement = r.replacement;
   return replacement?.state === 'dispatched' &&
-    WORKER.test(replacement.worker ?? '') && replacement.worker !== worker &&
+    typeof replacement.worker === 'string' && WORKER.test(replacement.worker) && replacement.worker !== worker &&
     validReceipt(replacement, replacement.worker);
 }
 export async function drainOne({store,relay,workerIds}) {
@@ -27,7 +27,8 @@ export async function drainOne({store,relay,workerIds}) {
   const event = await store.claimOutbox();
   if (event === null) return {state:'empty'};
   if (!event || !Number.isSafeInteger(event.id) || event.id < 1 ||
-      !TICKET.test(event.ticket_id ?? '') || !UUID.test(event.lease_token ?? ''))
+      typeof event.ticket_id !== 'string' || !TICKET.test(event.ticket_id) ||
+      typeof event.lease_token !== 'string' || !UUID.test(event.lease_token))
     throw Error('Invalid durable outbox lease');
   const attempts = [];
   for (const worker of workerIds) {
