@@ -9,6 +9,8 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const out = resolve(root, 'mirror-dist');
 const allowedFiles = [
   'index.html',
+  'accountability.html',
+  'handoff-ledger.json',
   'evidence-clock.mjs',
   'automation-proof.mjs',
   'automation-proof.json',
