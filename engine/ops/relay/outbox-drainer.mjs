@@ -54,9 +54,19 @@ function withinDeadline(operation, deadline) {
 }
 export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000}) {
   if (!store || typeof store.claimOutbox !== 'function' || typeof store.ackOutbox !== 'function' ||
-      !relay || typeof relay.next !== 'function' || !Array.isArray(workerIds) || !workerIds.length ||
-      workerIds.some(w => typeof w !== 'string' || !WORKER.test(w)))
+      !relay || typeof relay.next !== 'function' || !Array.isArray(workerIds) || !workerIds.length)
     throw Error('Qualified worker roster and durable store required');
+  // Capture the qualified roster exactly once before any asynchronous callbacks.
+  const qualifiedWorkers = [];
+  const rosterLength = workerIds.length;
+  for (let i = 0; i < rosterLength; i++) {
+    if (!Object.prototype.hasOwnProperty.call(workerIds, i))
+      throw Error('Qualified worker roster and durable store required');
+    const worker = workerIds[i];
+    if (typeof worker !== 'string' || !WORKER.test(worker) || qualifiedWorkers.includes(worker))
+      throw Error('Qualified worker roster and durable store required');
+    qualifiedWorkers.push(worker);
+  }
   if (!Number.isSafeInteger(operationTimeoutMs) || operationTimeoutMs < 1 || operationTimeoutMs > 30000)
     throw Error('Valid outbox operation timeout required');
   const deadline = performance.now() + operationTimeoutMs;
@@ -69,7 +79,7 @@ export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000})
   const eventId = event.id;
   const leaseToken = event.lease_token;
   const attempts = [];
-  for (const worker of workerIds) {
+  for (const worker of qualifiedWorkers) {
     try {
       const r = await withinDeadline(() => relay.next(worker), deadline);
       const state = r?.state;
@@ -83,7 +93,7 @@ export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000})
         continue;
       }
       if (state === 'dispatched' || state === 'delegated') {
-        const dispatch = verifiedDispatch(r, worker, workerIds);
+        const dispatch = verifiedDispatch(r, worker, qualifiedWorkers);
         if (!dispatch)
           return {state:'recovery_required',reason:'dispatch receipt not confirmed',eventId:eventId,attempts};
         // Once dispatch is confirmed, an ambiguous ACK is never a reason to
