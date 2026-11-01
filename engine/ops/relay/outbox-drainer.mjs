@@ -40,7 +40,20 @@ function safeErrorMessage(error) {
       ? name : 'error detail redacted';
   } catch { return 'unprintable error'; }
 }
-export async function drainOne({store,relay,workerIds}) {
+// One monotonic deadline for the entire drain. A timed-out callback may still
+// complete remotely, so timeout is uncertainty, never proof of non-execution.
+function withinDeadline(operation, deadline) {
+  const remaining = Math.ceil(deadline - performance.now());
+  if (remaining <= 0) return Promise.reject(Error('Outbox operation deadline exceeded'));
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(Error('Outbox operation deadline exceeded')), remaining);
+    Promise.resolve().then(operation).then(
+      value => { clearTimeout(timer); resolve(value); },
+      error => { clearTimeout(timer); reject(error); }
+    );
+  });
+}
+export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000}) {
   // Read each roster entry exactly once. Re-reading array getters during
   // validation and snapshotting can admit an unqualified/duplicate worker.
   const qualifiedWorkers = Array.isArray(workerIds) ? [...workerIds] : [];
@@ -49,7 +62,10 @@ export async function drainOne({store,relay,workerIds}) {
       qualifiedWorkers.some(w => typeof w !== 'string' || !WORKER.test(w)) ||
       new Set(qualifiedWorkers).size !== qualifiedWorkers.length)
     throw Error('Qualified worker roster and durable store required');
-  const event = await store.claimOutbox();
+  if (!Number.isSafeInteger(operationTimeoutMs) || operationTimeoutMs < 1 || operationTimeoutMs > 30000)
+    throw Error('Valid outbox operation timeout required');
+  const deadline = performance.now() + operationTimeoutMs;
+  const event = await withinDeadline(() => store.claimOutbox(), deadline);
   if (event === null) return {state:'empty'};
   // Keep the validated lease identity stable across awaited worker callbacks.
   const claimed = event && {id:event.id,ticket_id:event.ticket_id,lease_token:event.lease_token};
@@ -60,14 +76,14 @@ export async function drainOne({store,relay,workerIds}) {
   const attempts = [];
   for (const worker of qualifiedWorkers) {
     try {
-      const r = await relay.next(worker);
+      const r = await withinDeadline(() => relay.next(worker), deadline);
       const state = r?.state;
       attempts.push({worker,state:typeof state === 'string' && SAFE_STATES.has(state) ? state : 'unknown'});
       if (state === 'idle') {
         // An idle worker does not prove the shared queue is empty. Only a
         // transactional store check may settle the wake-up without dispatch.
         if (typeof store.settleIdleOutbox === 'function' &&
-            await store.settleIdleOutbox(claimed.id,claimed.lease_token) === true)
+            await withinDeadline(() => store.settleIdleOutbox(claimed.id,claimed.lease_token), deadline) === true)
           return {state:'idle-settled',eventId:claimed.id,attempts};
         continue;
       }
@@ -78,7 +94,7 @@ export async function drainOne({store,relay,workerIds}) {
         // Once dispatch is confirmed, an ambiguous ACK is never a reason to
         // dispatch another worker. Reconciliation must inspect the durable lease.
         try {
-          if (await store.ackOutbox(claimed.id,claimed.lease_token) === true)
+          if (await withinDeadline(() => store.ackOutbox(claimed.id,claimed.lease_token), deadline) === true)
             return {state:'acknowledged',eventId:claimed.id,dispatch,attempts};
         } catch (error) {
           attempts.push({worker,state:'ack_error',reason:safeErrorMessage(error)});
