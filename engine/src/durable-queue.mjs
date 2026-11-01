@@ -63,7 +63,11 @@ export class DurableQueue {
     // Expiry alone is not recovery; recover() must release the old claim first.
     if([...this.items.values()].some(other => other.id!==id && other.worker===worker &&
       ['assigned','running','blocked'].includes(other.status)))fail('Worker already has active ticket');
-    return this.#record('claim',id,{worker,provider,leaseUntil:this.now()+this.leaseMs});
+    // Validate the clock and bounded deadline before journaling a lease.
+    // A string/NaN clock or safe-integer overflow must never persist an invalid claim.
+    const now=this.now(),leaseUntil=now+this.leaseMs;
+    if(!Number.isSafeInteger(now)||!Number.isSafeInteger(leaseUntil))fail('Invalid lease deadline');
+    return this.#record('claim',id,{worker,provider,leaseUntil});
   }
   #active(id,worker,now=this.now()){const t=this.get(id);if(!Number.isSafeInteger(now)||!t||t.worker!==worker||!['assigned','running'].includes(t.status)||!Number.isSafeInteger(t.leaseUntil)||t.leaseUntil<=now)fail('No active lease');return t}
   start(id,worker){const t=this.#active(id,worker);if(t.status!=='assigned')fail('Not assigned');return this.#record('start',id)}
