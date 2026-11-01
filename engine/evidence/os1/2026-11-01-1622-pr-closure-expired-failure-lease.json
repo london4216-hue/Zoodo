@@ -1,0 +1,44 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-01T16:22:00Z",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "prior_exact_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "task": "Prevent expired pilot queue worker from issuing stale failure/requeue before recover()",
+  "defect": "DurableQueue.fail checked worker identity and state but not lease expiry; delayed failure callback could requeue an expired ticket before recovery ownership handling.",
+  "source_path": "engine/src/durable-queue.mjs",
+  "source_previous_blob": "834a6c0d98d4a94db888b853480f8e2df7353d27",
+  "source_new_blob": "af768ff08d7ca4d4f250fad2c7a1743b39cc5e75",
+  "source_commit": "7a551511cbe9f6f4351ba2811b6089d2c6dd1ed3",
+  "test_path": "engine/test/failure-expired-lease-fence.test.mjs",
+  "test_blob": "a2f00173447a21ab7bee1a0f4c533664b7470f75",
+  "test_commit": "f7056809bfaf2951efbaed004f09256f08bacd30",
+  "test_environment": "Local Node.js v22.16.0; source and tests Git blob SHA matched GitHub branch readback",
+  "baseline_regression": {
+    "passed": 1,
+    "failed": 2
+  },
+  "fixed_regression": {
+    "passed": 3,
+    "failed": 0
+  },
+  "combined_tests": {
+    "passed": 9,
+    "failed": 0,
+    "command": "node --test engine/test/failure-expired-lease-fence.test.mjs engine/test/identity-unicode-separator-fence.test.mjs",
+    "existing_identity_test_blob": "3cc05f3f7a43c7a6e7c1e3f6b0b60d6cd95ef188"
+  },
+  "node_check": "passed",
+  "scope": "single-writer local pilot queue; not distributed Supabase queue or hosted two-ticket loop",
+  "durable_queue_claim": "NOT_CLAIMED; no authenticated Supabase queue access",
+  "provider_native_invocation": "NOT_INVOKED",
+  "ci": "NOT_CLAIMED; no hosted CI test success asserted",
+  "merged": false,
+  "deployed": false,
+  "stack_reconciliation": "PR81 receipt and issue77 read; no blind merge of historical stacked drafts; dashboard lane unchanged",
+  "next": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "task": "Review SQL 001→002→005→006 migration order and concurrency/lease-expiry semantics in disposable PostgreSQL; PostgreSQL runtime unavailable in this local environment",
+    "state": "DISCOVERED_NOT_CLAIMED"
+  }
+}
