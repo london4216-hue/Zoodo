@@ -43,8 +43,9 @@ test('recent code with contemporaneous review and CI remains verified',()=>{
  assert.equal(r.lastVerifiedCodeAt,new Date(recent).toISOString());
  assert.equal(r.state,'VERIFIED WITHIN 5 MINUTES');
 });
-test('unrelated SHA CI remains insufficient',()=>{
- const r=evaluateEvidence({...base,runs:[{...base.runs[0],head_sha:'b'.repeat(40)}]});
- assert.equal(r.verified,false);
- assert.equal(r.exactHeadCiAt,null);
+test('late CI alone cannot reset code movement age after earlier review',()=>{
+ const r=evaluateEvidence({...base,review:{...base.review,at:old}});
+ assert.equal(r.verified,true);
+ assert.equal(r.lastVerifiedCodeAt,new Date(old).toISOString());
+ assert.match(r.state,/ESCALATION DUE/);
 });
