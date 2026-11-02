@@ -37,6 +37,10 @@ export class DurableQueue {
       this.items.set(e.id,{id:e.id,repo:e.repo,description:e.description,status:'queued',attempts:0,worker:null,provider:null,leaseUntil:null,commit:null,reviewer:null,reviewProvider:null,tests:null,releaseRequired:e.releaseRequired,releaseProof:null,history:[e]});
       return;
     }
+    // Fail closed on unknown persisted event kinds: accepting a typo or injected
+    // journal operation as inert history can hide corrupt execution evidence.
+    if(!new Set(['claim','start','heartbeat','submit','approve','tested','release','verify','done','requeue','quarantine']).has(e.type))
+      fail('Unknown journal event type');
     const t=this.items.get(e.id);if(!t)fail('Unknown journal ticket');
     if(e.type==='claim'){t.status='assigned';t.attempts++;t.worker=e.worker;t.provider=e.provider;t.leaseUntil=e.leaseUntil;t.commit=null;t.reviewer=null;t.reviewProvider=null;t.tests=null;t.releaseProof=null}
     if(e.type==='start')t.status='running';
