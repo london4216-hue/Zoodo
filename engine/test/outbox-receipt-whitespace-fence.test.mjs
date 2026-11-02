@@ -23,9 +23,10 @@ for (const [name, url] of [
   assert.equal(f.acks(),0);
   assert.equal(f.calls(),1);
 });
-test('accepts percent-encoded spaces in canonical HTTPS receipts',async()=>{
+test('rejects percent-encoded spaces before durable ACK',async()=>{
   const f=fixture('https://runner.example/receipts/T%201');
   const r=await drainOne({...f,workerIds:['workerA']});
-  assert.equal(r.state,'acknowledged');
-  assert.equal(f.acks(),1);
+  assert.equal(r.state,'recovery_required');
+  assert.equal(f.acks(),0);
+  assert.equal(f.calls(),1);
 });
