@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-11-02T07:05:08.390Z",
+  "observed_at": "2026-11-02T07:05:54.700Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Agent Hunter",
@@ -10,7 +10,7 @@
     "ZOO Asset Restoration",
     "ZOO Adler"
   ],
-  "publication_scope": "Native ChatGPT scheduler readback only. Two previously started recovery roles (Adler and Hunter) completed then self-disabled due to missing authenticated runtime/host access. PR Closure and Asset Restoration last runs completed; Dashboard scheduler currently in progress. Two new parallel run requests accepted but their starts are not yet confirmed. No native coding-worker or durable queue claim inferred.",
+  "publication_scope": "Authenticated ChatGPT scheduler evidence only. Dashboard recovery schedule PAUSED because authenticated Netlify deployment, Supabase queue and Aider/Trigger runtime access are unavailable after repeated attempts; its current run was still marked in progress at readback. Adler and Hunter schedules also disabled after completed blocked recovery checks. PR Closure and Product Builder remain enabled and their immediate run requests were accepted. No native coding-worker proof.",
   "refresh_policy": "Single dashboard publisher, compare-and-swap GitHub blob SHA; browser refresh does not run workers.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
@@ -150,15 +150,15 @@
     }
   ],
   "prior_snapshot": {
-    "observed_at": "2026-11-02T05:47:33.472Z",
-    "note": "Previous snapshot retained in Git history; prior IN_PROGRESS states are not current."
+    "observed_at": "2026-11-02T07:05:08.390Z",
+    "note": "Previous source readback retained in Git history."
   },
   "recovery_handoff": {
-    "status": "RUNTIME_ACCESS_BLOCKED",
+    "status": "BLOCKED_PAUSED",
     "owner": "ZOO Dashboard Worker",
     "backup": "ZOO Agent Hunter",
     "integration_authority": "Sole ZOO Keeper",
-    "next_action": "Authenticated Netlify/Vercel/Render production deployment action unavailable; independent DNS/HTTP probe failed before HTTP, no deployment ID/SHA/readback. Adler and Hunter self-disabled after confirming missing Aider host, Supabase RPC and Trigger.dev logs; do not equate scheduler completion with worker activity. Connect actual queue and native provider receipts; keep PR Closure and product lanes independent.",
+    "next_action": "Existing host operator must restore authenticated deployment action and native Supabase/Aider/Trigger runtime receipts before dashboard recovery can resume. PR Closure and Product Builder schedules remain enabled; do not claim first-loop success.",
     "issues": [
       "https://github.com/london4216-hue/Zoodo/issues/17",
       "https://github.com/london4216-hue/Zoodo/issues/18"
@@ -183,9 +183,9 @@
   "other_scheduler_states": [
     {
       "role": "ZOO Dashboard Worker",
-      "state": "SCHEDULER_ENABLED",
+      "state": "SCHEDULER_DISABLED",
       "last_recorded_run_id": "19a5d07e-fb30-8321-8c0e-457d3620a74a",
-      "note": "Native scheduler status only; provider worker, queue claim, quota and deployment UNKNOWN."
+      "note": "Current scheduled recovery paused due to persistent inaccessible provider runtime; existing in-progress run record is not a worker heartbeat."
     },
     {
       "role": "ZOO PR Closure",
@@ -223,7 +223,7 @@
     "independent_live_readback": "UNVERIFIED"
   },
   "publication_observation": {
-    "checked_at": "2026-11-02T07:05:08.390Z",
+    "checked_at": "2026-11-02T07:05:54.700Z",
     "scope": "connected_automations_peek",
     "scheduler_roles_checked": 5,
     "recorded_completed_roles": [
@@ -239,6 +239,7 @@
       "ZOO Keeper"
     ],
     "disabled_roles": [
+      "ZOO Dashboard Worker",
       "ZOO Agent Hunter",
       "ZOO Adler"
     ],
@@ -264,7 +265,7 @@
     "notes": "Immediate requests accepted, but subsequent scheduler readback had not yet advanced to the new run. No ticket claim or automatic NEXT evidence."
   },
   "provider_access": {
-    "checked_at": "2026-11-02T07:05:08.390Z",
+    "checked_at": "2026-11-02T07:05:54.700Z",
     "netlify_deploy_permission": "UNAVAILABLE_IN_CONNECTED_TOOLS",
     "netlify_dns_probe": "FAILED_BEFORE_HTTP",
     "supabase_queue_runtime": "NOT_ACCESSIBLE",
@@ -272,6 +273,7 @@
     "trigger_native_logs": "NOT_ACCESSIBLE",
     "quota_state": "UNKNOWN",
     "refill_time": "UNKNOWN",
-    "note": "No outage, exhaustion or reactivation inferred."
+    "note": "No outage, exhaustion or reactivation inferred.",
+    "dashboard_schedule": "PAUSED_AFTER_REPEATED_RUNTIME_ACCESS_BLOCKER"
   }
 }
