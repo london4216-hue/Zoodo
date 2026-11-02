@@ -20,6 +20,23 @@
 .zoo-p0{margin:16px 0;border:1px solid #e0ae56}.zoo-p0-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.zoo-p0-grid>div{min-width:0;border:1px solid #344256;border-radius:10px;padding:12px}.zoo-p0 p{overflow-wrap:anywhere;margin:8px 0}.zoo-p0 strong{font-size:15px}@media(max-width:680px){.zoo-p0-grid{grid-template-columns:1fr}.zoo-p0{padding:12px}}
 </style></head><body>
 <header><div><h1>ZOO <span style="color:#69e2b2">/ EXECUTION PROOF</span></h1><small>GitHub-backed evidence, never simulated activity</small></div><div><span id="state" class="status warn">CONNECTING</span> <button id="refresh">Refresh now</button><div class="time" id="checked"></div></div></header>
+<section class="panel" id="mobile-queue-summary" aria-label="Phone-first durable queue summary" style="margin-top:18px">
+<h2>QUEUE SUMMARY · REAL DURABLE QUEUE ONLY</h2>
+<p class="muted" id="mq-scope">Source: UNKNOWN · durable queue scope not established</p>
+<button type="button" id="mq-refresh">Refresh queue</button>
+<div class="grid" aria-label="Source-backed queue counts">
+<div class="card"><small>Total tickets</small><div class="metric" id="mq-total">UNKNOWN</div></div>
+<div class="card"><small>Queued</small><div class="metric" id="mq-queued">UNKNOWN</div></div>
+<div class="card"><small>Running</small><div class="metric" id="mq-running">UNKNOWN</div></div>
+<div class="card"><small>Blocked</small><div class="metric" id="mq-blocked">UNKNOWN</div></div>
+<div class="card"><small>Completed / 24h</small><div class="metric" id="mq-completed24">UNKNOWN</div></div>
+<div class="card"><small>Oldest pending</small><div class="metric" id="mq-oldest">UNKNOWN</div></div>
+</div>
+<p class="time" id="mq-freshness" role="status">UNKNOWN · no fresh queue receipt</p>
+<h2>Next 3–5 tickets</h2><div id="mq-next" class="queue-list">UNKNOWN · no source-backed next assignments</div>
+<p class="muted" id="mq-groups">Asset / priority totals: UNKNOWN</p>
+<p class="time">Queue counts are source-reported, not native worker proof. Two-ticket automatic NEXT and production readback remain separate.</p>
+</section>
 <section class="panel" id="worker-receipts" aria-label="ZOO worker receipt roster" style="margin-top:18px">
 <h2>WORKER RECEIPTS · SOURCE-REPORTED, NOT INDEPENDENT ACTIVE PROOF</h2>
 <p class="muted" id="worker-feed-status" role="status" aria-live="polite">UNKNOWN · Awaiting a valid, recent published worker feed. A static snapshot is not an authenticated heartbeat.</p>
@@ -424,4 +441,64 @@ update();
 setInterval(update,GITHUB_SOURCE_POLL_MS);
 setInterval(()=>refreshAutomationProof().catch(()=>{runFeedFetchError='Unexpected proof refresh error';paintAutomationProof()}),AUTOMATION_PROOF_POLL_MS);
 setInterval(tickClock,1000);
-</script><script type="module" src="./priority-watch.mjs"></script><script type="module" src="./worker-feed-panel.mjs"></script></body></html>
+</script><script type="module" src="./priority-watch.mjs"></script><script type="module" src="./worker-feed-panel.mjs"></script><script>
+(function(){
+ const ids=['total','queued','running','blocked','completed24','oldest'];
+ const el=id=>document.getElementById('mq-'+id);
+ const whole=n=>Number.isSafeInteger(n)&&n>=0;
+ const validTime=t=>typeof t==='string'&&Number.isFinite(Date.parse(t));
+ let busy=false;
+ function unknown(reason){
+   for(const id of ids)el(id).textContent='UNKNOWN';
+   el('scope').textContent='Source: UNKNOWN · durable queue scope not established';
+   el('freshness').textContent='UNKNOWN · '+reason;
+   el('next').replaceChildren();el('next').textContent='UNKNOWN · no source-backed next assignments';
+   el('groups').textContent='Asset / priority totals: UNKNOWN';
+ }
+ function safeLink(x){
+   try{const u=new URL(x);return u.protocol==='https:'&&u.hostname==='github.com'&&!u.username&&!u.password&&
+     !u.search&&!u.hash&&/^\/london4216-hue\/[A-Za-z0-9_.-]+\/(issues|pull)\/[1-9][0-9]*$/.test(u.pathname)}
+   catch{return false}
+ }
+ async function refresh(){
+   if(busy)return;busy=true;el('refresh').disabled=true;
+   try{
+     const response=await fetch('./board.json?read='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(8000)});
+     if(!response.ok)throw Error('board HTTP '+response.status);
+     const d=await response.json(),now=Date.now(),at=Date.parse(d?.observed_at),s=d?.stats;
+     if(d?.schema_version!==1||d.source!=='zoo-durable-queue'||!validTime(d.observed_at)||
+       at>now+60000||now-at>900000||typeof d.scope!=='string'||!d.scope.trim()||
+       typeof d.source_run_id!=='string'||!d.source_run_id.trim()||d.completed_window_hours!==24)
+       throw Error('no fresh, scoped durable queue receipt');
+     if(!s||!['total','queued','running','blocked','completed_last_24h'].every(k=>whole(s[k]))||
+       s.queued+s.running+s.blocked>s.total||s.completed_last_24h>s.total)
+       throw Error('queue totals invalid');
+     if(!Array.isArray(d.next_tickets)||d.next_tickets.length>5||!Array.isArray(d.groups)||d.groups.length>50)
+       throw Error('queue details invalid');
+     for(const [id,key] of [['total','total'],['queued','queued'],['running','running'],
+       ['blocked','blocked'],['completed24','completed_last_24h']])el(id).textContent=s[key].toLocaleString();
+     el('oldest').textContent=validTime(d.oldest_pending_at)&&Date.parse(d.oldest_pending_at)<=now?
+       Math.floor((now-Date.parse(d.oldest_pending_at))/60000)+' min':'UNKNOWN';
+     el('scope').textContent='Scope: '+d.scope.slice(0,120)+' · source run '+d.source_run_id.slice(0,120);
+     el('freshness').textContent='Queue observed '+d.observed_at+' · '+Math.floor((now-at)/60000)+
+       ' min old · SOURCE-REPORTED (not independently verified worker execution)';
+     const list=el('next');list.replaceChildren();
+     for(const t of d.next_tickets){
+       if(!t||typeof t.title!=='string'||!safeLink(t.issue_url))continue;
+       const p=document.createElement('p'),a=document.createElement('a');
+       a.href=t.issue_url;a.target='_blank';a.rel='noopener noreferrer';
+       a.textContent=t.title.slice(0,65)+(t.title.length>65?'…':'')+' · '+String(t.id??'').slice(0,35);
+       p.append(a,document.createTextNode(' · '+String(t.asset??'asset UNKNOWN').slice(0,40)+
+         ' · '+String(t.agent??'agent UNKNOWN').slice(0,40)));list.append(p);
+     }
+     if(!list.childNodes.length)list.textContent='UNKNOWN · no valid next-ticket receipts';
+     const groups=d.groups.filter(g=>g&&typeof g.asset==='string'&&typeof g.priority==='string'&&whole(g.total));
+     el('groups').textContent=groups.length?'By asset / priority: '+
+       groups.map(g=>g.asset.slice(0,40)+' / '+g.priority.slice(0,20)+' '+g.total).join(' · '):
+       'Asset / priority totals: UNKNOWN';
+   }catch(e){unknown(String(e.message||e).slice(0,100))}
+   finally{busy=false;el('refresh').disabled=false}
+ }
+ el('refresh').addEventListener('click',refresh);refresh();setInterval(refresh,30000);
+})();
+</script></body></html>
