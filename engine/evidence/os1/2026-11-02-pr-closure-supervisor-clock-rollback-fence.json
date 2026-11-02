@@ -1,0 +1,62 @@
+{
+  "schema": "zoo.os1.code-test-receipt.v1",
+  "recorded_date_utc": "2026-11-02",
+  "repository": "london4216-hue/Zoodo",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "pr": 132,
+  "issue": 77,
+  "source_path": "engine/ops/relay/supervisor-contingent.mjs",
+  "test_path": "engine/test/supervisor-clock-rollback-fence.test.mjs",
+  "defect": "A backward wall-clock step could leave nextRecoveryAt in the future and skip lease recovery while dispatch continued. A failed recovery after rollback also needed a sticky retry obligation.",
+  "fix": "Track the previous valid clock sample, force recovery on rollback, and retain recoveryRequired until a valid recovery result. Do not dispatch while recovery is unknown.",
+  "source_commit": "5d2b912875538c97b2a561a031edf4b4c0e59803",
+  "test_commit": "ac5a38d440437f9914cda563e646e15b6d62f664",
+  "exact_git_blob_shas": {
+    "engine/ops/relay/supervisor-contingent.mjs": "9095bad43d707a5443dfe6220a189f3bf9a59240",
+    "engine/test/supervisor-clock-rollback-fence.test.mjs": "f4c533019e86e61f33a283230b229aeeddda2369",
+    "engine/test/supervisor-contingent.test.mjs": "78a693042ee8b5868af09bf6d28f7cfa18531b61",
+    "engine/test/supervisor-clock-fence.test.mjs": "146fcb1c68180f2f12d5905466c54f9eedde0c00",
+    "engine/test/supervisor-roster-snapshot.test.mjs": "ef5c787d1452e18562911a3221b4c1670fdce860"
+  },
+  "tests": {
+    "environment": "local Node.js v22.16.0, exact locally tested Git blob content compared to authenticated GitHub readback",
+    "fail_first": {
+      "command": "node --test engine/test/supervisor-clock-rollback-fence.test.mjs",
+      "pass": 0,
+      "fail": 2
+    },
+    "fixed": {
+      "command": "node --test engine/test/supervisor-*.test.mjs",
+      "pass": 12,
+      "fail": 0
+    },
+    "syntax": "node --check engine/ops/relay/supervisor-contingent.mjs PASS",
+    "native_postgresql": false,
+    "hosted_ci": false,
+    "hosted_queue": false,
+    "provider_native_worker": false
+  },
+  "boundaries": {
+    "product_files_changed": false,
+    "dashboard_files_changed": false,
+    "main_merged": false,
+    "production_deployed": false,
+    "branches_deleted": false
+  },
+  "queue_claim": "NOT VERIFIED: no authenticated durable queue lease or live worker claim was made in this code-edit session",
+  "next": {
+    "pr": 93,
+    "task": "Run disposable PostgreSQL 001→002→005→006 migrations and expired ACK/concurrency tests; preserve #93 draft until successful. Independently deduplicate PR #96 with OS1 before integration."
+  },
+  "unresolved": [
+    "OS1 branch diverged from main (30 commits behind at inventory read)",
+    "Actions zero-step startup infrastructure UNKNOWN",
+    "Hosted two-ticket claim/complete/NEXT and dashboard readback not proven"
+  ],
+  "historical_stacks": [
+    "#65→#69→#72 merged only along historical branch chain",
+    "#68→#73→#81; #73 closed unmerged and #81 merged into historical stack",
+    "#16→#71 historical dashboard stack not proof of production"
+  ],
+  "reference_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json"
+}
