@@ -39,4 +39,5 @@ test('one valid clock sample suffices for recovery deadline and dispatch',async(
   const result=await runSupervisorContingent({...f,signal:f.controller.signal});
   assert.deepEqual(f.actions,['recover','dispatch']);
   assert.equal(result.cycles,1);
+  assert.equal(samples,1);
 });
