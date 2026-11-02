@@ -1,0 +1,55 @@
+{
+  "schema": "zoo.pr-closure-evidence.v1",
+  "recorded_at_utc": "2026-11-02T04:10:32.787Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "source_pr": 96,
+  "coordination_issue": 77,
+  "scope": "PR96 regression preservation and OS1 release/verify/done replay fence; no product/dashboard/SQL modifications",
+  "source_fix_commit": "341e9af3188b6f769cb97e6cbfe7b134572eb31b",
+  "test_regression_commit": "e1bcbeff7105a7d8b2a448e7946b99c7774d430f",
+  "previous_receipt_commit": "52b05e77227fe965fca343780c6e0593bd4ff935",
+  "additional_test_commits": [
+    "3367c3c559385db7d162270bde2b4a89578b32ec",
+    "39c6e0358c8897774db5360133518167610012c2",
+    "d9dd76eeea13f70dc89623a4ac07383350b41ae7",
+    "4bbddc68b1c0d8c6e1e324ef367ae91cd1a3ce5c"
+  ],
+  "exact_blobs": {
+    "engine/src/durable-queue.mjs": "87384d253cc53341247d08a488d4c2aeb2cb8a5f",
+    "engine/test/durable-queue.test.mjs": "eecd9a930d5e3a0a6d381b5b601684822eee6728",
+    "engine/test/journal-release-verify-done-replay-fence.test.mjs": "ea5d4087d4422e79a96ff1ce8998def9828a89bd",
+    "engine/test/expired-fail-lease.test.mjs": "24f0c52e417ade6c191ce9bafb857ce95b5b1061",
+    "engine/test/failed-test-retry-budget.test.mjs": "093ac86fd369ba21aca3f83d7ae9207fdb688a3f",
+    "engine/test/requeue-stale-commit.test.mjs": "a9270e5b32de36ce33a1ec0a084148da0a84a4f1",
+    "engine/test/canonical-ticket-id-fence.test.mjs": "9863490a686b9733325af1dd8d4a8563088fc799"
+  },
+  "readback_verified": true,
+  "original_PR96_test_blobs_unchanged": true,
+  "tests": {
+    "environment": "Exact GitHub-published JavaScript source and exact test bodies executed in V8 using in-memory Node fs/crypto shims; NOT native Node.js",
+    "passed": 24,
+    "failed": 0,
+    "by_file": [
+      9,
+      7,
+      2,
+      2,
+      2,
+      2
+    ],
+    "new_replay_fail_first": {
+      "invalid_events_accepted_before": 6,
+      "invalid_events_rejected_after": 6,
+      "valid_control_passed": true
+    }
+  },
+  "hosted_ci": "UNKNOWN; GitHub status previously returned []",
+  "postgresql": "NOT_EXECUTED",
+  "authenticated_durable_claim": false,
+  "provider_native_external_worker": false,
+  "merge": false,
+  "deploy": false,
+  "pr_head_before_receipt": "4bbddc68b1c0d8c6e1e324ef367ae91cd1a3ce5c",
+  "next": "PR96 release-required-type regression is unported but expects obsolete error text; reconcile without changing test semantics. PR93 SQL outbox remains blocked on disposable PostgreSQL concurrency test. Verify hosted two-ticket NEXT separately."
+}
