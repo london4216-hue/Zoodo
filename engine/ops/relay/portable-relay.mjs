@@ -21,7 +21,7 @@ export function makeStore({origin,serviceRoleKey,fetchImpl=fetch}){
  }
  return {
   claim:async(worker)=>{const r=await rpc('claim',{p_worker:worker});if(!Array.isArray(r)||r.length>1)throw Error('Invalid claim');return r[0]??null},
-  complete:x=>rpc('complete',{p_id:x.ticket_id,p_worker:x.worker,p_token:x.lease_token,p_commit:x.commit_sha,p_test_url:x.test_url}),
+  complete:x=>rpc('complete',{p_id:x.ticket_id,p_worker:x.worker,p_token:x.lease_token,p_commit:x.commit_sha,p_test_url:x.test_url??null}),
   notStarted:x=>rpc('not_started',{p_id:x.ticket_id,p_worker:x.worker,p_token:x.lease_token,p_evidence:x.evidence_url}),
   record:x=>rpc('dispatch_recorded',{p_id:x.ticket_id,p_worker:x.worker,p_token:x.lease_token,p_receipt:x.receipt_url}),
   quarantine:()=>rpc('quarantine_expired',{})
@@ -73,12 +73,25 @@ export function makeRelay({store,workers,fetchImpl=fetch,now=()=>Date.now()}){
   // The uncertain task stays leased/quarantined; only independent tickets may advance.
   return delegate(worker,allowReplacement,result);
  }
+ async function nextAfter(worker){
+  // Prefer a different eligible adapter after each committed change. Probe
+  // without nested delegation so a busy successor cannot jump back to the
+  // completing worker ahead of the rest of the pool. One bounded rotation;
+  // the existing durable queue is still the only source of assignments.
+  const ids=[...pool.keys()],offset=ids.indexOf(worker);
+  for(let step=1;step<=ids.length;step++){
+   const result=await next(ids[(offset+step)%ids.length],false);
+   if(result.state!=='idle')return result;
+  }
+  return {state:'idle'};
+ }
  async function completed(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
-     !SHA.test(x?.commit_sha??'')||!https(x?.test_url)||!pool.has(x.worker))throw Error('Invalid completion');
+     !SHA.test(x?.commit_sha??'')||(x.test_url!=null&&!https(x.test_url))||!pool.has(x.worker))throw Error('Invalid completion');
   if(await store.complete(x)!==true)throw Error('Completion not durably confirmed');
   // NEXT is triggered by the authenticated completion callback, not an hourly tick.
-  return {state:'completed',ticket:x.ticket_id,next:await next(x.worker),completed_at:new Date(now()).toISOString()};
+  // A committed change does not wait for a separate test-evidence URL or judge.
+  return {state:'completed',ticket:x.ticket_id,next:await nextAfter(x.worker),completed_at:new Date(now()).toISOString()};
  }
  async function notStarted(x){
   if(!ID.test(x?.ticket_id??'')||!WORKER.test(x?.worker??'')||!UUID.test(x?.lease_token??'')||
