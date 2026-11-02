@@ -53,7 +53,14 @@ function withinDeadline(operation, deadline) {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(Error('Outbox operation deadline exceeded')), remaining);
     Promise.resolve().then(operation).then(
-      value => { clearTimeout(timer); resolve(value); },
+      value => {
+        clearTimeout(timer);
+        // A synchronous callback can block the event loop past the deadline;
+        // its fulfilled promise may beat the delayed timer microtask.
+        if (performance.now() >= deadline)
+          reject(Error('Outbox operation deadline exceeded'));
+        else resolve(value);
+      },
       error => { clearTimeout(timer); reject(error); }
     );
   });
