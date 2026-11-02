@@ -2,6 +2,8 @@
 const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
 const TICKET = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/;
 const WORKER = /^[A-Za-z0-9_-]{1,64}$/;
+// Bound roster validation before claiming a lease or invoking a provider.
+const MAX_WORKERS = 256;
 const SAFE_STATES = new Set(['idle','dispatched','delegated','failed','uncertain','recovery_required','not_started']);
 function validReceipt(r, worker) {
   if (!r || typeof r.ticket !== 'string' || !TICKET.test(r.ticket) || r.worker !== worker ||
@@ -58,7 +60,8 @@ function withinDeadline(operation, deadline) {
 }
 export async function drainOne({store,relay,workerIds,operationTimeoutMs=12000}) {
   if (!store || typeof store.claimOutbox !== 'function' || typeof store.ackOutbox !== 'function' ||
-      !relay || typeof relay.next !== 'function' || !Array.isArray(workerIds) || !workerIds.length)
+      !relay || typeof relay.next !== 'function' || !Array.isArray(workerIds) ||
+      !workerIds.length || workerIds.length > MAX_WORKERS)
     throw Error('Qualified worker roster and durable store required');
   // Capture the qualified roster exactly once before any asynchronous callbacks.
   const qualifiedWorkers = [];
