@@ -1,0 +1,48 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-02T06:15:34.527Z",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "original_outbox_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "task": "Prevent forged requeue and quarantine journal replay from erasing active or completed tickets",
+  "source_path": "engine/src/durable-queue.mjs",
+  "source_previous_blob": "942a844b0e139b9a0c4b3aff6e13236d81678738",
+  "source_new_blob": "0de1ad4e20ef96c433c0534fcf5b237a6532d38d",
+  "source_commit": "a3bd3363a1f29932c8c7b895a47ef12697edd70e",
+  "test_path": "engine/test/journal-requeue-quarantine-replay-fence.test.mjs",
+  "test_blob": "bf34e5f42cf3f8e19fdb82eb088eace194712de0",
+  "test_commits": [
+    "860ed1ade5e7c547055edb988deb31278289b18c",
+    "76a120f69e4a0fde2d08ecd55a81f04de8fe8ba2"
+  ],
+  "fail_first": {
+    "environment": "Exact baseline module source evaluated in V8 with in-memory filesystem and journal mocks",
+    "invalid_replays_accepted": 8,
+    "valid_replays_preserved": 3
+  },
+  "after_fix": {
+    "environment": "Exact published source and exact committed Node test body executed in V8 with in-memory filesystem and journal mocks",
+    "tests_registered": 12,
+    "passed": 12,
+    "failed": 0,
+    "readback_blobs_matched": true
+  },
+  "native_node_test_run": "NOT_EXECUTED",
+  "hosted_ci": "UNKNOWN_ZERO_STATUS_CHECKS",
+  "durable_queue_claim": "NOT_CLAIMED_NO_AUTHENTICATED_SHARED_QUEUE_ACCESS",
+  "external_worker_invocation": "NOT_INVOKED",
+  "merge": false,
+  "deploy": false,
+  "stack_reconciliation": {
+    "65_69_72": "Intermediate branch merges, not proof of main integration",
+    "68_73_81": "PR73 closed unmerged; PR81 merged into intermediate branch; exact main source/test blob hashes match original PR81 receipt",
+    "16_71": "Intermediate dashboard branch merges; dashboard lane owns deployment"
+  },
+  "next": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "state": "DISCOVERED_NOT_CLAIMED",
+    "task": "Disposable PostgreSQL migration and concurrency tests for outbox 005-010; preserve branch, do not merge without database evidence"
+  },
+  "file_ownership": "PR closure touched only engine/src/durable-queue.mjs, its dedicated regression test, and this receipt; no product/dashboard/SQL files",
+  "preserved_source_history": true
+}
