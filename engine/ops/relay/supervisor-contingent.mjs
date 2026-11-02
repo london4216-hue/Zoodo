@@ -8,6 +8,8 @@
  * recovery plan is still required for host/database outages.
  */
 const bounded = (n, min, max) => Number.isSafeInteger(n) && n >= min && n <= max;
+// Match the downstream outbox-drainer worker identity contract before starting recovery.
+const WORKER = /^[A-Za-z0-9_-]{1,64}$/;
 
 function wait(ms, signal) {
   if (signal.aborted) return Promise.resolve();
@@ -37,8 +39,7 @@ export async function runSupervisorContingent({
       !bounded(workerIds.length,1,64) ||
       !Array.from({length:workerIds.length},(_,i)=>i).every(i =>
         Object.hasOwn(workerIds,i) && typeof workerIds[i] === 'string' &&
-        workerIds[i].length > 0 && workerIds[i].length <= 128 &&
-        workerIds[i] === workerIds[i].trim()) ||
+        WORKER.test(workerIds[i])) ||
       new Set(workerIds).size !== workerIds.length ||
       !signal || typeof signal.aborted !== 'boolean' ||
       typeof signal.addEventListener !== 'function' ||
