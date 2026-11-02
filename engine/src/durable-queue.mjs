@@ -99,7 +99,7 @@ export class DurableQueue {
     if(!Number.isSafeInteger(leaseUntil))fail('Invalid lease deadline');
     return this.#record('heartbeat',id,{leaseUntil},now);
   }
-  submit(id,worker,{commit,evidence}){const now=this.now(),t=this.#active(id,worker,now);if(t.status!=='running')fail('Not running');if(!/^[a-f0-9]{40}$/.test(commit)||!valid(evidence))fail('Exact commit SHA and evidence required');return this.#record('submit',id,{commit,evidence},now)}
+  submit(id,worker,{commit,evidence}){const now=this.now(),t=this.#active(id,worker,now);if(t.status!=='running')fail('Not running');if(typeof commit!=='string'||!/^[a-f0-9]{40}$/.test(commit)||!valid(evidence))fail('Exact commit SHA and evidence required');return this.#record('submit',id,{commit,evidence},now)}
   approve(id,{reviewer,provider,commit,evidence,approved}){
     const t=this.get(id);if(!t||t.status!=='review')fail('Not awaiting review');
     if(!validIdentity(reviewer)||!validIdentity(provider)||!valid(evidence)||provider===t.provider||reviewer===t.worker||commit!==t.commit)fail('Independent exact-commit review required');
