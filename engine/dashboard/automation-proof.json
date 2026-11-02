@@ -7,9 +7,10 @@
     "ZOO Agent Hunter",
     "ZOO Dashboard Worker",
     "ZOO PR Closure",
-    "ZOO Asset Restoration"
+    "ZOO Asset Restoration",
+    "ZOO Adler"
   ],
-  "publication_scope": "Fresh connected scheduler-only observation. ChatGPT automation runs are NOT authenticated provider workers, durable-queue claims, autonomous NEXT, or deployed dashboard proof. Disabled Adler/Hunter do not imply exhausted quota.",
+  "publication_scope": "Fresh scheduler-only observation with historical/invalid runs separated. No provider-native workers, durable-queue claims, quota/refill evidence, autonomous NEXT or production deployment verified.",
   "refresh_policy": "Single dashboard publisher, compare-and-swap GitHub blob SHA; browser refresh does not run workers.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
@@ -42,17 +43,6 @@
       "scheduled_for": "2026-11-02T04:24:51Z",
       "started_at": "2026-11-02T04:23:42.594284Z",
       "completed_at": "2026-11-02T04:28:20.651012Z",
-      "receipt_source": "connected_automations_peek.run_details.last_run",
-      "evidence_url": null,
-      "evidence_url_scope": "native_scheduler_record_not_public_url"
-    },
-    {
-      "role": "ZOO Adler",
-      "run_id": "780c9f60-6b78-832f-ad3c-1adce187420b",
-      "recorded_status": "completed",
-      "scheduled_for": "2026-11-01T19:45:30Z",
-      "started_at": "2026-11-01T19:42:57.219586Z",
-      "completed_at": "2026-11-01T19:44:24.592354Z",
       "receipt_source": "connected_automations_peek.run_details.last_run",
       "evidence_url": null,
       "evidence_url_scope": "native_scheduler_record_not_public_url"
@@ -138,6 +128,14 @@
       "scheduled_for": "2026-10-31T10:45:58Z",
       "completed_at": "2026-10-31T10:34:59.730110Z",
       "action": "quarantined_not_counted_as_verified_scheduler_completion"
+    },
+    {
+      "role": "ZOO Adler",
+      "kind": "completion_before_scheduled_for_or_invalid",
+      "run_id": "780c9f60-6b78-832f-ad3c-1adce187420b",
+      "scheduled_for": "2026-11-01T19:45:30Z",
+      "completed_at": "2026-11-01T19:44:24.592354Z",
+      "action": "quarantined_not_counted_as_verified_scheduler_completion"
     }
   ],
   "prior_snapshot": {
@@ -219,9 +217,7 @@
     "scheduler_roles_checked": 5,
     "recorded_completed_roles": [
       "ZOO PR Closure",
-      "ZOO Asset Restoration",
-      "ZOO Adler",
-      "ZOO Agent Hunter"
+      "ZOO Asset Restoration"
     ],
     "in_progress_roles": [
       "ZOO Dashboard Worker"
@@ -240,6 +236,9 @@
     "netlify_deploy_id": null,
     "production_source_sha": null,
     "independent_browser_readback": "UNVERIFIED",
-    "source_commit_at_observation": "38ffa8fa1210e87cbc4e6bfccfb0304dfcf8d357"
+    "source_commit_at_observation": "38ffa8fa1210e87cbc4e6bfccfb0304dfcf8d357",
+    "invalid_scheduler_roles": [
+      "ZOO Adler"
+    ]
   }
 }
