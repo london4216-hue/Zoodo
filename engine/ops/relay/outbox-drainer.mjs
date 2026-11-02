@@ -16,10 +16,17 @@ function validReceipt(r, worker) {
   try {
     // URL() preserves percent-encoded path bytes; a later decoder can expose
     // invisible Unicode, whitespace or backslashes after durable ACK.
-    const decodedReceipt = decodeURIComponent(r.receipt_url);
-    if (decodedReceipt.includes('\\') ||
-        /[\p{Cc}\p{Cf}\p{Zs}\p{Zl}\p{Zp}]/u.test(decodedReceipt) ||
-        /[\uD800-\uDFFF]/u.test(decodedReceipt)) return false;
+    // A downstream consumer may decode percent escapes repeatedly.
+    // Inspect bounded decoding layers without rejecting harmless literal %25.
+    let decodedReceipt = r.receipt_url;
+    for (let depth = 0; depth <= 5; depth++) {
+      if (decodedReceipt.includes('\\') ||
+          /[\p{Cc}\p{Cf}\p{Zs}\p{Zl}\p{Zp}]/u.test(decodedReceipt) ||
+          /[\uD800-\uDFFF]/u.test(decodedReceipt)) return false;
+      if (!/%[0-9a-f]{2}/i.test(decodedReceipt)) break;
+      if (depth === 5) return false; // Unbounded nesting is not reliable evidence.
+      decodedReceipt = decodeURIComponent(decodedReceipt);
+    }
     const url = new URL(r.receipt_url);
     return url.protocol === 'https:' && !url.username && !url.password && !url.hash;
   } catch { return false; }
