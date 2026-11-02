@@ -57,14 +57,25 @@ export async function runSupervisorContingent({
   while (!signal.aborted) {
     // Recovery is independent of dispatch: any surviving peer may reclaim
     // expired leases, but only the database can decide which leases expired.
-    if (now() >= nextRecoveryAt) {
+    // Invalid clocks must not bypass recovery and allow unfenced dispatch.
+    // Sample once so a changing clock cannot corrupt the recovery deadline.
+    let tick;
+    try { tick = now(); } catch { /* handled below */ }
+    if (!bounded(tick, 0, Number.MAX_SAFE_INTEGER)) {
+      emit({type:'clock_error'});
+      await sleep(intervalMs, signal);
+      continue;
+    }
+    if (tick >= nextRecoveryAt) {
       try {
         const recovered = await store.recoverOutbox();
         if (!Number.isSafeInteger(recovered) || recovered < 0)
           throw Error('Invalid recovery count');
+        const deadline = tick + recoveryIntervalMs;
+        if (!Number.isSafeInteger(deadline)) throw Error('Invalid recovery deadline');
+        nextRecoveryAt = deadline;
         recoveryAttempts++;
         emit({type:'recovered',count:recovered});
-        nextRecoveryAt = now() + recoveryIntervalMs;
       } catch {
         emit({type:'recovery_error'});
         // Do not dispatch while recovery status is unknown.
