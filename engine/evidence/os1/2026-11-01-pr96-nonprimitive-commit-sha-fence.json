@@ -1,0 +1,48 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "run_date_local": "2026-11-01",
+  "lane": "PR_INTEGRATE",
+  "integration_pr": 132,
+  "source_pr": 96,
+  "source_commit": "f4761c8a945ce02af17c2e047582eac41a18c561",
+  "test_commit": "4906248391d6c0db39775cfeb532154dc83dd80d",
+  "source_blob": "6df497583664648e70d3d898e6588602b56f9357",
+  "test_blob": "5832bc7224f942d9ebc6412d0518c4290cb61498",
+  "existing_suite_blob": "eecd9a930d5e3a0a6d381b5b601684822eee6728",
+  "atomic_journal_blob": "e44db26351d36e0b16d8f1c41c18ee506d47905a",
+  "baseline_source_blob": "75de2cc0bb7b91fb37b49cf7db97187d2ec0cd96",
+  "finding": "RegExp.test(commit) coerced nonprimitive SHA values; a boxed String could enter durable journal and strand strict commit equality review.",
+  "fix": "Reject nonprimitive commit SHA before regex test and durable journal append.",
+  "tests": {
+    "runtime": "Node.js 22.16.0",
+    "before": {
+      "command": "node --test engine/test/nonstring-commit-sha-fence.test.mjs",
+      "passed": 0,
+      "failed": 2
+    },
+    "after": {
+      "command": "node --test engine/test/nonstring-commit-sha-fence.test.mjs engine/test/durable-queue.test.mjs",
+      "passed": 11,
+      "failed": 0
+    },
+    "syntax": "node --check engine/src/durable-queue.mjs PASS",
+    "exact_git_blob_matches_local": true,
+    "scope": "native local tests of exact published source and matching Git blob tests, no hosted integration"
+  },
+  "stack_reconciliation": {
+    "65_69_72": "closed merged into intermediate branch chain; no mainline claim",
+    "68_73_81": "68 and 81 merged into intermediate branches, 73 closed unmerged; PR81 receipt inspected",
+    "16_71": "dashboard intermediate branch stack, no deployed SHA proof"
+  },
+  "ownership": "Only engine/src/durable-queue.mjs, engine/test/nonstring-commit-sha-fence.test.mjs, engine/evidence/os1; no product, dashboard, SQL changes",
+  "queue_claim": "NOT_CLAIMED: no authenticated durable queue lease access",
+  "next": {
+    "candidate": "PR96 historical provider/worker review lineage; requires separate nonoverlapping review and test",
+    "state": "READ_ONLY_CANDIDATE_NOT_CLAIMED"
+  },
+  "ci": "UNKNOWN: no successful hosted CI verified",
+  "merges": 0,
+  "deployment": "NOT_VERIFIED",
+  "provider_native_invocation": "NOT_PERFORMED",
+  "autonomous_two_ticket_next": "NOT_VERIFIED"
+}
