@@ -4,7 +4,7 @@ import {existsSync,readFileSync} from 'node:fs';
 import {appendJournalEvent} from './atomic-journal.mjs';
 import {randomUUID} from 'node:crypto';
 
-const valid = s => typeof s === 'string' && s.length > 0 && s.length <= 256;
+const valid = s => typeof s === 'string' && s.trim().length > 0 && s.length <= 256;
 // Match the durable SQL ticket directory key contract; do not alter worker identity rules.
 const validTicketId = s => typeof s === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/.test(s);
 // Worker, provider and reviewer IDs must have one canonical spelling.
