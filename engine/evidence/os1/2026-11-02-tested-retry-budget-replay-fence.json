@@ -1,0 +1,39 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "date_utc": "2026-11-02",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "prior_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "work": "Reject replayed tested events whose dead-letter verdict contradicts passed status or maxAttempts",
+  "defect": "A persisted tested event could force a below-budget failed ticket into blocked, force an exhausted failed ticket back into queued, or mark a passing test dead without live API authorization.",
+  "source_commit": "2da59684f99040815a6f43be3df936279135a191",
+  "test_commit": "6bcf9b22b16920d4e04dc159f61e7c904b5a7c66",
+  "source_path": "engine/src/durable-queue.mjs",
+  "source_blob": "a3ca5257b0b69106c8edf501d4a1dccddb826c89",
+  "test_path": "engine/test/journal-tested-retry-budget-replay-fence.test.mjs",
+  "test_blob": "88592a93c8590050275d03d1551eb5691647d7fc",
+  "tests": {
+    "baseline": "3 forged retry-budget verdicts accepted under V8 filesystem shim",
+    "after": "8/8 exact-published-source V8 shim scenarios passed; five invalid cases rejected and three valid cases replayed",
+    "native_node": "NOT_RUN",
+    "postgresql": "NOT_RUN",
+    "hosted_ci": "UNKNOWN",
+    "command_for_native": "node --test engine/test/journal-tested-retry-budget-replay-fence.test.mjs"
+  },
+  "branch_scope": "Only queue source, new regression tests, and this evidence receipt. No dashboard/product/SQL changes.",
+  "queue_claim": "NOT_CLAIMED: authenticated durable distributed queue lease unavailable",
+  "native_provider_invocation": false,
+  "merges": 0,
+  "deployments": 0,
+  "backlog": {
+    "zoodo_open": "search observed; exact total not asserted",
+    "transendiq": "first 100 private PR search results, truncated",
+    "historical_stacks": "Preserved #65→#69→#72; #68→#73→#81; dashboard #16→#71; no blind merge"
+  },
+  "next": {
+    "pr": 93,
+    "url": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "action": "Run disposable PostgreSQL migration 001→002→005 with concurrent lease and retry tests before any integration",
+    "state": "DISCOVERED_NOT_CLAIMED"
+  }
+}
