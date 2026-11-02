@@ -56,5 +56,14 @@
   "local_git_hash_object_verified": true,
   "native_node_test_completed": true,
   "native_node_version": "v22.16.0",
-  "test_scope": "4 new synchronous deadline regressions + 5 existing async deadline regressions; synthetic fixtures, no PostgreSQL or hosted worker"
+  "test_scope": "4 new synchronous deadline regressions + 5 existing async deadline regressions; synthetic fixtures, no PostgreSQL or hosted worker",
+  "hosted_actions": {
+    "run_id": 41426671146,
+    "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41426671146",
+    "job_id": 125214822086,
+    "job_name": "lab-tests",
+    "conclusion": "failure",
+    "executed_steps": 0,
+    "classification": "INFRASTRUCTURE_UNKNOWN_NOT_TEST_FAILURE"
+  }
 }
