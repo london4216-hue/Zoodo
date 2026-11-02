@@ -1,0 +1,45 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-02T01:37:35Z",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_pr_reconciled": "https://github.com/london4216-hue/Zoodo/pull/96",
+  "scope": "single-writer local durable queue; persisted create-event release policy",
+  "defect": "Replay of a create event accepted nonboolean releaseRequired values (including null and string 'false'), changing authorization semantics despite create() validation.",
+  "test_first_commit": "132d98a9d2c3d0cb3de7511f82b2c3b22defb847",
+  "source_fix_commit": "912e675f719fef500de03a03fb810d6350705492",
+  "tested_published_git_blobs": {
+    "engine/src/durable-queue.mjs": "56bb2ed3268f51bc058444b45a448052270e32aa",
+    "engine/test/journal-release-policy-replay-fence.test.mjs": "bf6b3aedca283a0aba51e09362ca99851d0fc53a",
+    "engine/test/durable-queue.test.mjs": "eecd9a930d5e3a0a6d381b5b601684822eee6728"
+  },
+  "tests": {
+    "environment": "V8 exact published source and exact published test files with in-memory node:fs/crypto/path shims",
+    "before_fix": {
+      "scenarios_passed": 3,
+      "scenarios_failed": 7
+    },
+    "after_fix": {
+      "test_cases_passed": 12,
+      "test_cases_failed": 0,
+      "invalid_policy_values_rejected": 7,
+      "valid_and_legacy_replay_cases_passed": 3,
+      "existing_durable_queue_tests_passed": 9
+    },
+    "native_node": "NOT_EXECUTED",
+    "postgresql": "NOT_EXECUTED",
+    "hosted_ci": "NO_SUCCESS_STATUS_REPORTED",
+    "suggested_native_command": "node --test engine/test/journal-release-policy-replay-fence.test.mjs engine/test/durable-queue.test.mjs"
+  },
+  "coordination": {
+    "file_ownership": "PR closure engine/src/durable-queue.mjs + engine/test; no product/dashboard/SQL files changed",
+    "durable_claim": "NOT_CLAIMED; authenticated live queue unavailable",
+    "provider_native_invocation": "NOT_OBSERVED"
+  },
+  "historical_stack_reconciliation": {
+    "65_69_72": "merged into dependent branches; no mainline integration inferred",
+    "68_73_81": "PR #73 closed unmerged; PR #81 merged into dependent branch, not mainline proof",
+    "16_71": "merged into dashboard branches; deployment unverified"
+  },
+  "disposition": "PUBLISHED_DRAFT_FIX_ONLY; no merge, deployment, or unattended two-ticket execution",
+  "next_ticket": "PR #96 remaining clock/lease replay test coverage; PR #93 PostgreSQL concurrency deferred"
+}
