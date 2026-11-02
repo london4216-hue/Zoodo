@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-11-02T04:28:47.414Z",
+  "observed_at": "2026-11-02T05:47:13.105Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Agent Hunter",
@@ -10,7 +10,7 @@
     "ZOO Asset Restoration",
     "ZOO Adler"
   ],
-  "publication_scope": "Fresh scheduler-only observation with historical/invalid runs separated. No provider-native workers, durable-queue claims, quota/refill evidence, autonomous NEXT or production deployment verified.",
+  "publication_scope": "Authenticated ChatGPT scheduler control-plane observation only. Four immediate run requests were accepted, NOT observed as worker starts. Adler and Hunter schedules re-enabled; native worker status, quota/refill, durable queue and Netlify deployment remain UNKNOWN.",
   "refresh_policy": "Single dashboard publisher, compare-and-swap GitHub blob SHA; browser refresh does not run workers.",
   "recovery_issue": "https://github.com/london4216-hue/Zoodo/issues/17",
   "workers": [
@@ -62,10 +62,10 @@
   "in_progress_runs": [
     {
       "role": "ZOO Dashboard Worker",
-      "run_id": "ac30e7a1-fbb0-8333-a9b1-8c8bee1dc365",
+      "run_id": "5ad815c6-39e4-832a-8814-3c464bdd2ef8",
       "recorded_status": "in_progress",
-      "scheduled_for": "2026-11-02T04:45:58Z",
-      "started_at": "2026-11-02T04:27:23.217842Z",
+      "scheduled_for": "2026-11-02T05:45:58Z",
+      "started_at": "2026-11-02T05:44:50.698808Z",
       "completed_at": null,
       "receipt_source": "connected_automations_peek.run_details.last_run",
       "evidence_url": null,
@@ -139,7 +139,7 @@
     }
   ],
   "prior_snapshot": {
-    "observed_at": "2026-11-02T01:38:03.216Z",
+    "observed_at": "2026-11-02T04:28:47.414Z",
     "note": "Previous scheduler-only snapshot retained in Git history; no native worker proof."
   },
   "recovery_handoff": {
@@ -173,32 +173,32 @@
     {
       "role": "ZOO Dashboard Worker",
       "state": "SCHEDULER_ENABLED",
-      "last_recorded_run_id": "ac30e7a1-fbb0-8333-a9b1-8c8bee1dc365",
-      "note": "Scheduler state only; provider worker and quota state UNKNOWN."
+      "last_recorded_run_id": "5ad815c6-39e4-832a-8814-3c464bdd2ef8",
+      "note": "Scheduler state only; immediate run request accepted for non-dashboard roles. Provider worker, ticket claim, quota and refill UNKNOWN."
     },
     {
       "role": "ZOO PR Closure",
       "state": "SCHEDULER_ENABLED",
-      "last_recorded_run_id": "ad318224-a298-8325-949d-f0a6a53dea3a",
-      "note": "Scheduler state only; provider worker and quota state UNKNOWN."
+      "last_recorded_run_id": "bac13ec5-d79c-8330-a130-fee53f516564",
+      "note": "Scheduler state only; immediate run request accepted for non-dashboard roles. Provider worker, ticket claim, quota and refill UNKNOWN."
     },
     {
       "role": "ZOO Asset Restoration",
       "state": "SCHEDULER_ENABLED",
-      "last_recorded_run_id": "580c21ad-9684-8320-897c-d7728cbed7ef",
-      "note": "Scheduler state only; provider worker and quota state UNKNOWN."
+      "last_recorded_run_id": "3153b936-68ac-832b-a991-0212e83e5717",
+      "note": "Scheduler state only; immediate run request accepted for non-dashboard roles. Provider worker, ticket claim, quota and refill UNKNOWN."
     },
     {
       "role": "ZOO Adler",
-      "state": "SCHEDULER_DISABLED",
+      "state": "SCHEDULER_ENABLED",
       "last_recorded_run_id": "780c9f60-6b78-832f-ad3c-1adce187420b",
-      "note": "Scheduler state only; provider worker and quota state UNKNOWN."
+      "note": "Scheduler state only; immediate run request accepted for non-dashboard roles. Provider worker, ticket claim, quota and refill UNKNOWN."
     },
     {
       "role": "ZOO Agent Hunter",
-      "state": "SCHEDULER_DISABLED",
+      "state": "SCHEDULER_ENABLED",
       "last_recorded_run_id": "4ea5c369-55f0-8325-8789-e70479766f3e",
-      "note": "Scheduler state only; provider worker and quota state UNKNOWN."
+      "note": "Scheduler state only; immediate run request accepted for non-dashboard roles. Provider worker, ticket claim, quota and refill UNKNOWN."
     }
   ],
   "source_context": {
@@ -212,7 +212,7 @@
     "independent_live_readback": "UNVERIFIED"
   },
   "publication_observation": {
-    "checked_at": "2026-11-02T04:28:47.414Z",
+    "checked_at": "2026-11-02T05:47:13.105Z",
     "scope": "connected_automations_peek",
     "scheduler_roles_checked": 5,
     "recorded_completed_roles": [
@@ -224,21 +224,32 @@
     ],
     "historical_only_roles": [
       "ZOO Keeper",
-      "ZOO Agent Hunter"
+      "ZOO Agent Hunter",
+      "ZOO Adler"
     ],
-    "disabled_roles": [
-      "ZOO Adler",
-      "ZOO Agent Hunter"
-    ],
+    "disabled_roles": [],
     "provider_worker_feed_observed_at": null,
     "queue_depth": null,
     "first_automatic_two_ticket_loop": "NOT_PROVEN",
     "netlify_deploy_id": null,
     "production_source_sha": null,
     "independent_browser_readback": "UNVERIFIED",
-    "source_commit_at_observation": "38ffa8fa1210e87cbc4e6bfccfb0304dfcf8d357",
+    "source_commit_at_observation": "0ee9f1b43b821801b94df90449202d77191a7de4",
     "invalid_scheduler_roles": [
       "ZOO Adler"
     ]
+  },
+  "dispatch_requests": {
+    "observed_at": "2026-11-02T05:47:13.105Z",
+    "scope": "ChatGPT automation run_now acceptance; not provider-native invocation",
+    "accepted": [
+      "ZOO Agent Hunter",
+      "ZOO Adler",
+      "ZOO PR Closure",
+      "ZOO Asset Restoration"
+    ],
+    "native_worker_started": "UNKNOWN",
+    "native_run_ids": [],
+    "notes": "Requests were accepted after re-enabling Hunter and Adler; independent execution and queue claims require later native receipts."
   }
 }
