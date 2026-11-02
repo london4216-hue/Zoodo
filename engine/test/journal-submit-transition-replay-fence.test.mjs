@@ -45,7 +45,7 @@ test('forged duplicate submission cannot replace review commit', () => fixture((
   inject({commit: 'b'.repeat(40)});
   rejectUnchanged(file, make);
 }));
-test('forged submission cannot resurrect blocked ticket', () => fixture(({file, make, inject}) => {
+test('forged submission cannot bypass a failed worker requeue', () => fixture(({file, make, inject}) => {
   const q = make();
   q.create({id: 'T', repo: 'Zoodo', description: 'Replay'});
   q.claim('T', {worker: 'worker1', provider: 'builder'});
