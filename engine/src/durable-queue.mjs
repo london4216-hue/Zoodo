@@ -50,7 +50,12 @@ export class DurableQueue {
     }
     if(e.type==='start')t.status='running';
     if(e.type==='heartbeat')t.leaseUntil=e.leaseUntil;
-    if(e.type==='submit'){t.status='review';t.commit=e.commit;t.leaseUntil=null}
+    // Persisted submissions must retain a real exact SHA and nonblank evidence.
+    // A malformed replayed commit cannot advance to independent review.
+    if(e.type==='submit'){
+      if(typeof e.commit!=='string'||!/^[a-f0-9]{40}$/.test(e.commit)||!valid(e.evidence))fail('Invalid journal submission provenance');
+      t.status='review';t.commit=e.commit;t.leaseUntil=null
+    }
     if(e.type==='approve'){t.status='test';t.reviewer=e.reviewer;t.reviewProvider=e.reviewProvider}
     if(e.type==='tested'){t.tests={passed:e.passed,evidence:e.evidence};if(!e.passed){
       // A failed final attempt is terminal, not an unclaimable READY ticket.
