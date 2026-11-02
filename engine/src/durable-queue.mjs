@@ -42,7 +42,12 @@ export class DurableQueue {
     if(!new Set(['claim','start','heartbeat','submit','approve','tested','release','verify','done','requeue','quarantine']).has(e.type))
       fail('Unknown journal event type');
     const t=this.items.get(e.id);if(!t)fail('Unknown journal ticket');
-    if(e.type==='claim'){t.status='assigned';t.attempts++;t.worker=e.worker;t.provider=e.provider;t.leaseUntil=e.leaseUntil;t.commit=null;t.reviewer=null;t.reviewProvider=null;t.tests=null;t.releaseProof=null}
+    // Replayed claims must preserve canonical worker/provider provenance.
+    // An invalid identity cannot be treated as a real invocation or reassigned.
+    if(e.type==='claim'){
+      if(!validIdentity(e.worker)||!validIdentity(e.provider))fail('Invalid journal claim identity');
+      t.status='assigned';t.attempts++;t.worker=e.worker;t.provider=e.provider;t.leaseUntil=e.leaseUntil;t.commit=null;t.reviewer=null;t.reviewProvider=null;t.tests=null;t.releaseProof=null
+    }
     if(e.type==='start')t.status='running';
     if(e.type==='heartbeat')t.leaseUntil=e.leaseUntil;
     if(e.type==='submit'){t.status='review';t.commit=e.commit;t.leaseUntil=null}
