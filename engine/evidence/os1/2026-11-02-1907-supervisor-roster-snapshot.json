@@ -1,0 +1,46 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-02T19:07:32Z",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "baseline_pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "task": "Prevent externally mutated or malformed supervisor worker roster from altering dispatch while running",
+  "source_path": "engine/ops/relay/supervisor-contingent.mjs",
+  "source_previous_blob": "017a869482e49f60a3f8b0e47742485df19986ce",
+  "source_new_blob": "12ac48a86b26699cb2d1e193f1ba2a1d2023cdb8",
+  "source_commit": "e5d9c9df86e9a4ef687619b748a739cfc188b515",
+  "regression_test_path": "engine/test/supervisor-roster-snapshot.test.mjs",
+  "regression_test_blob": "ef5c787d1452e18562911a3221b4c1670fdce860",
+  "test_commit": "e7a9c452df717cf1b151bd5deb8635b19a130e1f",
+  "red_first": {
+    "command": "node --test engine/test/supervisor-roster-snapshot.test.mjs",
+    "passed": 0,
+    "failed": 2
+  },
+  "green": {
+    "command": "node --test engine/test/supervisor-contingent.test.mjs engine/test/supervisor-roster-snapshot.test.mjs",
+    "passed": 6,
+    "failed": 0,
+    "node_version": "v22.16.0",
+    "syntax_check": "node --check engine/ops/relay/supervisor-contingent.mjs passed"
+  },
+  "github_readback": {
+    "source_blob_matches_locally_tested_git_hash": true,
+    "test_blob_matches_locally_tested_git_hash": true
+  },
+  "single_writer_scope": "PR closure: supervisor-contingent.mjs plus new test and receipt only; no dashboard or product paths",
+  "queue_claim": "NOT_CLAIMED_NO_AUTHENTICATED_PRIVATE_DURABLE_QUEUE",
+  "provider_native_invocation": false,
+  "hosted_two_ticket_next": false,
+  "hosted_ci": "UNKNOWN; GitHub Actions zero-step startup is not CI pass",
+  "merge": false,
+  "deployment": false,
+  "stack_reconciliation": "#65→#69→#72, #68→#73→#81, #16→#71 remain preserved as historical intermediate stacks; no blind merge or deletion",
+  "next": {
+    "pr": 93,
+    "url": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "head": "4cc63170a7b8e8fb285e22315e9c1123980b7049",
+    "status": "DISCOVERED_NOT_CLAIMED",
+    "action": "Run disposable PostgreSQL 001→002→005→006→008 and concurrency/lease-expiry tests; do not merge without exact-head checks and branch-protection readback"
+  }
+}
