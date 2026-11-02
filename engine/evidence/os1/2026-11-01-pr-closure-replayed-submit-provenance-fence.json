@@ -1,0 +1,54 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_at_utc": "2026-11-02T03:13:13.218Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr_url": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "task": "Reject malformed persisted exact-SHA submission/evidence during journal replay",
+  "source": {
+    "path": "engine/src/durable-queue.mjs",
+    "previous_blob_sha": "0daeabe8b114c5e05f02ea6d7f1f93e7a696c4f8",
+    "published_blob_sha": "b02b7e805653b40e8391caf434da0e3f30c2560e",
+    "commit_sha": "9fa897619baab28eb2146e18b8c0da334acb5c13"
+  },
+  "test": {
+    "path": "engine/test/journal-submit-provenance-replay-fence.test.mjs",
+    "blob_sha": "c94447cc264e98a54806fb4a5357b8e4a23de008",
+    "commit_sha": "be9ad80b9ace3035bcf19617aef26f124658e92a"
+  },
+  "verification": {
+    "environment": "native local Node.js 22.16.0, Linux, exact Git blob source and test",
+    "fail_first": {
+      "passed": 1,
+      "failed": 8
+    },
+    "after": {
+      "passed": 9,
+      "failed": 0
+    },
+    "combined_with_previous_replay_and_existing_regressions": {
+      "passed": 31,
+      "failed": 0
+    },
+    "syntax": "PASSED",
+    "source_blob_matches_github": true,
+    "test_blob_matches_github": true,
+    "github_actions": "ZERO_COMMIT_STATUSES_NOT_CI_PASS",
+    "postgresql": "NOT_EXECUTED",
+    "live_queue_claim": "NOT_ESTABLISHED",
+    "external_provider_native_invocation": "NOT_INVOKED",
+    "two_ticket_autonomous_handoff": "NOT_ESTABLISHED"
+  },
+  "scope": {
+    "product_files_changed": 0,
+    "dashboard_files_changed": 0,
+    "sql_files_changed": 0,
+    "historical_branches_deleted": 0,
+    "merges": 0,
+    "deployment_ids": []
+  },
+  "next": {
+    "candidate": "Review persisted approve/tested/release/verify event payload invariants in PR #96 parity; PR #93 PostgreSQL outbox still requires disposable DB tests",
+    "state": "QUEUED_NOT_CLAIMED"
+  }
+}
