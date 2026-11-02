@@ -1,0 +1,52 @@
+{
+  "schema": "zoo.os1.pr-closure-evidence.v1",
+  "date_utc": "2026-11-02",
+  "repo": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "baseline_source_blob_sha": "6ea38acfc93027c9d0f83921f67d66c5b81d3b30",
+  "test_commit_sha": "8dc4bfdb4b088864a4b6c4e0f1c5ed56013bfa23",
+  "source_commit_sha": "91f1e7e9ed8a3c57a80be8a267ff78bf5054355a",
+  "published_source_blob_sha": "d646cca3dcd4b4ec40aa9f7a44e900caaa11b2e8",
+  "published_test_blob_sha": "a4f9620bc36b3bb4bb381d297ad64efdea82932e",
+  "test_command": "node --test engine/test/outbox-synchronous-deadline-fence.test.mjs",
+  "test_execution": "V8 exact-source execution with Date.now monotonic approximation and minimal URL shim; native Node.js test file NOT executed",
+  "baseline": {
+    "total": 4,
+    "failed": 3,
+    "passed": 1
+  },
+  "after": {
+    "total": 4,
+    "failed": 0,
+    "passed": 4
+  },
+  "test_cases": [
+    {
+      "name": "synchronous ACK completing after deadline cannot report acknowledged",
+      "passed": true
+    },
+    {
+      "name": "synchronous idle settlement completing after deadline cannot report settled",
+      "passed": true
+    },
+    {
+      "name": "synchronous claim completing after deadline rejects without dispatch",
+      "passed": true
+    },
+    {
+      "name": "fast legitimate ACK remains acknowledged",
+      "passed": true
+    }
+  ],
+  "defect": "Timer callbacks can be delayed by a synchronous operation; a fulfilled callback promise can resolve after the deadline and before the timer, falsely reporting ACK or idle settlement success.",
+  "fix": "Check the deadline again in the operation fulfillment microtask; expired fulfillment rejects and requires recovery.",
+  "github_readback_exact": true,
+  "provider_native_worker_invocation": false,
+  "authenticated_distributed_queue_claim": false,
+  "autonomous_two_ticket_handoff": false,
+  "hosted_ci_passed": false,
+  "merged": false,
+  "deployed": false,
+  "next": "Continue PR #112 regression reconciliation, then PR #93 disposable PostgreSQL concurrency testing; preserve all historical stacks."
+}
