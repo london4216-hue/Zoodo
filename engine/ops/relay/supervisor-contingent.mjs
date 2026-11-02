@@ -33,13 +33,21 @@ export async function runSupervisorContingent({
       typeof store.ackOutbox !== 'function' ||
       typeof store.recoverOutbox !== 'function' ||
       !relay || typeof relay.next !== 'function' ||
-      typeof drainOne !== 'function' || !Array.isArray(workerIds) || !workerIds.length ||
+      typeof drainOne !== 'function' || !Array.isArray(workerIds) ||
+      !bounded(workerIds.length,1,64) ||
+      !Array.from({length:workerIds.length},(_,i)=>i).every(i =>
+        Object.hasOwn(workerIds,i) && typeof workerIds[i] === 'string' &&
+        workerIds[i].length > 0 && workerIds[i].length <= 128 &&
+        workerIds[i] === workerIds[i].trim()) ||
+      new Set(workerIds).size !== workerIds.length ||
       !signal || typeof signal.aborted !== 'boolean' ||
       typeof signal.addEventListener !== 'function' ||
       !bounded(intervalMs,1,60000) || !bounded(recoveryIntervalMs,1,3600000) ||
       typeof now !== 'function' || typeof sleep !== 'function' || typeof onCycle !== 'function')
     throw Error('Qualified shared store, relay, signal and bounded cadence required');
 
+  // Fix the dispatch roster at startup: callers must not change active routing.
+  const roster = Object.freeze([...workerIds]);
   let nextRecoveryAt = -Infinity;
   let cycles = 0;
   let recoveryAttempts = 0;
@@ -66,7 +74,7 @@ export async function runSupervisorContingent({
     }
     if (signal.aborted) break;
     try {
-      const outcome = await drainOne({store,relay,workerIds});
+      const outcome = await drainOne({store,relay,workerIds:roster});
       cycles++;
       // Emit only the state and event ID, never raw provider diagnostics.
       emit({type:'cycle',state:outcome?.state ?? 'unknown',eventId:outcome?.eventId ?? null});
