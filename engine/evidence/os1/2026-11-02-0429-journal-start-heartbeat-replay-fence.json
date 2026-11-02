@@ -1,0 +1,51 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-02T04:29:00Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_commit": "72aef2a22dadaaaa79864762364cd9b9e719452b",
+  "test_commit": "cdaefe44ee438c9ab928cb692f74405cd0b5bb40",
+  "source_blob": "d80844eb438189c544e5a8e581c0ba8d08ffc120",
+  "test_blob": "bddc82aa04b11f4b9b6df004fddf700082947d6e",
+  "defect": "Replaying a forged start or heartbeat could activate or renew a queued ticket without a real claim; a malformed heartbeat deadline could poison the lease.",
+  "repair": "Require assigned state and safe lease for start; require assigned/running state, safe integer deadline, and nondecreasing deadline for heartbeat.",
+  "test_results": {
+    "isolated_native_node_22_16_0": {
+      "fail_first_conditions_reproduced": 4,
+      "post_fix_assertions_passed": 6,
+      "scope": "Isolated copied transition logic only; NOT exact GitHub source/test execution"
+    },
+    "committed_exact_source_tests": {
+      "count": 4,
+      "executed": false,
+      "reason": "No authenticated local checkout or functioning hosted CI runner accessible in this run"
+    },
+    "github_readback": {
+      "source_blob_matched": true,
+      "test_blob_matched": true
+    },
+    "hosted_ci": "UNKNOWN; zero status checks"
+  },
+  "queue_claim": {
+    "authenticated": false,
+    "reason": "No verified live durable queue lease/RPC access"
+  },
+  "provider_native_invocations": [],
+  "merge": false,
+  "deployment": false,
+  "stack_reconciliation": {
+    "relay1": "#65→#69→#72 branch-only",
+    "relay2": "#68→#73→#81 branch-only; #73 closed unmerged",
+    "dashboard": "#16→#71 branch-only",
+    "historical_branches_deleted": false
+  },
+  "file_ownership": "engine/src/durable-queue.mjs and isolated queue regression only; no product/dashboard/SQL edits",
+  "next": {
+    "candidate": "PR #96 release-required-type-fence.test.mjs missing from OS1 integration",
+    "status": "QUEUED_NOT_CLAIMED",
+    "secondary": "PR #93 requires disposable PostgreSQL migration and concurrency tests"
+  },
+  "two_ticket_autonomous_next": "UNVERIFIED",
+  "dashboard_readback": "UNVERIFIED"
+}
