@@ -103,6 +103,10 @@ export class DurableQueue {
   approve(id,{reviewer,provider,commit,evidence,approved}){
     const t=this.get(id);if(!t||t.status!=='review')fail('Not awaiting review');
     if(!validIdentity(reviewer)||!validIdentity(provider)||!valid(evidence)||provider===t.provider||reviewer===t.worker||commit!==t.commit)fail('Independent exact-commit review required');
+    // A prior builder or provider on this ticket cannot review replacement work.
+    // Preserve independence across retries and durable journal replay.
+    if(t.history.some(e=>e.type==='claim' && (e.worker===reviewer || e.provider===provider)))
+      fail('Independent exact-commit review required');
     if(typeof approved!=='boolean')fail('Boolean review verdict required');
     if(approved!==true)return this.#record('requeue',id,{reason:'Independent reviewer rejected',reviewer,reviewProvider:provider,evidence,dead:t.attempts>=this.maxAttempts});
     return this.#record('approve',id,{reviewer,reviewProvider:provider,commit,evidence});
