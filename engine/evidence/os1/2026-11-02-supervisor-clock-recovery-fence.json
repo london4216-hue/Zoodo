@@ -1,0 +1,41 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "date_utc": "2026-11-02",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "source_pr81": "https://github.com/london4216-hue/Zoodo/pull/81",
+  "source_pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "task": "OS1-SUPERVISOR-INVALID-CLOCK-RECOVERY-FENCE",
+  "source_path": "engine/ops/relay/supervisor-contingent.mjs",
+  "test_path": "engine/test/supervisor-clock-fence.test.mjs",
+  "before_source_blob": "12ac48a86b26699cb2d1e193f1ba2a1d2023cdb8",
+  "source_commit": "85e46403c7e87bd3d189396ff2b33f4e13cc9c26",
+  "test_first_commit": "8e445e5059bc522ee96b3fa9a0288a9a677c9732",
+  "test_final_commit": "89f32d39a13009c507d89b2d7e22e2234ec43adb",
+  "source_blob": "f608ed002441bffb9d583dd1e8211d48bd7e57e3",
+  "test_blob": "146fcb1c68180f2f12d5905466c54f9eedde0c00",
+  "defect": "Invalid/throwing now() bypassed lease recovery and still dispatched; second clock read could overflow or throw after recovery, corrupting cadence.",
+  "fix": "Validate one nonnegative safe-integer clock sample before dispatch; reject overflowed recovery deadlines; never dispatch when clock/recovery status is unknown.",
+  "validation": {
+    "runtime": "local Node.js v22.16.0",
+    "fail_first": "node --test engine/test/supervisor-clock-fence.test.mjs: 0 passed / 4 failed against exact original source blob",
+    "after": "node --test engine/test/supervisor-*.test.mjs: 10 passed / 0 failed, including 6 prior tests and 4 new regression tests",
+    "syntax": "node --check engine/ops/relay/supervisor-contingent.mjs passed",
+    "github_readback_exact_git_blob_matches_local": true,
+    "scope": "isolated local deterministic synthetic queue; no PostgreSQL or hosted execution"
+  },
+  "coordination": "Only OS1 supervisor source, dedicated regression test and receipt; no dashboard/product/private repository changes",
+  "durable_queue_claim": "NOT_CLAIMED; no authenticated private queue lease available",
+  "provider_native_worker_invocation": false,
+  "hosted_two_ticket_next": false,
+  "github_actions_success": false,
+  "production_deployment": false,
+  "merge": false,
+  "mergeability_latest": "FALSE at head 89f32d39a13009c507d89b2d7e22e2234ec43adb; investigate current main conflict before merge",
+  "historical_stacks": "65→69→72 and 68→73→81 branch-scoped; 16→71 dashboard branch-scoped; preserved",
+  "next": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "action": "Run disposable PostgreSQL migration 001→002→005→006 and concurrency/expired ACK checks; reconcile #92 migration order; do not merge on synthetic-only evidence",
+    "status": "INSPECTED_NOT_CLAIMED"
+  }
+}
