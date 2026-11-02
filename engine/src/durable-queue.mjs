@@ -12,6 +12,13 @@ const validTicketId = s => typeof s === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:-]
 const validIdentity = s => valid(s) && s === s.trim() && s.normalize('NFC') === s && !/[\p{Cc}\p{Cf}\p{Zs}\p{Zl}\p{Zp}]/u.test(s);
 const fail = message => {throw new Error(message)};
 const snapshot = x => structuredClone(x);
+// A replayed progress event cannot revive or submit an already-expired lease.
+// Require the same canonical UTC timestamp produced by #record.
+const journalEventWithinLease = (at, leaseUntil) => {
+  if(typeof at!=='string')return false;
+  const ms=Date.parse(at);
+  return Number.isSafeInteger(ms)&&new Date(ms).toISOString()===at&&ms<leaseUntil;
+};
 export class DurableQueue {
   constructor(file,{now=()=>Date.now(),leaseMs=60000,maxAttempts=3}={}) {
     if(!valid(file))fail('Journal path required');
@@ -61,7 +68,8 @@ export class DurableQueue {
     // Replayed progress must not turn a queued ticket into an active worker.
     // Only a previously claimed ticket can start or renew a lease.
     if(e.type==='start'){
-      if(t.status!=='assigned'||!Number.isSafeInteger(t.leaseUntil))
+      if(t.status!=='assigned'||!Number.isSafeInteger(t.leaseUntil)||
+        !journalEventWithinLease(e.at,t.leaseUntil))
         fail('Invalid journal start');
       t.status='running';
     }
@@ -69,6 +77,7 @@ export class DurableQueue {
       if(!['assigned','running'].includes(t.status)||
         !Number.isSafeInteger(t.leaseUntil)||
         !Number.isSafeInteger(e.leaseUntil)||
+        !journalEventWithinLease(e.at,t.leaseUntil)||
         e.leaseUntil<t.leaseUntil)
         fail('Invalid journal heartbeat');
       t.leaseUntil=e.leaseUntil;
@@ -80,7 +89,8 @@ export class DurableQueue {
       // A replayed submission must follow a real start and an assigned lease.
       // Otherwise a forged journal line could skip claim/start or replace a review.
       if(t.status!=='running'||!validIdentity(t.worker)||!validIdentity(t.provider)||
-        !Number.isSafeInteger(t.leaseUntil))fail('Invalid journal submission transition');
+        !Number.isSafeInteger(t.leaseUntil)||
+        !journalEventWithinLease(e.at,t.leaseUntil))fail('Invalid journal submission transition');
       t.status='review';t.commit=e.commit;t.leaseUntil=null
     }
     if(e.type==='approve'){
