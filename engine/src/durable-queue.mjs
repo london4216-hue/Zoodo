@@ -56,8 +56,19 @@ export class DurableQueue {
       if(typeof e.commit!=='string'||!/^[a-f0-9]{40}$/.test(e.commit)||!valid(e.evidence))fail('Invalid journal submission provenance');
       t.status='review';t.commit=e.commit;t.leaseUntil=null
     }
-    if(e.type==='approve'){t.status='test';t.reviewer=e.reviewer;t.reviewProvider=e.reviewProvider}
-    if(e.type==='tested'){t.tests={passed:e.passed,evidence:e.evidence};if(!e.passed){
+    if(e.type==='approve'){
+      // A persisted approval must satisfy the same independence and exact-SHA
+      // evidence contract as a newly submitted approval.
+      if(t.status!=='review'||!validIdentity(e.reviewer)||!validIdentity(e.reviewProvider)||
+        !valid(e.evidence)||e.commit!==t.commit||e.reviewProvider===t.provider||e.reviewer===t.worker||
+        t.history.some(h=>h.type==='claim'&&(h.worker===e.reviewer||h.provider===e.reviewProvider)))
+        fail('Invalid journal approval provenance');
+      t.status='test';t.reviewer=e.reviewer;t.reviewProvider=e.reviewProvider
+    }
+    if(e.type==='tested'){
+      if(t.status!=='test'||typeof e.passed!=='boolean'||!valid(e.evidence))
+        fail('Invalid journal test evidence');
+      t.tests={passed:e.passed,evidence:e.evidence};if(!e.passed){
       // A failed final attempt is terminal, not an unclaimable READY ticket.
       // Clear stale invocation/review fields; history retains failure evidence.
       t.status=e.dead===true||(e.dead===undefined&&t.attempts>=this.maxAttempts)?'blocked':'queued';
