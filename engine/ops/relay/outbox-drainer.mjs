@@ -9,6 +9,8 @@ function validReceipt(r, worker) {
   if (!r || typeof r.ticket !== 'string' || !TICKET.test(r.ticket) || r.worker !== worker ||
       typeof r.receipt_url !== 'string' || r.receipt_url.length > 2048 ||
       r.receipt_url !== r.receipt_url.trim() || r.receipt_url.includes('\\') ||
+      // Reject encoded ASCII control bytes before a downstream URL decoder can reveal them.
+      /%(?:0[0-9a-f]|1[0-9a-f]|7f)/i.test(r.receipt_url) ||
       /[\p{Cc}\p{Cf}\p{Zs}\p{Zl}\p{Zp}]/u.test(r.receipt_url) ||
       /[\uD800-\uDFFF]/u.test(r.receipt_url)) return false;
   try {
