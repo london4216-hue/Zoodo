@@ -13,6 +13,8 @@ function validReceipt(r, worker) {
       /%(?:0[0-9a-f]|1[0-9a-f]|7f)/i.test(r.receipt_url) ||
       /[\p{Cc}\p{Cf}\p{Zs}\p{Zl}\p{Zp}]/u.test(r.receipt_url) ||
       /[\uD800-\uDFFF]/u.test(r.receipt_url)) return false;
+  // Do not ACK a receipt URL that URL() silently repairs into another address.
+  if (!/^https:\/\/[^/?#]+(?:[/?#]|$)/i.test(r.receipt_url)) return false;
   try {
     // URL() preserves percent-encoded path bytes; a later decoder can expose
     // invisible Unicode, whitespace or backslashes after durable ACK.
@@ -23,6 +25,10 @@ function validReceipt(r, worker) {
       if (decodedReceipt.includes('\\') ||
           /[\p{Cc}\p{Cf}\p{Zs}\p{Zl}\p{Zp}]/u.test(decodedReceipt) ||
           /[\uD800-\uDFFF]/u.test(decodedReceipt)) return false;
+      // URL() collapses literal or encoded dot segments before consumers see
+      // the original path. Repeated decoding must not change receipt identity.
+      const path = decodedReceipt.match(/^https:\/\/[^/?#]+(\/[^?#]*)?/i)?.[1] ?? '';
+      if (/(?:^|\/)\.{1,2}(?:\/|$)/.test(path)) return false;
       if (!/%[0-9a-f]{2}/i.test(decodedReceipt)) break;
       if (depth === 5) return false; // Unbounded nesting is not reliable evidence.
       decodedReceipt = decodeURIComponent(decodedReceipt);
