@@ -54,7 +54,10 @@ export async function runSupervisorContingent({
   let cycles = 0;
   let recoveryAttempts = 0;
   const emit = event => {
-    try { onCycle(event); } catch { /* telemetry must never stop the relay */ }
+    // A telemetry callback may reject asynchronously; never let its rejection
+    // become an unhandled exception that terminates an active supervisor.
+    try { Promise.resolve(onCycle(event)).catch(() => {}); }
+    catch { /* synchronous telemetry failure must not stop the relay */ }
   };
   while (!signal.aborted) {
     // Recovery is independent of dispatch: any surviving peer may reclaim
