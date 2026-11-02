@@ -29,6 +29,8 @@ export class DurableQueue {
   }
   #apply(e){
     if(e.type==='create'){
+      // Persisted journal data must not silently weaken or change release authorization.
+      if(e.releaseRequired!==undefined && typeof e.releaseRequired!=='boolean')fail('Invalid journal release requirement');
       if(this.items.has(e.id))fail('Duplicate journal ticket');
       this.items.set(e.id,{id:e.id,repo:e.repo,description:e.description,status:'queued',attempts:0,worker:null,provider:null,leaseUntil:null,commit:null,reviewer:null,reviewProvider:null,tests:null,releaseRequired:e.releaseRequired,releaseProof:null,history:[e]});
       return;
