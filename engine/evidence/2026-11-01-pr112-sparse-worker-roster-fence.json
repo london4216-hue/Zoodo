@@ -1,0 +1,64 @@
+{
+  "schema": "zoo.pr-closure-local-receipt.v1",
+  "recorded_at_utc": "2026-11-01T07:49:59.420Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 112,
+  "advisory_claim_issue": 77,
+  "advisory_claim_comment_id": 6555142928,
+  "durable_database_lease_verified": false,
+  "prior_evidence": {
+    "pr81_exact_head": "50689fb00c0940fae40cf568ad60937c8d47d83b",
+    "fleet_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "historical_stacks": "#65→#69→#72 merged branch-scoped; #68 and #81 merged branch-scoped but #73 closed/unmerged; dashboard #16→#71 branch-scoped, no production proof"
+  },
+  "baseline": {
+    "head": "2583e89749326bb72ab58634675f83a5ea12b981",
+    "source_blob": "3aeacd139bc77f33b13902eff0dd0328202b0bf3"
+  },
+  "defect": "Array.prototype.some skips sparse array holes, allowing unqualified undefined worker slots through workerIds validation before claimOutbox; relay.next(undefined) can then be invoked.",
+  "fix": "Spread roster before .some validation so sparse holes become undefined and are rejected; preserve dense worker, duplicate-roster and idle alternate-dispatch behavior.",
+  "regression_commit": "7b15cf03bb97c6c4f9314c691b9c713390d547f1",
+  "source_fix_commit": "31e2f5b837f335bea22d9d59b85552fbe5aff964",
+  "tested_git_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "af94897979e7dc0fe272eec56e2ff6f79f99da6d",
+    "engine/test/outbox-sparse-roster-fence.test.mjs": "0b9f1806d398ad96e1f8261fd6198382d66f5deb",
+    "engine/test/outbox-ambiguous-recovery-fence.test.mjs": "3edb1d3bcea81fcb0f6d4b40de235b43339c520d",
+    "engine/test/outbox-duplicate-roster-fence.test.mjs": "6c2526e12c57dddb24a6e2c9de82785a7025252a"
+  },
+  "verification": {
+    "runner": "local Node.js 22.16.0",
+    "fail_first": {
+      "command": "node --test engine/test/outbox-sparse-roster-fence.test.mjs",
+      "passed": 2,
+      "failed": 3,
+      "expected_failures": true
+    },
+    "after_fix": {
+      "command": "node --test engine/test/*.test.mjs (three exact-hash-matched targeted files)",
+      "passed": 12,
+      "failed": 0
+    },
+    "scope": "synthetic local deterministic, not full repository or hosted CI",
+    "git_blob_readback_matches_locally_tested_files": true
+  },
+  "integration": {
+    "pr_state": "DRAFT_OPEN_UNMERGED",
+    "hosted_ci": "UNKNOWN; no workflow runs or combined statuses returned for fix SHA at readback",
+    "production_deployment": false,
+    "provider_native_external_model_invoked": false,
+    "hosted_worker_execution": false,
+    "postgresql_or_supabase_lease_tested": false,
+    "owner_email_sent": false
+  },
+  "ownership": {
+    "advisory_only": true,
+    "product_files_changed": false,
+    "dashboard_files_changed": false,
+    "sql_files_changed": false
+  },
+  "next": {
+    "pr": 96,
+    "head_observed": "3c81ed6414ff62f294c545eba032e691dff7419a",
+    "task": "Read exact source/tests and current checks, repair only reproducible independent defect; no blind merge."
+  }
+}

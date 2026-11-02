@@ -1,0 +1,41 @@
+{
+  "schema": "zoo.pr-closure-receipt.v1",
+  "date_utc": "2026-11-01",
+  "pr": 112,
+  "repository": "london4216-hue/Zoodo",
+  "branch": "integrate/p0-outbox-ambiguous-state-fence-20261031",
+  "baseline_head_sha": "c5b17ff21a0f852a871f02cf771c52f43ce54551",
+  "baseline_source_blob_sha": "af94897979e7dc0fe272eec56e2ff6f79f99da6d",
+  "test_commit_sha": "f3441ea0b53043428ec8f862d6d39c9929fdfb69",
+  "source_fix_commit_sha": "993d69a053400b9999f9358c430ae08e109f10f5",
+  "tested_git_blob_shas": {
+    "engine/ops/relay/outbox-drainer.mjs": "24a9dd90572772a9c811c3eb126ce581370e48a7",
+    "engine/test/outbox-drainer.test.mjs": "970adf150ba734e580858e9f01273ea145595ee6",
+    "engine/test/outbox-lease-snapshot-fence.test.mjs": "a3c44441cbcd89d675e153887bb1d1fc49f9db27"
+  },
+  "defect": "Mutable claimOutbox() event object could change after validation during awaited relay.next(), causing ackOutbox/settleIdleOutbox and returned eventId to use a different lease ID/token.",
+  "repair": "Snapshot id/ticket_id/lease_token into local claimed object before validation and async callbacks; use stable values for ACK, idle settlement, and recovery receipts.",
+  "fail_first": {
+    "command": "node --test engine/test/outbox-lease-snapshot-fence.test.mjs",
+    "passed": 0,
+    "failed": 3,
+    "source_blob": "af94897979e7dc0fe272eec56e2ff6f79f99da6d"
+  },
+  "post_fix": {
+    "command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-lease-snapshot-fence.test.mjs",
+    "passed": 19,
+    "failed": 0,
+    "runtime": "Node.js 22.16.0",
+    "scope": "targeted synthetic local tests; no database, hosted integration or full repository suite"
+  },
+  "exact_git_blob_readback_matches_locally_tested": true,
+  "prior_pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "handoff_issue": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "historical_stacks": "65→69→72, 68→73→81 and dashboard 16→71 are branch-scoped; #73 closed unmerged; no inferred mainline integration",
+  "durable_database_lease_claimed": false,
+  "provider_native_external_model_invoked": false,
+  "hosted_ci": "UNKNOWN until exact final-head workflow jobs actually execute",
+  "merged": false,
+  "deployed": false,
+  "next": "Review #96 exact head and #92/#93 PostgreSQL migration/concurrency prerequisites; preserve product/dashboard single-writer ownership"
+}

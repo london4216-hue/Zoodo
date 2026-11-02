@@ -1,0 +1,43 @@
+{
+  "schema": "zoo.pr-closure-local-receipt.v1",
+  "recorded_date_utc": "2026-11-01",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 112,
+  "advisory_claim_issue": 77,
+  "advisory_claim_comment_id": 6553303937,
+  "durable_database_lease_verified": false,
+  "original_head": "ccb4358820ff5c57f64def0333635480d2db237d",
+  "original_source_blob": "ba4b9ab2dda217c207034845f2feb7eab0d3924f",
+  "regression_commit": "766d79b0303cdc1f3f74c220c6c98547a8828859",
+  "source_fix_commit": "55c4e7e37fee84bdf2f950b7d17f4de4f6fcb603",
+  "tested_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "eccd4eaf9ed8e277da8a7fe34be1bf1772550f1a",
+    "engine/test/outbox-drainer.test.mjs": "970adf150ba734e580858e9f01273ea145595ee6",
+    "engine/test/outbox-state-serialization-fence.test.mjs": "a21abca2a018a6eb074ce254c105c1f106ad57fc"
+  },
+  "defect": "Untrusted relay.next() state copied into attempts unbounded, allowing cyclic objects to make recovery evidence unserializable or very long strings to inflate it.",
+  "fix": "Store only nonempty string state of at most 64 characters; normalize all other states to unknown; leave ACK and dispatch state machine unchanged.",
+  "fail_first": {
+    "command": "node --test engine/test/outbox-state-serialization-fence.test.mjs",
+    "node_version": "22.16.0",
+    "passed": 0,
+    "failed": 2
+  },
+  "post_fix": {
+    "command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-state-serialization-fence.test.mjs",
+    "node_version": "22.16.0",
+    "passed": 18,
+    "failed": 0,
+    "tap_sha256": "40fb3e3ec029d35fdfd62d09247c3d9c834fb6b694017f8c5f0a05735338d392"
+  },
+  "scope": "Exact GitHub source and test blob hash matched local Node tests. No full repository, SQL, or hosted integration test.",
+  "ci": {
+    "workflow_run_id": 41272501740,
+    "observed_status": "queued",
+    "hosted_test_verdict": "UNKNOWN"
+  },
+  "merge": false,
+  "deployment": false,
+  "provider_native_external_ai_invocation": false,
+  "next": "Read-only check next released PR #96 and/or disposable PostgreSQL test of #92/#93; no blind merge."
+}

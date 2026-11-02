@@ -1,0 +1,53 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_date_utc": "2026-11-01",
+  "ticket": "Zoodo#77 PR_INTEGRATE",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 112,
+  "branch": "integrate/p0-outbox-ambiguous-state-fence-20261031",
+  "baseline_head_sha": "64ed9983f264699f09bc1779b572a79698dd4516",
+  "test_first_commit_sha": "25c1600c009f6e0cc7ae64946238c4bfc8ca6326",
+  "source_fix_commit_sha": "4e38ab918ca0a877f74a95e1f0670a7c81f93ced",
+  "exact_git_blob_shas": {
+    "engine/ops/relay/outbox-drainer.mjs": "2644de4c589ca1be3ebc292b017ae585d651f4ee",
+    "engine/test/outbox-receipt-backslash-fence.test.mjs": "10bc3e52bdcba82802127e3dd1631608863706da",
+    "engine/test/outbox-receipt-url-control-fence.test.mjs": "dfd69012068f92c36433604afcdae5fa2877e03f"
+  },
+  "historical_81_source_blob": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+  "historical_81_test_blob": "76b1fcb63dd7baebe71e30ae20462510b8d6c408",
+  "defect": "Node URL() normalizes raw backslashes in HTTPS authority/path. An untrusted provider receipt_url such as https://runner.example\\\\@attacker.example/receipts/T1 was accepted and ACKed while the canonical URL differs from raw evidence.",
+  "fix": "Reject raw backslash characters before URL parsing, for direct and delegated receipts. Preserve canonical HTTPS and percent-encoded URL paths.",
+  "fail_first": {
+    "runtime": "native Node.js 22.16.0",
+    "command": "node --test engine/test/outbox-receipt-backslash-fence.test.mjs",
+    "passed": 1,
+    "failed": 4
+  },
+  "after_fix": {
+    "runtime": "native Node.js 22.16.0",
+    "command": "node --test engine/test/outbox-receipt-backslash-fence.test.mjs engine/test/outbox-receipt-url-control-fence.test.mjs",
+    "passed": 11,
+    "failed": 0,
+    "tap_sha256": "74ad3f26ac22a01ea459ebcf04cdf60617acf869bf6b3002b7c4febc0c07909b"
+  },
+  "readback_matches_native_tested_git_blob_hashes": true,
+  "ci": {
+    "run_id": 41312739566,
+    "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41312739566",
+    "conclusion": "failure",
+    "job": "lab-tests",
+    "steps": null,
+    "interpretation": "Infrastructure UNKNOWN; zero executed test steps; not CI pass"
+  },
+  "historical_stacks": {
+    "65_69_72": "intermediate branch merges only",
+    "68_73_81": "#68/#81 intermediate branch merges; #73 closed unmerged",
+    "dashboard_16_71": "intermediate branch merges; production deploy not established"
+  },
+  "status": "DRAFT_UNMERGED_NO_DEPLOY",
+  "distributed_database_lease_verified": false,
+  "provider_native_copilot_gemini_deepseek_invocations_verified": false,
+  "hosted_two_ticket_handoff_verified": false,
+  "ownership": "advisory single-writer scope released after readback; not distributed DB lease",
+  "next": "#96 current head da3b20cc772c3ce07bf38ce3c087e38b5de75a21 inspected, no #96 files modified; SQL #92/#93 PostgreSQL migration/concurrency tests remain a separate dependency"
+}

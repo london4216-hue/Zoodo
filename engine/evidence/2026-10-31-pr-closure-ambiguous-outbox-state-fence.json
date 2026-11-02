@@ -1,0 +1,35 @@
+{
+  "schema": "zoo.pr-closure-evidence.v1",
+  "recorded_at_utc": "2026-10-31T23:18:00Z",
+  "repo": "london4216-hue/Zoodo",
+  "branch": "integrate/p0-outbox-ambiguous-state-fence-20261031",
+  "tested_code_head": "d71b108e78b2392dff86e1fab371229325b967ba",
+  "source_baseline_blob": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+  "source_patched_blob": "152996cb3bcce80df2074b63a4584384480df586",
+  "existing_test_baseline_blob": "76b1fcb63dd7baebe71e30ae20462510b8d6c408",
+  "existing_test_patched_blob": "d7c616dcd0c3e666339ea9dbb0b549a2a6731588",
+  "new_regression_blob": "3edb1d3bcea81fcb0f6d4b40de235b43339c520d",
+  "bug": "An ambiguous relay.next state such as recovery_required or failed fell through to a second worker, which could produce a false acknowledged outbox while the first worker might already be running.",
+  "fix": "Only idle can try another worker after unsuccessful durable empty-queue settlement. Every other unconfirmed result requires reconciliation/native non-started evidence. Preserve verified dispatched/delegated ACK path.",
+  "tests": {
+    "runtime": "Node.js 22.16.0 local",
+    "fail_first": "node --test engine/test/outbox-ambiguous-recovery-fence.test.mjs: 1 pass, 4 fail on original exact Git blob",
+    "patched": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-ambiguous-recovery-fence.test.mjs: 21 pass, 0 fail",
+    "github_readback_matches_local_git_blobs": true,
+    "scope": "synthetic local Node tests; not PostgreSQL or hosted CI"
+  },
+  "stacks": {
+    "relay": "Zoodo #68→#73→#81 closed; #81 tested drainer blob verified on main",
+    "callback": "Zoodo #65→#69→#72 closed",
+    "dashboard": "Zoodo #16→#71 closed; deployment not inferred"
+  },
+  "constraints": {
+    "durable_db_lease_verified": false,
+    "branch_protection_verified": false,
+    "hosted_ci_pass": false,
+    "external_model_native_invocation": false,
+    "merged": false,
+    "deployed": false
+  },
+  "next": "Check protected required checks and source overlap before merge; inspect #92/#93 disposable PostgreSQL migration/concurrency and PR #96 independent queue lane. No product/dashboard changes."
+}
