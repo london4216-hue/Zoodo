@@ -75,9 +75,23 @@ export class DurableQueue {
       t.worker=null;t.provider=null;t.leaseUntil=null;t.commit=null;
       t.reviewer=null;t.reviewProvider=null;t.releaseProof=null;
     }}
-    if(e.type==='release')t.releaseProof=e.evidence;
-    if(e.type==='verify')t.status='verified';
-    if(e.type==='done')t.status='done';
+    // Replay is an authorization boundary too: journaled release, verification
+    // and completion cannot bypass the same preconditions as live transitions.
+    if(e.type==='release'){
+      if(t.status!=='test'||!t.tests?.passed||t.releaseRequired!==true||!valid(e.evidence))
+        fail('Invalid journal release evidence');
+      t.releaseProof=e.evidence;
+    }
+    if(e.type==='verify'){
+      if(t.status!=='test'||!t.tests?.passed||!valid(e.evidence)||
+        (t.releaseRequired===true&&!valid(t.releaseProof)))
+        fail('Invalid journal verification evidence');
+      t.status='verified';
+    }
+    if(e.type==='done'){
+      if(t.status!=='verified')fail('Invalid journal completion state');
+      t.status='done';
+    }
     if(e.type==='requeue'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null;t.commit=null;t.releaseProof=null}
     // Preserve the invocation identity when a replayed lease is malformed.
     // This ticket must not be dispatched again without explicit resolution.
