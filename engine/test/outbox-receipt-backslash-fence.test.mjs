@@ -27,11 +27,22 @@ test('rejects delegated replacement backslash without ACK',async()=>{
   assert.equal(r.state,'recovery_required');
   assert.equal(f.acks(),0);
 });
-test('retains canonical HTTPS and percent-encoded paths',async()=>{
-  for(const url of ['https://runner.example/receipts/T1','https://runner.example/receipts/T1%5C','https://runner.example/receipts/T1%0A']){
+test('retains canonical HTTPS and benign percent-encoded paths',async()=>{
+  for(const url of ['https://runner.example/receipts/T1','https://runner.example/receipts/T1%2Btag','https://runner.example/receipts/T1%25tag']){
     const f=fixture(direct(url));
     const r=await drainOne({...f,workerIds:['workerA']});
     assert.equal(r.state,'acknowledged');
     assert.equal(f.acks(),1);
   }
+});
+
+for (const [label,url] of [
+  ['encoded backslash','https://runner.example/receipts/T1%5C'],
+  ['encoded newline','https://runner.example/receipts/T1%0A']
+]) test('rejects '+label+' before durable ACK',async()=>{
+  const f=fixture(direct(url));
+  const r=await drainOne({...f,workerIds:['workerA','workerB']});
+  assert.equal(r.state,'recovery_required');
+  assert.equal(f.acks(),0);
+  assert.equal(f.dispatches(),1);
 });
