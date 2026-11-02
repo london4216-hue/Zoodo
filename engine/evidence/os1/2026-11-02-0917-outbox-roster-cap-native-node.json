@@ -1,0 +1,46 @@
+{
+  "schema": "zoo.os1.pr-closure.v1",
+  "recorded_at_utc": "2026-11-02T09:17:59Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "parent_head_before_change": "4b54540c1cd49de737b6715b3df049eda654e954",
+  "source_commit": "62875ba8d12cae8be6b717981b6ff7ebb65dd0fd",
+  "test_commit": "8ca10da88de02dad388ba1ef5f3742c46e79e97e",
+  "exact_git_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "6ea38acfc93027c9d0f83921f67d66c5b81d3b30",
+    "engine/test/outbox-roster-cap-fence.test.mjs": "b6459387d7fe0e68aebbb43c05a96ade6007cadb",
+    "engine/test/outbox-roster-getter-fence.test.mjs": "c920d1bd78f3aea1347400f5290a9684c834c29a"
+  },
+  "defect": "Unbounded qualified worker roster validation ran before the operation deadline and used repeated membership checks; oversized roster could delay durable outbox progress.",
+  "change": "Reject rosters longer than 256 before claiming an outbox event; 256 valid workers remain accepted.",
+  "tests": {
+    "environment": "local native Node.js v22.16.0",
+    "baseline_command": "node --test engine/test/outbox-roster-cap-fence.test.mjs",
+    "baseline": {
+      "passed": 1,
+      "failed": 1
+    },
+    "after_command": "node --check engine/ops/relay/outbox-drainer.mjs && node --test engine/test/outbox-roster-cap-fence.test.mjs engine/test/outbox-roster-getter-fence.test.mjs",
+    "after": {
+      "passed": 5,
+      "failed": 0
+    },
+    "source_and_tests_matched_authenticated_github_blob_readback": true,
+    "hosted_ci": "NOT_RUN",
+    "postgresql": "NOT_RUN"
+  },
+  "stack_reconciliation": {
+    "relay_a": "#65→#69→#72: intermediate branch merges, mainline publication unverified",
+    "relay_b": "#68→#73→#81: #73 closed unmerged; #81 merged only into stacked base, not proof of mainline publication",
+    "dashboard": "#16→#71: intermediate branch merges; no live deployment receipt"
+  },
+  "durable_queue_claim": "NOT_PERFORMED",
+  "provider_native_worker_invocation": "NOT_PERFORMED",
+  "two_ticket_handoff": "UNVERIFIED",
+  "deployment": "NOT_PERFORMED",
+  "historical_branches_deleted": false,
+  "product_dashboard_sql_files_modified": false,
+  "next_ticket": "PR #112 source-level outbox reconciliation against OS 1.0; PR #93 disposable PostgreSQL concurrency testing remains blocked by unavailable disposable DB",
+  "notes": "PR #132 remains draft; receipt documents local source tests only, not hosted autonomous execution."
+}
