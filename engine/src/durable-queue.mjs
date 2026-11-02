@@ -46,6 +46,16 @@ export class DurableQueue {
     // An invalid identity cannot be treated as a real invocation or reassigned.
     if(e.type==='claim'){
       if(!validIdentity(e.worker)||!validIdentity(e.provider))fail('Invalid journal claim identity');
+      // Replay must obey the same single-writer lease, retry and invocation
+      // fences as a live claim. Otherwise a forged journal event can silently
+      // replace an active worker or assign one invocation to two tickets.
+      // Do not reject malformed deadlines here: recover() quarantines those
+      // historical records without erasing evidence of uncertain execution.
+      if(t.status!=='queued'||t.attempts>=this.maxAttempts||
+        t.history.some(h=>h.type==='claim'&&h.worker===e.worker)||
+        [...this.items.values()].some(other=>other.id!==e.id&&other.worker===e.worker&&
+          ['assigned','running','blocked'].includes(other.status)))
+        fail('Invalid journal claim transition');
       t.status='assigned';t.attempts++;t.worker=e.worker;t.provider=e.provider;t.leaseUntil=e.leaseUntil;t.commit=null;t.reviewer=null;t.reviewProvider=null;t.tests=null;t.releaseProof=null
     }
     // Replayed progress must not turn a queued ticket into an active worker.
