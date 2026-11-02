@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "source": "connected_automations_peek",
-  "observed_at": "2026-11-02T04:28:37.479Z",
+  "observed_at": "2026-11-02T04:28:47.414Z",
   "expected_roles": [
     "ZOO Keeper",
     "ZOO Agent Hunter",
@@ -25,6 +25,39 @@
       "evidence_url_scope": "native_scheduler_record_not_public_url"
     },
     {
+      "role": "ZOO PR Closure",
+      "run_id": "ad318224-a298-8325-949d-f0a6a53dea3a",
+      "recorded_status": "completed",
+      "scheduled_for": "2026-11-02T04:10:39Z",
+      "started_at": "2026-11-02T04:08:08.002562Z",
+      "completed_at": "2026-11-02T04:11:04.364789Z",
+      "receipt_source": "connected_automations_peek.run_details.last_run",
+      "evidence_url": null,
+      "evidence_url_scope": "native_scheduler_record_not_public_url"
+    },
+    {
+      "role": "ZOO Asset Restoration",
+      "run_id": "580c21ad-9684-8320-897c-d7728cbed7ef",
+      "recorded_status": "completed",
+      "scheduled_for": "2026-11-02T04:24:51Z",
+      "started_at": "2026-11-02T04:23:42.594284Z",
+      "completed_at": "2026-11-02T04:28:20.651012Z",
+      "receipt_source": "connected_automations_peek.run_details.last_run",
+      "evidence_url": null,
+      "evidence_url_scope": "native_scheduler_record_not_public_url"
+    },
+    {
+      "role": "ZOO Adler",
+      "run_id": "780c9f60-6b78-832f-ad3c-1adce187420b",
+      "recorded_status": "completed",
+      "scheduled_for": "2026-11-01T19:45:30Z",
+      "started_at": "2026-11-01T19:42:57.219586Z",
+      "completed_at": "2026-11-01T19:44:24.592354Z",
+      "receipt_source": "connected_automations_peek.run_details.last_run",
+      "evidence_url": null,
+      "evidence_url_scope": "native_scheduler_record_not_public_url"
+    },
+    {
       "role": "ZOO Agent Hunter",
       "run_id": "4ea5c369-55f0-8325-8789-e70479766f3e",
       "recorded_status": "completed",
@@ -36,7 +69,19 @@
       "evidence_url_scope": "native_scheduler_record_not_public_url"
     }
   ],
-  "in_progress_runs": [],
+  "in_progress_runs": [
+    {
+      "role": "ZOO Dashboard Worker",
+      "run_id": "ac30e7a1-fbb0-8333-a9b1-8c8bee1dc365",
+      "recorded_status": "in_progress",
+      "scheduled_for": "2026-11-02T04:45:58Z",
+      "started_at": "2026-11-02T04:27:23.217842Z",
+      "completed_at": null,
+      "receipt_source": "connected_automations_peek.run_details.last_run",
+      "evidence_url": null,
+      "evidence_url_scope": "native_scheduler_record_not_public_url"
+    }
+  ],
   "source_anomalies": [
     {
       "role": "ZOO Agent Hunter",
@@ -130,32 +175,32 @@
     {
       "role": "ZOO Dashboard Worker",
       "state": "SCHEDULER_ENABLED",
-      "last_recorded_run_id": null,
-      "note": "Scheduler status only; worker capacity, provider quota and refill remain UNKNOWN."
+      "last_recorded_run_id": "ac30e7a1-fbb0-8333-a9b1-8c8bee1dc365",
+      "note": "Scheduler state only; provider worker and quota state UNKNOWN."
     },
     {
       "role": "ZOO PR Closure",
       "state": "SCHEDULER_ENABLED",
-      "last_recorded_run_id": null,
-      "note": "Scheduler status only; worker capacity, provider quota and refill remain UNKNOWN."
+      "last_recorded_run_id": "ad318224-a298-8325-949d-f0a6a53dea3a",
+      "note": "Scheduler state only; provider worker and quota state UNKNOWN."
     },
     {
       "role": "ZOO Asset Restoration",
       "state": "SCHEDULER_ENABLED",
-      "last_recorded_run_id": null,
-      "note": "Scheduler status only; worker capacity, provider quota and refill remain UNKNOWN."
+      "last_recorded_run_id": "580c21ad-9684-8320-897c-d7728cbed7ef",
+      "note": "Scheduler state only; provider worker and quota state UNKNOWN."
     },
     {
       "role": "ZOO Adler",
       "state": "SCHEDULER_DISABLED",
-      "last_recorded_run_id": null,
-      "note": "Scheduler status only; worker capacity, provider quota and refill remain UNKNOWN."
+      "last_recorded_run_id": "780c9f60-6b78-832f-ad3c-1adce187420b",
+      "note": "Scheduler state only; provider worker and quota state UNKNOWN."
     },
     {
       "role": "ZOO Agent Hunter",
       "state": "SCHEDULER_DISABLED",
-      "last_recorded_run_id": null,
-      "note": "Scheduler status only; worker capacity, provider quota and refill remain UNKNOWN."
+      "last_recorded_run_id": "4ea5c369-55f0-8325-8789-e70479766f3e",
+      "note": "Scheduler state only; provider worker and quota state UNKNOWN."
     }
   ],
   "source_context": {
@@ -169,11 +214,18 @@
     "independent_live_readback": "UNVERIFIED"
   },
   "publication_observation": {
-    "checked_at": "2026-11-02T04:28:37.479Z",
+    "checked_at": "2026-11-02T04:28:47.414Z",
     "scope": "connected_automations_peek",
     "scheduler_roles_checked": 5,
-    "recorded_completed_roles": [],
-    "in_progress_roles": [],
+    "recorded_completed_roles": [
+      "ZOO PR Closure",
+      "ZOO Asset Restoration",
+      "ZOO Adler",
+      "ZOO Agent Hunter"
+    ],
+    "in_progress_roles": [
+      "ZOO Dashboard Worker"
+    ],
     "historical_only_roles": [
       "ZOO Keeper",
       "ZOO Agent Hunter"
