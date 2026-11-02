@@ -1,0 +1,56 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-10-31T16:15:38Z",
+  "pr": 93,
+  "scope": "public Zoodo control-plane SQL only; no production database or host mutation",
+  "baseline": {
+    "path": "engine/ops/relay/001_ticket_directory.sql",
+    "blob": "c76707cdcb785e22fa14e0758e511ec19af2a0e0",
+    "finding": "zoo_ops_outbox_ack accepts a matching token without requiring lease_until>now(); delayed worker can ACK expired wake-up",
+    "reproduced_by": "exact-source static function-body inspection"
+  },
+  "repair": {
+    "sql": "engine/ops/relay/006_outbox_ack_lease_fence.sql",
+    "sql_blob": "e863faa6ced228341ef7ccad1ef1462dea0f2c5e",
+    "sql_commit": "04d63baa88d5e1ea5df1030875e3c1006d376314",
+    "test": "engine/test/outbox-ack-expired-lease.test.mjs",
+    "test_blob": "91ae579a6ba8e2a962540c48650bd0f12683f670",
+    "test_commit": "64a5404a44a1932ff7f88eb9bc8fd22aa4b6c8e8"
+  },
+  "preserved_existing_pr93": {
+    "sql_005_blob": "696cf71f3b6039fd2842c6b5251ad18b57c988c1",
+    "test_005_blob": "ba455dd90d8ffb418efec0d5762f631e656eebcb"
+  },
+  "local": {
+    "node": "v22.16.0",
+    "command": "node --test engine/test/outbox-recovery-no-deadletter.test.mjs engine/test/outbox-ack-expired-lease.test.mjs",
+    "passed": 6,
+    "failed": 0,
+    "git_hash_object_matches_github_blobs": true,
+    "scope": "source-contract and synthetic lease race; no PostgreSQL engine"
+  },
+  "ci": {
+    "exact_head_test_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41218731765",
+    "conclusion": "failure",
+    "executed_steps": 0,
+    "classification": "infrastructure UNKNOWN, not a test-code failure or CI pass"
+  },
+  "permissions": {
+    "repo_push": true,
+    "branch_protection_read": "403 Resource not accessible by integration"
+  },
+  "reconciliation": {
+    "87": "conflicted; preserve unique code",
+    "92": "separate SQL 003/004 branch; do not overwrite",
+    "96": "separate local pilot queue; no source overlap",
+    "65_69_72": "stacked intermediates previously merged; canonical callback via PR89",
+    "68_73_81": "stacked intermediates previously merged; 81 outbox adapter source on main",
+    "16_71": "dashboard on separate canonical branch; Dashboard Lead owns it"
+  },
+  "durable_queue_lease": "NOT_CLAIMED: no authenticated private ZOO queue connection",
+  "provider_native_invocation": false,
+  "hosted_handoff": false,
+  "merged": false,
+  "deployed": false,
+  "next": "PR96 exact-head CI retry queued; inspect and merge only after protected checks, then disposable PostgreSQL 001→002→005→006 integration tests for PR93"
+}
