@@ -1,0 +1,63 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-02T02:15:46.936Z",
+  "repository": "london4216-hue/Zoodo",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_before_blob": "56bb2ed3268f51bc058444b45a448052270e32aa",
+  "source_after_blob": "ac822cc40a7075cec5bab87a7c5e88a70f19ffb1",
+  "test_blobs": {
+    "engine/test/journal-create-contract-fence.test.mjs": "82cd995fc85f57efe4e88f64620396b8c514045d",
+    "engine/test/lease-deadline-overflow.test.mjs": "4f772a524d97d66cf6e7f1ba0d45561823b9608a",
+    "engine/test/heartbeat-clock-rollback-fence.test.mjs": "5ad898d9b1ea520cdca789c17ea7f91314d5ef21"
+  },
+  "atomic_journal_dependency_blob": "e44db26351d36e0b16d8f1c41c18ee506d47905a",
+  "commits": {
+    "fail_first_test": "fbb5e0924c8561b0049ed7db604c4df4ae180eb7",
+    "source_repair": "356e4332360fe106f38ffbd31d6cae67abdfeeb6",
+    "lease_overflow_regression": "fa567511b94a08f875bb2635fe526b16c4eef20c",
+    "heartbeat_rollback_regression": "2c52e626b5664a77ad6cd5f3310b91bb30504e20c"
+  },
+  "defect": "Persisted create journal events bypassed ticket ID, repository and description validation applied to new tickets. Replay could admit SQL-incompatible or malformed work records.",
+  "repair": "Apply the same bounded-field and SQL ticket-ID validation on create-event replay, preserving valid historical records without releaseRequired.",
+  "tests": {
+    "environment": "native Node.js 22.16.0, isolated synthetic local filesystem; exact Git blob readback matched",
+    "command": "node --test engine/test/*.test.mjs",
+    "fail_first": {
+      "new_regressions_failed": 4,
+      "new_regressions_passed": 1
+    },
+    "after_fix": {
+      "passed": 10,
+      "failed": 0
+    },
+    "syntax_check": "node --check engine/src/durable-queue.mjs PASS",
+    "hosted_ci": "UNKNOWN; zero reported commit status checks",
+    "postgresql": "NOT_RUN"
+  },
+  "historical_reconciliation": {
+    "outbox_pr_81": "reviewed",
+    "receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "handoff_issue_77": "reviewed",
+    "stacks": [
+      "#65→#69→#72 merged into dependent branches; no mainline assumption",
+      "#68→#73→#81 dependent and partially closed; no blind merge",
+      "#16→#71 dashboard dependent branch; no production assumption"
+    ],
+    "private_transendiq": "inspected open PR search; 100-result window truncated; no private data copied to public receipt"
+  },
+  "work_claim": {
+    "authenticated_durable_queue_lease": false,
+    "reason": "No authenticated remote queue or runtime credentials available to this execution context; local fixture tests are not live claims"
+  },
+  "provider_native_invocations": [],
+  "cost_usd": "UNKNOWN",
+  "merged": false,
+  "deployed": false,
+  "owner_email_sent": false,
+  "next_ticket": {
+    "source": "Zoodo PR #96",
+    "task": "Port and execute remaining malformed lease recovery/quarantine regression against OS1 head, then evaluate PR #93 PostgreSQL outbox migration separately",
+    "status": "QUEUED_NOT_CLAIMED"
+  }
+}
