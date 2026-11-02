@@ -1,0 +1,42 @@
+{
+  "schema": "zoo.pr-closure-evidence.v1",
+  "recorded_at_utc": "2026-11-02T04:09:40.113Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "source_pr": 96,
+  "coordination_issue": 77,
+  "task": "PR_INTEGRATE journal release/verify/done replay authorization fence",
+  "baseline_source_blob": "d99257498adeff35d554fb86a1a5415cf54fe2c1",
+  "regression_commit": "e1bcbeff7105a7d8b2a448e7946b99c7774d430f",
+  "source_commit": "341e9af3188b6f769cb97e6cbfe7b134572eb31b",
+  "published_source_blob": "87384d253cc53341247d08a488d4c2aeb2cb8a5f",
+  "published_test_blob": "ea5d4087d4422e79a96ff1ce8998def9828a89bd",
+  "paths": [
+    "engine/src/durable-queue.mjs",
+    "engine/test/journal-release-verify-done-replay-fence.test.mjs"
+  ],
+  "defect": "Journal replay accepted release, verify and done events without enforcing their live transition preconditions, allowing fabricated completion state after restart.",
+  "repair": "Replay now checks release-required policy, passed tests, nonblank release/verification evidence, release proof where required, and verified state before completion.",
+  "fail_first": {
+    "synthetic_cases": 6,
+    "invalid_cases_accepted": 6,
+    "valid_control_accepted": 1
+  },
+  "after": {
+    "synthetic_cases": 7,
+    "passed": 7,
+    "failed": 0,
+    "invalid_cases_rejected": 6,
+    "valid_control_accepted": 1
+  },
+  "test_method": "Exact GitHub-published source executed under V8 with in-memory filesystem/crypto shims. New Node test file syntax parsed; native Node test runner NOT executed.",
+  "github_readback": true,
+  "hosted_ci": "UNKNOWN",
+  "postgresql": "NOT_EXECUTED",
+  "authenticated_queue_claim": false,
+  "provider_native_worker_invoked": false,
+  "merged": false,
+  "deployed": false,
+  "single_writer_scope": "Only OS1 durable queue source, new regression test, receipt; no dashboard/product/SQL files",
+  "next": "Inspect PR #96 remaining replay/requeue cases and PR #93 SQL concurrency separately; no blind merge."
+}
