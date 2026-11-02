@@ -29,6 +29,8 @@ export class DurableQueue {
   }
   #apply(e){
     if(e.type==='create'){
+      // Replayed tickets must satisfy the same SQL key and bounded-field contract as new tickets.
+      if(!validTicketId(e.id)||!valid(e.repo)||!valid(e.description))fail('Invalid journal ticket create');
       // Persisted journal data must not silently weaken or change release authorization.
       if(e.releaseRequired!==undefined && typeof e.releaseRequired!=='boolean')fail('Invalid journal release requirement');
       if(this.items.has(e.id))fail('Duplicate journal ticket');
