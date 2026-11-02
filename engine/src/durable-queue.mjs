@@ -77,6 +77,10 @@ export class DurableQueue {
     // A malformed replayed commit cannot advance to independent review.
     if(e.type==='submit'){
       if(typeof e.commit!=='string'||!/^[a-f0-9]{40}$/.test(e.commit)||!valid(e.evidence))fail('Invalid journal submission provenance');
+      // A replayed submission must follow a real start and an assigned lease.
+      // Otherwise a forged journal line could skip claim/start or replace a review.
+      if(t.status!=='running'||!validIdentity(t.worker)||!validIdentity(t.provider)||
+        !Number.isSafeInteger(t.leaseUntil))fail('Invalid journal submission transition');
       t.status='review';t.commit=e.commit;t.leaseUntil=null
     }
     if(e.type==='approve'){
