@@ -56,6 +56,9 @@ export class DurableQueue {
     t.history.push(e);
   }
   #record(type,id,fields={},atMs=this.now()){
+    // All journal transitions require a numeric clock; Date() coerces strings such as '0'.
+    // Reject before append so replay timestamps cannot silently change meaning.
+    if(!Number.isSafeInteger(atMs))fail('Invalid journal clock');
     const e={eventId:randomUUID(),type,id,at:new Date(atMs).toISOString(),...fields};
     // Compare against the durable tail while holding an exclusive local filesystem lock.
     // A stale queue instance must not append a competing claim or heartbeat.
