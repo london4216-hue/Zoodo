@@ -22,6 +22,8 @@ function validReceipt(r, worker) {
     // Inspect bounded decoding layers without rejecting harmless literal %25.
     let decodedReceipt = r.receipt_url;
     for (let depth = 0; depth <= 5; depth++) {
+      // A later decoder must not turn encoded path/query bytes into URL delimiters.
+      if (/%(?:23|3f)/i.test(decodedReceipt)) return false;
       if (decodedReceipt.includes('\\') ||
           /[\p{Cc}\p{Cf}\p{Zs}\p{Zl}\p{Zp}]/u.test(decodedReceipt) ||
           /[\uD800-\uDFFF]/u.test(decodedReceipt)) return false;
