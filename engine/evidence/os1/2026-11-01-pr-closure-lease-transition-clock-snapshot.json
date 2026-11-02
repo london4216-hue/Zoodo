@@ -1,0 +1,56 @@
+{
+  "schema": "zoo.pr-closure-evidence.v1",
+  "date_utc": "2026-11-01",
+  "target_pr": 132,
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "historical_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "source_path": "engine/src/durable-queue.mjs",
+  "source_commit": "04e0343bd3dcdacfcec1e450910cc030e491e540",
+  "source_blob": "3a1899b4afccb3fe08f8eb320952e595861958a9",
+  "test_path": "engine/test/lease-transition-clock-snapshot.test.mjs",
+  "test_commit": "3e4c333347f5b6a9418bc49e6a09eafa11a9b0af",
+  "test_blob": "dfd2704541ebf2dead671a5112f8068421535605",
+  "defect": "start, submit and fail checked lease eligibility at one clock reading but recorded journal timestamps at a second, potentially expired clock reading",
+  "pre_fix": {
+    "exact_source_v8_synthetic_fs": {
+      "scenarios": 3,
+      "passed": 0,
+      "failed": 3,
+      "recorded_timestamps_ms": [
+        5000,
+        6000,
+        7000
+      ],
+      "lease_expiry_ms": 2000
+    }
+  },
+  "post_fix": {
+    "exact_source_v8_synthetic_fs": {
+      "scenarios": 3,
+      "passed": 3,
+      "failed": 0,
+      "recorded_timestamps_ms": [
+        1001,
+        1002,
+        1003
+      ],
+      "clock_reads_per_transition": 1
+    }
+  },
+  "test_method": "Fetched exact GitHub source and evaluated same class code in V8 with Node fs/crypto/path imports replaced by deterministic in-memory stubs. Published native Node test file; native Node test runner not executed in this run.",
+  "checks": {
+    "github_ci": "UNKNOWN; no successful statuses",
+    "native_node": "NOT_RUN",
+    "postgresql": "NOT_RUN",
+    "supabase_lease": "NOT_VERIFIED",
+    "external_provider_invocation": "NOT_VERIFIED",
+    "production_deploy": "NOT_VERIFIED",
+    "two_ticket_handoff": "NOT_VERIFIED"
+  },
+  "next": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/63",
+    "disposition": "OPEN_STACKED_ON_PR62",
+    "required": "Reconcile fail-closed callback semantics with main and OS 1.0; verify source overlap and exact-SHA tests before integration"
+  },
+  "scope": "No dashboard/product files modified; no historic PRs deleted or merged"
+}

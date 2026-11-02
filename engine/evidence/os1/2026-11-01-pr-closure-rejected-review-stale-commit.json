@@ -1,0 +1,53 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_at_utc": "2026-11-01T23:14:05Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_commit": "1c956d5bfedfc2617cab28ed7fa70e8011f7e524",
+  "regression_test_commit": "b32f846bc22c3b607c2bd211a00409e6b1adecc6",
+  "source_path": "engine/src/durable-queue.mjs",
+  "source_blob_sha": "cd88fc1d0459d8b0225f0bb7ede0cc7d0244ea84",
+  "test_path": "engine/test/durable-queue-rejected-review-reset.test.mjs",
+  "test_blob_sha": "dee134a5e7acb4f3289a09c1ecdafd8fdcec9f93",
+  "defect": "Rejected review requeued a ticket but retained the old submitted commit SHA; stale commit remained visible after durable journal replay.",
+  "change": "Clear commit and releaseProof on requeue, retaining event history and accepted-review commit.",
+  "tests": {
+    "runner": "V8 exact published source with mocked filesystem and journal",
+    "before": {
+      "passed": 2,
+      "failed": 2
+    },
+    "after": {
+      "passed": 5,
+      "failed": 0
+    },
+    "cases": [
+      "rejected commit cleared",
+      "replayed rejected commit cleared",
+      "rejection history preserved",
+      "release proof cleared",
+      "approved commit retained"
+    ],
+    "native_node": "NOT_RUN",
+    "postgresql": "NOT_RUN",
+    "github_ci": "NO_STATUSES_REPORTED"
+  },
+  "provenance": {
+    "pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "pr81_merged_into": "verifier/p0-outbox-idle-rpc-20261031-1109",
+    "issue77": "https://github.com/london4216-hue/Zoodo/issues/77",
+    "pr96": "https://github.com/london4216-hue/Zoodo/pull/96"
+  },
+  "ownership": "PR closure: engine/src/durable-queue.mjs and new regression test only; no product or dashboard files touched",
+  "next": {
+    "pr": 64,
+    "url": "https://github.com/london4216-hue/Zoodo/pull/64",
+    "action": "Reconcile durable outbox dead-letter recovery stack; run disposable PostgreSQL migration/concurrency tests before merge"
+  },
+  "authenticated_supabase_claim": false,
+  "provider_native_external_worker_invoked": false,
+  "hosted_two_ticket_handoff": false,
+  "deployed": false,
+  "merged": false
+}

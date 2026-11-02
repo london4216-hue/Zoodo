@@ -1,0 +1,68 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_at_utc": "2026-11-02T03:12:23.627Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr_url": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "task": "Reject malformed persisted worker/provider identities during durable queue journal replay",
+  "provenance": {
+    "pr81": "https://github.com/london4216-hue/Zoodo/pull/81",
+    "pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "handoff_issue": "https://github.com/london4216-hue/Zoodo/issues/77"
+  },
+  "source": {
+    "path": "engine/src/durable-queue.mjs",
+    "previous_blob_sha": "b45c44ff6adfa760e0e863260b2658a2d4994e49",
+    "published_blob_sha": "0daeabe8b114c5e05f02ea6d7f1f93e7a696c4f8",
+    "commit_sha": "0cb43d546c178e6cef0b44e3083741af4dfe91f9"
+  },
+  "new_test": {
+    "path": "engine/test/journal-claim-identity-replay-fence.test.mjs",
+    "blob_sha": "86c264629c38fcf3fe4927b4fc149a098dfa9412",
+    "commit_sha": "6210e996f46717c4e748a4c77643b9adeccb52cc"
+  },
+  "existing_test_blobs": {
+    "engine/test/journal-create-contract-fence.test.mjs": "82cd995fc85f57efe4e88f64620396b8c514045d",
+    "engine/test/journal-recovery-invalid-lease-fence.test.mjs": "c6ecb4239f33b9e3be95e78866e2e148e8820d48"
+  },
+  "verification": {
+    "environment": "native local Node.js 22.16.0, Linux, synthetic temporary JSONL journals",
+    "commands": [
+      "node --check engine/src/durable-queue.mjs",
+      "node --check engine/src/atomic-journal.mjs",
+      "node --test engine/test/journal-claim-identity-replay-fence.test.mjs",
+      "node --test engine/test/journal-claim-identity-replay-fence.test.mjs engine/test/journal-create-contract-fence.test.mjs engine/test/journal-recovery-invalid-lease-fence.test.mjs"
+    ],
+    "new_test_before": {
+      "passed": 2,
+      "failed": 9
+    },
+    "new_test_after": {
+      "passed": 11,
+      "failed": 0
+    },
+    "combined_after": {
+      "passed": 22,
+      "failed": 0
+    },
+    "source_and_test_blobs_match_github": true,
+    "hosted_ci": "NOT_CLAIMED",
+    "postgresql": "NOT_EXECUTED",
+    "authenticated_queue_claim": "NOT_ESTABLISHED",
+    "provider_native_worker": "NOT_INVOKED",
+    "two_ticket_handoff": "NOT_ESTABLISHED",
+    "deployment": "NOT_CLAIMED"
+  },
+  "preservation": {
+    "historical_prs_deleted": 0,
+    "historical_branches_deleted": 0,
+    "product_files_changed": 0,
+    "dashboard_files_changed": 0,
+    "sql_files_changed": 0
+  },
+  "next": {
+    "candidate": "Inspect replayed submit/review event provenance and PR #96 parity without touching product/dashboard paths",
+    "state": "QUEUED_NOT_CLAIMED",
+    "blocked_alternative": "PR #93 requires disposable PostgreSQL concurrency test; do not merge SQL blindly"
+  }
+}

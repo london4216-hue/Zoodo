@@ -1,0 +1,37 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-01T16:06:23Z",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "work": "Fix raw Unicode whitespace normalization in durable dispatch receipt URLs before ACK",
+  "source_path": "engine/ops/relay/outbox-drainer.mjs",
+  "source_previous_blob": "624a1fdb9bf2050b581e61a07e4df5d4aa637a5e",
+  "source_new_blob": "bde6715a297fb0e50c4798af818a89aefe31596b",
+  "source_commit": "df13a9e460279932705d57060eb880b221bd036c",
+  "regression_test_path": "engine/test/outbox-receipt-whitespace-fence.test.mjs",
+  "regression_test_blob": "162f73d093cd0466e0cbd60e848ea53069493517",
+  "test_commit": "86c5fb8e9a7fef02cc4d1f9fe6f5a45a30eb5363",
+  "baseline_original_source_blob_verified": true,
+  "baseline_existing_test_blob_verified": "3aa274db678b263c7a0fcd12c8c1322abd095718",
+  "baseline_backslash_test_blob_verified": "10bc3e52bdcba82802127e3dd1631608863706da",
+  "test_environment": "local Node.js (native node --test); GitHub readback blob matches locally tested bytes",
+  "red_first": "1 passed, 3 failed (new whitespace regression on baseline source)",
+  "green": "25 passed, 0 failed (existing drainer 16, backslash 5, new whitespace 4)",
+  "test_command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-receipt-backslash-fence.test.mjs engine/test/outbox-receipt-whitespace-fence.test.mjs",
+  "node_check": "passed",
+  "readback": "GitHub branch readback source/test blobs match locally tested files",
+  "scope": "Source and synthetic local tests only. No production host, native external AI provider, durable Supabase lease or two-ticket NEXT was invoked by this increment.",
+  "merges": 0,
+  "deployments": 0,
+  "queue_claim": "UNVERIFIED_NO_AUTHENTICATED_SUPABASE_QUEUE_TOOL",
+  "preservation_manifest": "engine/evidence/os1/zoodo-open-pr-archive-2026-11-01.json",
+  "reconciliation": {
+    "stack_65_69_72": "merged into intermediate branches, not proof of mainline release",
+    "stack_68_73_81": "81 merged into intermediate branch; 73 closed unmerged; PR81 receipt inspected",
+    "dashboard_16_71": "intermediate branch merge; dashboard lane owns further integration"
+  },
+  "next": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "action": "Review SQL retry/backoff and lease fence in isolated PR93; do not merge without schema compatibility, exact SQL tests and nonoverlap checks",
+    "state": "DISCOVERED_NOT_CLAIMED"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "date_local": "2026-11-01",
+  "task": "OS1-PR-CLOSURE-JOURNAL-REPLAY-RECORD-FENCE",
+  "repository": "london4216-hue/Zoodo",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_commit": "76e809e535738f5b9b9a0081ca0c538a65b1e63b",
+  "regression_test_commit": "7a657edc737312678079214dc60ee9d07b26bc8d",
+  "source_blob": "5234eb5dc86693d175c1832010f789ca63142e4d",
+  "test_blob": "dfc0748e71bc7e365c8de7cefb8b7bc631624634",
+  "source_file": "engine/src/durable-queue.mjs",
+  "test_file": "engine/test/durable-queue-replay-record-fence.test.mjs",
+  "defect": "Replay constructor silently filtered blank JSONL records and accepted unterminated final records despite the atomic journal append contract requiring complete newline-terminated records.",
+  "fix": "Fail closed on incomplete final JSONL record and blank interior record before applying any events.",
+  "verification": {
+    "before": {
+      "mode": "exact-source V8 with mocked filesystem and journal",
+      "passed": 1,
+      "failed": 2,
+      "source_blob": "e4d8eadf951466d6d77c0a477af37c54dc5d1bd2"
+    },
+    "after": {
+      "mode": "exact-source V8 with mocked filesystem and journal",
+      "passed": 4,
+      "failed": 0,
+      "source_blob": "5234eb5dc86693d175c1832010f789ca63142e4d",
+      "scenarios": [
+        "unterminated record rejected",
+        "blank record rejected",
+        "valid journal replay and claim",
+        "empty journal accepted"
+      ]
+    },
+    "published_test_source_readback": true,
+    "native_node_test_run": false,
+    "postgresql_test_run": false,
+    "github_actions_success_claimed": false
+  },
+  "coordination": {
+    "exclusive_file_lane": "engine/src/durable-queue.mjs and replay-record regression test",
+    "product_and_dashboard_files_touched": false,
+    "authenticated_distributed_queue_lease_claimed": false
+  },
+  "stack_reconciliation": {
+    "65_69_72": "branch-scoped merged chain; not mainline evidence",
+    "68_73_81": "81 merged to 73 branch, 73 closed unmerged; not mainline evidence",
+    "16_71": "branch-scoped dashboard chain, dashboard owner only"
+  },
+  "next": [
+    {
+      "pr": 96,
+      "task": "Compare remaining local queue identity/lineage tests against OS 1.0 without overwriting current source; port only missing compatible tests."
+    },
+    {
+      "pr": 93,
+      "task": "Run disposable PostgreSQL migration and concurrency tests before SQL integration.",
+      "blocked_on": "PostgreSQL runner not available in this run"
+    }
+  ],
+  "merge": false,
+  "deployment": false,
+  "provider_native_invocation": false,
+  "hosted_two_ticket_next": false,
+  "cost_usd": "UNKNOWN"
+}

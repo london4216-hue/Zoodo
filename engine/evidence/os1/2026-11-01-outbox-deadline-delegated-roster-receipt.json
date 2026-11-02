@@ -1,0 +1,83 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_date_utc": "2026-11-01",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "historical_pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "baseline_head": "cb100dc156bd283d629a8268eb39ffb93de78058",
+  "baseline_source_blob": "d48ebda03ecc8b875a4abd3fa248b933e72cd67c",
+  "changes": [
+    {
+      "ticket": "PR112/OS1 bounded async operations",
+      "source_pr": "https://github.com/london4216-hue/Zoodo/pull/112",
+      "defect": "Unresolved claim, relay callback, idle settlement or durable ACK could stall a one-shot outbox drain indefinitely",
+      "source_commit": "b3f2fe28429fe03f2642a76628ee3f0a8259ab89",
+      "test_commit": "360afa9bdc13e5a023711a7a9e82c0ff3654893b",
+      "exact_test_blob": "272da94f5260814a30ab22297095327b3c4b47dd",
+      "fail_first": {
+        "passed": 0,
+        "failed": 5
+      },
+      "after_fix": {
+        "passed": 5,
+        "failed": 0
+      },
+      "behavior": "One monotonic configurable 1..30000ms deadline, default 12000ms. Timeout on claim rejects without dispatch; timeout after relay/settlement/ACK yields recovery_required and never authorizes another worker."
+    },
+    {
+      "ticket": "NEXT PR112/OS1 delegated roster ACK fence",
+      "source_pr": "https://github.com/london4216-hue/Zoodo/pull/112",
+      "defect": "Delegated replacement outside supplied qualified worker roster could trigger durable ACK",
+      "source_commit": "3ff332a7d5f9fec19ae3f21e6e6f7726770c62e7",
+      "test_commit": "d1e3ae1e9b48fef9d7c3a9f3ba684fb30e665a6d",
+      "exact_test_blob": "1b9e1b0cc06acd090bf6c428c1b25482fb5bf72f",
+      "fail_first": {
+        "passed": 1,
+        "failed": 1
+      },
+      "after_fix": {
+        "passed": 2,
+        "failed": 0
+      },
+      "behavior": "Only delegated replacement IDs present in the qualified worker roster can be accepted for ACK."
+    }
+  ],
+  "exact_git_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "1f85595eb678f2ac50b977d388316b6602c373f9",
+    "engine/test/outbox-async-deadline-fence.test.mjs": "272da94f5260814a30ab22297095327b3c4b47dd",
+    "engine/test/outbox-delegated-roster-fence.test.mjs": "1b9e1b0cc06acd090bf6c428c1b25482fb5bf72f"
+  },
+  "tests": {
+    "runtime": "native Node.js 22.16.0",
+    "command": "node --test engine/test/outbox-async-deadline-fence.test.mjs engine/test/outbox-delegated-roster-fence.test.mjs",
+    "passed": 7,
+    "failed": 0,
+    "tap_sha256": "ff762db2c6ba685d53afafe627447fecc880d348b2ee2d2f858b29267581744e",
+    "additional_smoke_checks": "5/5 PASS on pre-delegated-fence source; final seven tests PASS",
+    "syntax_check": "node --check engine/ops/relay/outbox-drainer.mjs PASS",
+    "scope": "local exact GitHub source and copied regression blobs; not full repo suite, PostgreSQL or hosted CI"
+  },
+  "readback": {
+    "source_and_test_blob_shas_matched": true,
+    "head_before_receipt": "d1e3ae1e9b48fef9d7c3a9f3ba684fb30e665a6d",
+    "combined_commit_statuses": [],
+    "hosted_ci": "UNKNOWN, no pass established"
+  },
+  "historical_stacks": {
+    "65_69_72": "merged into intermediate branches, not mainline release proof",
+    "68_73_81": "#73 closed unmerged; #81 merged into intermediate branch, not mainline release proof",
+    "16_71": "dashboard intermediate branch merges, not deployment proof"
+  },
+  "constraints": {
+    "distributed_lease_verified": false,
+    "provider_native_agent_invoked": false,
+    "hosted_two_ticket_claim_complete_next_verified": false,
+    "dashboard_readback_verified": false,
+    "merged": false,
+    "deployed": false,
+    "owner_email_sent": false
+  },
+  "ownership": "advisory single-writer outbox scope only; no distributed lease claim; product, dashboard, SQL untouched",
+  "next": "Read-only inspect #92/#93 SQL dependencies and PostgreSQL concurrency feasibility; next unported #112 source fence or independently qualified SQL PR. Hosted two-ticket NEXT and dashboard readback remain separate acceptance criteria.",
+  "rollback": "Revert two narrow OS1 source changes and copied test files; main, product branches, archives and live URLs untouched."
+}

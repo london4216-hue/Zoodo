@@ -1,0 +1,39 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "date_utc": "2026-11-01",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/112",
+  "handoff_issue": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "task": "Use one validated relay state snapshot for durable dispatch decision and evidence",
+  "baseline_head": "dacd4634ea4c0646790fa29351f2b919c4145bc7",
+  "baseline_source_blob": "d4ea9a4bb5ea8df76a8bd54312a1341eb3fb5e90",
+  "source_test_blob": "18de5e7ae47ecddf94e71a8ca57514c4311f9b3d",
+  "final_source_blob": "9651b311c7fbbe7d9e318ee3896a4f56eeeb9aba",
+  "final_test_blob": "18de5e7ae47ecddf94e71a8ca57514c4311f9b3d",
+  "fail_first": {
+    "passed": 2,
+    "failed": 1
+  },
+  "after_fix": {
+    "passed": 44,
+    "failed": 0,
+    "test_files": 13
+  },
+  "test_environment": "Isolated V8 JS harness evaluating exact fetched ESM source and regression callbacks, minimal URL shim; not native Node.js or hosted CI",
+  "hosted_ci": "UNKNOWN",
+  "distributed_lease_verified": false,
+  "provider_native_worker_invoked": false,
+  "hosted_two_ticket_handoff_verified": false,
+  "dashboard_readback_verified": false,
+  "merged": false,
+  "deployed": false,
+  "next": {
+    "source_pr": 112,
+    "task": "Investigate non-string receipt ticket identity and unprintable provider errors; test-first only",
+    "test_files": [
+      "outbox-receipt-ticket-type-fence.test.mjs",
+      "outbox-unprintable-error-fence.test.mjs"
+    ]
+  },
+  "rollback": "Revert this isolated commit; main, private product and dashboard files untouched"
+}

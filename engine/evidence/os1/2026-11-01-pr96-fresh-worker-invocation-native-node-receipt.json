@@ -1,0 +1,41 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "date_utc": "2026-11-01",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/96",
+  "task": "NEXT integration: reject reuse of an old worker invocation identity after recovery or rejected review",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_before_blob": "c7e2f3425b7f829d6c2812f37053be2beacc6206",
+  "source_fix_commit": "0f14b56b5776030b72f14c1f148bf71d9fc817e7",
+  "test_commit": "63ce5f5e7e5f927d44769c0f625747ec43b6c30b",
+  "exact_blobs": {
+    "engine/src/durable-queue.mjs": "5dbe2fd94d66edb9ba3f89d36ff222203f384165",
+    "engine/test/reused-worker-identity-fence.test.mjs": "e729dfad03fda8756a1173c9fd8533c8c9f2c950"
+  },
+  "test_origin": "PR #96 test file copied byte-for-byte from authenticated refs/pull/96/head",
+  "fail_first": {
+    "command": "node --test engine/test/reused-worker-identity-fence.test.mjs",
+    "passed": 0,
+    "failed": 2
+  },
+  "after_fix": {
+    "command": "node --test engine/test/*.test.mjs",
+    "passed": 11,
+    "failed": 0,
+    "source_syntax": "node --check engine/src/durable-queue.mjs PASS"
+  },
+  "environment": "Native Node.js 22.16.0 isolated local exact-source checkout; Git blob SHA match to authenticated GitHub readback",
+  "result": "Published isolated source/test commits to draft PR #132; no main merge or deployment",
+  "ownership": "Advisory single-writer durable-queue source only; no verified distributed lease; release after handoff",
+  "ci": "UNKNOWN; no passing GitHub combined status",
+  "postgres": "NOT RUN; local PostgreSQL unavailable",
+  "external_provider_invoked": false,
+  "hosted_two_ticket_next": false,
+  "dashboard_readback": false,
+  "rollback": "Revert source and test commits on OS1 branch; preserve PR #96 and mainline",
+  "next": {
+    "ticket": "Zoodo PRs #92/#93",
+    "status": "BLOCKED_POSTGRES_UNAVAILABLE",
+    "fallback": "Next unintegrated PR #96 durable queue regression, separate from dashboard/product files"
+  }
+}

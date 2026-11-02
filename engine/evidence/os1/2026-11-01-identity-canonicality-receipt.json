@@ -1,0 +1,62 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_date_utc": "2026-11-01",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/96",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "parent_before_fix": "585fb353799b80ed8461245b0fc4e18c0da4b2c3",
+  "code_and_tests_head_before_receipt": "a03f346e1a02ba3e26a7e71a3021af58cc96f861",
+  "exact_prechange_source_blob": "69ec8e80279ecf41d8ea4b124e292624492c4c06",
+  "source_fix_commit": "26cc234bcb082771bd1f4c2e95c897b99a7b26a8",
+  "exact_test_commits": [
+    "91c3c2de5d6c5568aed59ae26eb55489ab2e743e",
+    "98896d0caf2b595fe2ccbe57488d0d91a02d2acf",
+    "a03f346e1a02ba3e26a7e71a3021af58cc96f861"
+  ],
+  "exact_git_blobs": {
+    "engine/src/durable-queue.mjs": "68f616cd3749b687901b7840940841f172e5bedb",
+    "engine/test/invisible-identity-review-fence.test.mjs": "20a0e6b3dc579796fc63919853fca5ae8313f56c",
+    "engine/test/unicode-normalization-identity-fence.test.mjs": "9a0e7a503893b4986ab70436305b68f6c0d2cfa2",
+    "engine/test/identity-alias-fence.test.mjs": "d34b3cddf8ce38c06c1f9d9f8ad6d54e607b599f",
+    "engine/test/heartbeat-single-clock-snapshot.test.mjs": "b8893e683d4722b59d7ae66eb650de9f9631a46b",
+    "engine/test/single-worker-active-lease.test.mjs": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79"
+  },
+  "defect": "Unvalidated worker/provider/reviewer IDs accepted invisible Cc/Cf characters, padded aliases and canonically decomposed Unicode spellings, bypassing exact identity comparisons in the single-writer pilot queue.",
+  "fix": "Require nonblank bounded, trim-stable, NFC-normalized worker/provider/reviewer identities with no Unicode Cc/Cf codepoints; preserve visible NFC Unicode identities.",
+  "native_runtime": "Node.js 22.16.0",
+  "fail_first": {
+    "command": "node --test engine/test/{invisible-identity-review-fence,unicode-normalization-identity-fence,identity-alias-fence}.test.mjs",
+    "pass": 2,
+    "expected_fail": 12,
+    "baseline_sha_verified": "69ec8e80279ecf41d8ea4b124e292624492c4c06",
+    "note": "Exact original source and all three SHA-matched test files rerun; initial 1/13 provisional count included a local transcription error and is superseded by verified 2/12."
+  },
+  "after_fix": {
+    "command": "node --test engine/test/{single-worker-active-lease,heartbeat-single-clock-snapshot,invisible-identity-review-fence,unicode-normalization-identity-fence,identity-alias-fence}.test.mjs",
+    "pass": 19,
+    "fail": 0,
+    "stdout_sha256": "ebd0cb21edf574b012812420d6ea475594aa2e3d43fcfab07820cd641aec7508"
+  },
+  "syntax_check": "node --check engine/src/durable-queue.mjs PASS",
+  "source_and_tests_git_blob_readback_matched": true,
+  "historical_pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "historical_pr81_source_blob": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+  "historical_pr81_test_blob": "76b1fcb63dd7baebe71e30ae20462510b8d6c408",
+  "nonoverlap": [
+    "dashboard paths",
+    "private TransendIQ product paths",
+    "SQL #92/#93",
+    "outbox drainer"
+  ],
+  "no_claims": {
+    "hosted_ci": "UNKNOWN: zero-step startup",
+    "distributed_lease": false,
+    "provider_native_external_worker": false,
+    "hosted_two_ticket_handoff": false,
+    "production_deployment": false,
+    "merged": false
+  },
+  "next": "Run exact OS1 branch full Node suite; inspect #92/#93 PostgreSQL migration/concurrency readiness and test real two-ticket hosted NEXT; Dashboard Lead owns live readback.",
+  "rollback": "Revert isolated OS1 identity code/test commits or close draft #132; main and production assets unchanged."
+}

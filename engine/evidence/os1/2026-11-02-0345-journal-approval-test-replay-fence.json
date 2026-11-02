@@ -1,0 +1,62 @@
+{
+  "schema": "zoo.os1.pr-closure-repair.v1",
+  "recorded_at_utc": "2026-11-02T03:45:51Z",
+  "repo": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_commit": "1020328caaf1734cc4b86d9e3a2a19cf425467dc",
+  "test_commit": "b3a5c50313db9c98165c2d90317f173943834f45",
+  "source_blob_sha": "d99257498adeff35d554fb86a1a5415cf54fe2c1",
+  "test_blob_sha": "0374a418354e55755ee75efba55135775763fe70",
+  "source_path": "engine/src/durable-queue.mjs",
+  "test_path": "engine/test/journal-approval-test-evidence-replay-fence.test.mjs",
+  "defect": "Journal replay accepted persisted approve records without valid reviewer/provider/exact-SHA/evidence and tested records with nonboolean verdict or blank evidence.",
+  "before": {
+    "malformed_replays_accepted": 6,
+    "valid_replays_accepted": 1
+  },
+  "after": {
+    "synthetic_v8_source_checks_passed": 7,
+    "synthetic_v8_source_checks_total": 7,
+    "valid_positive_replay_passed": true
+  },
+  "test_scope": "V8 evaluation of exact fetched GitHub source with mocked fs and structuredClone; native Node, PostgreSQL and hosted CI not executed.",
+  "readback": {
+    "source_blob_matched": true,
+    "test_blob_matched": true
+  },
+  "checks": {
+    "commit_statuses_reported": 0,
+    "mergeable_last_readback": false,
+    "draft": true
+  },
+  "claim": {
+    "durable_queue_lease_claimed": false,
+    "reason": "Authenticated distributed queue RPC unavailable in this run; this is a branch-isolated PR integration increment."
+  },
+  "historical_reconciliation": {
+    "pr81": "Merged into dependent branch; not proof of mainline release",
+    "outbox_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "issue77": "Temporary keeper responsibility, unified queue, two-ticket NEXT not yet verified",
+    "stacked_prs": [
+      "65>69>72",
+      "68>73>81",
+      "16>71"
+    ],
+    "branches_deleted": 0,
+    "stacked_merges_performed": 0
+  },
+  "backlog": {
+    "zoodo_open_pr_search_results": 82,
+    "private_transendiq_search_results": 100,
+    "private_search_truncated": true
+  },
+  "next_ticket": {
+    "pr": 96,
+    "task": "Reconcile persisted release, verify and done transition evidence with deterministic replay tests, or test PR #93 on disposable PostgreSQL when available",
+    "status": "QUEUED_NOT_CLAIMED"
+  },
+  "provider_native_invocation": false,
+  "production_deployment": false,
+  "unattended_two_ticket_next": false
+}

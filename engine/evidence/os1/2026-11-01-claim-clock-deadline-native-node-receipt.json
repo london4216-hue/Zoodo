@@ -1,0 +1,44 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "date_utc": "2026-11-01",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_issue": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "task": "Prevent invalid clock samples and overflowing lease deadlines from being journaled as assigned worker claims",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_before_blob": "68f616cd3749b687901b7840940841f172e5bedb",
+  "source_fix_commit": "f53d935b7901ed3eadd5fad60290f6d8cd1f7494",
+  "test_commit": "d73f62518a1670bc790194890464975197df59e0",
+  "exact_blobs": {
+    "engine/src/durable-queue.mjs": "c7e2f3425b7f829d6c2812f37053be2beacc6206",
+    "engine/test/claim-valid-clock-fence.test.mjs": "abae929ce3934fc13a178acd50bdb434143cc6c1",
+    "engine/test/heartbeat-single-clock-snapshot.test.mjs": "b8893e683d4722b59d7ae66eb650de9f9631a46b",
+    "engine/test/single-worker-active-lease.test.mjs": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79"
+  },
+  "fail_first": {
+    "command": "node --test engine/test/claim-valid-clock-fence.test.mjs",
+    "passed": 1,
+    "failed": 3,
+    "total": 4
+  },
+  "after_fix": {
+    "command": "node --test engine/test/*.test.mjs",
+    "passed": 9,
+    "failed": 0,
+    "total": 9,
+    "source_syntax": "node --check engine/src/durable-queue.mjs PASS"
+  },
+  "environment": "Native local Node.js 22.16.0, exact source and three test file Git blob hashes matched authenticated GitHub readback; isolated test checkout",
+  "outcome": "Published two source/test commits to open draft OS 1.0 integration PR; not merged or deployed",
+  "claim_type": "advisory nonoverlapping file ownership, NOT a distributed Supabase queue lease",
+  "native_external_model_invoked": false,
+  "github_actions": "UNKNOWN; no passing hosted checks",
+  "postgres": "NOT AVAILABLE in local environment",
+  "hosted_two_ticket_handoff": false,
+  "dashboard_readback": false,
+  "rollback": "Revert isolated source fix and regression-test commits on integration branch; main and product/dashboard assets unchanged",
+  "next": {
+    "ticket": "Zoodo PR #92/#93",
+    "task": "Run disposable PostgreSQL migration/claim/ACK/expiry concurrency tests and reconcile SQL stack; do not merge without real database evidence",
+    "fallback": "Inspect next unblocked isolated queue correctness ticket while PostgreSQL remains unavailable"
+  }
+}

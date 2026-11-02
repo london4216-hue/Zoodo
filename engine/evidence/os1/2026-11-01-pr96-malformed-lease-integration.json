@@ -1,0 +1,56 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_date_utc": "2026-11-01",
+  "repo": "london4216-hue/Zoodo",
+  "os1_pr": 132,
+  "source_pr": 96,
+  "source_pr_url": "https://github.com/london4216-hue/Zoodo/pull/96",
+  "decision": "Port PR96's existing tested quarantine semantics into OS1 rather than preserve duplicate fail-entire-recovery implementation. Keep OS1's single validated recovery-clock snapshot and preserve unrelated ticket progress.",
+  "supersedes": "engine/evidence/os1/2026-11-01-pr-closure-malformed-replayed-lease.json",
+  "reason": "Initial OS1 repair duplicated PR96's existing fix and blocked recovery of unrelated valid tickets. Reconciled against PR96 exact source/receipt; replaced with per-ticket quarantine.",
+  "source": {
+    "path": "engine/src/durable-queue.mjs",
+    "prior_os1_blob": "ae674ca1640ebf094995418de8b854c20c8bb33c",
+    "pr96_blob_inspected": "7df032b0cf864cace3e06bab768850c1c245f7da",
+    "integrated_os1_blob": "1b4e6bb93737abd1cc8548cd2873b194bb1653fb",
+    "commit": "f0ddab4f493df0b9422ce8cd3507258245dced79"
+  },
+  "test": {
+    "path": "engine/test/recovery-corrupt-lease-fence.test.mjs",
+    "blob": "24f8961060cbe0eb8b41289143734fe2441d6dd4",
+    "commit": "e4ab139aee77814563576444f13805f4a11d1032"
+  },
+  "verification": {
+    "method": "Exact GitHub source readback executed in V8 with synthetic in-memory append-only JSONL; not native Node test runner",
+    "scenarios": 5,
+    "passed": 5,
+    "failed": 0,
+    "malformed": [
+      "null",
+      "numeric string",
+      "object"
+    ],
+    "behavior": "Quarantine malformed A, preserve worker identity, recover unrelated expired B, no duplicate recovery writes, same clock timestamp, reject reuse of quarantined worker",
+    "normal": [
+      "valid expired leases requeued",
+      "valid unexpired leases retained"
+    ],
+    "native_node": "NOT_EXECUTED",
+    "postgresql": "NOT_EXECUTED",
+    "ci": "UNKNOWN"
+  },
+  "status": {
+    "published": true,
+    "merged": false,
+    "deployed": false,
+    "authenticated_supabase_claim": false,
+    "provider_native_agent": false,
+    "unattended_two_ticket_next": false
+  },
+  "next": {
+    "candidate": "https://github.com/london4216-hue/Zoodo/pull/63",
+    "action": "Compare relay response-status fail-closed patch with current OS1 source; isolate nonoverlapping tested integration without touching product/dashboard",
+    "fallback": "https://github.com/london4216-hue/Zoodo/pull/93 requires disposable PostgreSQL migration and concurrency testing"
+  },
+  "preservation": "No historical branch deletion or mass merges. Existing PR96 retained."
+}

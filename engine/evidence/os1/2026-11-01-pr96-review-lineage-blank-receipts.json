@@ -1,0 +1,98 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-02T00:54:31.647Z",
+  "repository": "london4216-hue/Zoodo",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_head_tested": "c2e351312ef0cef357787aefc230bca0439e6c70",
+  "source_blob": "368b44c4d84cbbecb397efa4d27afdd7a7f37eb5",
+  "source_commits": [
+    "f09e73b4790eb2890dc6b85e1e6731047f966fc0",
+    "c2e351312ef0cef357787aefc230bca0439e6c70"
+  ],
+  "test_commits": [
+    "2e05178035ef5e6d23cd9867564263262dd0f7d6",
+    "0b8205b6028d1fdbeff5da3bdbbb735d22d1cd60",
+    "2e478a202fbac37a59da1c48aa72aca12018ba42"
+  ],
+  "ported_pr96_test_blobs": {
+    "engine/test/prior-worker-reviewer-lineage-fence.test.mjs": "39fa3db7692fe0b45d089be3042627b8f13a3c59",
+    "engine/test/prior-provider-reviewer-lineage-fence.test.mjs": "f79409a244406ddb2bfb6f13df5d3853a9f755",
+    "engine/test/blank-identity-receipt.test.mjs": "401aaa3c7108d66fe7ba475472574ad0a2b35f97"
+  },
+  "defects": [
+    "Historical builder/provider identities could approve replacement work on the same ticket",
+    "Whitespace-only ticket metadata, review/submission/test receipts and failure reasons were accepted"
+  ],
+  "test_scope": {
+    "method": "Exact published JavaScript source evaluated in V8 with in-memory Node filesystem/crypto shims; not native Node.js, PostgreSQL or hosted runtime",
+    "historical_lineage_before": {
+      "passed": 3,
+      "failed": 4
+    },
+    "historical_lineage_after": {
+      "passed": 7,
+      "failed": 0
+    },
+    "blank_receipts_before": {
+      "passed": 1,
+      "failed": 6
+    },
+    "blank_receipts_after": {
+      "passed": 7,
+      "failed": 0
+    },
+    "published_head_retest": {
+      "passed": 14,
+      "failed": 0
+    },
+    "scenarios": [
+      "prior_worker_restart",
+      "prior_provider_restart",
+      "prior_worker_live",
+      "prior_provider_live",
+      "independent_restart",
+      "current_worker",
+      "current_provider",
+      "blank_repo",
+      "blank_description",
+      "blank_submit_receipt",
+      "blank_review_receipt",
+      "blank_test_receipt",
+      "blank_fail_reason",
+      "valid_lifecycle"
+    ]
+  },
+  "historical_context": {
+    "pr81": "https://github.com/london4216-hue/Zoodo/pull/81",
+    "pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "issue77": "https://github.com/london4216-hue/Zoodo/issues/77",
+    "stacked_relay": "65→69→72 and 68→73→81 merged only into stacked bases; not verified main",
+    "dashboard": "16→71 remains dashboard-owned"
+  },
+  "execution": {
+    "github_ci": "No commit statuses reported",
+    "authenticated_queue_claim": false,
+    "provider_native_invocation": false,
+    "postgresql_test": false,
+    "unattended_two_ticket_handoff": false,
+    "production_deploy": false,
+    "merge": false
+  },
+  "ownership": {
+    "files": [
+      "engine/src/durable-queue.mjs",
+      "engine/test/prior-worker-reviewer-lineage-fence.test.mjs",
+      "engine/test/prior-provider-reviewer-lineage-fence.test.mjs",
+      "engine/test/blank-identity-receipt.test.mjs"
+    ],
+    "product_dashboard_files_modified": false
+  },
+  "next": {
+    "candidate": "https://github.com/london4216-hue/Zoodo/pull/96",
+    "task": "Inspect remaining clock-type and journal-lease-type regressions for compatible isolated port",
+    "status": "INSPECTED_NOT_CLAIMED",
+    "blocked_sql": "https://github.com/london4216-hue/Zoodo/pull/93"
+  },
+  "rollback": "Revert source commits f09e73b and c2e3513 on integration branch; main unchanged"
+}

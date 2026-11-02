@@ -1,0 +1,66 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-01T21:12:24.040Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_base_head": "38d322f9489c467a11371083e76fcacd8684e8d0",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "historical_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "historical_pr81": {
+    "state": "merged_into_stacked_base",
+    "merged_at": "2026-10-31T12:50:36Z",
+    "mainline_release_proven": false
+  },
+  "stacks": {
+    "65_69_72": "merged into successive feature branches, not independently proven mainline",
+    "68_73_81": "68 and 81 merged into stacked bases; 73 closed unmerged",
+    "16_71": "merged into successive dashboard branches, deployed SHA unverified"
+  },
+  "change": {
+    "defect": "A final failed test left a ticket status queued even after maxAttempts; claim then rejected it forever. Failed tests also retained stale active worker and review identity fields.",
+    "test_commit": "dfe2acc2d7824e2383b422f792978da17b4afa53",
+    "source_commit": "2bd9f3aee947c346c46d0f921617ce58ab62b610",
+    "source_path": "engine/src/durable-queue.mjs",
+    "source_blob": "0abe195a62925c0ca94a871703af6aa59c989bd5",
+    "test_path": "engine/test/failed-test-retry-budget-fence.test.mjs",
+    "test_blob": "48bb954aabbea97aeeb9fc1cb9f33ac9c331ed0",
+    "behavior": "Journal explicit dead flag; failed final test blocked; stale worker/provider/commit/review fields cleared; legacy journal replay fallback retained."
+  },
+  "checks": {
+    "baseline_v8_exact_source": {
+      "passed": 1,
+      "total": 6
+    },
+    "patched_v8_exact_source": {
+      "passed": 6,
+      "total": 6
+    },
+    "published_test_source_v8_mocked_node_fs": {
+      "passed": 4,
+      "total": 4
+    },
+    "native_node_test_runner": "NOT_EXECUTED",
+    "disposable_postgresql": "NOT_EXECUTED",
+    "github_combined_status_checks": [],
+    "github_actions": "INFRASTRUCTURE_UNKNOWN",
+    "source_test_readback": "MATCHED_PUBLISHED_GIT_BLOBS"
+  },
+  "execution": {
+    "authenticated_supabase_queue_claim": false,
+    "provider_native_external_agent_invocation": false,
+    "production_deployment": false,
+    "unattended_two_ticket_claim_complete_next": false,
+    "no_product_or_dashboard_files_modified": true,
+    "no_historical_branch_deleted": true
+  },
+  "next": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/46",
+    "task": "Reconcile single-filesystem atomic journal compare-and-append into OS1 without overwriting newer durable-queue lease/test fixes; test two-instance stale claims, journal lock recovery and restart. Preserve stacked PR #46.",
+    "status": "INSPECTED_NOT_CLAIMED",
+    "other_blocked": [
+      "PR #92 SQL migration requires disposable PostgreSQL",
+      "PR #93 SQL migration requires disposable PostgreSQL"
+    ]
+  }
+}
