@@ -49,6 +49,8 @@ export async function runSupervisorContingent({
   // Fix the dispatch roster at startup: callers must not change active routing.
   const roster = Object.freeze([...workerIds]);
   let nextRecoveryAt = -Infinity;
+  let lastTick = -Infinity;
+  let recoveryRequired = true;
   let cycles = 0;
   let recoveryAttempts = 0;
   const emit = event => {
@@ -66,7 +68,11 @@ export async function runSupervisorContingent({
       await sleep(intervalMs, signal);
       continue;
     }
-    if (tick >= nextRecoveryAt) {
+    // A wall-clock rollback invalidates the previous recovery deadline.
+    // Keep the recovery obligation sticky until the database confirms it.
+    if (tick < lastTick) recoveryRequired = true;
+    lastTick = tick;
+    if (recoveryRequired || tick >= nextRecoveryAt) {
       try {
         const recovered = await store.recoverOutbox();
         if (!Number.isSafeInteger(recovered) || recovered < 0)
@@ -74,9 +80,11 @@ export async function runSupervisorContingent({
         const deadline = tick + recoveryIntervalMs;
         if (!Number.isSafeInteger(deadline)) throw Error('Invalid recovery deadline');
         nextRecoveryAt = deadline;
+        recoveryRequired = false;
         recoveryAttempts++;
         emit({type:'recovered',count:recovered});
       } catch {
+        recoveryRequired = true;
         emit({type:'recovery_error'});
         // Do not dispatch while recovery status is unknown.
         await sleep(intervalMs, signal);
