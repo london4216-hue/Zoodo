@@ -119,10 +119,33 @@ export class DurableQueue {
       if(t.status!=='verified')fail('Invalid journal completion state');
       t.status='done';
     }
-    if(e.type==='requeue'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null;t.commit=null;t.releaseProof=null}
-    // Preserve the invocation identity when a replayed lease is malformed.
-    // This ticket must not be dispatched again without explicit resolution.
-    if(e.type==='quarantine'){t.status='blocked';t.leaseUntil=null}
+    if(e.type==='requeue'){
+      // Replayed requeue must originate from an active worker or a rejected review.
+      // It cannot erase a verified/completed ticket or another worker's lease.
+      if(typeof e.dead!=='boolean'||e.dead!==(t.attempts>=this.maxAttempts))
+        fail('Invalid journal requeue budget');
+      if(t.status==='review'){
+        if(e.reason!=='Independent reviewer rejected'||!validIdentity(e.reviewer)||
+          !validIdentity(e.reviewProvider)||!valid(e.evidence)||
+          e.reviewer===t.worker||e.reviewProvider===t.provider||
+          t.history.some(h=>h.type==='claim'&&(h.worker===e.reviewer||h.provider===e.reviewProvider)))
+          fail('Invalid journal review requeue');
+      }else if(['assigned','running'].includes(t.status)){
+        if(!validIdentity(e.worker)||e.worker!==t.worker||
+          !validIdentity(e.provider)||e.provider!==t.provider||!valid(e.reason))
+          fail('Invalid journal worker requeue');
+      }else fail('Invalid journal requeue state');
+      t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;
+      t.reviewer=null;t.reviewProvider=null;t.tests=null;t.commit=null;t.releaseProof=null;
+    }
+    // Only a malformed active lease can be quarantined, never completed work.
+    if(e.type==='quarantine'){
+      if(!['assigned','running'].includes(t.status)||Number.isSafeInteger(t.leaseUntil)||
+        e.reason!=='Malformed lease deadline; execution uncertain'||
+        e.worker!==t.worker||e.provider!==t.provider)
+        fail('Invalid journal quarantine');
+      t.status='blocked';t.leaseUntil=null;
+    }
     t.history.push(e);
   }
   #record(type,id,fields={},atMs=this.now()){
