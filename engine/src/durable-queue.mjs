@@ -48,8 +48,21 @@ export class DurableQueue {
       if(!validIdentity(e.worker)||!validIdentity(e.provider))fail('Invalid journal claim identity');
       t.status='assigned';t.attempts++;t.worker=e.worker;t.provider=e.provider;t.leaseUntil=e.leaseUntil;t.commit=null;t.reviewer=null;t.reviewProvider=null;t.tests=null;t.releaseProof=null
     }
-    if(e.type==='start')t.status='running';
-    if(e.type==='heartbeat')t.leaseUntil=e.leaseUntil;
+    // Replayed progress must not turn a queued ticket into an active worker.
+    // Only a previously claimed ticket can start or renew a lease.
+    if(e.type==='start'){
+      if(t.status!=='assigned'||!Number.isSafeInteger(t.leaseUntil))
+        fail('Invalid journal start');
+      t.status='running';
+    }
+    if(e.type==='heartbeat'){
+      if(!['assigned','running'].includes(t.status)||
+        !Number.isSafeInteger(t.leaseUntil)||
+        !Number.isSafeInteger(e.leaseUntil)||
+        e.leaseUntil<t.leaseUntil)
+        fail('Invalid journal heartbeat');
+      t.leaseUntil=e.leaseUntil;
+    }
     // Persisted submissions must retain a real exact SHA and nonblank evidence.
     // A malformed replayed commit cannot advance to independent review.
     if(e.type==='submit'){
