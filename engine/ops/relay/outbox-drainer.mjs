@@ -14,6 +14,12 @@ function validReceipt(r, worker) {
       /[\p{Cc}\p{Cf}\p{Zs}\p{Zl}\p{Zp}]/u.test(r.receipt_url) ||
       /[\uD800-\uDFFF]/u.test(r.receipt_url)) return false;
   try {
+    // URL() preserves percent-encoded path bytes; a later decoder can expose
+    // invisible Unicode, whitespace or backslashes after durable ACK.
+    const decodedReceipt = decodeURIComponent(r.receipt_url);
+    if (decodedReceipt.includes('\\') ||
+        /[\p{Cc}\p{Cf}\p{Zs}\p{Zl}\p{Zp}]/u.test(decodedReceipt) ||
+        /[\uD800-\uDFFF]/u.test(decodedReceipt)) return false;
     const url = new URL(r.receipt_url);
     return url.protocol === 'https:' && !url.username && !url.password && !url.hash;
   } catch { return false; }
