@@ -59,3 +59,16 @@ test('valid expired lease recovery survives journal replay',()=>fixture(({make,s
   const q=make();assigned(q);setNow(100101);q.recover();
   assert.equal(make().get('T').status,'queued');
 }));
+
+test('malformed historical active lease is quarantined and replayable',()=>fixture(({file,make})=>{
+  const q=make();create(q);
+  appendFileSync(file,JSON.stringify({
+    eventId:'malformed-claim',type:'claim',id:'T',
+    worker:'builder',provider:'providerA',leaseUntil:'invalid',
+    at:'2026-11-02T06:00:00.000Z'
+  })+'\n');
+  const recovered=make();
+  assert.equal(recovered.get('T').status,'assigned');
+  assert.equal(recovered.recover()[0].status,'blocked');
+  assert.equal(make().get('T').status,'blocked');
+}));
