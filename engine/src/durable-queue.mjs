@@ -95,6 +95,9 @@ export class DurableQueue {
     if(e.type==='tested'){
       if(t.status!=='test'||typeof e.passed!=='boolean'||!valid(e.evidence))
         fail('Invalid journal test evidence');
+      // A replayed test verdict cannot override the retry budget.
+      if(typeof e.dead!=='boolean'||e.dead!==(!e.passed&&t.attempts>=this.maxAttempts))
+        fail('Invalid journal test retry budget');
       t.tests={passed:e.passed,evidence:e.evidence};if(!e.passed){
       // A failed final attempt is terminal, not an unclaimable READY ticket.
       // Clear stale invocation/review fields; history retains failure evidence.
