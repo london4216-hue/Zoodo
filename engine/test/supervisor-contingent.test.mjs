@@ -3,20 +3,22 @@ import assert from 'node:assert/strict';
 import {runSupervisorContingent} from '../ops/relay/supervisor-contingent.mjs';
 
 function setup(ids=['T1','T2']) {
-  const ready=[...ids], active=new Set(), completed=[];
+  const ready=[...ids], active=new Set(), completed=[], dispatches=[];
   const store={
     claimOutbox:async()=>{const id=ready.shift();if(!id)return null;active.add(id);return {id,lease_token:id}},
     ackOutbox:async id=>{assert.ok(active.delete(id));completed.push(id);return true},
     recoverOutbox:async()=>0
   };
-  const relay={next:async()=>({state:'dispatched'})};
-  const drainOne=async ({store})=>{
+  const relay={next:async worker=>{dispatches.push(worker);return {state:'dispatched'}}};
+  const drainOne=async ({store,relay,workerIds})=>{
     const event=await store.claimOutbox();
     if(!event)return {state:'empty'};
+    const result=await relay.next(workerIds[0]);
+    assert.equal(result.state,'dispatched');
     await store.ackOutbox(event.id,event.lease_token);
     return {state:'acknowledged',eventId:event.id};
   };
-  return {store,relay,drainOne,completed,ready};
+  return {store,relay,drainOne,completed,ready,dispatches};
 }
 const instant=async()=>{};
 
@@ -29,6 +31,7 @@ test('surviving peer completes next ticket after first supervisor stops',async()
   const result=await runSupervisorContingent({...f,workerIds:['adler'],signal:second.signal,sleep:instant,
     onCycle:e=>{if(e.type==='cycle')second.abort()}});
   assert.deepEqual(f.completed,['T1','T2']);
+  assert.deepEqual(f.dispatches,['adler','adler']);
   assert.equal(result.state,'stopped');
   assert.ok(events.some(e=>e.type==='recovered'));
 });
