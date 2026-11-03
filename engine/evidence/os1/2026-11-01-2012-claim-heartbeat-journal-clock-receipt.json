@@ -1,0 +1,51 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_at_utc": "2026-11-01T20:12:28Z",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "prior_source_blob": "2ae48e28beb2ed80aac4dab3a056c5679af5b3c1",
+  "test_first_commit": "4bfc318ac9bf75d4bf0466bf95a3b94743da13bf",
+  "source_fix_commit": "05000ff475b9867a8d86c643983caeeec2a576b8",
+  "source_blob": "8d61b8431e311fa0a7188a4682da8bfaa0b5475f",
+  "test_blob": "4e40523cf582730c4e625c57a7ad4a8348af92fe",
+  "defect": "Claim and heartbeat validated a lease using one now() sample, then #record sampled now() again for the journal timestamp; a changed or invalid second read could make an event inconsistent with its lease or abort a valid operation.",
+  "repair": "Pass the same validated now snapshot to #record for claim and heartbeat; preserve existing lease fencing and journal format.",
+  "native_runtime": "Node.js 22.16.0",
+  "fail_first": {
+    "command": "node --test engine/test/claim-heartbeat-journal-clock-fence.test.mjs",
+    "passed": 0,
+    "failed": 4
+  },
+  "after_fix": {
+    "command": "node --test engine/test/claim-heartbeat-journal-clock-fence.test.mjs engine/test/claim-valid-clock-fence.test.mjs engine/test/heartbeat-single-clock-snapshot.test.mjs",
+    "passed": 12,
+    "failed": 0,
+    "stdout_sha256": "42bbee580b0795994c29cc24cd4c8d19071c424ba0086d08b11706e4a289db3e"
+  },
+  "syntax_check": "node --check engine/src/durable-queue.mjs PASS",
+  "git_blob_readback_matches_local": true,
+  "scope": "Local single-writer queue source repair; no Supabase durable lease claim",
+  "historical_context": {
+    "pr81": "https://github.com/london4216-hue/Zoodo/pull/81",
+    "pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "issue77": "https://github.com/london4216-hue/Zoodo/issues/77",
+    "stack_reconciliation": "65->69->72 and 68->73->81 are not evidence of mainline deploy; dashboard 16->71 likewise"
+  },
+  "nonoverlap": [
+    "engine/dashboard/*",
+    "london4216-hue/TransendIQ",
+    "engine/ops/relay/*.sql"
+  ],
+  "limitations": {
+    "github_ci": "NO STATUSES",
+    "pr132_mergeable_readback": "FALSE at source commit; requires current base conflict inspection",
+    "postgresql": "NOT EXECUTED",
+    "supabase_authenticated_claim": "NOT VERIFIED",
+    "external_provider_native_invocation": "NOT VERIFIED",
+    "hosted_two_ticket_next": "NOT VERIFIED",
+    "production_deployment": "NOT VERIFIED",
+    "merge": false
+  },
+  "next": "Inspect PR #92 SQL migration against disposable PostgreSQL with concurrent worker lease claims, and reconcile PR #132 base conflicts before merging. Do not touch dashboard or product files.",
+  "rollback": "Revert 05000ff475b9867a8d86c643983caeeec2a576b8 on integration branch or close draft; main remains unchanged."
+}

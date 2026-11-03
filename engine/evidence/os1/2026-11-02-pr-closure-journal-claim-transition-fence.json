@@ -1,0 +1,51 @@
+{
+  "schema": "zoo.pr-closure-evidence.v1",
+  "recorded_date_utc": "2026-11-02",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "source_pr": 96,
+  "coordination_issue": 77,
+  "task": "PR_INTEGRATE: replayed claim transition and worker lease uniqueness fence",
+  "starting_integration_head": "407a96544ba2c60145b6bdabdb8e8ed00a67153c",
+  "test_commit": "9eb6dcdb1a2f8f89e41f5528cb078711d18744df",
+  "source_commit": "a10f9cf1dd7361aa63bd62082bd56c132d133196",
+  "tested_source_blob": "c42a891a6efe31143767185c90f56453629e4b5c",
+  "regression_test_blob": "d98bfffee949a19b6228c5ffe588e59a5448da78",
+  "files": [
+    "engine/src/durable-queue.mjs",
+    "engine/test/journal-claim-transition-replay-fence.test.mjs"
+  ],
+  "finding": "Replayed claim events checked worker/provider syntax but did not require a queued ticket, retry budget, unused invocation identity or absence of an active same-worker ticket. Forged journal claims could replace active ownership after restart.",
+  "repair": "Replay claim validation now enforces the same single-writer state, retry, invocation history and cross-ticket active-worker fences as live claim; historical malformed lease deadlines still quarantine in recover().",
+  "verification": {
+    "published_exact_source_and_test_readback": true,
+    "static_source_invariants": 5,
+    "native_node_isolated_predicate_cases": {
+      "passed": 6,
+      "failed": 0,
+      "scope": "Isolated guard logic, NOT execution of published DurableQueue module"
+    },
+    "native_node_exact_module_test": {
+      "status": "NOT_EXECUTED",
+      "command": "node --test engine/test/journal-claim-transition-replay-fence.test.mjs"
+    },
+    "hosted_ci": {
+      "status": "UNKNOWN",
+      "combined_status_checks": 0
+    },
+    "postgresql": "NOT_EXECUTED"
+  },
+  "private_queue_lease": "NOT_CLAIMED: no authenticated queue/database access",
+  "provider_native_worker_invoked": false,
+  "autonomous_two_ticket_handoff_verified": false,
+  "merged": false,
+  "deployed": false,
+  "stack_reconciliation": {
+    "65-69-72": "Intermediate branch merges; no inferred mainline release",
+    "68-73-81": "PR 81 merged to PR 73 branch; PR 73 closed unmerged; outbox receipt inspected",
+    "16-71": "Intermediate dashboard branch merges; no inferred production deployment"
+  },
+  "private_transendiq_open_prs": "100 search results; truncated; no private details published",
+  "single_writer_scope": "Only OS1 durable queue source, new regression test and this receipt; no dashboard, product or SQL modifications",
+  "next": "Execute exact-source native Node suite when source is available in test runtime; inspect PR96 journal submit/requeue transition parity; PR93 remains gated on disposable PostgreSQL 001-002-005-006 concurrency tests."
+}

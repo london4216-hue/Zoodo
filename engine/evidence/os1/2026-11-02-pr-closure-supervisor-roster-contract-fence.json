@@ -1,0 +1,72 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "date_utc": "2026-11-02",
+  "repository": "london4216-hue/Zoodo",
+  "integration_pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "task": "Prevent supervisor from accepting worker identifiers rejected by the downstream outbox drainer",
+  "original_source_blob": "6892358f32bdc6609e5f35c815d50115356afc90",
+  "source_commit": "804b4e663ecbe6e00f762a260b371515239cb5cb",
+  "source_blob": "2576838a5f2b078ca4adb0999ecb86f32c0f52d7",
+  "regression_test_commit": "83f688e0e7e5d4c1d9b0a3c14a7e50fa2e1f85f2",
+  "regression_test_blob": "4539a790d9394dcb3d09ffe8904dc6feacc5a6fd",
+  "scope": {
+    "source": "engine/ops/relay/supervisor-contingent.mjs",
+    "new_test": "engine/test/supervisor-roster-contract-fence.test.mjs",
+    "other_file_ownership": "untouched"
+  },
+  "verification": {
+    "runtime": "Node.js v22.16.0 local, synthetic fixtures",
+    "red_first": {
+      "command": "node --test engine/test/supervisor-roster-contract-fence.test.mjs",
+      "passed": 1,
+      "failed": 1,
+      "reason": "original supervisor accepts 'adler worker', which downstream drainer rejects"
+    },
+    "green": {
+      "command": "node --test engine/test/supervisor-*.test.mjs",
+      "passed": 15,
+      "failed": 0
+    },
+    "syntax": "node --check engine/ops/relay/supervisor-contingent.mjs PASS",
+    "exact_source_blob_matches_local": true,
+    "exact_new_test_blob_matches_local": true,
+    "existing_test_blobs": {
+      "engine/test/supervisor-async-telemetry-fence.test.mjs": "680d92b9318791c26e948d1bfec82d38c8a8aca2",
+      "engine/test/supervisor-clock-fence.test.mjs": "146fcb1c68180f2f12d5905466c54f9eedde0c00",
+      "engine/test/supervisor-clock-rollback-fence.test.mjs": "f4c533019e86e61f33a283230b229aeeddda2369",
+      "engine/test/supervisor-contingent.test.mjs": "78a693042ee8b5868af09bf6d28f7cfa18531b61",
+      "engine/test/supervisor-roster-snapshot.test.mjs": "ef5c787d1452e18562911a3221b4c1670fdce860"
+    },
+    "github_actions": "UNKNOWN: no success statuses returned for regression-test commit",
+    "hosted_tests": false
+  },
+  "historical_reconciliation": {
+    "65->69->72": "stack merges on branch-specific bases, not mainline release",
+    "68->73->81": "PR #73 closed unmerged, PR #81 merged into its stack base; no mainline release inferred",
+    "16->71": "dashboard stack branch-scoped; no deploy claimed",
+    "baseline_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "issue": 77
+  },
+  "live_integration_compare": {
+    "behind_main": 30,
+    "ahead_main": 220,
+    "merge_performed": false
+  },
+  "durable_queue_lease_claimed": false,
+  "external_model_native_invocation": false,
+  "hosted_two_ticket_next": false,
+  "production_deployment": false,
+  "next_ticket": {
+    "pr": 93,
+    "reason": "Needs disposable PostgreSQL migrations 005-010, concurrency/lease and retry-backoff tests before integration",
+    "status": "QUEUED_NOT_CLAIMED"
+  },
+  "secondary_candidate": {
+    "pr": 96,
+    "reason": "Deduplicate against existing OS1 queue source",
+    "status": "PRESERVE"
+  },
+  "cost_usd": "UNKNOWN",
+  "owner_email_sent": false
+}

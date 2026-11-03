@@ -1,0 +1,45 @@
+{
+  "schema": "zoo.os1.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-03T00:16:22Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "task": "Fence untrusted supervisor drain outcome from telemetry",
+  "source": {
+    "path": "engine/ops/relay/supervisor-contingent.mjs",
+    "before_blob_sha": "2576838a5f2b078ca4adb0999ecb86f32c0f52d7",
+    "after_blob_sha": "10bd497e2ea085dbd5c5cd01fcf96234278dcfe8",
+    "commit_sha": "17fe13e973af4740261974cc84831dbf6e26c79b"
+  },
+  "test": {
+    "path": "engine/test/supervisor-telemetry-payload-fence.test.mjs",
+    "blob_sha": "75d940a4d02860a356f35bb3455b322151bb9858",
+    "commit_sha": "783126177b9c16de4cb8d461e72707ae60a62bef"
+  },
+  "regression": {
+    "red": "2 failed, 0 passed on exact pre-fix source",
+    "green": "6 passed, 0 failed on patched source (2 new + 4 existing)",
+    "command": "node --test engine/test/supervisor-contingent.test.mjs engine/test/supervisor-telemetry-payload-fence.test.mjs",
+    "runtime": "Node.js 22.16.0",
+    "syntax": "node --check engine/ops/relay/supervisor-contingent.mjs passed",
+    "local_source_and_existing_test_blob_sha_matched_github": true,
+    "github_source_and_new_test_readback_matched_local_git_blobs": true
+  },
+  "effect": "Only known bounded cycle states and positive safe-integer event IDs reach onCycle; arbitrary objects and diagnostics are not emitted",
+  "scope": "Local deterministic synthetic supervisor test only; no live durable queue claim, external AI worker, hosted two-ticket handoff, CI success, merge, or deployment",
+  "historical_stacks": [
+    "#65→#69→#72 intermediate merges only",
+    "#68→#73→#81 intermediate merge; #73 closed unmerged",
+    "#16→#71 dashboard intermediate merges only"
+  ],
+  "single_writer_scope": [
+    "engine/ops/relay/supervisor-contingent.mjs",
+    "engine/test/supervisor-telemetry-payload-fence.test.mjs"
+  ],
+  "next_ticket": "Review PR #93 SQL 005–010 against disposable PostgreSQL migrations/concurrency; #96 remains semantically overlapping and unmerged",
+  "provider_native_worker_invocation": false,
+  "verified_hosted_handoffs": 0,
+  "merges": 0,
+  "deployments": 0,
+  "ci_statuses_observed": 0
+}

@@ -28,3 +28,12 @@ test('migration revokes public RPC execution and retains service role access', (
   assert.match(sql, /GRANT EXECUTE ON FUNCTION %s TO service_role/);
   assert.ok(sql.trimEnd().endsWith('COMMIT;'), 'grants included in transaction');
 });
+
+test('completion requires a commit but not separate test-evidence telemetry', () => {
+  const section = sql.split('CREATE OR REPLACE FUNCTION public.zoo_ops_complete(')[1]?.split('END $$;')[0];
+  assert.ok(section, 'completion RPC present');
+  assert.match(section, /p_commit IS NULL OR p_commit !~/);
+  assert.match(section, /p_test_url IS NOT NULL AND p_test_url !~/);
+  assert.match(section, /state='leased' AND lease_owner=p_worker AND lease_token=p_token/);
+  assert.match(section, /INSERT INTO public\.zoo_ops_outbox/);
+});

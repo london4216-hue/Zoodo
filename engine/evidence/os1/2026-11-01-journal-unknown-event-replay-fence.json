@@ -1,0 +1,54 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "local_date": "2026-11-01",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "ticket": "PR96 backlog reconciliation — journal replay unknown-operation integrity",
+  "issue_context": [
+    "Zoodo#77",
+    "Zoodo#81",
+    "Zoodo#96"
+  ],
+  "source_commit": "a14a1ff23b4351248e19d89dc183b26dc9ec81b8",
+  "test_commit": "9a07ebf9c90316b23039ea582410022a1b30a90b",
+  "source_blob": "b45c44ff6adfa760e0e863260b2658a2d4994e49",
+  "test_blob": "56bddf00be8544b23b1f9851da61ade38abc3a36",
+  "source_path": "engine/src/durable-queue.mjs",
+  "test_path": "engine/test/journal-unknown-event-fence.test.mjs",
+  "defect": "Unknown journal event types were silently accepted and appended to ticket history on replay; malformed operation evidence did not stop recovery.",
+  "test_environment": "V8 synthetic exact-published-source evaluation with in-memory fs and JSON clone shims; NOT native Node, PostgreSQL or hosted CI",
+  "before": {
+    "invalid_event_cases_accepted": 3,
+    "valid_replay_passed": true
+  },
+  "after": {
+    "passed": 4,
+    "failed": 0,
+    "invalid_event_types_rejected": [
+      "cliam",
+      "release-authorized",
+      "__proto__"
+    ],
+    "valid_replay_passed": true
+  },
+  "readback": {
+    "github_exact_source_blob_verified": true,
+    "github_exact_test_blob_verified": true,
+    "commit_statuses_reported": 0
+  },
+  "execution": {
+    "authenticated_queue_claim": false,
+    "provider_native_invocation": false,
+    "hosted_two_ticket_handoff": false,
+    "merge": false,
+    "deployment": false
+  },
+  "safety": {
+    "source_branches_deleted": false,
+    "product_files_changed": false,
+    "dashboard_files_changed": false,
+    "sql_migrations_changed": false
+  },
+  "next": "Port and verify PR #96 active-lease invalid-clock regression on current OS 1.0 head, then independently assess PR #93 PostgreSQL outbox work; no distributed lease claimed."
+}

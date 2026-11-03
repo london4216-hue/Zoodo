@@ -1,0 +1,53 @@
+{
+  "schema": "zoo.os1.migration-dependency-readback.v1",
+  "observed_at_utc": "2026-11-03T02:12:03Z",
+  "repository": "london4216-hue/Zoodo",
+  "integration_pr": 132,
+  "integration_head_before": "5f93309983c037e987b3d3b36af9953183a45c88",
+  "source": "authenticated GitHub PR and exact-branch receipt readback",
+  "findings": [
+    {
+      "pr": 81,
+      "state": "closed",
+      "merged": true,
+      "base": "verifier/p0-outbox-idle-rpc-20261031-1109",
+      "head": "50689fb00c0940fae40cf568ad60937c8d47d83b",
+      "scope": "outbox adapter; branch merge does not prove mainline deployment"
+    },
+    {
+      "pr": 92,
+      "state": "open",
+      "draft": true,
+      "head": "4155fde854e1fa429d92e4093809ec70eb0fcf51",
+      "scope": "SQL 003/004 uncertain-worker fencing and integrity constraints; source-contract tests only"
+    },
+    {
+      "pr": 93,
+      "state": "open",
+      "draft": true,
+      "head": "4cc63170a7b8e8fb285e22315e9c1123980b7049",
+      "scope": "SQL 005+ recovery, ACK lease fence and subsequent migrations; no disposable PostgreSQL execution verified",
+      "dependency": "Test both 001→002→005 onward and 001→002→003→004→005 onward before selecting deployment ordering"
+    },
+    {
+      "pr": 96,
+      "state": "open",
+      "draft": true,
+      "head": "da3b20cc772c3ce07bf38ce3c087e38b5de75a21",
+      "scope": "single-process pilot queue; deduplicate against OS 1.0 before any merge"
+    }
+  ],
+  "verification": {
+    "github_metadata_read": true,
+    "original_pr81_receipt_read": true,
+    "issue77_read": true,
+    "postgresql_tests_run": false,
+    "local_node_tests_run": false,
+    "ci": "UNKNOWN",
+    "queue_lease": "NOT_VERIFIED",
+    "native_workers": "NOT_VERIFIED",
+    "hosted_two_ticket_handoff": "NOT_VERIFIED"
+  },
+  "next": "PR #93 disposable PostgreSQL concurrency and migration-order verification; avoid product/dashboard paths",
+  "preservation": "No historical PR or branch deletion, merge, deployment, or product/dashboard mutation"
+}

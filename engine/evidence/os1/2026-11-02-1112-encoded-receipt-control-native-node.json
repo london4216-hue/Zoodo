@@ -1,0 +1,85 @@
+{
+  "schema": "zoo.os1.pr-closure-repair.v1",
+  "recorded_at_utc": "2026-11-02T11:12:15Z",
+  "repository": "london4216-hue/Zoodo",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_commit": "8851d89db3bcbb1457537d1a03d446e6036428c6",
+  "regression_commit": "06e80e919cb817c304c6fa207ca4797d81de40fd",
+  "base_head": "a089f748a2671431d4f35e419f962f10e3cad2b0",
+  "exact_git_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "8d78e401d477b3cbf972a00eed99afe86424bdb6",
+    "engine/test/outbox-percent-encoded-control-fence.test.mjs": "63755ec2a8fa8cfb8e882b1a6668ef12a8d6963d"
+  },
+  "defect": "Percent-encoded ASCII control bytes (%00-%1F, %7F) in HTTPS worker receipt URLs passed validation and authorized durable ACK; downstream decoding can reveal control bytes.",
+  "change": "Reject encoded ASCII controls before URL parsing, for both direct and delegated worker receipts; preserve ordinary percent-encoded URL characters.",
+  "local_tests": {
+    "runtime": "Node.js v22.16.0",
+    "exact_source_and_test_blobs_matched_github": true,
+    "baseline_command": "node --test engine/test/outbox-percent-encoded-control-fence.test.mjs",
+    "baseline": {
+      "passed": 1,
+      "failed": 6
+    },
+    "patched_command": "node --test engine/test/outbox-percent-encoded-control-fence.test.mjs",
+    "patched": {
+      "passed": 7,
+      "failed": 0
+    },
+    "additional_local_compat_smoke": {
+      "passed": 4,
+      "failed": 0,
+      "source": "temporary local fixture, not committed"
+    },
+    "syntax_check": "node --check engine/ops/relay/outbox-drainer.mjs",
+    "syntax_check_passed": true
+  },
+  "hosted_ci": {
+    "commit_statuses": 0,
+    "associated_workflow_runs": 0,
+    "conclusion": "UNKNOWN; no CI pass claimed"
+  },
+  "execution": {
+    "authenticated_durable_queue_claim": false,
+    "provider_native_external_model_invocation": false,
+    "autonomous_two_ticket_handoff": false,
+    "production_deployment": false
+  },
+  "preservation": {
+    "historical_prs_closed": 0,
+    "branches_deleted": 0,
+    "product_dashboard_sql_files_changed": 0
+  },
+  "inspected": {
+    "pr81": "https://github.com/london4216-hue/Zoodo/pull/81",
+    "pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "issue77": "https://github.com/london4216-hue/Zoodo/issues/77",
+    "stacks": [
+      [
+        65,
+        69,
+        72
+      ],
+      [
+        68,
+        73,
+        81
+      ],
+      [
+        16,
+        71
+      ]
+    ],
+    "private_transendiq_search_count": 100,
+    "private_transendiq_search_truncated": true
+  },
+  "next_ticket": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/112",
+    "task": "Reconcile remaining PR #112 outbox test and source coverage against OS1 integration without touching dashboard/product files",
+    "status": "QUEUED_NOT_CLAIMED"
+  },
+  "blocked_candidate": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "reason": "Disposable PostgreSQL migration and concurrent lease testing not yet executed"
+  },
+  "disposition": "PUBLISHED_DRAFT_SOURCE_REPAIR; HOSTED_AUTOMATION_UNVERIFIED"
+}

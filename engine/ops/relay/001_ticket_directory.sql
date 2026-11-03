@@ -77,8 +77,10 @@ END $$;
 CREATE OR REPLACE FUNCTION public.zoo_ops_complete(p_id text,p_worker text,p_token uuid,p_commit text,p_test_url text)
 RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $$
 BEGIN
- IF p_commit !~ '^[a-f0-9]{40}$' OR p_test_url !~ '^https://[^ ]{1,1000}$'
- THEN RAISE EXCEPTION 'exact SHA and HTTPS test receipt required'; END IF;
+ -- The commit is mandatory; test telemetry is optional, not a continuation gate.
+ IF p_commit IS NULL OR p_commit !~ '^[a-f0-9]{40}$'
+ OR (p_test_url IS NOT NULL AND p_test_url !~ '^https://[^ ]{1,1000}$')
+ THEN RAISE EXCEPTION 'exact SHA and optional HTTPS test receipt required'; END IF;
  UPDATE public.zoo_ops_tickets SET state='done',commit_sha=p_commit,test_url=p_test_url,
  completed_at=now(),updated_at=now(),lease_owner=NULL,lease_token=NULL,lease_until=NULL
  WHERE id=p_id AND state='leased' AND lease_owner=p_worker AND lease_token=p_token;

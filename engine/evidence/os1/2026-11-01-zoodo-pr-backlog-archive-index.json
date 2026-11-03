@@ -1,0 +1,660 @@
+{
+  "schema": "zoo.os1.archive-index.v1",
+  "observed_at_utc": "2026-11-02T01:37:35Z",
+  "repository": "london4216-hue/Zoodo",
+  "public_repository": true,
+  "open_pr_search_count": 82,
+  "open_pr_search_truncated": false,
+  "open_prs": [
+    {
+      "number": 132,
+      "title": "ZOO Operating System 1.0 — First Publish",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/132",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 130,
+      "title": "fix(dashboard): include accountability iframe and handoff ledger in portable mirror",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/130",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 112,
+      "title": "fix(zoo): stop alternate outbox dispatch after ambiguous worker result",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/112",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 96,
+      "title": "fix(zoo): prevent one pilot worker from holding two active tickets",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/96",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 129,
+      "title": "fix(dashboard): require complete declared scheduler roster before current status",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/129",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 126,
+      "title": "fix(zoo dashboard): clear stale PR and Sara details after priority feed failure",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/126",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 125,
+      "title": "fix(dashboard): remove duplicate accountability DOM id without changing links",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/125",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 124,
+      "title": "fix(zoo dashboard): prevent false-verified Sara URL from stale source receipt",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/124",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 123,
+      "title": "fix(dashboard): keep demo links visible after repeated verification expiry",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/123",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 121,
+      "title": "fix(zoo dashboard): do not refresh code-movement clock from late CI/review",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/121",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 120,
+      "title": "fix(zoo dashboard): prevent historical accountability totals appearing live",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/120",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 119,
+      "title": "fix(zoo dashboard): refresh authentic five-role scheduler feed without false worker claims",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/119",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 118,
+      "title": "fix(zoo dashboard): reject replayed priority feed and overlapping refreshes",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/118",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 117,
+      "title": "fix(zoo dashboard): show complete GitHub PR and issue counts, not first-page samples",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/117",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 116,
+      "title": "fix(zoo dashboard): update API freshness when both GitHub endpoints fail",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/116",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 115,
+      "title": "fix(zoo dashboard): reject corrupted scheduler anomaly ledger",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/115",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 114,
+      "title": "fix(zoo dashboard): mark disabled scheduler workers as requiring recovery",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/114",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 70,
+      "title": "test(zoo): require native provider readback for productive-agent KPIs",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/70",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 113,
+      "title": "fix(zoo): clear historical scheduler anomalies by actual completion chronology",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/113",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 111,
+      "title": "fix(zoo): quarantine future-dated CI, review and deployment evidence",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/111",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 110,
+      "title": "fix(zoo): reject impossible dates in review feed before claiming passes",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/110",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 92,
+      "title": "P0 integrate uncertain-worker lease fence and queue integrity from #87",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/92",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 107,
+      "title": "fix(zoo): reject impossible scheduler timestamps before counting receipts",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/107",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 105,
+      "title": "fix(zoo): reject malformed scheduler run IDs before counting receipts",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/105",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 93,
+      "title": "P0 integrate durable outbox retry backoff without dead-letter loss",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/93",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 104,
+      "title": "fix(zoo): do not show future-dated source evidence as fresh",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/104",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 103,
+      "title": "fix(zoo): show actual GitHub and scheduler retry cadences in recovery status",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/103",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 102,
+      "title": "fix(zoo): quarantine stale priority feed instead of showing old PR stage as current",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/102",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 101,
+      "title": "fix(zoo): exclude future-dated commits from last-hour dashboard metric",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/101",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 100,
+      "title": "fix(zoo): do not label static lab assets as live functional demos",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/100",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 99,
+      "title": "fix(zoo): prevent false current scheduler proof from missing worker roster",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/99",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 98,
+      "title": "fix(zoo): show exact open queue counts and preserve mirror JS dependencies",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/98",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 87,
+      "title": "Consolidate merged ZOO work into main: worker/p0-canonical-lease-validation-20261031-1039",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/87",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 90,
+      "title": "fix(zoo): restore future-evidence rejection to canonical dashboard branch",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/90",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 64,
+      "title": "P0: prevent permanent dead-letter loss of durable ZOO outbox wakeups",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/64",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 32,
+      "title": "P0 relay: bounded alternate-worker dispatch with fail-first local HTTP tests",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/32",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 57,
+      "title": "test(zoo): direct-base Netlify preview for bounded host execution probe",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/57",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 63,
+      "title": "P0: fail closed on unknown relay callback outcomes (no false HTTP 200)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/63",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 61,
+      "title": "fix(zoo relay): return 503 when authenticated kick cannot confirm dispatch",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/61",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 62,
+      "title": "P0: retry unconfirmed kick, replay and reconcile webhooks",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/62",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 60,
+      "title": "P0: retry transient Supabase callback failures without weakening stale-lease checks",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/60",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 59,
+      "title": "P0: fence late completion/requeue commits before NEXT worker dispatch",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/59",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 56,
+      "title": "fix(zoo Keeper): integrate PR #53 recovery-count fence onto PR #55 durable NEXT receipts",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/56",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 58,
+      "title": "P0: bound authenticated kick callbacks and fence late worker dispatch",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/58",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 55,
+      "title": "P0: fence false NEXT success when durable dispatch receipt finishes after deadline",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/55",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 54,
+      "title": "test(zoo): independently verify Netlify host receipts without exposing probe tokens",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/54",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 53,
+      "title": "fix(zoo relay): reject malformed recovery RPC counts before declaring reconciled",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/53",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 52,
+      "title": "fix(zoo P0): bound full reconcile callback and fence late outbox replay",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/52",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 51,
+      "title": "fix(relay): fence late NEXT claims after callback deadline",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/51",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 50,
+      "title": "fix(zoo P0): abort late NEXT claims and replay after serverless deadline",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/50",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 49,
+      "title": "fix(zoo P0): bound replay worker hangs and preserve outbox recovery",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/49",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 47,
+      "title": "fix(zoo): fail-closed Netlify relay intake with synthetic adapter tests",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/47",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 45,
+      "title": "fix(zoo P0): restore missing executable Netlify proof build on relay stack",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/45",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 48,
+      "title": "fix(zoo): bounded evidence refresh, no overlap, retain last good receipt",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/48",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 46,
+      "title": "Fix duplicate local ticket claims with atomic journal writes",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/46",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 38,
+      "title": "test(zoo): authenticated bounded Netlify execution probe for independent runner qualification",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/38",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 44,
+      "title": "fix(zoo integration): retain proof builder on event-driven relay stack",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/44",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 43,
+      "title": "test(relay): establish lease before NEXT failure recovery assertions",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/43",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 42,
+      "title": "fix(zoo relay): bound hanging NEXT callback after durable completion",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/42",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 39,
+      "title": "fix(zoo ops): fence phantom leases and false completion at database boundary",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/39",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 40,
+      "title": "fix(zoo relay): acknowledge durable completion despite NEXT dispatch outage",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/40",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 41,
+      "title": "fix(zoo): preserve dashboard evidence build when enabling independent relay",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/41",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 37,
+      "title": "fix(zoo relay): prevent uncertain worker from claiming a second ticket",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/37",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 36,
+      "title": "fix(zoo relay): atomically settle idle wakeups without dropping queued work",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/36",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 35,
+      "title": "P0 ZOO relay: replay durable wake-up outbox after missed NEXT events",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/35",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 34,
+      "title": "fix(zoo relay): acknowledge durable completion when NEXT dispatch fails",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/34",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 23,
+      "title": "P0 ZOO ops: private durable ticket directory and event-driven Netlify relay adapter",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/23",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 31,
+      "title": "test(zoo relay): enforce one active lease per worker in test fixture",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/31",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 30,
+      "title": "feat(zoo): separate original Figma and Gold Standard design lanes with evidence-gated previews",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/30",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 22,
+      "title": "feat(zoo): independent shared ticket directory (10 issues, 11 PRs; no product repo control plane)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/22",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 29,
+      "title": "fix(zoo relay): repair invalid Supabase migration dispatch RPC SQL",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/29",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 28,
+      "title": "P0 fix: repair broken Supabase relay migration before hosted queue setup",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/28",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 26,
+      "title": "feat(zoo): source-safe PR #787 and Sara priority feed with verified-work age",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/26",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 21,
+      "title": "Hunter: bounded synthetic Netlify build execution probe (not runner qualification)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/21",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 20,
+      "title": "Hunter: correct ZOO watchdog proof source ref",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/20",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 19,
+      "title": "ZOO: independent scheduler-proof watchdog and bounded recovery (issue #18)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/19",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 15,
+      "title": "Builder/fixer failover: two-handoff lease fencing and bounded seeker (draft)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/15",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 5,
+      "title": "Zoo: require exact-commit independent review proof and run engine CI",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/5",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 2,
+      "title": "Add premium voice personalization, persistent ambient music, and parent-cheer celebration flow",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/2",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 4,
+      "title": "feat: integrate all 10 production systems — ambient music, premium voice, escalating celebrations, sensory activities, parent video playback",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/4",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 3,
+      "title": "Zoodo: integrate all 10 engagement systems, fix lint, complete Dashboard and Layout wiring",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/3",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    },
+    {
+      "number": 1,
+      "title": "feat: production integration — ZoodoAvatar, child dev framework, sensory breaks, audit panel",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/1",
+      "status": "open_at_snapshot",
+      "head_sha": "UNFETCHED; resolve from linked PR before closing"
+    }
+  ],
+  "closed_stacks": {
+    "65_69_72": [
+      {
+        "number": 65,
+        "head_sha": "0e3901f45ca0573da21a12c040b8eec92302c130",
+        "merged": true,
+        "base": "worker/p0-outbox-recovery-no-deadletter-20261031-0824",
+        "url": "https://github.com/london4216-hue/Zoodo/pull/65"
+      },
+      {
+        "number": 69,
+        "head_sha": "89309b2c3e4b53916432619de8b08580ece60dd2",
+        "merged": true,
+        "base": "keeper/p0-callback-envelope-fence-20261031-0840",
+        "url": "https://github.com/london4216-hue/Zoodo/pull/69"
+      },
+      {
+        "number": 72,
+        "head_sha": "fd216f26fbfaa8fbc791082b2d96d0dd315cae7f",
+        "merged": true,
+        "base": "worker/p0-callback-envelope-wiring-20261031-1022",
+        "url": "https://github.com/london4216-hue/Zoodo/pull/72"
+      }
+    ],
+    "68_73_81": [
+      {
+        "number": 68,
+        "head_sha": "c7c65b8b01c3d2ef9467e2816f3cf096e845ba5e",
+        "merged": true,
+        "base": "worker/p0-relay-bounded-replacement-20261031-auto11",
+        "url": "https://github.com/london4216-hue/Zoodo/pull/68"
+      },
+      {
+        "number": 73,
+        "head_sha": "b33c8e862410c0563847369a944e27f3468a78a0",
+        "merged": false,
+        "base": "keeper/zoo-outbox-drainer-20261031",
+        "url": "https://github.com/london4216-hue/Zoodo/pull/73"
+      },
+      {
+        "number": 81,
+        "head_sha": "50689fb00c0940fae40cf568ad60937c8d47d83b",
+        "merged": true,
+        "base": "verifier/p0-outbox-idle-rpc-20261031-1109",
+        "url": "https://github.com/london4216-hue/Zoodo/pull/81"
+      }
+    ],
+    "16_71": [
+      {
+        "number": 16,
+        "head_sha": "bdd5b18e4fd34b91ff798b1683cd5015cc329312",
+        "merged": true,
+        "base": "autonomous-engine-replacement-2026-10-29",
+        "url": "https://github.com/london4216-hue/Zoodo/pull/16"
+      },
+      {
+        "number": 71,
+        "head_sha": "e0acae0e7618761df92587ecff8feb761d165f12",
+        "merged": true,
+        "base": "fix/zoo-live-dashboard-accountability-20261030",
+        "url": "https://github.com/london4216-hue/Zoodo/pull/71"
+      }
+    ]
+  },
+  "private_transendiq": {
+    "searched": true,
+    "first_page_count": 100,
+    "truncated": true,
+    "details_not_published_to_public_repo": true
+  },
+  "limitations": [
+    "Open PRs are indexed by stable PR URL and title; individual head SHAs/branch bases not fetched except specified stacks.",
+    "This index does not prove changes are integrated into main; it does not authorize closure or deletion.",
+    "Private TransendIQ details are deliberately omitted from this public repository."
+  ],
+  "policy": "Preserve existing branches and code; verify dependencies and exact SHA before archiving/closing. Do not blindly merge stacks."
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-01T16:10:07Z",
+  "repository": "london4216-hue/Zoodo",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "prior_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "task": "Prevent Unicode separator worker/provider/reviewer aliases bypassing durable pilot queue identity fences",
+  "original_source_blob": "5dbe2fd94d66edb9ba3f89d36ff222203f384165",
+  "source_path": "engine/src/durable-queue.mjs",
+  "source_blob": "834a6c0d98d4a94db888b853480f8e2df7353d27",
+  "source_commit": "c947121a6298ab102839091409ec80d64df93bf1",
+  "test_path": "engine/test/identity-unicode-separator-fence.test.mjs",
+  "test_blob": "3cc05f3f7a43c7a6e7c1e3f6b0b60d6cd95ef188",
+  "test_commit": "a52c9dc9ba847729cfbe1ead43eb0f42d7f7db3f",
+  "reproduction": {
+    "runtime": "Node.js v22.16.0",
+    "command": "node --test engine/test/identity-unicode-separator-fence.test.mjs",
+    "baseline": {
+      "passed": 1,
+      "failed": 5
+    },
+    "fixed": {
+      "passed": 6,
+      "failed": 0
+    },
+    "syntax_check": "node --check engine/src/durable-queue.mjs passed",
+    "scope": "isolated local exact-source module plus new regression tests; NOT full repository CI"
+  },
+  "github_readback": {
+    "source_blob_matches_local_git_hash_object": true,
+    "test_blob_matches_local_git_hash_object": true
+  },
+  "single_writer_scope": "PR closure owns durable-queue identity validation and new regression test; no dashboard or product files",
+  "queue_claim": "NOT_CLAIMED: no authenticated private Supabase durable queue connector",
+  "native_provider_invocation": false,
+  "hosted_two_ticket_next": false,
+  "merge": false,
+  "deployment": false,
+  "ci": "UNKNOWN: not claiming GitHub Actions passed",
+  "next": {
+    "pr": 93,
+    "url": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "head": "4cc63170a7b8e8fb285e22315e9c1123980b7049",
+    "work": "Disposable PostgreSQL migration and lock-wait concurrency tests; keep draft until exact-head checks/branch protections verified"
+  },
+  "stack_reconciliation": "PR81 closed with intermediate stack receipt; #65→#69→#72, #68→#73→#81 and #16→#71 preserved in OS1 archive; no blind merges"
+}

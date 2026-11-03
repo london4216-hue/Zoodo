@@ -1,0 +1,46 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_date_utc": "2026-11-01",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/112",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "parent_before_fix": "52ef95bc998e44168ca377de35d4827652af866e",
+  "code_and_test_head_before_receipt": "cbf19d73e91729ac0d56aedc264f9c40c5588872",
+  "prechange_source_blob": "71650c38fc8e7c9d60ab9be983f7314986d6191a",
+  "source_fix_commit": "59a999ff9cfbca9dd2a1c55100d8416bdc950024",
+  "test_commit": "cbf19d73e91729ac0d56aedc264f9c40c5588872",
+  "exact_git_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "d48ebda03ecc8b875a4abd3fa248b933e72cd67c",
+    "engine/test/outbox-ambiguous-recovery-fence.test.mjs": "3edb1d3bcea81fcb0f6d4b40de235b43339c520d",
+    "engine/test/outbox-receipt-backslash-fence.test.mjs": "10bc3e52bdcba82802127e3dd1631608863706da",
+    "engine/src/durable-queue.mjs": "68f616cd3749b687901b7840940841f172e5bedb"
+  },
+  "defect": "OS1 drainer only fail-closed on explicit uncertain result; recovery_required, failed, not_started or unrecognized worker states fell through to next worker, allowing duplicate dispatch.",
+  "fix": "Only confirmed idle permits trying another worker. Every other non-confirmed worker state returns recovery_required before NEXT or durable ACK.",
+  "native_runtime": "Node.js 22.16.0",
+  "fail_first": {
+    "command": "node --test engine/test/outbox-ambiguous-recovery-fence.test.mjs",
+    "passed": 1,
+    "expected_failed": 4
+  },
+  "after_fix": {
+    "command": "node --test engine/test/*.test.mjs",
+    "passed": 29,
+    "failed": 0,
+    "stdout_sha256": "7bfaf682382bb1d16c953bfec11ad08f8089c1d34114e8bd9d74106e4aae7362",
+    "scope": "Seven exact-source focused OS1 test files, not the entire Zoodo test suite"
+  },
+  "syntax_check": "node --check engine/ops/relay/outbox-drainer.mjs PASS",
+  "github_source_and_test_blob_readback_matched": true,
+  "no_claims": {
+    "hosted_ci": "UNKNOWN zero-step startup",
+    "distributed_lease": false,
+    "provider_native_worker": false,
+    "hosted_two_ticket_next": false,
+    "production_deployment": false,
+    "merged": false
+  },
+  "next": "Inspect OS1 drainer other PR112 bounded callback/ACK safeguards and full Node suite; #92/#93 PostgreSQL tests and real two-ticket hosted NEXT/dashboard readback remain required.",
+  "rollback": "Revert narrow OS1 drainer and test commits; main and production assets untouched."
+}

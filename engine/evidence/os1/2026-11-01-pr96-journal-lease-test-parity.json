@@ -1,0 +1,24 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-02T01:37:35Z",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/96",
+  "test_path": "engine/test/journal-lease-type-fence.test.mjs",
+  "test_commit": "aaeaf9ecd8bfa2d1ec8987ac4b6890c22e97ce36",
+  "source_blob": "56bb2ed3268f51bc058444b45a448052270e32aa",
+  "test_blob": "9ffbfa448182d1b340afecb74627c04a812935c6",
+  "ported_test_byte_exact": true,
+  "tests": {
+    "exact_source_V8_in_memory_fs": {
+      "passed": 4,
+      "failed": 0
+    },
+    "native_node": "NOT_EXECUTED",
+    "postgresql": "NOT_EXECUTED",
+    "github_ci": "NO_SUCCESS_REPORTED"
+  },
+  "scope": "Journal replay lease-type regression only; no hosted worker or distributed queue claim",
+  "next": "PR #96 additional lease deadline overflow / heartbeat clock rollback tests; PR #93 SQL migration remains isolated",
+  "merge": false,
+  "deployment": false
+}

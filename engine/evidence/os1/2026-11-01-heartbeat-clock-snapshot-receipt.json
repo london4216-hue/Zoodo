@@ -1,0 +1,52 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_at_utc": "2026-11-01T14:00:48Z",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/96",
+  "prior_integrated_head": "651fe937d6abc02ada59c419a917f302488be207",
+  "exact_prechange_source_blob": "6104133ce59fd5b568796d60ce6834c7d940f1fb",
+  "test_first_commit": "6905616877d234651c93142b40495046007e18e4",
+  "source_fix_commit": "745d4d51b0d984192246641ee13b47482cbd2450",
+  "defect": "heartbeat read wall clock separately for lease validation and renewal; rollback could shorten a valid lease and jump could extend against an unvalidated instant",
+  "fix": "Use one validated now snapshot for active lease and renewal; reject non-safe lease deadline",
+  "exact_test_blobs": {
+    "engine/test/heartbeat-single-clock-snapshot.test.mjs": "b8893e683d4722b59d7ae66eb650de9f9631a46b",
+    "engine/test/single-worker-active-lease.test.mjs": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79"
+  },
+  "exact_source_blob": "69ec8e80279ecf41d8ea4b124e292624492c4c06",
+  "native_runtime": "Node.js 22.16.0",
+  "fail_first": {
+    "command": "node --test engine/test/heartbeat-single-clock-snapshot.test.mjs",
+    "pass": 2,
+    "fail": 2
+  },
+  "after_fix": {
+    "command": "node --test engine/test/heartbeat-single-clock-snapshot.test.mjs engine/test/single-worker-active-lease.test.mjs",
+    "pass": 5,
+    "fail": 0,
+    "stdout_sha256": "a9a40210e8b7f0d967ac45410aae38b2d370228b7dc089385aead26bf2902686"
+  },
+  "syntax_check": "node --check engine/src/durable-queue.mjs PASS",
+  "source_and_test_git_blobs_match_local_git_hash_object": true,
+  "historical_pr81_fleet_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "historical_pr81_verified_blobs": {
+    "source": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+    "test": "76b1fcb63dd7baebe71e30ae20462510b8d6c408"
+  },
+  "no_overlap": [
+    "dashboard engine/dashboard/*",
+    "private TransendIQ product files",
+    "PostgreSQL PR #92/#93"
+  ],
+  "limitations": {
+    "hosted_ci": "UNKNOWN: GitHub Actions zero-step startup",
+    "distributed_queue_lease": "NOT VERIFIED",
+    "provider_native_external_worker": "NOT INVOKED",
+    "hosted_two_ticket_handoff": "NOT VERIFIED",
+    "production_deployment": "NOT VERIFIED",
+    "merge": false
+  },
+  "next": "Inspect remaining PR #96 identity/clock safeguards for compatible isolated OS1 port; then full exact-branch Node suite, PostgreSQL migration/concurrency and real hosted two-ticket NEXT/dashboard readback",
+  "rollback": "Close draft integration PR #132 without merging; main and existing assets/URLs unchanged."
+}

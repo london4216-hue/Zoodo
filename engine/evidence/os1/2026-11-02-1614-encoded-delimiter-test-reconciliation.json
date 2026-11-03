@@ -1,0 +1,72 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-02T16:14:03Z",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "base": "main",
+  "tested_head_before_receipt": "fc56c6753e2b35eb9beb5f8f15121f7f5f01d889",
+  "task": "Fence percent-encoded URL structural delimiters in durable outbox receipts; reconcile stale regression expectations",
+  "scope": "PR-closure only; no product/dashboard/SQL edits",
+  "original_pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "issue77": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "commits": {
+    "red_regression": "edd9dc94d509ebd2bb31d4a81d1337077ef2164b",
+    "source_fix": "1254a43f46bea149b4aaaac0895964560403d76d",
+    "backslash_test_reconciliation": "1aaea64f06ef80d3fc4cd3e3c039630424425307",
+    "whitespace_test_reconciliation": "fc56c6753e2b35eb9beb5f8f15121f7f5f01d889"
+  },
+  "exact_tested_git_blob_shas": {
+    "engine/ops/relay/outbox-drainer.mjs": "1aa9f5f2bee30cf32b011a78ed4e3936d7fc9dbd",
+    "engine/test/outbox-receipt-encoded-delimiter-fence.test.mjs": "d41a02bf6868a2237f181de753288c7fd1184c88",
+    "engine/test/outbox-receipt-backslash-fence.test.mjs": "0d107e9bedd928f4ec94bd0fe309adbaa292a605",
+    "engine/test/outbox-receipt-whitespace-fence.test.mjs": "c81543e52aaf4c3cdb50398f3f89e4713b9846f5"
+  },
+  "tests": {
+    "runtime": "Node.js v22.16.0",
+    "command": "node --test engine/test/outbox-receipt-{backslash,whitespace,encoded-delimiter}-fence.test.mjs",
+    "fail_first_new_regression": {
+      "passed": 1,
+      "failed": 5
+    },
+    "before_stale_tests_reconciled": {
+      "passed": 13,
+      "failed": 2
+    },
+    "final": {
+      "passed": 17,
+      "failed": 0
+    },
+    "syntax_check": "node --check engine/ops/relay/outbox-drainer.mjs PASS",
+    "scope": "Exact Git blob files reconstructed locally and hash-matched; targeted native Node tests only, not full repository suite"
+  },
+  "ci": {
+    "run": "https://github.com/london4216-hue/Zoodo/actions/runs/41479239568",
+    "conclusion": "failure",
+    "job_steps": 0,
+    "classification": "INFRASTRUCTURE_UNKNOWN_NOT_CI_PASS"
+  },
+  "main_divergence": {
+    "ahead_by": 196,
+    "behind_by": 30,
+    "relationship": "diverged",
+    "merge": "NOT_ATTEMPTED"
+  },
+  "queue_claim": "UNVERIFIED_NO_AUTHENTICATED_DURABLE_QUEUE_LEASE",
+  "native_provider_invocation": false,
+  "autonomous_two_ticket_next": false,
+  "deploy": false,
+  "merge": false,
+  "pr96_reconciliation": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/96",
+    "pr_source_blob": "7df032b0cf864cace3e06bab768850c1c245f7da",
+    "os1_source_blob": "40f33111860e1b16290313bf13947887d5975101",
+    "single_worker_active_lease_guard": "ALREADY_PRESENT_OS1",
+    "action": "Do not cherry-pick older PR96 whole source; compare remaining tests/semantics first"
+  },
+  "next": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "action": "Disposable PostgreSQL migrations 001-010 and concurrency tests; not executed",
+    "state": "QUEUED_NOT_CLAIMED"
+  },
+  "preservation_manifest": "engine/evidence/os1/zoodo-open-pr-archive-2026-11-01.json",
+  "source_and_branch_deletions": 0
+}

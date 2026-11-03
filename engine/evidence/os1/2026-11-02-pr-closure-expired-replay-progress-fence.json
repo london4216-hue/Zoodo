@@ -1,0 +1,51 @@
+{
+  "schema": "zoo.os1.pr-closure-repair.v1",
+  "recorded_date": "2026-11-02",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_commit": "99f7f848256f79d2001d015dd79b8fafc57e3d0a",
+  "test_commit": "a8ba50786aafc40ce1eb917c48042b5236d5325b",
+  "source_file": "engine/src/durable-queue.mjs",
+  "test_file": "engine/test/durable-queue-replayed-expired-progress-fence.test.mjs",
+  "source_blob_sha": "40f33111860e1b16290313bf13947887d5975101",
+  "test_blob_sha": "85fbeb056dea52c0b0c782654158512f24cab195",
+  "defect": "Replayed start, heartbeat and submit events with event timestamps later than the prior worker lease were accepted, falsely advancing expired work.",
+  "baseline": {
+    "exact_source_blob": "a3ca5257b0b69106c8edf501d4a1dccddb826c89",
+    "v8_shim_reproductions": 3,
+    "expired_start_accepted": true,
+    "expired_heartbeat_accepted": true,
+    "expired_submit_accepted": true
+  },
+  "after_fix": {
+    "exact_source_readback": true,
+    "source_blob_sha": "40f33111860e1b16290313bf13947887d5975101",
+    "v8_shim_checks_passed": 8,
+    "v8_shim_checks_total": 8,
+    "negative_cases": 5,
+    "positive_cases": 3,
+    "committed_test_syntax_parsed": true
+  },
+  "verification_scope": "Exact published GitHub source executed via V8 with filesystem/crypto/structuredClone shims; committed native Node test file was syntax-parsed but not executed; no hosted CI or PostgreSQL tests claimed.",
+  "historical_reconciliation": {
+    "pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "pr81_merged_to_intermediate_branch": true,
+    "pr73_closed_unmerged": true,
+    "relay_stacks": [
+      "65>69>72",
+      "68>73>81"
+    ],
+    "dashboard_stack": "16>71",
+    "historical_branches_deleted": false
+  },
+  "pr96_semantic_reconciliation": "PR #96 single-writer worker identity and retry protections exist in OS 1.0, with stronger replay transition validation; full source-level parity is not asserted.",
+  "private_repo_inventory": "london4216-hue/TransendIQ first 100 open PR results; search truncated; no private titles copied into public receipt.",
+  "worker_claim": "NOT_PERFORMED: authenticated durable distributed queue/lease is not verified",
+  "provider_native_invocation": "NOT_PERFORMED",
+  "two_ticket_handoff": "NOT_VERIFIED",
+  "hosted_ci": "UNKNOWN",
+  "merge": false,
+  "deployed": false,
+  "next": "PR #93: disposable PostgreSQL 001->002->005->006 migration and concurrency/expired-ACK test; otherwise finish PR #96 semantic reconciliation without touching product or dashboard files."
+}

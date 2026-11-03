@@ -1,0 +1,45 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-01T18:09:12Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "change": "Recover expired leases using one validated time snapshot for both decision and durable journal timestamps",
+  "baseline": {
+    "source_blob": "889820605ec8fc32083f1f14a40ab695a46558e2",
+    "new_regression_tests": {
+      "passed": 0,
+      "failed": 2
+    }
+  },
+  "published": {
+    "source_commit": "e9198f44892571a196c42e3bb4373c206035f125",
+    "test_commit": "47d493a17e7a1e9014304928e8b8ae220de732f8",
+    "source_blob": "b5396c1f3a133fdbf4dcf00d21204551596ba010",
+    "test_blob": "8eb8d6b7aaf06c51d20fff785341371dd74b96d7",
+    "github_readback_matches_local_git_hash_object": true
+  },
+  "validation": {
+    "runtime": "Node.js 22.16.0",
+    "command": "node --test engine/test/recovery-clock-snapshot-fence.test.mjs engine/test/recovery-journal-clock-fence.test.mjs",
+    "passed": 6,
+    "failed": 0,
+    "syntax": "node --check engine/src/durable-queue.mjs passed",
+    "existing_test_blob": "8969259fc76f9f108ddc7ef26d5a93bae6971a97",
+    "scope": "local deterministic single-writer journal tests; not hosted or PostgreSQL integration"
+  },
+  "coordination": {
+    "file_ownership": "Only engine/src/durable-queue.mjs and isolated engine/test/recovery-journal-clock-fence.test.mjs; no dashboard or product paths touched",
+    "authenticated_supabase_claim": false,
+    "provider_native_invocation": false,
+    "github_ci_pass": false,
+    "production_deployed": false,
+    "unattended_two_ticket_next": false
+  },
+  "next": {
+    "pr": 93,
+    "url": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "task": "Disposable PostgreSQL migration and concurrency checks for 005-010 outbox SQL chain before integration",
+    "status": "INSPECTED_NOT_CLAIMED"
+  }
+}

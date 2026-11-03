@@ -1,0 +1,94 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_date": "2026-11-01",
+  "task": "OWNER OS 1.0 First Publish and NEXT integration",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "base_sha": "1b7b468121c8bc975b59e5511c0a0c73d8a14fff",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "tested_commit_before_receipt": "bfc3ad4f799e67165242ff109bd06fd21ad2457e",
+  "native_runtime": "Node.js v22.16.0",
+  "source_verification": [
+    {
+      "source": "main",
+      "path": "engine/ops/relay/outbox-drainer.mjs",
+      "blob": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+      "regression_before": {
+        "passed": 1,
+        "failed": 4
+      },
+      "after_blob": "71650c38fc8e7c9d60ab9be983f7314986d6191a",
+      "after": {
+        "passed": 5,
+        "failed": 0
+      },
+      "test_blob": "10bc3e52bdcba82802127e3dd1631608863706da",
+      "origin_pr": 112
+    },
+    {
+      "source": "main",
+      "path": "engine/src/durable-queue.mjs",
+      "blob": "93285f37584113e21e74d66d8246abf2a6c42eb5",
+      "regression_before": {
+        "passed": 0,
+        "failed": 1
+      },
+      "after_blob": "6104133ce59fd5b568796d60ce6834c7d940f1fb",
+      "after": {
+        "passed": 1,
+        "failed": 0
+      },
+      "test_blob": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79",
+      "origin_pr": 96
+    }
+  ],
+  "combined_test_command": "node --test engine/test/outbox-receipt-backslash-fence.test.mjs engine/test/single-worker-active-lease.test.mjs",
+  "combined_local_result": {
+    "passed": 6,
+    "failed": 0
+  },
+  "syntax_checks": [
+    "node --check engine/ops/relay/outbox-drainer.mjs",
+    "node --check engine/src/durable-queue.mjs"
+  ],
+  "github_readback_exact_git_blobs_match_locally_tested": true,
+  "archive": {
+    "zoodo_public_observed_open_prs": 82,
+    "zoodo_manifest": "engine/evidence/os1/zoodo-open-pr-archive-2026-11-01.json",
+    "transendiq_private_observed_open_prs": 461,
+    "transendiq_manifest": "private branch archive/zoo-os1-open-prs-20261101; not published in public Zoodo"
+  },
+  "historical_reconciliation": {
+    "stack_a": [
+      65,
+      69,
+      72
+    ],
+    "stack_b": [
+      68,
+      73,
+      81
+    ],
+    "dashboard": [
+      16,
+      71
+    ],
+    "pr73": "closed_unmerged",
+    "pr81_fleet_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json"
+  },
+  "boundaries": {
+    "distributed_queue_lease": "NOT VERIFIED",
+    "hosted_two_ticket_next": "NOT VERIFIED",
+    "provider_native_external_agent": "NOT INVOKED",
+    "production_deployment": "NOT CLAIMED",
+    "github_actions_zero_step": "INFRASTRUCTURE UNKNOWN",
+    "branch_protections": "NOT VERIFIED",
+    "merged": false,
+    "owner_email": false
+  },
+  "next": [
+    "Port and verify one more independent source-backed fix without touching dashboard/product lanes",
+    "Run full canonical Node suite on exact OS1 branch; isolated PostgreSQL migrations #92/#93 pending disposable DB",
+    "Prove actual hosted two-ticket claim/complete/NEXT and dashboard readback before owner dashboard link"
+  ],
+  "rollback": "Close draft PR #132 without merging; main and existing live URLs remain unchanged. Existing branches and PRs preserved."
+}

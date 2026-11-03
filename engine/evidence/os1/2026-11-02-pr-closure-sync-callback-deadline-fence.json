@@ -1,0 +1,69 @@
+{
+  "schema": "zoo.os1.pr-closure-evidence.v1",
+  "date_utc": "2026-11-02",
+  "repo": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "baseline_source_blob_sha": "6ea38acfc93027c9d0f83921f67d66c5b81d3b30",
+  "test_commit_sha": "8dc4bfdb4b088864a4b6c4e0f1c5ed56013bfa23",
+  "source_commit_sha": "91f1e7e9ed8a3c57a80be8a267ff78bf5054355a",
+  "published_source_blob_sha": "d646cca3dcd4b4ec40aa9f7a44e900caaa11b2e8",
+  "published_test_blob_sha": "a4f9620bc36b3bb4bb381d297ad64efdea82932e",
+  "test_command": "node --test engine/test/outbox-synchronous-deadline-fence.test.mjs engine/test/outbox-async-deadline-fence.test.mjs",
+  "test_execution": "Native Node.js 22.16.0 on exact GitHub blob-hash-matched source and tests in isolated local filesystem; no hosted CI",
+  "baseline": {
+    "total": 4,
+    "failed": 3,
+    "passed": 1,
+    "source_blob_sha": "6ea38acfc93027c9d0f83921f67d66c5b81d3b30",
+    "runner": "native Node.js 22.16.0"
+  },
+  "after": {
+    "total": 9,
+    "failed": 0,
+    "passed": 9,
+    "runner": "native Node.js 22.16.0"
+  },
+  "test_cases": [
+    {
+      "name": "synchronous ACK completing after deadline cannot report acknowledged",
+      "passed": true
+    },
+    {
+      "name": "synchronous idle settlement completing after deadline cannot report settled",
+      "passed": true
+    },
+    {
+      "name": "synchronous claim completing after deadline rejects without dispatch",
+      "passed": true
+    },
+    {
+      "name": "fast legitimate ACK remains acknowledged",
+      "passed": true
+    }
+  ],
+  "defect": "Timer callbacks can be delayed by a synchronous operation; a fulfilled callback promise can resolve after the deadline and before the timer, falsely reporting ACK or idle settlement success.",
+  "fix": "Check the deadline again in the operation fulfillment microtask; expired fulfillment rejects and requires recovery.",
+  "github_readback_exact": true,
+  "provider_native_worker_invocation": false,
+  "authenticated_distributed_queue_claim": false,
+  "autonomous_two_ticket_handoff": false,
+  "hosted_ci_passed": false,
+  "merged": false,
+  "deployed": false,
+  "next": "Continue PR #112 regression reconciliation, then PR #93 disposable PostgreSQL concurrency testing; preserve all historical stacks.",
+  "existing_regression_test_blob_sha": "272da94f5260814a30ab22297095327b3c4b47dd",
+  "local_git_hash_object_verified": true,
+  "native_node_test_completed": true,
+  "native_node_version": "v22.16.0",
+  "test_scope": "4 new synchronous deadline regressions + 5 existing async deadline regressions; synthetic fixtures, no PostgreSQL or hosted worker",
+  "hosted_actions": {
+    "run_id": 41426671146,
+    "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41426671146",
+    "job_id": 125214822086,
+    "job_name": "lab-tests",
+    "conclusion": "failure",
+    "executed_steps": 0,
+    "classification": "INFRASTRUCTURE_UNKNOWN_NOT_TEST_FAILURE"
+  }
+}

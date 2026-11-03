@@ -1,0 +1,35 @@
+{
+  "schema": "zoo.os1.supervisor-contingent.v1",
+  "observed_at_utc": "2026-11-02T18:11:46Z",
+  "repository": "london4216-hue/Zoodo",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_commit_sha": "c684eb0a1f3a0b2c23287de01e1115d4580c4878",
+  "test_commit_sha": "a68bd31148acd944e047ff131e82c0b591a67d59",
+  "source_blob_sha": "017a869482e49f60a3f8b0e47742485df19986ce",
+  "test_blob_sha": "78a693042ee8b5868af09bf6d28f7cfa18531b61",
+  "github_readback_matches_local_git_blobs": true,
+  "runtime": "local Node.js v22.16.0",
+  "command": "node --test engine/test/supervisor-contingent.test.mjs",
+  "test_results": {
+    "passed": 4,
+    "failed": 0
+  },
+  "native_test_scope": "Synthetic in-memory shared queue, fake drainOne and fake worker adapter; demonstrates code-level peer takeover and recovery-error isolation, not a real Supabase/Trigger.dev/agent execution.",
+  "behavior": "Active-active supervisor instances use the existing durable store and independent process managers, with no second queue or single leader; recoverOutbox is invoked before dispatch.",
+  "reconciliation": {
+    "Zoodo#81": "Historical branch merge only; 2026-10-31-1243 keeper outbox receipt inspected, 16/16 local tests reported, hosted handoff unverified.",
+    "Zoodo#77": "Existing unified queue and next-worker algorithm preserved; no dedicated AI keeper.",
+    "Zoodo#65-69-72": "Intermediate branch merges, not canonical main release.",
+    "Zoodo#68-73-81": "#73 closed unmerged; #81 merged into its branch only.",
+    "Zoodo#16-71": "Dashboard branch merges, not deployment proof."
+  },
+  "external_provider_native_invocation": false,
+  "hosted_two_ticket_handoff_verified": false,
+  "production_deployment_verified": false,
+  "github_actions_status": "No statuses returned for latest commit; do not infer CI passed.",
+  "integration_state": "DRAFT; mergeability currently false, requires fresh check and full suite before merge.",
+  "next_ticket": "Wire this module to existing authenticated store/relay on an authorized always-on host; test two real Supabase claims, two worker-native receipts, supervisor termination and recovery; inspect OS1 full test suite and resolve mergeability before integration.",
+  "no_new_queue": true,
+  "no_product_or_dashboard_file_writes": true
+}

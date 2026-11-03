@@ -1,0 +1,58 @@
+{
+  "schema": "zoo.os1.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-02T22:10:42Z",
+  "lane": "independent-pr-closure",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "handoff_issue": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "task": "Fence unhandled asynchronous onCycle telemetry rejection in active-active supervisor",
+  "prior_source_blob": "9095bad43d707a5443dfe6220a189f3bf9a59240",
+  "source_commit": "b0e2d3f2e86c08ef0b919858cfa189f47d025eae",
+  "test_commit": "85260f4e59ac13220879d60b290e7b0db126315a",
+  "source_blob": "6892358f32bdc6609e5f35c815d50115356afc90",
+  "test_blob": "680d92b9318791c26e948d1bfec82d38c8a8aca2",
+  "files": [
+    "engine/ops/relay/supervisor-contingent.mjs",
+    "engine/test/supervisor-async-telemetry-fence.test.mjs"
+  ],
+  "test_environment": "local Node.js v22.16.0",
+  "fail_first": {
+    "command": "node --test engine/test/supervisor-async-telemetry-fence.test.mjs",
+    "passed": 0,
+    "failed": 1,
+    "reason": "unhandledRejection from asynchronous onCycle callback"
+  },
+  "after_fix": {
+    "command": "node --test engine/test/supervisor-contingent.test.mjs engine/test/supervisor-clock-rollback-fence.test.mjs engine/test/supervisor-async-telemetry-fence.test.mjs",
+    "passed": 7,
+    "failed": 0,
+    "syntax_check": "node --check engine/ops/relay/supervisor-contingent.mjs passed"
+  },
+  "readback": {
+    "source_blob_match": true,
+    "test_blob_match": true
+  },
+  "scope": "Synthetic local deterministic Node tests; source/test GitHub readback, no hosted execution",
+  "durable_queue_lease_claim": "NOT_VERIFIED",
+  "external_provider_native_invocation": false,
+  "hosted_two_ticket_handoff": false,
+  "ci_pass": "NOT_CLAIMED",
+  "merged": false,
+  "deployed": false,
+  "other_lanes": "No product or dashboard files touched; supervisor source changed in integration PR #132 only",
+  "historical_pr_reconciliation": {
+    "pr81": "closed stacked draft; preserved source and 2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "pr93": "unmerged, requires disposable PostgreSQL migration/concurrency test",
+    "pr96": "unmerged, overlaps durable-queue changes already on OS1; deduplication needed",
+    "stack65_69_72": "preserved, not blindly merged",
+    "stack68_73_81": "preserved, not blindly merged",
+    "dashboard16_71": "preserved, not modified"
+  },
+  "next_ticket": "PR #93: test disposable PostgreSQL 001→002→005→006→007→008→009→010 and concurrent outbox claim/ACK/recovery; no production migration without proof",
+  "limitations": [
+    "No verified authenticated Supabase durable queue claim",
+    "No native worker/provider receipt",
+    "No hosted autonomous two-ticket NEXT or dashboard readback",
+    "OS1 branch is behind main; reconciliation required before merge"
+  ],
+  "status": "PUBLISHED_CODE_TEST_RECEIPT_PENDING_THIS_COMMIT"
+}

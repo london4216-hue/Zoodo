@@ -1,0 +1,112 @@
+{
+  "schema": "zoo.pr-stack-reconciliation.v1",
+  "observed_at_utc": "2026-11-03T01:13:48Z",
+  "repository": "london4216-hue/Zoodo",
+  "os_integration_pr": 132,
+  "os_head_before": "ed2168018edc11fa0c28cd2b92f23a183261fce6",
+  "source": "authenticated GitHub connector PR metadata",
+  "stacks": [
+    {
+      "name": "callback",
+      "prs": [
+        {
+          "number": 65,
+          "state": "closed",
+          "merged": true,
+          "head": "0e3901f45ca0573da21a12c040b8eec92302c130"
+        },
+        {
+          "number": 69,
+          "state": "closed",
+          "merged": true,
+          "head": "89309b2c3e4b53916432619de8b08580ece60dd2"
+        },
+        {
+          "number": 72,
+          "state": "closed",
+          "merged": true,
+          "head": "fd216f26fbfaa8fbc791082b2d96d0dd315cae7f"
+        }
+      ],
+      "disposition": "merged into successive feature branches; mainline integration not established"
+    },
+    {
+      "name": "outbox",
+      "prs": [
+        {
+          "number": 68,
+          "state": "closed",
+          "merged": true,
+          "head": "c7c65b8b01c3d2ef9467e2816f3cf096e845ba5e"
+        },
+        {
+          "number": 73,
+          "state": "closed",
+          "merged": false,
+          "head": "b33c8e862410c0563847369a944e27f3468a78a0"
+        },
+        {
+          "number": 81,
+          "state": "closed",
+          "merged": true,
+          "head": "50689fb00c0940fae40cf568ad60937c8d47d83b"
+        }
+      ],
+      "disposition": "PR 81 merged to PR 73 branch; PR 73 closed unmerged; retain source and receipt; no mainline claim",
+      "receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json"
+    },
+    {
+      "name": "dashboard",
+      "prs": [
+        {
+          "number": 16,
+          "state": "closed",
+          "merged": true,
+          "head": "bdd5b18e4fd34b91ff798b1683cd5015cc329312"
+        },
+        {
+          "number": 71,
+          "state": "closed",
+          "merged": true,
+          "head": "e0acae0e7618761df92587ecff8feb761d165f12"
+        }
+      ],
+      "disposition": "feature-branch stack; no deployment assertion"
+    }
+  ],
+  "candidates": [
+    {
+      "number": 93,
+      "state": "open",
+      "draft": true,
+      "head": "4cc63170a7b8e8fb285e22315e9c1123980b7049",
+      "disposition": "BLOCKED for merge pending disposable PostgreSQL migration/concurrency checks; review dependency on PR 92 migrations 003/004"
+    },
+    {
+      "number": 96,
+      "state": "open",
+      "draft": true,
+      "head": "da3b20cc772c3ce07bf38ce3c087e38b5de75a21",
+      "disposition": "review semantic overlap with OS 1.0; no blind merge"
+    },
+    {
+      "number": 92,
+      "state": "open",
+      "draft": true,
+      "head": "4155fde854e1fa429d92e4093809ec70eb0fcf51",
+      "disposition": "migration dependency investigation"
+    }
+  ],
+  "queue_claim": "NOT_VERIFIED",
+  "hosted_two_ticket_handoff": "NOT_VERIFIED",
+  "native_external_worker_invocation": "NOT_VERIFIED",
+  "ci": "UNKNOWN",
+  "tests": {
+    "type": "manifest schema/invariant validation",
+    "passed": 8,
+    "failed": 0,
+    "limitations": "No code execution or PostgreSQL tests performed in this run"
+  },
+  "preservation": "No historical branches or PRs deleted or closed; no product or dashboard files touched",
+  "next": "PR 93 migration dependency and disposable PostgreSQL concurrency test"
+}

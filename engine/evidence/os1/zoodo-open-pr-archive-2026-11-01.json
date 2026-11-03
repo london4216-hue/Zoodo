@@ -1,0 +1,542 @@
+{
+  "schema": "zoo.os1.pr-archive.v1",
+  "snapshot_date": "2026-11-01",
+  "repo": "london4216-hue/Zoodo",
+  "verified_main": "1b7b468121c8bc975b59e5511c0a0c73d8a14fff",
+  "os1_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "open_pr_search_count": 82,
+  "search_cap": 100,
+  "open_pr_list_complete_for_query": true,
+  "sha_coverage": "Only pinned integration heads have exact SHAs; all other PR links preserve source references until SHA expansion.",
+  "private_repo": "Private TransendIQ PR titles/heads intentionally excluded from public Zoodo manifest; its 100-result search is truncated and requires separate private inventory.",
+  "historical_stacks": [
+    {
+      "prs": [
+        65,
+        69,
+        72
+      ],
+      "status": "intermediate-branch merges, not mainline proof"
+    },
+    {
+      "prs": [
+        68,
+        73,
+        81
+      ],
+      "status": "intermediate branch; #73 closed unmerged, #81 merged into #73 branch"
+    },
+    {
+      "prs": [
+        16,
+        71
+      ],
+      "status": "dashboard intermediate branch, not deployment proof"
+    }
+  ],
+  "preservation": "Do not delete or close source PRs without full dependency+SHA check and archive pointers; no mass merge.",
+  "open_prs": [
+    {
+      "number": 1,
+      "title": "feat: production integration — ZoodoAvatar, child dev framework, sensory breaks, audit panel",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/1",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 2,
+      "title": "Add premium voice personalization, persistent ambient music, and parent-cheer celebration flow",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/2",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 3,
+      "title": "Zoodo: integrate all 10 engagement systems, fix lint, complete Dashboard and Layout wiring",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/3",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 4,
+      "title": "feat: integrate all 10 production systems — ambient music, premium voice, escalating celebrations, sensory activities, parent video playback",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/4",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 5,
+      "title": "Zoo: require exact-commit independent review proof and run engine CI",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/5",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 15,
+      "title": "Builder/fixer failover: two-handoff lease fencing and bounded seeker (draft)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/15",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 19,
+      "title": "ZOO: independent scheduler-proof watchdog and bounded recovery (issue #18)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/19",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 20,
+      "title": "Hunter: correct ZOO watchdog proof source ref",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/20",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 21,
+      "title": "Hunter: bounded synthetic Netlify build execution probe (not runner qualification)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/21",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 22,
+      "title": "feat(zoo): independent shared ticket directory (10 issues, 11 PRs; no product repo control plane)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/22",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 23,
+      "title": "P0 ZOO ops: private durable ticket directory and event-driven Netlify relay adapter",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/23",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 26,
+      "title": "feat(zoo): source-safe PR #787 and Sara priority feed with verified-work age",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/26",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 28,
+      "title": "P0 fix: repair broken Supabase relay migration before hosted queue setup",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/28",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 29,
+      "title": "fix(zoo relay): repair invalid Supabase migration dispatch RPC SQL",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/29",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 30,
+      "title": "feat(zoo): separate original Figma and Gold Standard design lanes with evidence-gated previews",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/30",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 31,
+      "title": "test(zoo relay): enforce one active lease per worker in test fixture",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/31",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 32,
+      "title": "P0 relay: bounded alternate-worker dispatch with fail-first local HTTP tests",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/32",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 34,
+      "title": "fix(zoo relay): acknowledge durable completion when NEXT dispatch fails",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/34",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 35,
+      "title": "P0 ZOO relay: replay durable wake-up outbox after missed NEXT events",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/35",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 36,
+      "title": "fix(zoo relay): atomically settle idle wakeups without dropping queued work",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/36",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 37,
+      "title": "fix(zoo relay): prevent uncertain worker from claiming a second ticket",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/37",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 38,
+      "title": "test(zoo): authenticated bounded Netlify execution probe for independent runner qualification",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/38",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 39,
+      "title": "fix(zoo ops): fence phantom leases and false completion at database boundary",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/39",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 40,
+      "title": "fix(zoo relay): acknowledge durable completion despite NEXT dispatch outage",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/40",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 41,
+      "title": "fix(zoo): preserve dashboard evidence build when enabling independent relay",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/41",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 42,
+      "title": "fix(zoo relay): bound hanging NEXT callback after durable completion",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/42",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 43,
+      "title": "test(relay): establish lease before NEXT failure recovery assertions",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/43",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 44,
+      "title": "fix(zoo integration): retain proof builder on event-driven relay stack",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/44",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 45,
+      "title": "fix(zoo P0): restore missing executable Netlify proof build on relay stack",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/45",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 46,
+      "title": "Fix duplicate local ticket claims with atomic journal writes",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/46",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 47,
+      "title": "fix(zoo): fail-closed Netlify relay intake with synthetic adapter tests",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/47",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 48,
+      "title": "fix(zoo): bounded evidence refresh, no overlap, retain last good receipt",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/48",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 49,
+      "title": "fix(zoo P0): bound replay worker hangs and preserve outbox recovery",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/49",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 50,
+      "title": "fix(zoo P0): abort late NEXT claims and replay after serverless deadline",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/50",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 51,
+      "title": "fix(relay): fence late NEXT claims after callback deadline",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/51",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 52,
+      "title": "fix(zoo P0): bound full reconcile callback and fence late outbox replay",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/52",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 53,
+      "title": "fix(zoo relay): reject malformed recovery RPC counts before declaring reconciled",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/53",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 54,
+      "title": "test(zoo): independently verify Netlify host receipts without exposing probe tokens",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/54",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 55,
+      "title": "P0: fence false NEXT success when durable dispatch receipt finishes after deadline",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/55",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 56,
+      "title": "fix(zoo Keeper): integrate PR #53 recovery-count fence onto PR #55 durable NEXT receipts",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/56",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 57,
+      "title": "test(zoo): direct-base Netlify preview for bounded host execution probe",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/57",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 58,
+      "title": "P0: bound authenticated kick callbacks and fence late worker dispatch",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/58",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 59,
+      "title": "P0: fence late completion/requeue commits before NEXT worker dispatch",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/59",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 60,
+      "title": "P0: retry transient Supabase callback failures without weakening stale-lease checks",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/60",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 61,
+      "title": "fix(zoo relay): return 503 when authenticated kick cannot confirm dispatch",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/61",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 62,
+      "title": "P0: retry unconfirmed kick, replay and reconcile webhooks",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/62",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 63,
+      "title": "P0: fail closed on unknown relay callback outcomes (no false HTTP 200)",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/63",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 64,
+      "title": "P0: prevent permanent dead-letter loss of durable ZOO outbox wakeups",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/64",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 70,
+      "title": "test(zoo): require native provider readback for productive-agent KPIs",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/70",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 87,
+      "title": "Consolidate merged ZOO work into main: worker/p0-canonical-lease-validation-20261031-1039",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/87",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 90,
+      "title": "fix(zoo): restore future-evidence rejection to canonical dashboard branch",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/90",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 92,
+      "title": "P0 integrate uncertain-worker lease fence and queue integrity from #87",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/92",
+      "classification": "candidate_requires_dependency_tests",
+      "head": "4155fde854e1fa429d92e4093809ec70eb0fcf51",
+      "base": "main"
+    },
+    {
+      "number": 93,
+      "title": "P0 integrate durable outbox retry backoff without dead-letter loss",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/93",
+      "classification": "candidate_requires_dependency_tests",
+      "head": "4cc63170a7b8e8fb285e22315e9c1123980b7049",
+      "base": "main"
+    },
+    {
+      "number": 96,
+      "title": "fix(zoo): prevent one pilot worker from holding two active tickets",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/96",
+      "classification": "candidate_requires_dependency_tests",
+      "head": "da3b20cc772c3ce07bf38ce3c087e38b5de75a21",
+      "base": "main"
+    },
+    {
+      "number": 98,
+      "title": "fix(zoo): show exact open queue counts and preserve mirror JS dependencies",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/98",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 99,
+      "title": "fix(zoo): prevent false current scheduler proof from missing worker roster",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/99",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 100,
+      "title": "fix(zoo): do not label static lab assets as live functional demos",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/100",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 101,
+      "title": "fix(zoo): exclude future-dated commits from last-hour dashboard metric",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/101",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 102,
+      "title": "fix(zoo): quarantine stale priority feed instead of showing old PR stage as current",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/102",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 103,
+      "title": "fix(zoo): show actual GitHub and scheduler retry cadences in recovery status",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/103",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 104,
+      "title": "fix(zoo): do not show future-dated source evidence as fresh",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/104",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 105,
+      "title": "fix(zoo): reject malformed scheduler run IDs before counting receipts",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/105",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 107,
+      "title": "fix(zoo): reject impossible scheduler timestamps before counting receipts",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/107",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 110,
+      "title": "fix(zoo): reject impossible dates in review feed before claiming passes",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/110",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 111,
+      "title": "fix(zoo): quarantine future-dated CI, review and deployment evidence",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/111",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 112,
+      "title": "fix(zoo): stop alternate outbox dispatch after ambiguous worker result",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/112",
+      "classification": "candidate_requires_dependency_tests",
+      "head": "fcaba3b469de3eaeda85359fe3cfed58312a1747",
+      "base": "main"
+    },
+    {
+      "number": 113,
+      "title": "fix(zoo): clear historical scheduler anomalies by actual completion chronology",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/113",
+      "classification": "preserve_pending_review"
+    },
+    {
+      "number": 114,
+      "title": "fix(zoo dashboard): mark disabled scheduler workers as requiring recovery",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/114",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 115,
+      "title": "fix(zoo dashboard): reject corrupted scheduler anomaly ledger",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/115",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 116,
+      "title": "fix(zoo dashboard): update API freshness when both GitHub endpoints fail",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/116",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 117,
+      "title": "fix(zoo dashboard): show complete GitHub PR and issue counts, not first-page samples",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/117",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 118,
+      "title": "fix(zoo dashboard): reject replayed priority feed and overlapping refreshes",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/118",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 119,
+      "title": "fix(zoo dashboard): refresh authentic five-role scheduler feed without false worker claims",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/119",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 120,
+      "title": "fix(zoo dashboard): prevent historical accountability totals appearing live",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/120",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 121,
+      "title": "fix(zoo dashboard): do not refresh code-movement clock from late CI/review",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/121",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 123,
+      "title": "fix(dashboard): keep demo links visible after repeated verification expiry",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/123",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 124,
+      "title": "fix(zoo dashboard): prevent false-verified Sara URL from stale source receipt",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/124",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 125,
+      "title": "fix(dashboard): remove duplicate accountability DOM id without changing links",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/125",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 126,
+      "title": "fix(zoo dashboard): clear stale PR and Sara details after priority feed failure",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/126",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 129,
+      "title": "fix(dashboard): require complete declared scheduler roster before current status",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/129",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 130,
+      "title": "fix(dashboard): include accountability iframe and handoff ledger in portable mirror",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/130",
+      "classification": "dashboard_owned_preserve"
+    },
+    {
+      "number": 132,
+      "title": "ZOO Operating System 1.0 — First Publish",
+      "url": "https://github.com/london4216-hue/Zoodo/pull/132",
+      "classification": "active_os1_baseline",
+      "head": "9d8930a5e6c5f4dee2b822e4109bd5be605d2d89",
+      "base": "main"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-02T05:48:49.417Z",
+  "repository": "london4216-hue/Zoodo",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_fix_commit": "0b4588187d74629f3e45cf3d96c0fd7836069ce4",
+  "regression_commit": "bef86e502baa82f40d390fbe3c0b4a8a9f987fc6",
+  "regression_label_commit": "4ba1aa7b05b5054f50b110e59242060dcbf40324",
+  "tested_head": "4ba1aa7b05b5054f50b110e59242060dcbf40324",
+  "exact_git_blob_shas": {
+    "engine/src/durable-queue.mjs": "942a844b0e139b9a0c4b3aff6e13236d81678738",
+    "engine/test/journal-submit-transition-replay-fence.test.mjs": "d8517e3c987836b57dd8dfb68857464d4e19bd61"
+  },
+  "defect": "Persisted submit events could move queued, assigned, already-review, or failed/requeued tickets into review without a legitimate running lease.",
+  "fix": "Reject replayed submit unless ticket is running and has canonical assigned worker/provider identities and safe-integer lease deadline; retain valid running submissions.",
+  "tests": {
+    "baseline_v8": {
+      "invalid_cases_accepted": 4,
+      "positive_case_passed": true
+    },
+    "after_v8": {
+      "passed": 5,
+      "failed": 0
+    },
+    "method": "Exact published durable-queue source loaded in V8 with in-memory Node filesystem and appendJournalEvent shims",
+    "regression_file_committed": true,
+    "native_node_regression_file_executed": false,
+    "postgresql_executed": false,
+    "hosted_ci_passed": false,
+    "commit_statuses_reported": 0
+  },
+  "provenance": {
+    "provider_native_invocation": false,
+    "authenticated_distributed_claim": false,
+    "autonomous_two_ticket_handoff": false,
+    "deployment_verified": false,
+    "dashboard_readback_verified": false,
+    "cost_usd": "UNKNOWN"
+  },
+  "dependency_reconciliation": {
+    "#65→#69→#72": "Closed/merged within historical stacked branch ancestry; not assumed mainline release",
+    "#68→#73→#81": "#73 closed unmerged; #81 merged into its stack base; not assumed mainline release",
+    "#16→#71": "Historical dashboard stack; no dashboard files touched",
+    "issue #77": "Unified queue and next-worker architecture remains open; live hosted claim unverified"
+  },
+  "inventory": {
+    "zoodo_open_pr_search_results": 82,
+    "private_transendiq_open_pr_search_results": 100,
+    "private_transendiq_search_truncated": true,
+    "private_transendiq_details_excluded_from_public_receipt": true
+  },
+  "branch_preservation": "No historical branch deletion, mass merge, or PR closure performed.",
+  "next": {
+    "first": "Reconcile PR #96 requeue replay transition: prevent forged requeue from resetting completed/verified tickets; preserve legitimate fail/recovery paths.",
+    "second": "PR #93 disposable PostgreSQL outbox retry/backoff and concurrency verification.",
+    "third": "Authenticated two-ticket claim→complete→NEXT and dashboard readback by qualified host/provider."
+  }
+}

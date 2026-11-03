@@ -1,0 +1,41 @@
+{
+  "schema": "zoo.os1.pr112-reconciliation.v1",
+  "recorded_date_utc": "2026-11-02",
+  "repository": "london4216-hue/Zoodo",
+  "pr112": "https://github.com/london4216-hue/Zoodo/pull/112",
+  "pr112_head": "fcaba3b469de3eaeda85359fe3cfed58312a1747",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "integration_head_before_receipt": "a6f9c6ea76d72eb16d999e6cfc6014d4f294626d",
+  "test_inventory": {
+    "pr112_changed_test_files": 17,
+    "identical_blob_files": 16,
+    "changed_test_files": [
+      "engine/test/outbox-drainer.test.mjs"
+    ],
+    "source_head_comparison": "GitHub authenticated file SHA readback"
+  },
+  "observed_test_change": "PR112 outbox-drainer.test.mjs retained a positive idle-failed-settlement alternate-dispatch assertion; OS1's modified copy replaced it with a recovery-required fail-closed assertion and added an unqualified delegated worker check.",
+  "restoration": {
+    "path": "engine/test/outbox-idle-alternate-preservation.test.mjs",
+    "blob_sha": "88d866a7ed0e172e4ea8caeb923d74072cbd76ca",
+    "commit": "a6f9c6ea76d72eb16d999e6cfc6014d4f294626d",
+    "test_command": "node --test engine/test/outbox-idle-alternate-preservation.test.mjs engine/test/outbox-percent-encoded-control-fence.test.mjs",
+    "node_version": "22.16.0",
+    "passed": 8,
+    "failed": 0
+  },
+  "no_close_reason": "PR112 source and complete broader regression suite not independently executed on this latest head; preserve draft and original branch pending exact-suite verification and dependency reconciliation.",
+  "next_ticket": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "status": "BLOCKED_FOR_DISPOSABLE_POSTGRESQL",
+    "task": "Run lease-fenced claim, ACK, idle settlement and concurrency migration tests in disposable PostgreSQL"
+  },
+  "execution": {
+    "durable_queue_claim_verified": false,
+    "external_worker_invoked": false,
+    "two_ticket_automatic_handoff_verified": false,
+    "hosted_ci_verified": false,
+    "merge": false,
+    "deployment": false
+  }
+}

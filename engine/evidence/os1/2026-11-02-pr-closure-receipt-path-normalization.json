@@ -1,0 +1,49 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "date_utc": "2026-11-02",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "base_head_before": "b3f1c857472cf8e7f08eea618a651369a70bc8fd",
+  "regression_commit": "4fdd0bee7918932288b8f0bced4f9409792b2bd7",
+  "repair_commit": "05fdf382e0d90c6eec89fd0732f6d82be4034519",
+  "exact_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "0fcbe64494c58990a09cda8faac4ef33e177ec8b",
+    "engine/test/outbox-receipt-path-normalization-fence.test.mjs": "ceb75b3e638dfe0028ad61a69953529055779e8b",
+    "engine/test/outbox-drainer.test.mjs": "3aa274db678b263c7a0fcd12c8c1322abd095718"
+  },
+  "defect": "URL() silently canonicalized noncanonical HTTPS authorities and literal or nested percent-encoded dot-segment paths; the original drainer ACKed these ambiguous receipts.",
+  "fail_first": {
+    "cases": 8,
+    "failed": 5,
+    "passed": 3,
+    "baseline_source_blob": "ca5ffdf4e58ee593283331655ec1416133d79fcd"
+  },
+  "after_repair": {
+    "cases": 24,
+    "passed": 24,
+    "failed": 0,
+    "scope": "exact published GitHub source and committed test bodies executed with V8 performance/URL/timer shims"
+  },
+  "limitations": [
+    "Not native Node.js URL implementation or node --test",
+    "Not hosted CI, PostgreSQL, authenticated queue claim, provider-native worker invocation, merge, or deployment"
+  ],
+  "reconciliation": {
+    "PR81": "closed and merged into stacked #73 base, not proof of mainline deployment; original receipt inspected",
+    "PR73": "closed unmerged",
+    "relay_stack_a": "#65 #69 #72 closed merged on stacked branches",
+    "relay_stack_b": "#68 #81 closed merged on stacked branches; #73 closed unmerged",
+    "dashboard": "#16 #71 closed merged on stacked branches; deployment not proven",
+    "private_transendiq": "100 open PR results retrieved from london4216-hue/TransendIQ; search truncated; no private inventory published here"
+  },
+  "single_writer_scope": [
+    "engine/ops/relay/outbox-drainer.mjs",
+    "engine/test/outbox-receipt-path-normalization-fence.test.mjs"
+  ],
+  "next_ticket": "PR #96 remaining durable-queue semantic reconciliation; PR #93 disposable PostgreSQL concurrency testing when a disposable database is available",
+  "durable_claim": "NOT_VERIFIED",
+  "two_ticket_handoff": "NOT_VERIFIED",
+  "dashboard_readback": "NOT_VERIFIED",
+  "provider_native_invocation": "NOT_VERIFIED",
+  "merged": false,
+  "deployed": false
+}

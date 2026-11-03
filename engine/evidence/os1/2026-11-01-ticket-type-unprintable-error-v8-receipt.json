@@ -1,0 +1,39 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "date_utc": "2026-11-01",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/112",
+  "handoff_issue": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "task": "Reject non-string durable ticket/lease tokens before worker invocation and safely classify unprintable provider errors without logging secrets",
+  "baseline_head": "c47854a1294395a178600fc3bced756d06511054",
+  "baseline_source_blob": "9651b311c7fbbe7d9e318ee3896a4f56eeeb9aba",
+  "exact_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "2fa4e29607928bd21271c84a11b2d4917e0a7232",
+    "engine/test/outbox-receipt-ticket-type-fence.test.mjs": "0d9901a6c40856547eac623857ba2204bc0f1fd1",
+    "engine/test/outbox-unprintable-error-fence.test.mjs": "fac5743fe0763a431c5a68465139ae57e2c190a4"
+  },
+  "fail_first": {
+    "total": 5,
+    "passed": 2,
+    "failed": 3
+  },
+  "after_fix": {
+    "total": 49,
+    "passed": 49,
+    "failed": 0,
+    "test_files": 15
+  },
+  "test_environment": "Isolated V8 JavaScript harness with minimal URL shim evaluating exact fetched source and test callbacks; NOT native Node.js or hosted CI",
+  "hosted_ci": "UNKNOWN",
+  "distributed_lease_verified": false,
+  "provider_native_worker_invoked": false,
+  "hosted_two_ticket_handoff_verified": false,
+  "dashboard_readback_verified": false,
+  "merged": false,
+  "deployed": false,
+  "next": {
+    "source_pr": 112,
+    "task": "Review further exact-source outbox tests for unintegrated defects; prioritize real PostgreSQL concurrency validation of PRs #92/#93 and native Node full-suite verification"
+  },
+  "rollback": "Revert this isolated OS1 commit; no main, product, dashboard or live URL changes"
+}

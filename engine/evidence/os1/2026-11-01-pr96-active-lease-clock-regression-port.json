@@ -1,0 +1,35 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "local_date": "2026-11-01",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "from_pr": 96,
+  "source_commit": "a14a1ff23b4351248e19d89dc183b26dc9ec81b8",
+  "test_commit": "5799924407f8af8a3f5b439f201a5290ab49dae6",
+  "source_blob": "b45c44ff6adfa760e0e863260b2658a2d4994e49",
+  "test_blob": "c1cc2750c22bcf1fe4cc6b9f383e6c2120dd2c19",
+  "original_test_blob": "c1cc2750c22bcf1fe4cc6b9f383e6c2120dd2c19",
+  "test_path": "engine/test/clock-type-active-lease-fence.test.mjs",
+  "test_mode": "Exact GitHub-published OS 1.0 source executed in V8 with synthetic filesystem; NOT native Node, CI, SQL or production",
+  "results": {
+    "passed": 4,
+    "failed": 0,
+    "scenarios": [
+      "invalid-string-clock-submit",
+      "invalid-string-clock-start",
+      "invalid-string-clock-recovery",
+      "numeric-clock-expired-recovery"
+    ]
+  },
+  "github_readback": {
+    "test_blob_exact_original_match": true
+  },
+  "execution": {
+    "authenticated_queue_claim": false,
+    "provider_native_invocation": false,
+    "hosted_two_ticket_handoff": false,
+    "merged": false,
+    "deployed": false
+  },
+  "next": "PR #93 PostgreSQL outbox 005/006 migration requires disposable PostgreSQL concurrency tests; meanwhile inspect additional independent PR96 regression gaps without changing product/dashboard ownership."
+}

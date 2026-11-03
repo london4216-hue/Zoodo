@@ -1,0 +1,35 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-02T06:16:24.341Z",
+  "task": "PR96 remaining releaseRequired test compatibility",
+  "original_pr": "https://github.com/london4216-hue/Zoodo/pull/96",
+  "original_test_blob": "313409a3e7d3ad261d1649cb080715d928386aed",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "integration_source_blob": "0de1ad4e20ef96c433c0534fcf5b237a6532d38d",
+  "integrated_test_path": "engine/test/release-required-type-fence.test.mjs",
+  "integrated_test_blob": "387f109da3eef9675f36cd3e71296a9dee8bd223",
+  "test_commit": "741cf50fce57c356080c670d88cc939abbdde402",
+  "adaptation": "One assertion regex updated to match canonical OS1 source error; test logic and invalid input cases otherwise unchanged",
+  "fail_first": {
+    "environment": "Exact PR96 test body against exact OS1 source under V8 filesystem shims",
+    "passed": 0,
+    "failed": 1,
+    "reason": "Expected error text differs; implementation already rejects invalid releaseRequired values"
+  },
+  "after_adaptation": {
+    "environment": "Exact committed test body against exact OS1 source under V8 filesystem shims",
+    "passed": 1,
+    "failed": 0,
+    "source_readback_matched": true,
+    "test_readback_matched": true
+  },
+  "native_node": "NOT_EXECUTED",
+  "hosted_ci": "UNKNOWN",
+  "merge": false,
+  "deploy": false,
+  "next": {
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/93",
+    "action": "Disposable PostgreSQL outbox 001→002→005–010 migration and concurrency verification; do not merge untested SQL",
+    "state": "DISCOVERED_NOT_CLAIMED"
+  }
+}

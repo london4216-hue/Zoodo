@@ -1,0 +1,55 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "date_local": "2026-11-01",
+  "task": "OS1-PR96-SQL-TICKET-ID-PARITY",
+  "repository": "london4216-hue/Zoodo",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "upstream_pr": "https://github.com/london4216-hue/Zoodo/pull/96",
+  "source_commit": "bbb015e48441b0d3bc20cfd5edeb45a4eb7a972a",
+  "test_commit": "95eada7368e8e73b42015873f9b03e9b981b4787",
+  "source_blob": "e8e7499a0306b2b1aef86a50fa414d656b97f9b4",
+  "test_blob": "64e21103d2af6b0c37a581f13e83b12da64eae74",
+  "test_ported_unchanged_from_pr96": true,
+  "files": [
+    "engine/src/durable-queue.mjs",
+    "engine/test/sql-ticket-id-contract-fence.test.mjs"
+  ],
+  "defect": "Local durable queue accepted ticket keys containing whitespace, newlines, # and overlong strings incompatible with SQL ticket directory key contract.",
+  "fix": "Require ASCII alphanumeric first character and 1–120 characters of [A-Za-z0-9_.:-] for ticket IDs, without modifying worker/provider identity validation.",
+  "verification": {
+    "before": {
+      "source_blob": "5234eb5dc86693d175c1832010f789ca63142e4d",
+      "mode": "exact-source V8 with mocked filesystem",
+      "passed": 1,
+      "failed": 5
+    },
+    "after": {
+      "source_blob": "e8e7499a0306b2b1aef86a50fa414d656b97f9b4",
+      "mode": "exact-source V8 with mocked filesystem",
+      "passed": 9,
+      "failed": 0,
+      "includes_prior_replay_fence": true
+    },
+    "native_node_test_run": false,
+    "postgresql_test_run": false,
+    "github_actions_success_claimed": false
+  },
+  "single_writer": "engine/src/durable-queue.mjs; no product/dashboard files",
+  "authenticated_queue_claim": false,
+  "provider_native_invocation": false,
+  "hosted_two_ticket_next": false,
+  "merge": false,
+  "deploy": false,
+  "next": [
+    {
+      "pr": 96,
+      "task": "Compare remaining reviewer-lineage and stale requeue fields for compatibility; no new governance gate."
+    },
+    {
+      "pr": 93,
+      "task": "Run disposable PostgreSQL migration and concurrency test before integration",
+      "blocked_on": "PostgreSQL runner unavailable"
+    }
+  ],
+  "cost_usd": "UNKNOWN"
+}

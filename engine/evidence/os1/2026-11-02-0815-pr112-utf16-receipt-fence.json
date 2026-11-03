@@ -1,0 +1,59 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_at_utc": "2026-11-02T08:15:34.830Z",
+  "repository": "london4216-hue/Zoodo",
+  "integration_pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "source_from_pr": 112,
+  "source_fix": "Reject lone UTF-16 surrogates in direct and delegated HTTPS receipt URLs before durable outbox ACK; preserve valid supplementary Unicode and percent-encoded URLs",
+  "baseline_head": "72aa75c2295d793254ece471050c9195e52a8a66",
+  "baseline_source_blob": "bde6715a297fb0e50c4798af818a89aefe31596b",
+  "baseline_native_node_22_16_0": {
+    "command": "node --test engine/test/outbox-receipt-utf16-fence.test.mjs",
+    "passed": 3,
+    "failed": 3,
+    "expected_fail_first": true
+  },
+  "commits": {
+    "source": "bf4fbdaad13e868cb8de370f3c34d10382712e82",
+    "regression": "6033cf5f03bf05832ead1b6b8e612305608bac82",
+    "pr112_test_preservation": "3874e43da7ec00303f6d7d0629da7437a65e6f84"
+  },
+  "exact_published_git_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "88d0dd59476b71c42d43145db8219d6a650ee424",
+    "engine/test/outbox-receipt-utf16-fence.test.mjs": "09aa33ded95bb7cabd199b8b99ce9b3372da34a5",
+    "engine/test/outbox-receipt-url-control-fence.test.mjs": "dfd69012068f92c36433604afcdae5fa2877e03f",
+    "engine/test/outbox-drainer.test.mjs": "3aa274db678b263c7a0fcd12c8c1322abd095718"
+  },
+  "local_native_node_22_16_0": {
+    "command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-receipt-utf16-fence.test.mjs engine/test/outbox-receipt-url-control-fence.test.mjs",
+    "passed": 28,
+    "failed": 0,
+    "source_and_test_blobs_match_authenticated_github_readback": true,
+    "node_check": true
+  },
+  "historical_stacks": {
+    "#65->#69->#72": "all merged into intermediate non-main bases, not proof of main deployment",
+    "#68->#73->#81": "#68 and #81 merged into intermediate bases; #73 closed unmerged; #81 source/test receipt inspected",
+    "#16->#71": "both merged into intermediate non-main bases; dashboard deployment unverified"
+  },
+  "private_transendiq": {
+    "repository": "london4216-hue/TransendIQ",
+    "open_pr_search_results": 100,
+    "truncated": true,
+    "source_untouched": true
+  },
+  "ownership": "PR-closure lane only; engine/ops/relay/outbox-drainer.mjs and two engine/test paths; no product or dashboard paths",
+  "ci": "UNKNOWN: no commit status checks returned; hosted GitHub Actions not claimed",
+  "durable_queue_claim": "NOT_VERIFIED",
+  "provider_native_external_model_invocations": 0,
+  "autonomous_two_ticket_handoff": "NOT_VERIFIED",
+  "merge": false,
+  "deployment": false,
+  "next": {
+    "candidate": "Zoodo PR #112 remaining independent outbox regressions",
+    "status": "QUEUED_NOT_CLAIMED",
+    "alternate": "PR #93 disposable PostgreSQL migration/concurrency tests remain blocked on database runtime"
+  },
+  "rollback": "Revert source commit bf4fbdaad13e868cb8de370f3c34d10382712e82; regression files are additive"
+}

@@ -1,0 +1,59 @@
+{
+  "schema": "zoo.os1.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-02T12:09:16Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 132,
+  "branch": "integrate/zoo-os-1-0-first-publish-20261101",
+  "baseline_head": "5723026454b1cbcc7148e1f09883f568bdbc4110",
+  "source_commit": "5fa5fa0a90b3fef8e2fe8ae589b8699da31192e2",
+  "test_commit": "c3ac4919eb3e8546c0fee1ffa2e5bd3e9ee7d9a0",
+  "exact_tested_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "f887015c4a03b4779d55f2f361f9820f545367f0",
+    "engine/test/outbox-drainer.test.mjs": "3aa274db678b263c7a0fcd12c8c1322abd095718",
+    "engine/test/outbox-encoded-unicode-receipt-fence.test.mjs": "3655d53eb963d1dd08c3f8c58bf320ba5a96fc6a"
+  },
+  "defect": "Percent-encoded Unicode format/space characters and backslashes could pass URL() validation and permit durable ACK before a downstream decoder exposed prohibited characters; invalid UTF-8 percent sequences were also accepted.",
+  "fail_first": {
+    "source_blob": "8d78e401d477b3cbf972a00eed99afe86424bdb6",
+    "command": "node --test engine/test/outbox-encoded-unicode-receipt-fence.test.mjs",
+    "passed": 1,
+    "failed": 6
+  },
+  "after_fix": {
+    "runtime": "Node.js 22.16.0",
+    "command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-encoded-unicode-receipt-fence.test.mjs",
+    "passed": 23,
+    "failed": 0,
+    "syntax_check": "node --check engine/ops/relay/outbox-drainer.mjs",
+    "syntax_passed": true,
+    "exact_local_git_blob_hashes_match_authenticated_GitHub_readback": true
+  },
+  "scope": "local exact-source synthetic native Node tests; no PostgreSQL, hosted worker or CI pass",
+  "stacks": {
+    "relay_1": "#65→#69→#72 branch-scoped intermediate merges",
+    "relay_2": "#68→#73→#81 (#73 closed unmerged, #81 merged into intermediate branch)",
+    "dashboard": "#16→#71 branch-scoped intermediate merges; no deployment proof",
+    "pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "issue77": "open; no autonomous two-ticket proof"
+  },
+  "inventory": {
+    "zoodo_open_pr_search_results": 82,
+    "private_transendiq_first_page": 100,
+    "private_inventory_truncated": true
+  },
+  "no_changes": [
+    "products",
+    "dashboard",
+    "SQL",
+    "main branch",
+    "historical branches"
+  ],
+  "durable_queue_claim": "NOT_VERIFIED",
+  "provider_native_invocations": 0,
+  "authenticated_two_ticket_handoff": "NOT_VERIFIED",
+  "merge": false,
+  "deployment": false,
+  "ci": "commit status empty; associated GitHub Actions run queued at observation, not CI pass",
+  "next_ticket": "PR #96 remaining queue test/source parity; PR #93 disposable PostgreSQL migration and concurrency tests blocked by absent local PostgreSQL runtime",
+  "rollback": "Revert source commit 5fa5fa0a90b3fef8e2fe8ae589b8699da31192e2 and test commit c3ac4919eb3e8546c0fee1ffa2e5bd3e9ee7d9a0 from integration branch if regression found"
+}

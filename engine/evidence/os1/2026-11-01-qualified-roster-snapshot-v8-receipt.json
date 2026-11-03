@@ -1,0 +1,45 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "date_utc": "2026-11-01",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/112",
+  "handoff_issue": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "task": "Snapshot and validate qualified worker roster before asynchronous claim and dispatch; reject duplicates, sparse slots and changing getters",
+  "baseline_head": "3ae135735f26fa00de286c43f517afeecd569ed8",
+  "baseline_source_blob": "25f278d66431c28589c6b10e5362a54c6da08be0",
+  "exact_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "d4ea9a4bb5ea8df76a8bd54312a1341eb3fb5e90",
+    "engine/test/outbox-roster-snapshot-fence.test.mjs": "60d6583f4b024c2b1fe015d62d102a155e928d6d",
+    "engine/test/outbox-roster-getter-fence.test.mjs": "c920d1bd78f3aea1347400f5290a9684c834c29a",
+    "engine/test/outbox-duplicate-roster-fence.test.mjs": "6c2526e12c57dddb24a6e2c9de82785a7025252a",
+    "engine/test/outbox-sparse-roster-fence.test.mjs": "0b9f1806d398ad96e1f8261fd6198382d66f5deb"
+  },
+  "fail_first": {
+    "test_files": 4,
+    "total": 12,
+    "passed": 3,
+    "failed": 9
+  },
+  "after_fix": {
+    "test_files": 12,
+    "total": 41,
+    "passed": 41,
+    "failed": 0
+  },
+  "test_environment": "Isolated V8 JavaScript harness executing exact source and regression callbacks with minimal URL shim; not native Node.js; not hosted CI",
+  "source_syntax": "V8 Function constructor compiled source",
+  "hosted_ci": "UNKNOWN",
+  "distributed_lease_verified": false,
+  "provider_native_worker_invoked": false,
+  "hosted_two_ticket_handoff_verified": false,
+  "dashboard_readback_verified": false,
+  "merged": false,
+  "deployed": false,
+  "next": {
+    "source_pr": 112,
+    "task": "Prevent mutable relay state getter from changing dispatch interpretation after first read",
+    "test_blob": "18de5e7ae47ecddf94e71a8ca57514c4311f9b3d",
+    "test_file": "engine/test/outbox-mutable-state-fence.test.mjs"
+  },
+  "rollback": "Revert this isolated OS1 integration commit; main, private product and dashboard files untouched"
+}

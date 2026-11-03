@@ -1,0 +1,44 @@
+{
+  "schema": "zoo.os1.integration-receipt.v1",
+  "recorded_date_utc": "2026-11-01",
+  "integration_pr": "https://github.com/london4216-hue/Zoodo/pull/132",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/112",
+  "advisory_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "task": "Prevent provider token or request headers from leaking into durable outbox attempts",
+  "baseline_head": "7a128cf1be7a7a10e8683bc398d08476fc88a698",
+  "source_commit": "5f587e499af279623bd445a4a97b5ece40ff842f",
+  "test_commit": "61c2d2ec4a1d31ed6ff6ec8f554fa3e9354eca15",
+  "tested_head_before_receipt": "61c2d2ec4a1d31ed6ff6ec8f554fa3e9354eca15",
+  "native_runtime": "Node.js v22.16.0",
+  "fail_first": {
+    "command": "node --test engine/test/outbox-provider-diagnostic-redaction-fence.test.mjs",
+    "passed": 2,
+    "failed": 2
+  },
+  "after_fix": {
+    "command": "node --test engine/test/outbox-*.test.mjs",
+    "passed": 26,
+    "failed": 0,
+    "scope": "Seven exact-source focused outbox test files, not full repository suite"
+  },
+  "syntax_check": "node --check engine/ops/relay/outbox-drainer.mjs PASS",
+  "exact_github_readback": {
+    "engine/ops/relay/outbox-drainer.mjs": "92efc2a6088416f577aa85ff919eb96215d3674e",
+    "engine/test/outbox-provider-diagnostic-redaction-fence.test.mjs": "518833dafc99d85ae23dd3e784fe77c0f79f842a"
+  },
+  "implementation": "Persist only allowlisted error class names; never persist provider error.message, token, headers or arbitrary exception text.",
+  "hosted_ci": "UNKNOWN; no success statuses at previous readback",
+  "distributed_lease_verified": false,
+  "provider_native_worker_invoked": false,
+  "hosted_two_ticket_handoff_verified": false,
+  "dashboard_readback_verified": false,
+  "merged": false,
+  "deployed": false,
+  "next": {
+    "source_pr": 112,
+    "task": "Test mutable claimed lease identity before ACK/idle settlement",
+    "test_path": "engine/test/outbox-lease-snapshot-fence.test.mjs",
+    "source_test_blob": "a3c44441cbcd89d675e153887bb1d1fc49f9db27"
+  },
+  "rollback": "Revert the narrow source/test commits; no main, private product, or dashboard modifications."
+}
