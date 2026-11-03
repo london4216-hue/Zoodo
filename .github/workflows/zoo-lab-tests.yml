@@ -1,31 +1,57 @@
 name: Zoo isolated lab regression tests
 on:
   push:
-    branches: [autonomous-engine-replacement-2026-10-29]
+    branches: [main, autonomous-engine-replacement-2026-10-29]
     paths:
       - 'engine/dashboard/labs/**'
       - 'engine/test/**'
       - 'engine/src/**'
+      - 'engine/package.json'
       - '.github/workflows/zoo-lab-tests.yml'
   pull_request:
     paths:
       - 'engine/dashboard/labs/**'
       - 'engine/test/**'
       - 'engine/src/**'
+      - 'engine/package.json'
+      - '.github/workflows/zoo-lab-tests.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
   lab-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
+
+      - name: Diagnostic smoke (always runs)
+        if: always()
+        run: |
+          set -euo pipefail
+          echo "=== CI diagnostic smoke ==="
+          echo "Node: $(node --version)"
+          echo "PWD: $(pwd)"
+          echo "Git SHA: ${GITHUB_SHA:-unknown}"
+          echo "Ref: ${GITHUB_REF:-unknown}"
+          echo "Event: ${GITHUB_EVENT_NAME:-unknown}"
+          echo "--- expected paths ---"
+          ls -la engine/package.json || echo "MISSING: engine/package.json"
+          ls -la engine/test || echo "MISSING: engine/test"
+          ls -la engine/dashboard/labs || echo "MISSING: engine/dashboard/labs"
+
       - name: Run isolated engine and lab regression tests
         run: |
+          set -euo pipefail
           npm --prefix engine test
           node --test engine/dashboard/labs/yearbook3/logic.test.mjs
