@@ -10,6 +10,8 @@
 const bounded = (n, min, max) => Number.isSafeInteger(n) && n >= min && n <= max;
 // Match the downstream outbox-drainer worker identity contract before starting recovery.
 const WORKER = /^[A-Za-z0-9_-]{1,64}$/;
+// Only bounded outbox outcomes may enter telemetry; provider objects may contain secrets.
+const CYCLE_STATES = new Set(['empty','idle-settled','acknowledged','recovery_required']);
 
 function wait(ms, signal) {
   if (signal.aborted) return Promise.resolve();
@@ -100,7 +102,11 @@ export async function runSupervisorContingent({
       const outcome = await drainOne({store,relay,workerIds:roster});
       cycles++;
       // Emit only the state and event ID, never raw provider diagnostics.
-      emit({type:'cycle',state:outcome?.state ?? 'unknown',eventId:outcome?.eventId ?? null});
+      const state = outcome?.state;
+      const eventId = outcome?.eventId;
+      emit({type:'cycle',
+        state:typeof state === 'string' && CYCLE_STATES.has(state) ? state : 'unknown',
+        eventId:bounded(eventId,1,Number.MAX_SAFE_INTEGER) ? eventId : null});
     } catch {
       emit({type:'drain_error'});
     }
