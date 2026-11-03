@@ -1,31 +1,90 @@
 name: Zoo isolated lab regression tests
 on:
   push:
-    branches: [autonomous-engine-replacement-2026-10-29]
+    branches: [main, autonomous-engine-replacement-2026-10-29]
     paths:
       - 'engine/dashboard/labs/**'
       - 'engine/test/**'
       - 'engine/src/**'
+      - 'engine/package.json'
       - '.github/workflows/zoo-lab-tests.yml'
   pull_request:
     paths:
       - 'engine/dashboard/labs/**'
       - 'engine/test/**'
       - 'engine/src/**'
+      - 'engine/package.json'
+      - '.github/workflows/zoo-lab-tests.yml'
+  workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
   lab-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Run isolated engine and lab regression tests
+
+      - name: Diagnostic smoke
         run: |
-          npm --prefix engine test
-          node --test engine/dashboard/labs/yearbook3/logic.test.mjs
+          set -euo pipefail
+          echo "=== CI diagnostic smoke ==="
+          echo "Node: $(node --version)"
+          echo "npm: $(npm --version)"
+          echo "PWD: $(pwd)"
+          echo "Git SHA: ${GITHUB_SHA:-unknown}"
+          echo "Ref: ${GITHUB_REF:-unknown}"
+          echo "Event: ${GITHUB_EVENT_NAME:-unknown}"
+          echo "--- expected paths ---"
+          ls -la engine/package.json
+          ls -ld engine/test engine/dashboard/labs
+          echo "--- test files ---"
+          find engine/test engine/dashboard/labs -name '*.test.mjs' -type f -print | sort
+
+      - name: Install engine dependencies
+        run: |
+          set -euo pipefail
+          if [ -f engine/package-lock.json ]; then
+            npm --prefix engine ci --ignore-scripts --no-audit --no-fund
+          else
+            npm --prefix engine install --package-lock=false --ignore-scripts --no-audit --no-fund
+          fi
+
+      - name: Run engine and lab regression tests
+        run: |
+          set -euo pipefail
+          mkdir -p ci-results
+          npm --prefix engine test 2>&1 | tee ci-results/engine-tests.log
+          node --test engine/dashboard/labs/yearbook3/logic.test.mjs 2>&1 | tee ci-results/yearbook3-tests.log
+
+      - name: Report outcome
+        if: always()
+        run: |
+          {
+            echo "### Zoo isolated lab regression tests"
+            echo "- Commit: \`${GITHUB_SHA:-unknown}\`"
+            echo "- Job status: \`${{ job.status }}\`"
+            echo "- Test logs: uploaded as an artifact if the runner reached the upload step"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ job.status }}" != "success" ]; then
+            echo "::error::Zoo lab regression workflow failed or was cancelled; inspect the first failing step and any uploaded logs."
+          fi
+
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zoo-lab-test-logs
+          path: ci-results/
+          if-no-files-found: ignore
+          retention-days: 7
