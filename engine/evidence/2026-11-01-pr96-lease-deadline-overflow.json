@@ -1,0 +1,36 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "date": "2026-11-01",
+  "role": "queue_fixer",
+  "pr": 96,
+  "baseline": "1c7effc95faa8ed61848cfbcd8fb2602ed9f0141",
+  "code_commit": "d88eb1993a3e2495db74cc48586016bb7018c6ec",
+  "tested_head": "aae36a08d63f48f04e84f3dd6544c46a90af654a",
+  "defect": "Safe-integer lease duration plus current time could overflow into an unsafe deadline, corrupting a new claim or heartbeat and causing later quarantine.",
+  "repair": "Reject unsafe clock/deadline arithmetic before appending claim or heartbeat.",
+  "tests": {
+    "runtime": "Node v24.22.1",
+    "fail_first": {
+      "passed": 0,
+      "failed": 2
+    },
+    "after": {
+      "passed": 54,
+      "failed": 0,
+      "command": "node --test engine/test/*.test.mjs",
+      "scope": "Baseline durable-queue suite plus all 17 PR96 regression suites and new overflow suite; not full repository frontend/build validation"
+    }
+  },
+  "verified_blobs": {
+    "engine/src/durable-queue.mjs": "54aafde01d0ce2bfde51521670ba3d7bf828fbc9",
+    "engine/test/lease-deadline-overflow.test.mjs": "4f772a524d97d66cf6e7f1ba0d45561823b9608a"
+  },
+  "hosted_ci": {
+    "run_id": 41298883021,
+    "status_at_check": "queued",
+    "passed": false
+  },
+  "merged": false,
+  "deployed": false,
+  "scope": "Single-process local journal only; no distributed worker/handoff proof"
+}

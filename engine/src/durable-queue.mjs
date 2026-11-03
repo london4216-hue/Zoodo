@@ -4,7 +4,13 @@ import {appendFileSync,existsSync,readFileSync,mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {randomUUID} from 'node:crypto';
 
-const valid = s => typeof s === 'string' && s.length > 0 && s.length <= 256;
+const valid = s => typeof s === 'string' && s.trim().length > 0 && s.length <= 256;
+// Invocation, provider and reviewer IDs must have one canonical spelling.
+// Otherwise whitespace aliases bypass worker-lease and review independence fences.
+// Reject invisible control/format code points that alias worker/provider/reviewer identities.
+const validIdentity = s => valid(s) && s === s.trim() && s.normalize('NFC') === s && !/[\p{Cc}\p{Cf}]/u.test(s);
+// Align durable pilot ticket keys with the private SQL queue's 001 ID contract.
+const validTicketId = s => typeof s === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$/.test(s);
 const fail = message => {throw new Error(message)};
 const snapshot = x => structuredClone(x);
 export class DurableQueue {
@@ -31,11 +37,14 @@ export class DurableQueue {
     if(e.type==='heartbeat')t.leaseUntil=e.leaseUntil;
     if(e.type==='submit'){t.status='review';t.commit=e.commit;t.leaseUntil=null}
     if(e.type==='approve'){t.status='test';t.reviewer=e.reviewer;t.reviewProvider=e.reviewProvider}
-    if(e.type==='tested'){t.tests={passed:e.passed,evidence:e.evidence};if(!e.passed)t.status='queued';}
+    if(e.type==='tested'){t.tests={passed:e.passed,evidence:e.evidence};if(!e.passed){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.commit=null;t.releaseProof=null;}}
     if(e.type==='release')t.releaseProof=e.evidence;
     if(e.type==='verify')t.status='verified';
     if(e.type==='done')t.status='done';
-    if(e.type==='requeue'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null}
+    if(e.type==='requeue'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null;t.commit=null;t.releaseProof=null}
+    // A malformed persisted deadline cannot prove the old invocation stopped.
+    // Keep its identity reserved, but isolate this ticket from automatic NEXT.
+    if(e.type==='quarantine'){t.status='blocked';t.leaseUntil=null}
     t.history.push(e);
   }
   #record(type,id,fields={}){
@@ -47,31 +56,60 @@ export class DurableQueue {
   get(id){const t=this.items.get(id);return t?snapshot(t):null}
   list(){return [...this.items.values()].map(snapshot)}
   create({id,repo,description,releaseRequired=false}){
-    if(!valid(id)||!valid(repo)||!valid(description))fail('Ticket needs id, repo and bounded description');
+    if(!validTicketId(id)||!valid(repo)||!valid(description))fail('Ticket needs id, repo and bounded description');
+    if(typeof releaseRequired!=='boolean')fail('Boolean releaseRequired required');
     const t=this.get(id);
     if(t){if(t.repo!==repo||t.description!==description||t.releaseRequired!==releaseRequired)fail('Idempotency collision');return t}
-    return this.#record('create',id,{repo,description,releaseRequired:Boolean(releaseRequired)});
+    return this.#record('create',id,{repo,description,releaseRequired});
   }
   claim(id,{worker,provider}){
     const t=this.get(id);if(!t||t.status!=='queued')fail('Ticket not queued');
-    if(!valid(worker)||!valid(provider))fail('Real worker identity and provider required');
+    if(!validIdentity(worker)||!validIdentity(provider))fail('Real worker identity and provider required');
     if(t.attempts>=this.maxAttempts)fail('Retry budget exhausted');
-    return this.#record('claim',id,{worker,provider,leaseUntil:this.now()+this.leaseMs});
+    // A worker value is an invocation identity, not a reusable provider name.
+    // Reusing it on this ticket would let a late callback from the prior lease
+    // impersonate the replacement: #active only sees ticket + worker.
+    if(t.history.some(e=>e.type==='claim' && e.worker===worker))
+      fail('Fresh worker invocation required for retry');
+    // This journal is single-writer; refuse a second active lease for the same
+    // worker, including an expired lease until recover() explicitly releases it.
+    if([...this.items.values()].some(other => other.id!==id && other.worker===worker &&
+      ['assigned','running','blocked'].includes(other.status)))fail('Worker already has active ticket');
+    return this.#record('claim',id,{worker,provider,leaseUntil:this.#deadline()});
   }
-  #active(id,worker){const t=this.get(id);if(!t||t.worker!==worker||!['assigned','running'].includes(t.status)||t.leaseUntil<=this.now())fail('No active lease');return t}
+  #deadline(now=this.now()){const deadline=now+this.leaseMs;if(!Number.isSafeInteger(now)||!Number.isSafeInteger(deadline))fail('Invalid lease deadline');return deadline}
+  #active(id,worker,now=this.now()){const t=this.get(id);if(!Number.isSafeInteger(now)||!t||t.worker!==worker||!['assigned','running'].includes(t.status)||!Number.isSafeInteger(t.leaseUntil)||t.leaseUntil<=now)fail('No active lease');return t}
   start(id,worker){const t=this.#active(id,worker);if(t.status!=='assigned')fail('Not assigned');return this.#record('start',id)}
-  heartbeat(id,worker){this.#active(id,worker);return this.#record('heartbeat',id,{leaseUntil:this.now()+this.leaseMs})}
-  submit(id,worker,{commit,evidence}){const t=this.#active(id,worker);if(t.status!=='running')fail('Not running');if(!/^[a-f0-9]{40}$/.test(commit)||!valid(evidence))fail('Exact commit SHA and evidence required');return this.#record('submit',id,{commit,evidence})}
+  heartbeat(id,worker){const now=this.now(),t=this.#active(id,worker,now);return this.#record('heartbeat',id,{leaseUntil:Math.max(t.leaseUntil,this.#deadline(now))})}
+  submit(id,worker,{commit,evidence}){const t=this.#active(id,worker);if(t.status!=='running')fail('Not running');if(typeof commit!=='string'||!/^[a-f0-9]{40}$/.test(commit)||!valid(evidence))fail('Exact commit SHA and evidence required');return this.#record('submit',id,{commit,evidence})}
   approve(id,{reviewer,provider,commit,evidence,approved}){
     const t=this.get(id);if(!t||t.status!=='review')fail('Not awaiting review');
-    if(!valid(reviewer)||!valid(provider)||!valid(evidence)||provider===t.provider||reviewer===t.worker||commit!==t.commit)fail('Independent exact-commit review required');
+    if(!validIdentity(reviewer)||!validIdentity(provider)||!valid(evidence)||provider===t.provider||reviewer===t.worker||commit!==t.commit)fail('Independent exact-commit review required');
+    // Review independence covers every attempt, not only the current worker.
+    // A replaced builder or its provider must not review later work on this ticket.
+    if(t.history.some(e=>e.type==='claim' && (e.worker===reviewer || e.provider===provider)))
+      fail('Independent exact-commit review required');
+    if(typeof approved!=='boolean')fail('Boolean review verdict required');
     if(approved!==true)return this.#record('requeue',id,{reason:'Independent reviewer rejected',reviewer,reviewProvider:provider,evidence,dead:t.attempts>=this.maxAttempts});
     return this.#record('approve',id,{reviewer,reviewProvider:provider,commit,evidence});
   }
-  tested(id,{passed,evidence}){const t=this.get(id);if(!t||t.status!=='test')fail('Not awaiting tests');if(typeof passed!=='boolean'||!valid(evidence))fail('Test verdict and evidence required');return this.#record('tested',id,{passed,evidence})}
+  tested(id,{passed,evidence}){const t=this.get(id);if(!t||t.status!=='test')fail('Not awaiting tests');if(typeof passed!=='boolean'||!valid(evidence))fail('Test verdict and evidence required');return this.#record('tested',id,{passed,evidence,dead:!passed&&t.attempts>=this.maxAttempts})}
   release(id,{authorized,evidence}){const t=this.get(id);if(!t||t.status!=='test'||!t.tests?.passed||!t.releaseRequired)fail('Release not eligible');if(authorized!==true||!valid(evidence))fail('Explicit release authorization and proof required');return this.#record('release',id,{evidence})}
   verify(id,{evidence}){const t=this.get(id);if(!t||t.status!=='test'||!t.tests?.passed||!valid(evidence)||t.releaseRequired&&!t.releaseProof)fail('Tests and authorized release evidence required');return this.#record('verify',id,{evidence})}
   done(id){const t=this.get(id);if(!t||t.status!=='verified')fail('Not verified');return this.#record('done',id)}
-  fail(id,{worker,reason}){const t=this.get(id);if(!t||!['assigned','running'].includes(t.status)||t.worker!==worker||!valid(reason))fail('Active worker failure evidence required');return this.#record('requeue',id,{reason,worker,provider:t.provider,dead:t.attempts>=this.maxAttempts})}
-  recover(){const recovered=[];for(const t of this.items.values())if(['assigned','running'].includes(t.status)&&t.leaseUntil<=this.now())recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts}));return recovered}
+  fail(id,{worker,reason}){const t=this.get(id);if(!t||!['assigned','running'].includes(t.status)||t.worker!==worker||!valid(reason))fail('Active worker failure evidence required');this.#active(id,worker);return this.#record('requeue',id,{reason,worker,provider:t.provider,dead:t.attempts>=this.maxAttempts})}
+  recover(){
+    const now=this.now();
+    if(!Number.isSafeInteger(now))fail('Invalid recovery clock');
+    const recovered=[];
+    for(const t of this.items.values()){
+      if(!['assigned','running'].includes(t.status))continue;
+      if(!Number.isSafeInteger(t.leaseUntil)){
+        recovered.push(this.#record('quarantine',t.id,{reason:'Malformed lease deadline; execution uncertain',worker:t.worker,provider:t.provider}));
+      }else if(t.leaseUntil<=now){
+        recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts}));
+      }
+    }
+    return recovered;
+  }
 }

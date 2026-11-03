@@ -1,0 +1,65 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-10-31T22:16:33Z",
+  "lane": "PR_INTEGRATE",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 96,
+  "branch": "fix/zoo-single-active-worker-lease-20261031",
+  "prior_head": "7da75604cd43a559670dc1f4c1c5a0ebee4a0c7d",
+  "code_commit": "61b129face0e65816d44c5ec58e79a724217ddd7",
+  "test_commit": "2d0309cb187ca91c6490a85c63cdf8b241b52039",
+  "exact_tested_head": "2d0309cb187ca91c6490a85c63cdf8b241b52039",
+  "tested_blobs": {
+    "engine/src/durable-queue.mjs": "2c3584115e6a6bcdc562f3ea67069fdf1cbd281a",
+    "engine/test/invalid-review-verdict.test.mjs": "22e178601838f62162f3b2bb324efd5c08922867",
+    "engine/test/durable-queue.test.mjs": "eecd9a930d5e3a0a6d381b5b601684822eee6728"
+  },
+  "finding": "Pilot queue approve() treated a missing or malformed approval verdict (including undefined, null, strings, numbers, objects) as an explicit rejection, appending a requeue and clearing the submitted active commit. This can trigger unnecessary replacement and misattribute a negative review.",
+  "repair": "Require typeof approved === 'boolean' before any journal mutation; preserve explicit false requeue and explicit true test-stage transition.",
+  "local_tests": {
+    "runtime": "Node v22.16.0",
+    "command": "node --test engine/test/durable-queue.test.mjs engine/test/invalid-review-verdict.test.mjs",
+    "baseline_new_regression": {
+      "passed": 2,
+      "failed": 1,
+      "expected_fail": true
+    },
+    "after_fix": {
+      "passed": 12,
+      "failed": 0
+    },
+    "exact_local_git_hash_object_matches_authenticated_github_blobs": true,
+    "scope": "Local single-writer JSONL pilot; no distributed queue, hosted worker or PostgreSQL runtime"
+  },
+  "github_actions": {
+    "run_id": 41247424539,
+    "job_id": 124673644760,
+    "conclusion": "failure",
+    "executed_steps": null,
+    "classification": "INFRASTRUCTURE_UNKNOWN_NOT_CI_PASS"
+  },
+  "commit_statuses": [],
+  "branch_protection": "UNKNOWN; not bypassed",
+  "durable_private_queue_lease": "NOT_VERIFIED; advisory issue #77 ownership only",
+  "external_provider_native_invocations": 0,
+  "hosted_autonomous_handoffs": 0,
+  "merges": 0,
+  "deployments": 0,
+  "ownership": "Only #96 pilot queue source, new test, and evidence receipt; no product, dashboard, or #92/#93 SQL files changed",
+  "stack_reconciliation": {
+    "65→69→72": "All closed/merged into intermediate branches, not proof of main integration",
+    "68→73→81": "#68 and #81 merged to intermediate branches; #73 closed unmerged; #81 tested drainer source/test blobs match main",
+    "16→71": "Both merged into dashboard branches; live Netlify production SHA not verified"
+  },
+  "next": {
+    "pr": 92,
+    "head": "4155fde854e1fa429d92e4093809ec70eb0fcf51",
+    "source_blob": "cfecc935e840b2e643259e7d71582d64d47ce2e9",
+    "source_checks": "5/5 static source checks passed; no PostgreSQL execution",
+    "pr93_head": "4cc63170a7b8e8fb285e22315e9c1123980b7049",
+    "pr93_blob": "515618f58af555b1cd007e053c5dd5360145736a",
+    "pr93_checks": "4/4 static source checks passed; no PostgreSQL execution",
+    "gates": "Disposable PostgreSQL migration order/concurrency, authenticated DB preflight, required checks and branch-protection verification before merge"
+  },
+  "disposition": "LOCAL_TESTED_DRAFT_ONLY"
+}

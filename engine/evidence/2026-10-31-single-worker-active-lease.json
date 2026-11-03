@@ -1,0 +1,61 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "task_id": "Zoodo-76-single-worker-journal-fence",
+  "related_issues": [
+    76,
+    77,
+    78,
+    74
+  ],
+  "executor": "temporary-coordinator/ChatGPT-connector-plus-local-node",
+  "provider_native_external_agent_invoked": false,
+  "repository": "london4216-hue/Zoodo",
+  "branch": "fix/zoo-single-active-worker-lease-20261031",
+  "code_commit": "7bf3695977a73e042aa977e707bc2be00eb706a4",
+  "test_commit": "311a95352f35b50eb8119a879ee9ff94865acb90",
+  "files": [
+    {
+      "path": "engine/src/durable-queue.mjs",
+      "git_blob_sha": "32827556ea3aa01d0c258d4cd7f46e503b4af920"
+    },
+    {
+      "path": "engine/test/single-worker-active-lease.test.mjs",
+      "git_blob_sha": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79"
+    },
+    {
+      "path": "engine/test/durable-queue.test.mjs",
+      "git_blob_sha": "eecd9a930d5e3a0a6d381b5b601684822eee6728",
+      "unchanged": true
+    }
+  ],
+  "executed_at_utc": "2026-10-31T15:42:57Z",
+  "checks": [
+    {
+      "name": "fail-first new regression against unpatched source",
+      "command": "node --test engine/test/single-worker-active-lease.test.mjs",
+      "result": "EXPECTED_FAIL",
+      "passed": 0,
+      "failed": 1,
+      "detail": "Missing expected exception"
+    },
+    {
+      "name": "exact-source Node.js 22.16.0 regression and existing queue tests",
+      "command": "node --test engine/test/durable-queue.test.mjs engine/test/single-worker-active-lease.test.mjs",
+      "result": "PASS",
+      "passed": 10,
+      "failed": 0
+    }
+  ],
+  "scope": "single-process append-only pilot queue; NOT distributed atomic lease or hosted worker",
+  "deployment": {
+    "status": "UNKNOWN",
+    "id": null
+  },
+  "hosted_ci": {
+    "status": "UNKNOWN"
+  },
+  "merge": {
+    "status": "NOT_MERGED"
+  },
+  "next_action": "PR closure lane review exact head, run full relevant Node suite, check branch protections, integrate if eligible; Hunter continue authenticated event-host qualification; dashboard independent."
+}

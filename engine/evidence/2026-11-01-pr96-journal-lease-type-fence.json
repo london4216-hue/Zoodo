@@ -1,0 +1,45 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-01T09:52:18.064Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 96,
+  "branch": "fix/zoo-single-active-worker-lease-20261031",
+  "baseline_head": "7b085f7fa9b9d97ea0e9ceaf579563e8580d4c1a",
+  "baseline_source_blob": "96194d7f96f8eee5a033a6ce38aa5baf264a7e19",
+  "regression_commit": "56eac6807a03b68164656f4a06039efd453d67da",
+  "repair_commit": "a63b80898fc10b29a306d15ee3ebb5e15945e2f4",
+  "repaired_source_blob": "d205937e83f6d86358eb8ff7315505023b385b07",
+  "regression_test_blob": "9ffbfa448182d1b340afecb74627c04a812935c6",
+  "regression": "Journal replay accepted string or unsafe-number leaseUntil in #active, allowing start/heartbeat of a malformed active lease",
+  "before_fix": {
+    "invalid_deadlines_accepted": 3,
+    "valid_control_passed": 1
+  },
+  "after_fix": {
+    "passed": 8,
+    "failed": 0,
+    "exact_committed_test_files": [
+      "engine/test/journal-lease-type-fence.test.mjs",
+      "engine/test/heartbeat-clock-rollback-fence.test.mjs",
+      "engine/test/single-worker-active-lease.test.mjs"
+    ]
+  },
+  "test_method": "Actual exact GitHub committed JavaScript source and tests executed in V8 with in-memory Node fs/crypto shims; NOT native Node.js, PostgreSQL, GitHub Actions or hosted integration",
+  "historical_pr81": {
+    "tested_head": "50689fb00c0940fae40cf568ad60937c8d47d83b",
+    "source_blob": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+    "test_blob": "76b1fcb63dd7baebe71e30ae20462510b8d6c408",
+    "fleet_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json"
+  },
+  "github_actions": {
+    "run_id": 41287602777,
+    "conclusion": "failure",
+    "executed_steps": 0,
+    "classification": "INFRASTRUCTURE UNKNOWN, not test failure or pass"
+  },
+  "merge": false,
+  "deployment": false,
+  "verified_atomic_db_lease": false,
+  "external_provider_native_invocation": false,
+  "next": "#92/#93 SQL migration-order and concurrency preflight; no blind merge"
+}

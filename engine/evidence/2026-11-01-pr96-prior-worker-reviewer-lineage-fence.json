@@ -1,0 +1,79 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-01T01:11:35Z",
+  "executor": {
+    "identity": "ChatGPT tool-enabled PR-closure builder",
+    "route": "authenticated GitHub connector + local Node.js 22.16.0",
+    "provider_native_external_model_invoked": false,
+    "durable_database_lease_claimed": false,
+    "advisory_claim_comment": "https://github.com/london4216-hue/Zoodo/issues/77#issuecomment-6551592410"
+  },
+  "change": {
+    "repository": "london4216-hue/Zoodo",
+    "pr": 96,
+    "branch": "fix/zoo-single-active-worker-lease-20261031",
+    "baseline_head": "bec0a8e365510fdd11fdee98215f1ec43e0d7ead",
+    "source_commit": "9b27f3a415e219f28d6de19a8694a69d1c4671b2",
+    "test_commit": "88fcf6fdbb1d14da60278b8128c9803cb727f92c",
+    "files": [
+      "engine/src/durable-queue.mjs",
+      "engine/test/prior-worker-reviewer-lineage-fence.test.mjs"
+    ],
+    "git_blob_shas": {
+      "engine/src/durable-queue.mjs": "6f4fe725655724b8e5ffffe90b508e2860a3a1ba",
+      "engine/test/prior-worker-reviewer-lineage-fence.test.mjs": "39fa3db7692fe0b45d089be3042627b8f13a3c59"
+    },
+    "defect": "A worker from a prior failed attempt of the same ticket could approve the replacement worker's commit, because approve() checked only the current worker identity.",
+    "fix": "Reject reviewer identities appearing in any historical claim event for the same ticket; preserve independent reviewer success."
+  },
+  "tests": {
+    "baseline_new_regression": {
+      "passed": 0,
+      "failed": 1,
+      "reason": "Missing expected exception against exact baseline blob e1eb5b66e21c817d435a6e01909581597e95dbd6"
+    },
+    "patched_new_regression": {
+      "passed": 1,
+      "failed": 0
+    },
+    "local_combined": {
+      "command": "node --test engine/test/*.test.mjs",
+      "passed": 15,
+      "failed": 0,
+      "files": [
+        "engine/test/durable-queue.test.mjs",
+        "engine/test/invalid-review-verdict.test.mjs",
+        "engine/test/reused-worker-identity-fence.test.mjs",
+        "engine/test/prior-worker-reviewer-lineage-fence.test.mjs"
+      ],
+      "exact_existing_test_blobs": [
+        "eecd9a930d5e3a0a6d381b5b601684822eee6728",
+        "22e178601838f62162f3b2bb324efd5c08922867",
+        "e729dfad03fda8756a1173c9fd8533c8c9f2c950"
+      ],
+      "scope": "isolated local Node synthetic journal tests; not full PR #96 suite or distributed DB"
+    },
+    "github_readback_source_and_regression_blobs_match_local": true,
+    "github_actions": {
+      "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41260013602",
+      "conclusion": "failure",
+      "job": "lab-tests",
+      "steps": null,
+      "classification": "INFRASTRUCTURE_UNKNOWN_ZERO_STEPS"
+    }
+  },
+  "integration": {
+    "pr_state": "draft_unmerged",
+    "merged": false,
+    "deployed": false,
+    "branch_protections_bypassed": false,
+    "hosted_worker_handoff_verified": false,
+    "product_files_changed": false,
+    "dashboard_files_changed": false
+  },
+  "next": {
+    "target": "Zoodo PR #112",
+    "scope": "Read-only exact-head verification and merge eligibility, nonoverlapping with #96; #92/#93 require disposable PostgreSQL migration/concurrency proof",
+    "state": "QUEUED_NOT_CLAIMED"
+  }
+}

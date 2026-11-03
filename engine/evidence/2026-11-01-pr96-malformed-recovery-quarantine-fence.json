@@ -1,0 +1,36 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-01",
+  "task": "Zoodo PR #96 local journal recovery integrity",
+  "baseline_head": "25b280a1c42fa44a885eb36174ca7f9015bd8673",
+  "baseline_source_blob": "d205937e83f6d86358eb8ff7315505023b385b07",
+  "test_commit": "fedfb5b6ad732594df4f7a7efe12ef6d613d2913",
+  "source_fix_commit": "2b9edff6e2b42ab99b922df7f87eae93296785a7",
+  "exact_git_blobs": {
+    "engine/src/durable-queue.mjs": "632b28ad9562ad1e5d0716f70fff4fb8603702a4",
+    "engine/test/journal-recovery-invalid-lease-fence.test.mjs": "c6ecb4239f33b9e3be95e78866e2e148e8820d48",
+    "engine/test/durable-queue.test.mjs": "eecd9a930d5e3a0a6d381b5b601684822eee6728",
+    "engine/test/journal-lease-type-fence.test.mjs": "9ffbfa448182d1b340afecb74627c04a812935c6"
+  },
+  "defect": "Journal replay with null leaseUntil is implicitly treated as expired and requeued despite unknown worker execution. Nonnumeric, numeric-string, and unsafe-integer lease deadlines are rejected by #active but silently remain assigned during recover().",
+  "repair": "Explicitly quarantine malformed deadlines into durable blocked status while retaining the worker invocation identity and preventing its reuse on another ticket. Preserve ordinary expired lease recovery and unrelated queue progress.",
+  "local_environment": "Native Node.js 22.16.0; synthetic local JSONL journal; no PostgreSQL or hosted runner",
+  "fail_first": {
+    "command": "node --test engine/test/journal-recovery-invalid-lease-fence.test.mjs",
+    "passed": 2,
+    "failed": 4
+  },
+  "after_fix": {
+    "command": "node --test engine/test/durable-queue.test.mjs engine/test/journal-lease-type-fence.test.mjs engine/test/journal-recovery-invalid-lease-fence.test.mjs",
+    "passed": 19,
+    "failed": 0
+  },
+  "source_and_test_blob_readback_matches_local_git_hash_object": true,
+  "provider_native_external_worker_invoked": false,
+  "distributed_database_lease_verified": false,
+  "postgresql_migration_run": false,
+  "hosted_ci": "UNKNOWN",
+  "merged": false,
+  "deployed": false,
+  "note": "This receipt documents exact-source local tests, not autonomous handoff or CI success. Historical #81 and #77 receipts inspected; #92/#93 remain separate SQL work."
+}

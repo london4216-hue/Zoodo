@@ -1,0 +1,35 @@
+{
+  "schema": "zoo.pr-closure-evidence.v1",
+  "recorded_at_utc": "2026-11-01T00:55:34Z",
+  "repo": "london4216-hue/Zoodo",
+  "pr": 96,
+  "coordination_issue": 77,
+  "claim_comment": "https://github.com/london4216-hue/Zoodo/issues/77#issuecomment-6551420314",
+  "claim_type": "ADVISORY_SINGLE_WRITER_NOT_DURABLE_DATABASE_LEASE",
+  "baseline_head": "07bd27e6c277d9c33cb8a3124716ed42a7bd5632",
+  "baseline_source_blob": "5d52f3f34cf06c21545afc2756f37c8b5ac06bb6",
+  "defect": "create() silently coerced nonboolean releaseRequired to Boolean, changing release policy and causing non-idempotent retries",
+  "fix": "Reject nonboolean releaseRequired before writing a journal event; preserve explicit true/false behavior",
+  "source_commit": "71c62eb0a0132fa6315fb12b2a924854a72a27d0",
+  "regression_commit": "0f228db7cee6c71573a2beb751204b974e5fc988",
+  "exact_tested_blobs": {
+    "engine/src/durable-queue.mjs": "e1eb5b66e21c817d435a6e01909581597e95dbd6",
+    "engine/test/release-required-type-fence.test.mjs": "313409a3e7d3ad261d1649cb080715d928386aed"
+  },
+  "tests": {
+    "node": "22.16.0",
+    "baseline_fail_first": "1 test FAILED (missing expected exception)",
+    "after_fix_committed_regression": "1/1 PASS",
+    "additional_local_smoke": "2/2 PASS for explicit true/false full lifecycle and journal restart (smoke not committed)",
+    "github_exact_blob_readback_matches_local": true,
+    "full_pr_suite": "NOT RUN",
+    "hosted_ci": "UNKNOWN",
+    "postgresql": "NOT TESTED"
+  },
+  "merged": false,
+  "deployed": false,
+  "provider_native_worker_invoked": false,
+  "dashboard_changed": false,
+  "product_changed": false,
+  "next": "Read-only exact-head review of Zoodo PR #112; #92/#93 require disposable PostgreSQL tests; do not merge #96 without required checks."
+}

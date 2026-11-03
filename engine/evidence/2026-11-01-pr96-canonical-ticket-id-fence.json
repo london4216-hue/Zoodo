@@ -1,0 +1,66 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-11-01T04:46:34.422Z",
+  "task": "PR_INTEGRATE Zoodo #96 — reject noncanonical ticket ID aliases",
+  "repo": "london4216-hue/Zoodo",
+  "branch": "fix/zoo-single-active-worker-lease-20261031",
+  "advisory_ownership_comment": "https://github.com/london4216-hue/Zoodo/issues/77#issuecomment-6553548570",
+  "durable_database_lease": "NOT_CLAIMED; no authenticated Supabase queue lease",
+  "baseline_head": "6bbb807685bfffd8542cde546c60b2a18b7a9449",
+  "baseline_source_blob": "5c10a65f92a00b63ece24eb795570a31aaead215",
+  "regression_commit": "421014f7a172fb10c26cd468b8d8ba13037f3cb4",
+  "fix_commit": "1467f0d88e5a8bfa4c1ead77d6738ca0e3c877d2",
+  "fixed_source_blob": "c34083464c226c7d1cbfb4afc08d65c94bc96ddb",
+  "regression_test_blob": "9863490a686b9733325af1dd8d4a8563088fc799",
+  "files": [
+    "engine/src/durable-queue.mjs",
+    "engine/test/canonical-ticket-id-fence.test.mjs"
+  ],
+  "defect": "create() allowed ticket IDs differing only by leading/trailing whitespace or newline to persist as distinct journal entries, defeating idempotency of a logical task",
+  "fix": "Require validIdentity(id) before append, using existing canonical nonblank bounded string check; no normalization of existing historical IDs",
+  "fail_first": {
+    "environment": "V8 exact GitHub source with in-memory Node filesystem/assert/test shims",
+    "tests": 37,
+    "passed": 35,
+    "failed": 2,
+    "expected_failures": [
+      "noncanonical ticket ID aliases cannot create duplicate durable work",
+      "invalid initial ticket ID does not append journal events"
+    ]
+  },
+  "after_fix": {
+    "environment": "V8 exact GitHub source and 14 exact GitHub test files with in-memory Node filesystem/assert/test shims",
+    "tests": 37,
+    "passed": 37,
+    "failed": 0,
+    "source_readback_matched": true,
+    "test_readback_matched": true
+  },
+  "limits": [
+    "NOT native Node.js test runner",
+    "NOT PostgreSQL or distributed locking test",
+    "NOT hosted CI pass",
+    "NOT provider-native external model invocation",
+    "NOT production deployment"
+  ],
+  "hosted_ci": {
+    "run_id": 41274353846,
+    "job_id": 124753386135,
+    "conclusion": "failure",
+    "steps": null,
+    "classification": "infrastructure UNKNOWN; zero-step startup"
+  },
+  "integration": {
+    "pr": 96,
+    "state": "draft",
+    "merged": false,
+    "deployed": false
+  },
+  "stack_reconciliation": {
+    "65→69→72": "closed/merged into intermediate branches; not proven on main",
+    "68→73→81": "#68 and #81 merged into intermediate branches; #73 closed unmerged, so not proven on main",
+    "16→71": "closed/merged into intermediate branches; not proof of live dashboard"
+  },
+  "next": "PR #112 exact head re-read; inspect mergeability/checks and independent files; #92/#93 require disposable PostgreSQL checks",
+  "owner_email_sent": false
+}

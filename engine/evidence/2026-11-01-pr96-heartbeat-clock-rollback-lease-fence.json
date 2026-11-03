@@ -1,0 +1,69 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-01T08:08:43.233Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 96,
+  "branch": "fix/zoo-single-active-worker-lease-20261031",
+  "task": "PR_INTEGRATE heartbeat clock-rollback lease fence",
+  "initial_head_sha": "3c81ed6414ff62f294c545eba032e691dff7419a",
+  "baseline_source_blob_sha": "e31f24012ebf1557858d79a624fb530921c162c1",
+  "regression_commit_sha": "0f997f93469805e23f270296d5519200853d6a2a",
+  "fix_commit_sha": "855a72d458d41a7943d0a449b5a31c6d9436695d",
+  "tested_source_blob_sha": "96194d7f96f8eee5a033a6ce38aa5baf264a7e19",
+  "tested_regression_blob_sha": "5ad898d9b1ea520cdca789c17ea7f91314d5ef21",
+  "changes": [
+    "engine/src/durable-queue.mjs",
+    "engine/test/heartbeat-clock-rollback-fence.test.mjs"
+  ],
+  "defect": "A backwards wall-clock step made heartbeat() replace an existing active leaseUntil with a smaller deadline; recovery could requeue an active worker before the original expiry.",
+  "fix": "Use Math.max(previous leaseUntil, current clock + leaseMs) after validating the active lease. Normal forward-clock extension and original expiry recovery remain unchanged.",
+  "fail_first": {
+    "environment": "V8 source execution with in-memory Node fs/crypto shims",
+    "assertions": 10,
+    "passed": 7,
+    "failed": 3,
+    "failed_cases": [
+      "rollback heartbeat never shortens lease",
+      "no premature recovery",
+      "replay preserves original lease"
+    ]
+  },
+  "after_fix": {
+    "environment": "V8 source execution with in-memory Node fs/crypto shims",
+    "new_regression_tests": 3,
+    "new_regression_passed": 3,
+    "committed_test_files_executed": 15,
+    "assertion_tests_passed": 33,
+    "assertion_tests_failed": 0,
+    "source_readback_sha_verified": true,
+    "regression_readback_sha_verified": true
+  },
+  "limitations": [
+    "Not native Node.js test execution",
+    "Not hosted CI",
+    "Not disposable PostgreSQL concurrency",
+    "Not authenticated durable database lease",
+    "Not native Copilot/Gemini/DeepSeek invocation",
+    "Not production deployment"
+  ],
+  "github_actions": {
+    "run_id": 41287544947,
+    "job_id": 124791804333,
+    "conclusion": "failure",
+    "executed_steps": null,
+    "classification": "INFRASTRUCTURE_UNKNOWN_ZERO_STEP"
+  },
+  "integration": {
+    "pr_draft": true,
+    "merged": false,
+    "deployed": false
+  },
+  "historical_stacks": {
+    "stack_a": "#65→#69→#72 merged only into intermediate branches",
+    "stack_b": "#68→#73→#81 includes #73 closed/unmerged and #81 intermediate merge",
+    "dashboard": "#16→#71 branch-scoped, production mapping not established"
+  },
+  "next": "PR #112 current exact head c5b17ff21a0f852a871f02cf771c52f43ce54551, draft/unmerged; #92/#93 PostgreSQL concurrency and migration order remain pending",
+  "single_writer": "Only #96 durable-queue source, new regression test and receipt; no product, dashboard, SQL or #112 edits",
+  "owner_email_sent": false
+}

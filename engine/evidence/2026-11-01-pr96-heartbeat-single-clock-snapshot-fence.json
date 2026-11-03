@@ -1,0 +1,52 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-01T13:37:20Z",
+  "task": "Zoodo#77 PR_INTEGRATE #96",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 96,
+  "branch": "fix/zoo-single-active-worker-lease-20261031",
+  "base_head_sha": "c8a8bb563dcc44ebe1db68c8201c50bb34c82e9c",
+  "test_first_commit": "782cec13c3f791fa200024eaf2be07d4210414b8",
+  "source_fix_commit": "0979f836361f89690b05a2e9214dbb5a8cdbd8ea",
+  "defect": "heartbeat() read now() separately in active lease validation and deadline renewal; clock rollback could discard valid heartbeat extension and clock jump could extend using a time never checked against the old expiry",
+  "fix": "Capture a single validated clock sample and reuse it in active lease check and deadline renewal",
+  "files": {
+    "engine/src/durable-queue.mjs": "7df032b0cf864cace3e06bab768850c1c245f7da",
+    "engine/test/heartbeat-single-clock-snapshot.test.mjs": "b8893e683d4722b59d7ae66eb650de9f9631a46b",
+    "engine/test/heartbeat-clock-rollback-fence.test.mjs": "5ad898d9b1ea520cdca789c17ea7f91314d5ef21",
+    "engine/test/single-worker-active-lease.test.mjs": "af941a69ff69eb2c251ed67b9a2ecfc7f8e72b79"
+  },
+  "environment": "native local Node.js 22.16.0; isolated temporary journal fixtures",
+  "test_command": "node --test engine/test/heartbeat-single-clock-snapshot.test.mjs engine/test/heartbeat-clock-rollback-fence.test.mjs engine/test/single-worker-active-lease.test.mjs",
+  "fail_first": {
+    "new_regression_pass": 2,
+    "new_regression_fail": 2,
+    "tap_sha256": "4cab22b2d1fe4220722bbcf48bed8e91557c6d615c9d337bf57d6e009d666f4d"
+  },
+  "after_fix": {
+    "pass": 8,
+    "fail": 0,
+    "tap_sha256": "d50716d40e628cf73b2c733e6208e1eb321d81bfd24050c984c0f160535d7c54"
+  },
+  "github_source_and_test_blobs_match_local_git_hash_object": true,
+  "historical_pr81_fleet_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "historical_pr81_source_blob": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+  "historical_pr81_test_blob": "76b1fcb63dd7baebe71e30ae20462510b8d6c408",
+  "historical_stacks": [
+    "#65→#69→#72 branch-scoped merges",
+    "#68→#73→#81 branch-scoped; #73 closed unmerged",
+    "#16→#71 dashboard branch-scoped"
+  ],
+  "scopes_excluded": [
+    "#112 outbox",
+    "#92/#93 SQL",
+    "#123-129 dashboard",
+    "private TransendIQ product branches"
+  ],
+  "durable_distributed_lease_verified": false,
+  "provider_native_external_worker_invoked": false,
+  "hosted_ci": "UNKNOWN — zero-step startup failure not a test result",
+  "merged": false,
+  "deployed": false,
+  "next": "Reinspect exact PR #112 and SQL #92/#93 without overlapping ownership; no automatic merge of stacked draft"
+}
