@@ -1,0 +1,19 @@
+name: Local Automation Loop
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # every 6 hours
+  workflow_dispatch:
+
+jobs:
+  loop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run local loop (1 tick)
+        run: node engine/ops/local-automation-loop.mjs
+      - name: Run engine tests
+        run: cd engine && npm test || node --test engine/test/*.test.mjs
