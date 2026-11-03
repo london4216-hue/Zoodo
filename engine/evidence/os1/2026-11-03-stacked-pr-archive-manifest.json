@@ -1,0 +1,115 @@
+{
+  "schema": "zoo.os1.archive-manifest.v1",
+  "recorded_date_utc": "2026-11-03",
+  "scope": "Selected stacked and integration PRs, not a complete repository inventory",
+  "integration_pr": 132,
+  "records": [
+    {
+      "number": 16,
+      "url": "https://github.com/london4216-hue/Zoodo/pull/16",
+      "state": "closed",
+      "merged": true,
+      "base": "autonomous-engine-replacement-2026-10-29",
+      "head_sha": "bdd5b18e4fd34b91ff798b1683cd5015cc329312"
+    },
+    {
+      "number": 65,
+      "url": "https://github.com/london4216-hue/Zoodo/pull/65",
+      "state": "closed",
+      "merged": true,
+      "base": "worker/p0-outbox-recovery-no-deadletter-20261031-0824",
+      "head_sha": "0e3901f45ca0573da21a12c040b8eec92302c130"
+    },
+    {
+      "number": 68,
+      "url": "https://github.com/london4216-hue/Zoodo/pull/68",
+      "state": "closed",
+      "merged": true,
+      "base": "worker/p0-relay-bounded-replacement-20261031-auto11",
+      "head_sha": "c7c65b8b01c3d2ef9467e2816f3cf096e845ba5e"
+    },
+    {
+      "number": 69,
+      "url": "https://github.com/london4216-hue/Zoodo/pull/69",
+      "state": "closed",
+      "merged": true,
+      "base": "keeper/p0-callback-envelope-fence-20261031-0840",
+      "head_sha": "89309b2c3e4b53916432619de8b08580ece60dd2"
+    },
+    {
+      "number": 71,
+      "url": "https://github.com/london4216-hue/Zoodo/pull/71",
+      "state": "closed",
+      "merged": true,
+      "base": "fix/zoo-live-dashboard-accountability-20261030",
+      "head_sha": "e0acae0e7618761df92587ecff8feb761d165f12"
+    },
+    {
+      "number": 72,
+      "url": "https://github.com/london4216-hue/Zoodo/pull/72",
+      "state": "closed",
+      "merged": true,
+      "base": "worker/p0-callback-envelope-wiring-20261031-1022",
+      "head_sha": "fd216f26fbfaa8fbc791082b2d96d0dd315cae7f"
+    },
+    {
+      "number": 73,
+      "url": "https://github.com/london4216-hue/Zoodo/pull/73",
+      "state": "closed",
+      "merged": false,
+      "base": "keeper/zoo-outbox-drainer-20261031",
+      "head_sha": "b33c8e862410c0563847369a944e27f3468a78a0"
+    },
+    {
+      "number": 81,
+      "url": "https://github.com/london4216-hue/Zoodo/pull/81",
+      "state": "closed",
+      "merged": true,
+      "base": "verifier/p0-outbox-idle-rpc-20261031-1109",
+      "head_sha": "50689fb00c0940fae40cf568ad60937c8d47d83b"
+    },
+    {
+      "number": 92,
+      "url": "https://github.com/london4216-hue/Zoodo/pull/92",
+      "state": "open",
+      "merged": false,
+      "base": "main",
+      "head_sha": "4155fde854e1fa429d92e4093809ec70eb0fcf51"
+    },
+    {
+      "number": 93,
+      "url": "https://github.com/london4216-hue/Zoodo/pull/93",
+      "state": "open",
+      "merged": false,
+      "base": "main",
+      "head_sha": "4cc63170a7b8e8fb285e22315e9c1123980b7049"
+    },
+    {
+      "number": 96,
+      "url": "https://github.com/london4216-hue/Zoodo/pull/96",
+      "state": "open",
+      "merged": false,
+      "base": "main",
+      "head_sha": "da3b20cc772c3ce07bf38ce3c087e38b5de75a21"
+    },
+    {
+      "number": 132,
+      "url": "https://github.com/london4216-hue/Zoodo/pull/132",
+      "state": "open",
+      "merged": false,
+      "base": "main",
+      "head_sha": "68402efebbd42697cfaa5534901766a657c87153"
+    }
+  ],
+  "stack_findings": [
+    "65->69->72 merged only into successive feature branches",
+    "68->73->81: 73 closed unmerged; 81 merged into 73 head branch",
+    "16->71 dashboard merged into intermediate branch; no production deploy inferred"
+  ],
+  "source_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "preservation": "No PR or branch closed/deleted by this manifest; no assertion of mainline ancestry without commit graph proof",
+  "test_scope": "GitHub metadata readback and 12 record field integrity assertions; no Node/PostgreSQL application test run",
+  "durable_lease": "NOT_CLAIMED",
+  "next": "PR 92 prerequisite SQL 003/004/004a then PR 93 SQL 005-010 in disposable PostgreSQL; separately deduplicate PR 96"
+}
