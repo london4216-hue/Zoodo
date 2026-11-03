@@ -1,0 +1,35 @@
+name: P0 CI runner and write-path diagnostic
+on:
+  push:
+    branches:
+      - fix/p0-ci-runner-diagnostic-20261103
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  runner-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Confirm runner actually started
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "runner=${RUNNER_NAME:-unknown}"
+          echo "sha=$GITHUB_SHA"
+          echo "event=$GITHUB_EVENT_NAME"
+          echo "RUNNER_STARTED=true" >> "$GITHUB_STEP_SUMMARY"
+      - name: Test local filesystem write and readback
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' "$GITHUB_SHA" > ci-write-probe.txt
+          test "$(cat ci-write-probe.txt)" = "$GITHUB_SHA"
+          echo "LOCAL_WRITE_READBACK=PASS" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload diagnostic receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: p0-ci-diagnostic
+          path: ci-write-probe.txt
+          if-no-files-found: error
+          retention-days: 7

@@ -7,7 +7,7 @@ import {join} from 'node:path';
 import {DurableQueue} from '../src/durable-queue.mjs';
 import {verifySignature,ingestIssue,createIngressServer} from '../src/webhook-ingress.mjs';
 const secret='a-test-webhook-secret-of-adequate-length';
-const payload={action:'labeled',label:{name:'zoo-ready'},sender:{login:'london4216-hue'},repository:{full_name:'london4216-hue/Zoodo'},issue:{number:12,title:'Build evidence clock',body:'## Acceptance\\nMust fail closed and pass exact-head tests\\n'}};
+const payload={action:'labeled',label:{name:'zoo-ready'},sender:{login:'london4216-hue'},repository:{full_name:'london4216-hue/Zoodo'},issue:{number:12,title:'Build evidence clock',body:'## Acceptance\nMust fail closed and pass exact-head tests\n'}};
 const options={repos:['london4216-hue/Zoodo'],maintainers:['london4216-hue']};
 function fixture(fn){const dir=mkdtempSync(join(tmpdir(),'zoo-ingress-')),file=join(dir,'queue.jsonl'),q=new DurableQueue(file,{leaseMs:100,maxAttempts:3});return Promise.resolve().then(()=>fn(q,file)).finally(()=>rmSync(dir,{recursive:true,force:true}))}
 const sig=raw=>'sha256='+createHmac('sha256',secret).update(raw).digest('hex');
