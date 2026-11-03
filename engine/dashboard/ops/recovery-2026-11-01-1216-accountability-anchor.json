@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "bounded_dashboard_source_repair",
+  "observed_at": "2026-11-01T12:16:00Z",
+  "repository": "london4216-hue/Zoodo",
+  "base_branch": "main",
+  "base_sha": "3b8942edae4230e15e745ff86d8fea6c208f814a",
+  "original_index_blob_sha": "82fa64fc52cbc8379f3f2ec8bd3073972271b617",
+  "changed_path": "engine/dashboard/index.html",
+  "defect": "Duplicate id=accountability on iframe queue panel and status panel creates ambiguous document.getElementById and fragment navigation",
+  "change": "Rename status panel id to accountability-status; preserve queue panel id and every href",
+  "source_checks": {
+    "baseline_duplicate_ids": [
+      "accountability"
+    ],
+    "post_duplicate_ids": [],
+    "original_href_count": 43,
+    "patched_href_count": 43,
+    "href_order_exact_match": true,
+    "patch_is_one_exact_replacement": true,
+    "source_executed_v8_checks": "6/6 passed"
+  },
+  "test_path": "engine/dashboard/tests/accountability-unique-ids.test.mjs",
+  "production": {
+    "deployed": false,
+    "verified_live": false,
+    "netlify_deploy_id": null,
+    "production_sha": null,
+    "rollback_mapping": null
+  },
+  "coordination": {
+    "keeper": "sole integration authority",
+    "hunter": "host probe only",
+    "independent_lanes": [
+      "PR Closure",
+      "EZ Move",
+      "BeautyPath"
+    ],
+    "grading": "deferred_until_wednesday"
+  },
+  "source_commit_sha": "e2acd472d793890472a88cd023ca92dea20e8c59",
+  "test_commit_sha": "263173d9670c0fd0896674eec780df3263414f42"
+}
