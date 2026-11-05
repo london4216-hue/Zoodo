@@ -1,0 +1,53 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "date_utc": "2026-10-31",
+  "lane": "PR_INTEGRATE",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 92,
+  "branch": "integrate/p0-uncertain-worker-fence-main-20261031",
+  "baseline_head_sha": "3ae813d16bc64bd01953a6e564d8615cef329209",
+  "code_commit_sha": "d29e57737ff86364540ea2d71c0a7620f1d8faa1",
+  "test_commit_sha": "6bc7388c73d7a067838c10def08861195fca950a",
+  "exact_tested_head_sha": "6bc7388c73d7a067838c10def08861195fca950a",
+  "exact_tested_git_blobs": {
+    "engine/ops/relay/004a_worker_lease_wall_clock_fence.sql": "8e9a6d86803dc7f433b23e0d56e5542ec33669c4",
+    "engine/test/worker-lease-wall-clock-fence.test.mjs": "27fa4d30d2d23a441232b376efa9bd836affb7a2"
+  },
+  "defect": "Original 001_ticket_directory.sql completion and dispatch-recorded RPCs accepted an expired worker lease before quarantine, because they checked token/state but not lease_until. Quarantine itself used transaction-start now() and could miss elapsed expiry.",
+  "repair": "Additive migration 004a, ordered after 004, replaces complete, dispatch_recorded and quarantine_expired with clock_timestamp lease checks and explicit null evidence validation. Existing token/worker and service-role fences retained.",
+  "tests": {
+    "fail_first": {
+      "command": "node --test engine/test/worker-lease-wall-clock-fence.test.mjs",
+      "passed": 0,
+      "failed": 4,
+      "reason": "repair migration absent"
+    },
+    "after_fix": {
+      "command": "node --test engine/test/worker-lease-wall-clock-fence.test.mjs",
+      "passed": 4,
+      "failed": 0,
+      "scope": "local Node 22.16.0 source-contract assertions only; no PostgreSQL engine test"
+    }
+  },
+  "github_actions": {
+    "exact_test_head_runs": [],
+    "prior_head_run_id": 41222034795,
+    "prior_head_conclusion": "failure",
+    "classification": "CI_UNKNOWN_NOT_PASSED"
+  },
+  "combined_commit_statuses": [],
+  "branch_protection": "403 Resource not accessible by integration",
+  "sql_migration_apply": "NOT_APPLIED",
+  "postgresql_concurrency": "NOT_TESTED",
+  "private_queue_lease": "NOT_VERIFIED",
+  "provider_native_invocations": 0,
+  "hosted_handoffs": 0,
+  "merges": 0,
+  "deployments": 0,
+  "coordination": "PR closure only touched #92 additive SQL migration and its test; #93 SQL 005-009 remains separate; no product/dashboard paths changed.",
+  "next": {
+    "pr": 93,
+    "action": "Reconcile 001→002→003→004→004a→005→006→007→008→009 in disposable PostgreSQL; test expired ACK/claim/complete, concurrent claims, outbox recovery, and protected checks."
+  },
+  "disposition": "SOURCE_CONTRACT_TESTED_DRAFT_ONLY"
+}

@@ -1,0 +1,50 @@
+{
+  "schema": "zoo.pr-integration-evidence.v1",
+  "recorded_date_utc": "2026-10-31",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 92,
+  "task": "Zoodo#77 PR_INTEGRATE",
+  "advisory_claim_comment": "https://github.com/london4216-hue/Zoodo/issues/77#issuecomment-6549589642",
+  "durable_database_lease_verified": false,
+  "tested_source_head": "559663e9d748f7d3ec79a784e659482b5c687ba2",
+  "change": "Preflight safely requeues only tokenless legacy leased outbox rows with NULL expiry before 004 validates outbox lease integrity; writes wall-clock audit, retains attempts and bounded backoff. Token-bearing malformed claims remain fail-closed.",
+  "files": {
+    "engine/ops/relay/004_queue_integrity_constraints.sql": "cfecc935e840b2e643259e7d71582d64d47ce2e9",
+    "engine/test/outbox-legacy-migration-order.test.mjs": "864e5de6000f4d989d5b5acf0c511f178c4b5c31",
+    "engine/test/queue-integrity-migration.test.mjs": "42d421b82c8d5c55a5e8bee93d41ea4cda7392cb"
+  },
+  "verification": {
+    "baseline_new_tests": {
+      "passed": 1,
+      "failed": 2
+    },
+    "after_fix_local_node22": {
+      "command": "node --test engine/test/queue-integrity-migration.test.mjs engine/test/outbox-legacy-migration-order.test.mjs",
+      "passed": 8,
+      "failed": 0
+    },
+    "exact_github_blob_readback": true,
+    "next_pr93": {
+      "head": "4cc63170a7b8e8fb285e22315e9c1123980b7049",
+      "sql_blob": "515618f58af555b1cd007e053c5dd5360145736a",
+      "test_blob": "fb62f093819a0ab9d617a2ac205c387ea9e2087f",
+      "local_node_source_predicate_tests_passed": 3
+    },
+    "postgresql_runtime_available": false,
+    "postgresql_migration_or_concurrency_tested": false,
+    "github_actions_status": "INFRASTRUCTURE UNKNOWN: run 41245543507 concluded failure, but lab-tests job 124668090314 returned steps=null; no test steps executed",
+    "branch_protection_verified": false,
+    "native_external_model_invoked": false,
+    "hosted_autonomous_handoff_verified": false,
+    "github_actions_run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41245543507"
+  },
+  "limitations": [
+    "Not applied to any database",
+    "Source-contract and predicate-model tests are not PostgreSQL integration tests",
+    "Operator reconciliation remains necessary for token-bearing NULL-expiry rows and any other malformed legacy records",
+    "Do not merge drafts until required checks, disposable PostgreSQL ordering/concurrency and protections are verified"
+  ],
+  "merges": 0,
+  "deployments": 0,
+  "owner_email_sent": false
+}
