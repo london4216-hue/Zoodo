@@ -1,0 +1,58 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-10-31T17:42:00Z",
+  "task": "PR_INTEGRATE #93: outbox recovery wall-clock fence",
+  "scope": "additive private operations SQL migration source only; no live DB write",
+  "pr": 93,
+  "baseline_migration": "engine/ops/relay/005_outbox_retry_backoff.sql",
+  "baseline_migration_blob": "696cf71f3b6039fd2842c6b5251ad18b57c988c1",
+  "repair_migration": "engine/ops/relay/008_outbox_recover_wall_clock.sql",
+  "repair_migration_blob": "7dd844f1204fabcb11ece7616845f15031c4c443",
+  "repair_commit": "13c4a4fa07a831fedab2b84c4a92c7c316cfd029",
+  "regression_test": "engine/test/outbox-recover-wall-clock.test.mjs",
+  "regression_test_blob": "696d0f4d0efe83bc84453cc456cd5462116dd194",
+  "test_commit": "f8d3cc6f9ab39af74f1c02e303307c03825b61ce",
+  "exact_tested_head": "f8d3cc6f9ab39af74f1c02e303307c03825b61ce",
+  "finding": "Original outbox recovery uses transaction-start now() for expired lease, dead wakeup eligibility and next retry deadline. Long-running transactions may skip expired work or schedule retry relative to stale time.",
+  "repair": "Add migration 008 overriding recovery with clock_timestamp() while preserving capped backoff, events and service-role restrictions; 005 remains historical for migration order.",
+  "tests": {
+    "runtime": "Node v22.16.0",
+    "command": "node --test engine/test/*.test.mjs",
+    "baseline_new_regression": {
+      "passed": 0,
+      "failed": 2,
+      "expected_fail": true,
+      "reason": "008 migration absent"
+    },
+    "after_fix": {
+      "passed": 15,
+      "failed": 0
+    },
+    "existing_exact_github_blobs": {
+      "engine/ops/relay/002_outbox_idle_settlement.sql": "82db86bc110e8b44ef98d67f5fa399f5ac159805",
+      "engine/ops/relay/005_outbox_retry_backoff.sql": "696cf71f3b6039fd2842c6b5251ad18b57c988c1",
+      "engine/ops/relay/006_outbox_ack_lease_fence.sql": "351ce19f456c456a2a1f59070e16fcc45d44fdde",
+      "engine/ops/relay/007_outbox_idle_ack_wall_clock.sql": "72defedddf4f8296a395dd2f8a10cb4b72f45b99",
+      "engine/test/outbox-recovery-no-deadletter.test.mjs": "ba455dd90d8ffb418efec0d5762f631e656eebcb",
+      "engine/test/outbox-ack-expired-lease.test.mjs": "4992b7e0db25f84cc900f7b62bf201a457e8d51a",
+      "engine/test/outbox-idle-ack-wall-clock.test.mjs": "b689322f3ceae0cd67acf6152dfda2f8fa2bb5e6"
+    },
+    "github_readback_matches_local_tested_blobs": true,
+    "limitations": "source-contract/synthetic tests only, not actual PostgreSQL transaction/row-lock tests"
+  },
+  "github_actions": {
+    "run_id": 41226000633,
+    "job_id": 124610167703,
+    "conclusion": "failure",
+    "steps": null,
+    "classification": "infrastructure UNKNOWN, not CI PASS"
+  },
+  "branch_protection": "UNKNOWN; protected rules not read",
+  "private_db_migrations_applied": false,
+  "native_provider_invoked": false,
+  "hosted_handoff": false,
+  "merged": false,
+  "deployed": false,
+  "single_writer_scope": "PR #93 new migration 008 and regression test only; no product/dashboard paths",
+  "next": "Run disposable PostgreSQL migrations 001,002,005,006,007,008 with lock-wait/lease-expiry concurrency, verify branch rules, integrate only when checks permit"
+}

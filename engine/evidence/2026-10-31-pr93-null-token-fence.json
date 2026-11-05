@@ -1,0 +1,46 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_date": "2026-10-31",
+  "task": "PR_INTEGRATE Zoodo #93",
+  "claim_type": "advisory_issue77_only_not_durable_database_lease",
+  "source_pr": "https://github.com/london4216-hue/Zoodo/pull/93",
+  "baseline_head": "ce848cdc4fc91cee61c78d4a506ac18d100ca8d2",
+  "test_commit": "c3d7d045dc27cd40057480a23f29b85032d17b32",
+  "fix_commit": "95f0280e6c47ac48a980f49539a22ec648fddf5d",
+  "tested_head": "95f0280e6c47ac48a980f49539a22ec648fddf5d",
+  "exact_git_blobs": {
+    "engine/ops/relay/010_outbox_null_lease_recovery.sql": "515618f58af555b1cd007e053c5dd5360145736a",
+    "engine/test/outbox-null-token-safety.test.mjs": "fb62f093819a0ab9d617a2ac205c387ea9e2087f",
+    "engine/test/outbox-null-lease-recovery.test.mjs": "275c9e9b9fb072a306f2a047c1ee94b6ff982649",
+    "engine/test/outbox-recover-event-wall-clock.test.mjs": "33d985516e2c5dfe4bba20f467a94da3df32129e"
+  },
+  "defect": "Outbox NULL-expiry recovery could automatically requeue token-bearing leased wakeups without native non-execution evidence, risking concurrent worker dispatch.",
+  "fix": "Require lease_token IS NULL for NULL-expiry recovery; expired non-null-expiry claims retain existing recovery. Token-bearing NULL-expiry rows stay fail-closed pending operator evidence.",
+  "tests": {
+    "environment": "local Node.js 22.16.0",
+    "command": "node --test engine/test/outbox-null-token-safety.test.mjs engine/test/outbox-null-lease-recovery.test.mjs engine/test/outbox-recover-event-wall-clock.test.mjs",
+    "baseline_new_suite": {
+      "passed": 2,
+      "failed": 1
+    },
+    "after_fix": {
+      "passed": 9,
+      "failed": 0
+    },
+    "scope": "exact-Git-blob source-contract and pure predicate-model tests; not PostgreSQL runtime/concurrency"
+  },
+  "ci": {
+    "workflow_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41242344182",
+    "conclusion": "failure",
+    "job": "lab-tests",
+    "steps": null,
+    "interpretation": "startup/infrastructure UNKNOWN; no tests executed"
+  },
+  "branch_protection": "403 Resource not accessible by integration",
+  "postgres_runtime": "NOT_RUN",
+  "hosted_worker_handoff": "NOT_VERIFIED",
+  "native_external_model_invocations": "NONE_VERIFIED",
+  "merge": false,
+  "deployment": false,
+  "next": "Inspect #92 exact-head migration 004 constraint ordering against #93 010 recovery; run disposable PostgreSQL tests before merging. No dashboard/product file ownership."
+}

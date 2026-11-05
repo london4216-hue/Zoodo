@@ -1,0 +1,64 @@
+{
+  "schema": "zoo.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-10-31T20:13:42.292Z",
+  "scope": "Zoodo PR #93 only; private operations SQL source and regression test; no production database write",
+  "source_head_before_receipt": "063ac075a1d832fbd92730909c76ea55e4a5e419",
+  "source_commits": {
+    "test": "e67624a7fcbab894f3eea54268f3eff1d75ca4a6",
+    "migration": "063ac075a1d832fbd92730909c76ea55e4a5e419"
+  },
+  "defect": {
+    "schema": "001_ticket_directory.sql permits nullable outbox.lease_until",
+    "prior_recovery": "008_outbox_recover_wall_clock.sql checks o.lease_until<clock_timestamp(); NULL is UNKNOWN",
+    "consequence": "a leased wake-up with NULL lease_until cannot be claimed, acknowledged, or recovered by existing RPCs"
+  },
+  "fix": {
+    "migration": "engine/ops/relay/010_outbox_null_lease_recovery.sql",
+    "test": "engine/test/outbox-null-lease-recovery.test.mjs",
+    "migration_order": "001→002→003→004→004a→005→006→007→008→009→010",
+    "scope": "recover leased NULL-expiry wakeups; retain capped backoff, dead replay, audit events and service-role-only RPC"
+  },
+  "exact_git_blobs": {
+    "engine/ops/relay/010_outbox_null_lease_recovery.sql": "a638404e2511ed6a0f31a688c2713616e9831b97",
+    "engine/test/outbox-null-lease-recovery.test.mjs": "f51c698f0bd05369eb4d072d481f274b34ed0b70"
+  },
+  "tests": {
+    "command": "node --test engine/test/outbox-null-lease-recovery.test.mjs",
+    "runtime": "Node 22.16.0",
+    "before": {
+      "pass": 0,
+      "fail": 1,
+      "reason": "new migration absent; fail-first regression file could not load"
+    },
+    "after": {
+      "pass": 4,
+      "fail": 0
+    },
+    "exact_source_blob_readback": true,
+    "scope": "local source-contract and SQL NULL predicate simulation; NOT PostgreSQL execution or concurrency test"
+  },
+  "github_actions": {
+    "prior_head_run": 41228434522,
+    "prior_head_conclusion": "failure",
+    "lab_tests_steps": null,
+    "current_head_statuses": [],
+    "current_head_workflow_runs": [],
+    "interpretation": "CI UNKNOWN, no CI PASS"
+  },
+  "gates": {
+    "private_durable_lease": "UNVERIFIED",
+    "postgresql_migration_execution": "NOT_RUN",
+    "postgresql_concurrency": "NOT_RUN",
+    "branch_protection": "UNKNOWN",
+    "native_provider_invocation": "NOT_RUN",
+    "hosted_two_ticket_handoff": "NOT_PROVEN",
+    "merge": false,
+    "production_deploy": false
+  },
+  "reconciliation": {
+    "stack_callback": "#65→#69→#72 closed/merged into intermediate bases, not proof of main",
+    "stack_outbox": "#68 merged into intermediate; #73 closed unmerged; #81 merged into #73 base; source receipt verified",
+    "dashboard": "#16→#71 merged on intermediate branch, production mapping not proven"
+  },
+  "next": "PR #92 exact-head SQL worker lease fence; check migration order and PostgreSQL concurrency in disposable database; no blind merge"
+}

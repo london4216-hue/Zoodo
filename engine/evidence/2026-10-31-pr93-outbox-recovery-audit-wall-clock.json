@@ -1,0 +1,51 @@
+{
+  "schema": "zoo.pr-integration-source-receipt.v1",
+  "recorded_date_utc": "2026-10-31",
+  "repo": "london4216-hue/Zoodo",
+  "pr": 93,
+  "branch": "integrate/p0-outbox-retry-backoff-main-20261031",
+  "source_head_before_receipt": "c31299a09ce1dac5d6cb0c3d69233ee044e8a769",
+  "scope": "Source-only repair to private ZOO operations SQL; not a PostgreSQL execution, scheduler or provider-native run",
+  "defect": "Recovery uses clock_timestamp() for lease expiry/backoff, but inserted zoo_ops_events.at used DEFAULT now() frozen at transaction start; long-running transactions backdate audit evidence",
+  "changed_files": [
+    "engine/ops/relay/010_outbox_null_lease_recovery.sql",
+    "engine/test/outbox-recover-event-wall-clock.test.mjs",
+    "engine/test/outbox-null-lease-recovery.test.mjs"
+  ],
+  "exact_tested_blob_shas": {
+    "engine/ops/relay/010_outbox_null_lease_recovery.sql": "3ba4aed3f802d41a7b9b2e082b6d4159a92247d6",
+    "engine/test/outbox-recover-event-wall-clock.test.mjs": "33d985516e2c5dfe4bba20f467a94da3df32129e",
+    "engine/test/outbox-null-lease-recovery.test.mjs": "275c9e9b9fb072a306f2a047c1ee94b6ff982649"
+  },
+  "test_command": "node --test engine/test/outbox-null-lease-recovery.test.mjs engine/test/outbox-recover-event-wall-clock.test.mjs",
+  "new_test_fail_first": {
+    "passed": 1,
+    "failed": 1
+  },
+  "after_fix": {
+    "passed": 6,
+    "failed": 0
+  },
+  "exact_blob_readback_matches_local_git_hash_object": true,
+  "postgreSQL_runtime_tested": false,
+  "postgres_concurrency_tested": false,
+  "github_actions_latest_observed": {
+    "run_id": 41240774942,
+    "status": "queued",
+    "conclusion": null
+  },
+  "branch_protection_verified": false,
+  "private_durable_queue_lease_verified": false,
+  "external_model_native_invocation_verified": false,
+  "merge": false,
+  "deploy": false,
+  "immediate_next": {
+    "pr": 92,
+    "head_sha": "4f4982ccf60c8594141d5dadbd660a3a0691893e",
+    "sql_blob_sha": "8e9a6d86803dc7f433b23e0d56e5542ec33669c4",
+    "source_contract_checks_passed": 4,
+    "source_contract_checks_total": 4,
+    "merge": false
+  },
+  "handoff_issue": 77
+}
