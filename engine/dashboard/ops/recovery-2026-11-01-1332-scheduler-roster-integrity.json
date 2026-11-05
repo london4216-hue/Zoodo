@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-11-01T13:32:42.793Z",
+  "scope": "dashboard source only; not deployed",
+  "issue": "https://github.com/london4216-hue/Zoodo/issues/18",
+  "defect": "Missing, empty, or inconsistent expected_roles could report RECORDED RUNS CURRENT from a partial scheduler feed.",
+  "change": "Require a nonempty unique expected_roles roster and reject worker roles absent from that roster; preserve UNKNOWN/recovery semantics and no active heartbeat claim.",
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "base_branch": "main",
+    "base_sha": "3b8942edae4230e15e745ff86d8fea6c208f814a",
+    "branch": "fix/zoo-scheduler-roster-integrity-20261101-1329",
+    "source_blob_before": "c5ec5108200f0eebf81132c5d7c63667c0601413",
+    "source_blob_after": "9564e69570d6567bf8420c10a0be703efba0e392",
+    "test_blob_after": "f2d512ffde2f76be7816dce8fa04d1ae46b70066"
+  },
+  "local_test": {
+    "command": "node --test automation-roster-contract.test.mjs",
+    "fail_first": "3/5 failing before patch; 2/5 passing",
+    "after": "5/5 passing against exact source blob 9564e69570d6567bf8420c10a0be703efba0e392",
+    "syntax": "node --check automation-proof.mjs passed",
+    "hosted_ci": "NOT EXECUTED"
+  },
+  "github": {
+    "open_prs": 79,
+    "open_issues": 27,
+    "counts_source": "authenticated GitHub search; counts are not a production display",
+    "last_inspected_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41308460380",
+    "last_inspected_job": "failure; steps null",
+    "new_head_runs": "none returned before PR creation"
+  },
+  "historical_merges": [
+    {
+      "pr": 16,
+      "base": "autonomous-engine-replacement-2026-10-29",
+      "merged_at": "2026-10-31T12:56:11Z",
+      "open_to_merge_seconds": 76910
+    },
+    {
+      "pr": 71,
+      "base": "fix/zoo-live-dashboard-accountability-20261030",
+      "merged_at": "2026-10-31T12:56:19Z",
+      "open_to_merge_seconds": 8072
+    }
+  ],
+  "scheduler": {
+    "source_feed_observed_at": "2026-10-31T10:40:41.796Z",
+    "source_feed_stale": true,
+    "live_readback_scope": "connected scheduler metadata, not productive worker execution",
+    "latest_roles": {
+      "keeper": "recorded completed 2026-11-01T13:28:40.287547Z",
+      "pr_closure": "recorded completed 2026-11-01T13:31:04.117361Z",
+      "builder": "in_progress 2026-11-01T13:29:52.215609Z; prior completion 12:31:48.586157Z",
+      "dashboard": "in_progress 2026-11-01T13:29:16.976176Z",
+      "hunter": "disabled; prior completion timestamp precedes scheduled_for"
+    }
+  },
+  "hosting": {
+    "netlify_preview": "UNKNOWN; no provider deployment receipt",
+    "production": "UNVERIFIED; direct browser readback unavailable",
+    "production_sha": null,
+    "deploy_id": null,
+    "cache_status": "UNKNOWN",
+    "rollback": "Preserve main at base_sha; no production mutation",
+    "deploy_latency_seconds": null,
+    "test_to_deploy_latency_seconds": null
+  },
+  "boundaries": {
+    "dashboard_html_edited": false,
+    "links_edited": false,
+    "owner_authentication_edited": false,
+    "hosting_config_edited": false,
+    "production_deployed": false,
+    "other_lanes_blocked": false,
+    "wednesday_grades_deferred": true,
+    "ordinary_email_sent": false
+  },
+  "handoff": {
+    "integration": "Sole Keeper reviews draft; do not merge without source compatibility",
+    "host_probe": "Qualified Hunter replacement or Keeper verifies Netlify site ID, deploy ID, source SHA, cache, browser readback and rollback"
+  }
+}
