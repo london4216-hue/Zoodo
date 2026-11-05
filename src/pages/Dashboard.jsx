@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Layout from '@/components/Layout';
 import { DAYS, getMondayISO, formatWeekRange } from '@/lib/lessonConfig';
-import { Check, ChevronRight, Heart, TrendingUp, MessageCircle, Loader2 } from 'lucide-react';
+import { ChevronRight, Heart, TrendingUp, MessageCircle, Loader2, Video } from 'lucide-react';
+import { generateDailySensoryPlan } from '@/lib/sensoryActivityLibrary';
+import ParentVideoPicker from '@/components/ParentVideoPicker';
 
 export default function Dashboard() {
   const [kid, setKid] = useState(null);
@@ -15,6 +17,10 @@ export default function Dashboard() {
   const [savingMilestone, setSavingMilestone] = useState(false);
   const [supportNeeds, setSupportNeeds] = useState('');
   const [savingSupportNeeds, setSavingSupportNeeds] = useState(false);
+  const [sensoryPlan, setSensoryPlan] = useState([]);
+  const [recordingParentVideo, setRecordingParentVideo] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [videoUploadError, setVideoUploadError] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -25,6 +31,7 @@ export default function Dashboard() {
           setCheerText(kids[0].cheer_text || '');
           setMilestone(kids[0].developmental_milestone || '');
           setSupportNeeds(kids[0].support_needs || '');
+          setSensoryPlan(generateDailySensoryPlan(kids[0].age || 4));
         }
         const all = await base44.entities.Lesson.filter({ kid_id: kids[0]?.id });
         setLessons(all || []);
@@ -257,6 +264,96 @@ export default function Dashboard() {
           <p className="mt-3 text-xs text-black/40">
             EduPath is a fun, caregiver-led companion that complements — it does not replace — professional therapy.
           </p>
+        </div>
+      )}
+
+      {/* Parent cheer videos — re-record anytime */}
+      {kid && (
+        <div className="rounded-[28px] bg-white p-5 mb-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <Video className="h-5 w-5 text-[#D96969]" />
+            <h2 className="font-bold text-black/80">Parent cheer videos</h2>
+            <span className="ml-auto text-xs font-semibold text-black/40">
+              {(kid.parent_videos || []).length} recorded
+            </span>
+          </div>
+          <p className="text-xs text-black/40 mb-3">
+            These play after every lesson so {kid.name || 'your child'} hears the people who love them celebrate. Re-record anytime!
+          </p>
+          {!recordingParentVideo ? (
+            <button
+              onClick={() => setRecordingParentVideo(true)}
+              className="w-full rounded-2xl border-2 border-[#D96969] py-3 font-bold text-[#D96969] active:scale-95 transition hover:bg-[#FAD7D7]/30"
+            >
+              {(kid.parent_videos || []).length > 0 ? '🎥 Re-record a cheer' : '🎥 Record your first cheer'}
+            </button>
+          ) : uploadingVideo ? (
+            <div className="flex flex-col items-center gap-2 py-6 text-black/50 font-semibold">
+              <Loader2 className="h-6 w-6 animate-spin text-[#D96969]" /> Saving cheer…
+            </div>
+          ) : (
+            <div>
+              <ParentVideoPicker
+                cheer={kid.cheer_text ? kid.cheer_text : `You did it, ${kid.name}!`}
+                onRecorded={async (file) => {
+                  if (!file) { setRecordingParentVideo(false); return; }
+                  setUploadingVideo(true);
+                  setVideoUploadError('');
+                  try {
+                    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                    const next = [...(kid.parent_videos || []), file_url];
+                    const updated = await base44.entities.Kid.update(kid.id, { parent_videos: next });
+                    setKid(updated);
+                    setRecordingParentVideo(false);
+                  } catch (e) {
+                    setVideoUploadError('Could not save video. Please try again.');
+                  }
+                  setUploadingVideo(false);
+                }}
+              />
+              <button
+                onClick={() => { setRecordingParentVideo(false); setVideoUploadError(''); }}
+                className="mt-2 w-full text-sm font-semibold text-black/40 underline underline-offset-2"
+              >
+                Cancel
+              </button>
+              {videoUploadError && (
+                <p className="mt-2 text-sm font-semibold text-red-500 text-center">{videoUploadError}</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Daily sensory enrichment suggestions */}
+      {kid && sensoryPlan.length > 0 && (
+        <div className="rounded-[28px] bg-white p-5 mb-5 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🌟</span>
+              <h2 className="font-bold text-black/80">Today's sensory add-ons</h2>
+            </div>
+            <button
+              onClick={() => setSensoryPlan(generateDailySensoryPlan(kid.age || 4))}
+              className="text-xs font-bold text-[#4969E1] underline underline-offset-2"
+            >
+              Refresh
+            </button>
+          </div>
+          <p className="text-xs text-black/40 mb-3">
+            2–5 min sensory breaks between lessons. Pick one or try them all!
+          </p>
+          <div className="space-y-2">
+            {sensoryPlan.slice(0, 4).map((activity) => (
+              <div key={activity.id} className="flex items-start gap-3 rounded-2xl bg-black/[0.03] p-3">
+                <span className="text-2xl shrink-0">{activity.icon}</span>
+                <div className="min-w-0">
+                  <p className="font-bold text-sm text-black/80">{activity.name}</p>
+                  <p className="text-xs text-black/50 mt-0.5">{activity.description} · {activity.duration}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

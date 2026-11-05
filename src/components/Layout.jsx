@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, LayoutDashboard, Sparkles } from 'lucide-react';
 import RestartDemoButton from '@/components/RestartDemoButton';
+import SystemAuditPanel from '@/components/SystemAuditPanel';
 
 // Bottom navigation shared across the app screens.
 export default function Layout({ children }) {
@@ -16,6 +17,7 @@ export default function Layout({ children }) {
         </div>
         {children}
       </main>
+      <SystemAuditPanel />
       <nav className="fixed bottom-0 inset-x-0 z-20 border-t border-black/5 bg-white/90 backdrop-blur">
         <div className="mx-auto max-w-2xl flex items-center justify-around px-6 py-2">
           <NavItem to="/" label="Home" icon={Home} active={isActive('/') && !isActive('/dashboard') && !isActive('/activities')} />
