@@ -1,0 +1,53 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "date_utc": "2026-11-01",
+  "task": "PR_INTEGRATE Zoodo#112 — mutable worker roster getter snapshot fence",
+  "prior_required_inspection": {
+    "pr81_head": "50689fb00c0940fae40cf568ad60937c8d47d83b",
+    "pr81_source_blob": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+    "pr81_test_blob": "76b1fcb63dd7baebe71e30ae20462510b8d6c408",
+    "fleet_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "handoff_issue": "https://github.com/london4216-hue/Zoodo/issues/77"
+  },
+  "baseline": {
+    "pr112_head": "718104e55ed928d01aed19ee1131e588bbbb48d1",
+    "source_blob": "24a9dd90572772a9c811c3eb126ce581370e48a7",
+    "reproduced_defect": "Three separate reads of array getters during workerIds validation and snapshot permit dispatch of a worker not present in validated reads, or duplicate dispatch after idle.",
+    "fail_first_native_node22": {
+      "passed": 1,
+      "failed": 2,
+      "command": "node --test engine/test/outbox-roster-getter-fence.test.mjs"
+    }
+  },
+  "repair": {
+    "test_commit": "9341ddf40352b6e56e43325ce0b9120848472b66",
+    "source_commit": "0118788391553dbf0b7475c0ce1bbcc4d0eb7595",
+    "source_blob": "9592e4e393fc8ef5c2c20b5ce2dcd5872e506a85",
+    "existing_test_blob": "970adf150ba734e580858e9f01273ea145595ee6",
+    "new_test_blob": "c920d1bd78f3aea1347400f5290a9684c834c29a",
+    "changed_paths": [
+      "engine/ops/relay/outbox-drainer.mjs",
+      "engine/test/outbox-roster-getter-fence.test.mjs"
+    ],
+    "description": "Snapshot workerIds once, then validate and dispatch only that exact snapshot."
+  },
+  "post_fix_native_node22": {
+    "command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-roster-getter-fence.test.mjs",
+    "passed": 19,
+    "failed": 0,
+    "scope": "Exact reconstructed GitHub source/test blobs; synthetic local fixtures, not full repository, SQL, or hosted CI."
+  },
+  "github_readback_matches_local_hashes": true,
+  "github_actions_at_receipt": {
+    "run_id": 41291787466,
+    "status": "queued",
+    "conclusion": null,
+    "hosted_ci": "UNKNOWN"
+  },
+  "merge": false,
+  "deployed": false,
+  "database_lease_claimed": false,
+  "provider_native_external_model_invoked": false,
+  "ownership": "advisory issue #77 only; not an atomic durable queue lease",
+  "next": "Inspect PR #96 exact head, then #92/#93 PostgreSQL migration and concurrency; no blind merge."
+}

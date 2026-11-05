@@ -1,0 +1,55 @@
+{
+  "schema": "zoo.pr-closure-receipt.v1",
+  "recorded_local_date": "2026-10-31",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 112,
+  "issue": 77,
+  "claim_comment": "https://github.com/london4216-hue/Zoodo/issues/77#issuecomment-6551025810",
+  "claim_type": "ADVISORY_FILE_OWNERSHIP_ONLY",
+  "durable_database_lease_verified": false,
+  "prior_reconciliation": {
+    "65→69→72": "closed merged branch-scoped",
+    "68→73→81": "68 and 81 merged branch-scoped; 73 closed unmerged",
+    "16→71": "closed merged branch-scoped"
+  },
+  "baseline": {
+    "head": "a0eb042e3abac7f2b46498e04ba81bec6258a7f9",
+    "source_blob": "152996cb3bcce80df2074b63a4584384480df586",
+    "existing_test_blobs": {
+      "engine/test/outbox-drainer.test.mjs": "d7c616dcd0c3e666339ea9dbb0b549a2a6731588",
+      "engine/test/outbox-ambiguous-recovery-fence.test.mjs": "3edb1d3bcea81fcb0f6d4b40de235b43339c520d"
+    }
+  },
+  "defect": "Duplicate workerIds entries allow the same idle worker to be called twice as its own fallback after durable idle settlement returns false; roster must be validated before claiming an outbox event.",
+  "change": "Reject duplicate qualified worker IDs before durable claim; preserve distinct-worker idle fallback.",
+  "test_commit": "2267fe18df8839ae521d1856fb9750073bab4c8e",
+  "code_commit": "8dee9c80c117a5d512700989a3b5df76acb35f92",
+  "exact_tested_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "94137a2b9874a7a775b5af4148959527bccffcad",
+    "engine/test/outbox-duplicate-roster-fence.test.mjs": "6c2526e12c57dddb24a6e2c9de82785a7025252a"
+  },
+  "verification": {
+    "node": "22.16.0",
+    "baseline_fail_first": {
+      "command": "node --test engine/test/outbox-duplicate-roster-fence.test.mjs",
+      "passed": 1,
+      "failed": 1
+    },
+    "after_fix": {
+      "command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-ambiguous-recovery-fence.test.mjs engine/test/outbox-duplicate-roster-fence.test.mjs",
+      "passed": 23,
+      "failed": 0
+    },
+    "github_blob_readback_matches_local": true,
+    "scope": "Exact-hash-matched local Node synthetic tests; no hosted worker, Supabase lease or PostgreSQL integration",
+    "github_actions": "No PR-triggered workflow runs returned for code commit; hosted CI UNKNOWN",
+    "combined_statuses": []
+  },
+  "merged": false,
+  "deployed": false,
+  "provider_native_worker_invoked": false,
+  "product_files_changed": false,
+  "dashboard_files_changed": false,
+  "owner_email_sent": false,
+  "next": "Review Zoodo PR #96 for a nonoverlapping core queue integration defect; #92/#93 remain gated on disposable PostgreSQL migration/concurrency."
+}

@@ -1,0 +1,59 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "date_utc": "2026-11-01",
+  "task": "PR_INTEGRATE Zoodo#112",
+  "issue_handoff": "https://github.com/london4216-hue/Zoodo/issues/77",
+  "required_first_inspection": {
+    "pr81_exact_source_blob": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+    "pr81_exact_test_blob": "76b1fcb63dd7baebe71e30ae20462510b8d6c408",
+    "original_fleet_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "stack_reconciliation": "65->69->72,68->73->81,16->71 are intermediate branch merges; #73 closed unmerged"
+  },
+  "scope": {
+    "branch": "integrate/p0-outbox-ambiguous-state-fence-20261031",
+    "baseline_head": "110493ed6ba4fa56bbbce827c1faa346465d5f00",
+    "test_commit": "c991fb2df77e374b9dfcfb049b6edb457f98e5ed",
+    "source_fix_commit": "5f0837228d7cb26a879aa3612449e38183dd8d0c",
+    "files": [
+      "engine/ops/relay/outbox-drainer.mjs",
+      "engine/test/outbox-mutable-state-fence.test.mjs"
+    ]
+  },
+  "defect": "Untrusted relay result.state getter was read repeatedly. First observation idle/failed could mutate to dispatched, causing durable ACK while attempts evidence recorded idle/failed. Snapshot one state value and use it for all dispatch decisions.",
+  "exact_blobs": {
+    "baseline_source": "9592e4e393fc8ef5c2c20b5ce2dcd5872e506a85",
+    "fixed_source": "ff914f4cf516e2b13ff9028ce196bb852cbabe5e",
+    "existing_test": "970adf150ba734e580858e9f01273ea145595ee6",
+    "new_test": "18de5e7ae47ecddf94e71a8ca57514c4311f9b3d"
+  },
+  "tests": {
+    "runtime": "Node.js v22.16.0",
+    "command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-mutable-state-fence.test.mjs",
+    "baseline_existing": {
+      "passed": 16,
+      "failed": 0
+    },
+    "new_regressions_before_fix": {
+      "passed": 0,
+      "failed": 3
+    },
+    "after_fix": {
+      "passed": 19,
+      "failed": 0
+    },
+    "source_and_tests_reconstructed_exact_git_blobs": true,
+    "hosted_ci": "UNKNOWN: GitHub Actions run 41298943398 failed before any steps (lab-tests.steps=null)"
+  },
+  "integration": {
+    "pr_state": "draft, unmerged",
+    "branch_protections": "not independently verified",
+    "production_deployment": false,
+    "durable_database_lease": false,
+    "external_provider_native_invocation": false,
+    "owner_email": false
+  },
+  "next": {
+    "pr96": "Concurrent independent #96 update observed at 50d3ad7ae9caff4b26f89c97db88b22f6ef97fbf; do not touch its files",
+    "pr92_93": "Remain draft; disposable PostgreSQL migration-order/concurrency execution unavailable, no merge"
+  }
+}

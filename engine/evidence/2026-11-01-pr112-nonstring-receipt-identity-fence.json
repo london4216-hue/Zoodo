@@ -1,0 +1,63 @@
+{
+  "schema": "zoo.pr-closure-receipt.v1",
+  "recorded_at_utc": "2026-11-01T01:45:39Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 112,
+  "issue": 77,
+  "claim_comment": "https://github.com/london4216-hue/Zoodo/issues/77#issuecomment-6551923014",
+  "claim_type": "ADVISORY_SINGLE_WRITER_ONLY",
+  "durable_database_lease_verified": false,
+  "historical_stack_reconciliation": {
+    "65→69→72": "all merged into stacked intermediate branches; not proof of main integration",
+    "68→73→81": "#68 and #81 merged branch-scoped; #73 closed unmerged; exact #81 fleet receipt inspected",
+    "16→71": "merged branch-scoped; no production deploy inferred"
+  },
+  "baseline": {
+    "head": "e4b0530c6aa2e94ebbdda2ef7d4233166bcbb78c",
+    "source_blob": "94137a2b9874a7a775b5af4148959527bccffcad",
+    "existing_test_blobs": {
+      "engine/test/outbox-drainer.test.mjs": "d7c616dcd0c3e666339ea9dbb0b549a2a6731588",
+      "engine/test/outbox-ambiguous-recovery-fence.test.mjs": "3edb1d3bcea81fcb0f6d4b40de235b43339c520d",
+      "engine/test/outbox-duplicate-roster-fence.test.mjs": "6c2526e12c57dddb24a6e2c9de82785a7025252a"
+    }
+  },
+  "defect": "JavaScript RegExp.test coerced numeric ticket IDs and delegated replacement worker IDs to strings. A malformed durable outbox lease could pass validation and an untyped dispatch/delegation receipt could trigger durable ACK.",
+  "change": "Require actual string type before ticket, worker, and lease-token regex validation; preserve all valid string dispatch/delegation paths.",
+  "test_commit": "cd81d59c0ad22c6950de6a3b240e9f6340fc02c8",
+  "code_commit": "44b747f6c18227ee914dad5cb4f7d2d6e8939662",
+  "exact_tested_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "87c6db7c8a6a4686b2744be499306a96a50fde1e",
+    "engine/test/outbox-receipt-ticket-type-fence.test.mjs": "0d9901a6c40856547eac623857ba2204bc0f1fd1"
+  },
+  "verification": {
+    "node": "22.16.0",
+    "fail_first": {
+      "command": "node --test engine/test/outbox-receipt-ticket-type-fence.test.mjs",
+      "passed": 0,
+      "failed": 3,
+      "source_blob": "94137a2b9874a7a775b5af4148959527bccffcad"
+    },
+    "after_fix": {
+      "command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-ambiguous-recovery-fence.test.mjs engine/test/outbox-duplicate-roster-fence.test.mjs engine/test/outbox-receipt-ticket-type-fence.test.mjs",
+      "passed": 26,
+      "failed": 0
+    },
+    "github_blob_readback_matches_local": true,
+    "scope": "Exact-hash-matched local Node synthetic tests; no hosted worker, PostgreSQL or Supabase lease",
+    "github_actions": {
+      "run_id": 41262409418,
+      "conclusion": "failure",
+      "job": "lab-tests",
+      "steps_executed": 0,
+      "classification": "INFRASTRUCTURE_UNKNOWN"
+    },
+    "combined_statuses": []
+  },
+  "merged": false,
+  "deployed": false,
+  "provider_native_worker_invoked": false,
+  "product_files_changed": false,
+  "dashboard_files_changed": false,
+  "owner_email_sent": false,
+  "next": "Release advisory ownership, independently inspect unblocked #96 read-only or other eligible PR; #92/#93 PostgreSQL validation still gated."
+}

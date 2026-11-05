@@ -1,0 +1,67 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-11-01T03:46:40Z",
+  "ticket": "Zoodo PR #112",
+  "worker": "ChatGPT authenticated GitHub connector + local Node.js 22.16.0",
+  "lease": "ADVISORY_SINGLE_WRITER_ONLY; no verified atomic Supabase lease",
+  "baseline": {
+    "pr_head": "cbde9a53d4e392ea79b2ef6630c0f7d37e12c9cd",
+    "source_blob": "fd8beace4ccb20740527534109209bfc8646cccf",
+    "regression": "unlisted delegated replacement worker can cause durable ACK",
+    "fail_first": {
+      "passed": 1,
+      "failed": 1
+    }
+  },
+  "changes": {
+    "regression_commit": "060c17f1279bb2b518722b978bd41ac68a867506",
+    "source_commit": "57ba651516c9c81726f3febf409aa3c38cd52241",
+    "existing_test_adjustment_commit": "c649c7916aea37a52ca445a87402cbaaba295f97",
+    "files": [
+      "engine/ops/relay/outbox-drainer.mjs",
+      "engine/test/outbox-delegated-roster-fence.test.mjs",
+      "engine/test/outbox-drainer.test.mjs"
+    ],
+    "blobs": {
+      "engine/ops/relay/outbox-drainer.mjs": "ba4b9ab2dda217c207034845f2feb7eab0d3924f",
+      "engine/test/outbox-delegated-roster-fence.test.mjs": "1b9e1b0cc06acd090bf6c428c1b25482fb5bf72f",
+      "engine/test/outbox-drainer.test.mjs": "970adf150ba734e580858e9f01273ea145595ee6"
+    }
+  },
+  "tests": {
+    "command": "node --test engine/test/outbox-*.test.mjs",
+    "runner": "local Node.js 22.16.0",
+    "passed": 30,
+    "failed": 0,
+    "scope": "six relevant source-exact test files, synthetic fixtures, not full repository/hosted integration",
+    "baseline_source_and_original_test_blobs_verified": true,
+    "committed_blobs_match_locally_tested": true
+  },
+  "hosted_ci": {
+    "run_id": 41270509204,
+    "job_id": 124742136987,
+    "conclusion": "failure",
+    "job_steps": null,
+    "classification": "INFRASTRUCTURE_UNKNOWN; NOT TEST PASS"
+  },
+  "integration": {
+    "pr_state": "DRAFT_OPEN_UNMERGED",
+    "merged": false,
+    "deployed": false,
+    "production_verified": false
+  },
+  "historical_stacks": {
+    "#65→#69→#72": "merged into intermediate branches; not mainline proof",
+    "#68→#73→#81": "#73 closed unmerged; #81 merged into intermediate branch, not mainline proof",
+    "#16→#71": "merged into intermediate dashboard branches; not deployment proof"
+  },
+  "next": {
+    "pr": 96,
+    "head": "6bbb807685bfffd8542cde546c60b2a18b7a9449",
+    "state": "DRAFT_OPEN",
+    "lease": "NOT CLAIMED",
+    "status": "READ_ONLY_INSPECTED"
+  },
+  "external_ai_provider_native_invocations": 0,
+  "owner_email_sent": false
+}

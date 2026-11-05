@@ -1,0 +1,63 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-11-01T04:48:03.777Z",
+  "task": "PR_INTEGRATE Zoodo #112 — preserve bounded recovery for unprintable error objects",
+  "repo": "london4216-hue/Zoodo",
+  "branch": "integrate/p0-outbox-ambiguous-state-fence-20261031",
+  "advisory_ownership_comment": "https://github.com/london4216-hue/Zoodo/issues/77#issuecomment-6553562127",
+  "durable_database_lease": "NOT_CLAIMED",
+  "baseline_head": "bbd7c12622adb2bae9de01e3e01605b71253b873",
+  "baseline_source_blob": "eccd4eaf9ed8e277da8a7fe34be1bf1772550f1a",
+  "regression_commit": "3e20a06d5db0f9a382b3697fd85dff3b8523032b",
+  "fix_commit": "a89a507f5bddb2eecb6060911e37a821738660aa",
+  "fixed_source_blob": "90b0c9c47a8a36947060acc689ea25c1feb6b99f",
+  "regression_test_blob": "fac5743fe0763a431c5a68465139ae57e2c190a4",
+  "files": [
+    "engine/ops/relay/outbox-drainer.mjs",
+    "engine/test/outbox-unprintable-error-fence.test.mjs"
+  ],
+  "defect": "Untrusted relay rejection or ACK exception whose toString() throws can throw during error formatting, losing bounded recovery or misclassifying an ACK exception as a worker invocation exception",
+  "fix": "Use try/catch safeErrorMessage() for both relay and ACK exception paths, bounded to 120 characters with 'unprintable error' fallback",
+  "fail_first": {
+    "environment": "V8 exact GitHub source with simplified URL shim",
+    "test_files": 8,
+    "tests": 34,
+    "passed": 32,
+    "failed": 2,
+    "expected_failures": [
+      "unprintable relay rejection returns bounded recovery instead of rejecting",
+      "unprintable ACK exception retains explicit ACK recovery state"
+    ]
+  },
+  "after_fix": {
+    "environment": "V8 exact GitHub source and 8 exact test files with simplified URL shim",
+    "tests": 34,
+    "passed": 34,
+    "failed": 0,
+    "source_readback_matched": true,
+    "test_readback_matched": true
+  },
+  "hosted_ci": {
+    "run_id": 41274456550,
+    "job_id": 124753688063,
+    "conclusion": "failure",
+    "steps": null,
+    "classification": "infrastructure UNKNOWN; no executed test steps"
+  },
+  "limits": [
+    "NOT native Node.js test runner",
+    "NOT native Node.js URL parser",
+    "NOT PostgreSQL or distributed queue test",
+    "NOT hosted CI pass",
+    "NOT native external AI provider invocation",
+    "NOT deployment"
+  ],
+  "integration": {
+    "pr": 112,
+    "state": "draft",
+    "merged": false,
+    "deployed": false
+  },
+  "next": "Inspect next nonoverlapping eligible PR; #92/#93 require disposable PostgreSQL migration/concurrency verification; avoid dashboard/product files",
+  "owner_email_sent": false
+}

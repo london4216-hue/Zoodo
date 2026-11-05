@@ -1,0 +1,44 @@
+{
+  "schema": "zoo.pr-closure-local-receipt.v1",
+  "recorded_at_utc": "2026-11-01T07:18:11Z",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 112,
+  "advisory_claim_issue": 77,
+  "advisory_claim_comment_id": 6554858396,
+  "durable_database_lease_verified": false,
+  "baseline_head": "7c3ad9666bf8a30d0d58e81fd0da977b76116a95",
+  "baseline_source_blob": "90b0c9c47a8a36947060acc689ea25c1feb6b99f",
+  "regression_commit": "6b06a2fcbad4e3f05b24939eb7f5855ac82295f3",
+  "source_fix_commit": "70fd09753c520e1133e443f9f4e15a28d35bf092",
+  "tested_blobs": {
+    "engine/ops/relay/outbox-drainer.mjs": "3aeacd139bc77f33b13902eff0dd0328202b0bf3",
+    "engine/test/outbox-drainer.test.mjs": "970adf150ba734e580858e9f01273ea145595ee6",
+    "engine/test/outbox-dispatch-serialization-fence.test.mjs": "5305199273c6555c02cde70338292ad6e492a896"
+  },
+  "defect": "Successful outbox ACK returned raw provider dispatch objects, including cyclic/unbounded metadata. An arbitrarily long HTTPS receipt_url also passed validation and could be ACKed.",
+  "fix": "Snapshot only verified direct/delegated receipt fields before ACK; reject receipt URLs longer than 2048 characters. Preserve queue-wide wake-up and idle alternate-dispatch semantics.",
+  "fail_first": {
+    "command": "node --test engine/test/outbox-dispatch-serialization-fence.test.mjs",
+    "node_version": "22.16.0",
+    "passed": 0,
+    "failed": 3
+  },
+  "post_fix": {
+    "command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-dispatch-serialization-fence.test.mjs",
+    "node_version": "22.16.0",
+    "passed": 19,
+    "failed": 0
+  },
+  "readback": "GitHub source and regression test Git blob hashes matched local native Node.js 22.16.0 tests.",
+  "ci": {
+    "workflow_run_id": 41284234726,
+    "observed_status": "queued",
+    "hosted_test_verdict": "UNKNOWN",
+    "combined_statuses": 0
+  },
+  "merge": false,
+  "deployment": false,
+  "provider_native_external_ai_invocation": false,
+  "product_or_dashboard_files_changed": false,
+  "next": "Inspect released #96 or read-only #92/#93 PostgreSQL integration preflight; no blind merges or false CI passes."
+}

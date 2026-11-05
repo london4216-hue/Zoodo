@@ -1,0 +1,67 @@
+{
+  "schema": "zoo.pr-integration-receipt.v1",
+  "recorded_at_utc": "2026-11-01T11:12:36Z",
+  "task": "PR_INTEGRATE Zoodo #112 — redact untrusted provider diagnostics before durable evidence",
+  "repo": "london4216-hue/Zoodo",
+  "pr": 112,
+  "branch": "integrate/p0-outbox-ambiguous-state-fence-20261031",
+  "advisory_ownership_comment": "https://github.com/london4216-hue/Zoodo/issues/77#issuecomment-6557153686",
+  "durable_database_lease": "NOT_CLAIMED",
+  "provider_native_external_worker": "NOT_INVOKED",
+  "required_first_inspection": {
+    "pr81_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+    "pr81_tested_source_blob": "8c2c7e87fb10f0b955f50c75ceabd732d344ee66",
+    "pr81_tested_test_blob": "76b1fcb63dd7baebe71e30ae20462510b8d6c408",
+    "issue77_handoff": "READ"
+  },
+  "baseline_head": "881d2100e0bef17fc05d79a5430faa8d1ac16465",
+  "baseline_source_blob": "ff914f4cf516e2b13ff9028ce196bb852cbabe5e",
+  "regression_commit": "77c844b3e02a2d7a46914477824d10f899407425",
+  "fix_commit": "00062707e2177f80ddf0c85dd3c246b3ad5746dd",
+  "fixed_source_blob": "72f611d75fd994284e0f0a9185f6497ba453efd8",
+  "regression_test_blob": "518833dafc99d85ae23dd3e784fe77c0f79f842a",
+  "existing_exact_test_blobs": {
+    "engine/test/outbox-drainer.test.mjs": "970adf150ba734e580858e9f01273ea145595ee6",
+    "engine/test/outbox-unprintable-error-fence.test.mjs": "fac5743fe0763a431c5a68465139ae57e2c190a4"
+  },
+  "defect": "Untrusted provider error.message and arbitrary <=64-character relay result state were echoed into serialized outbox attempts; a synthetic bearer-token string leaked in both transport and ACK exception paths, and in unknown result state.",
+  "fix": "Allowlist diagnostic error classes and known relay status values. Replace unrecognized status with 'unknown' and provider error detail with a generic redacted label. Preserve existing unprintable-error fallback, ACK fencing and recovery semantics.",
+  "fail_first": {
+    "environment": "native Node.js 22.16.0",
+    "tests": 4,
+    "passed": 1,
+    "failed": 3,
+    "expected_failures": 3
+  },
+  "after_fix": {
+    "environment": "native Node.js 22.16.0",
+    "command": "node --test engine/test/outbox-drainer.test.mjs engine/test/outbox-provider-diagnostic-redaction-fence.test.mjs engine/test/outbox-unprintable-error-fence.test.mjs",
+    "tests": 22,
+    "passed": 22,
+    "failed": 0,
+    "source_and_test_git_blob_hashes_match_readback": true
+  },
+  "hosted_ci": {
+    "latest_fix_commit": "00062707e2177f80ddf0c85dd3c246b3ad5746dd",
+    "pr_triggered_runs_observed": 0,
+    "classification": "UNKNOWN; prior zero-step Actions failures are infrastructure UNKNOWN, not CI pass"
+  },
+  "integration": {
+    "draft": true,
+    "merged": false,
+    "deployed": false,
+    "branch_protection_requirements": "NOT_VERIFIED"
+  },
+  "file_ownership": {
+    "scope": [
+      "engine/ops/relay/outbox-drainer.mjs",
+      "engine/test/outbox-provider-diagnostic-redaction-fence.test.mjs",
+      "engine/evidence/2026-11-01-pr112-provider-diagnostic-redaction-fence.json"
+    ],
+    "product_files_changed": false,
+    "dashboard_files_changed": false,
+    "sql_files_changed": false
+  },
+  "next": "Review #96 exact-head local queue regressions without concurrent writes; #92/#93 still require disposable PostgreSQL migration-order/concurrency proof; do not force merge stacked drafts",
+  "owner_email_sent": false
+}
