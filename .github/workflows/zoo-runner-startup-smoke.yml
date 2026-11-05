@@ -1,0 +1,26 @@
+name: Zoo runner startup smoke (no checkout, no secrets)
+# Isolates runner/account availability from repository code and third-party Actions.
+# See issue #11. A job with no runner and zero steps is NOT a failed code test.
+on:
+  push:
+    branches: [zoo-panel-failover-2026-10-30]
+    paths:
+      - '.github/workflows/zoo-runner-startup-smoke.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/zoo-runner-startup-smoke.yml'
+  workflow_dispatch:
+permissions: {}
+jobs:
+  runner-startup-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Prove a GitHub-hosted runner executed shell
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$GITHUB_RUN_ID"
+          test -n "$GITHUB_SHA"
+          test -n "$RUNNER_NAME"
+          printf 'ZOO_RUNNER_SMOKE_OK run=%s sha=%s runner=%s event=%s\n' "$GITHUB_RUN_ID" "$GITHUB_SHA" "$RUNNER_NAME" "$GITHUB_EVENT_NAME"
