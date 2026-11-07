@@ -20,7 +20,10 @@ async function refreshPriority(){
   $('zooPriorityReceipt').textContent='Authenticated source observed '+d.observed_at+' · source age '+age(d.observed_at)+' · production proof '+(d.dashboard?.production_verified?'VERIFIED':'UNKNOWN')+' · last FETCH '+new Date().toISOString()+' (not execution evidence).';
  }catch(e){
   $('zoo787stage').textContent='RECOVERING';
+  $('zoo787detail').textContent='PR source/head/test UNKNOWN · latest feed check failed; last snapshot is historical only.';
+  $('zoo787drift').textContent='Verified meaningful task movement UNKNOWN · no current source evidence; not a worker heartbeat.';
   $('zooSaraState').textContent='UNKNOWN';
+  $('zooSaraDetail').textContent='URL NOT CURRENTLY VERIFIED · source feed unavailable.';
   $('zooPriorityReceipt').textContent='PRIORITY FEED UNAVAILABLE: '+String(e.message||e)+' · last valid snapshot '+(lastGood?.observed_at||'UNKNOWN')+' · next: repair same-origin feed and verify Netlify deploy.';
  }
 }
