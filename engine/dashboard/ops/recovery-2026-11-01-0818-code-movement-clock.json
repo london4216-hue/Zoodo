@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "kind": "bounded_dashboard_source_repair",
+  "observed_at": "2026-11-01T08:18:09Z",
+  "scope": "engine/dashboard/evidence-clock.mjs plus isolated regression tests; no HTML, links, authentication, or Netlify config changed",
+  "defect": "Late independent review or CI could reset lastVerifiedCodeAt for a much older code commit, producing false fresh substantive movement; future/missing code timestamp could still pass verification",
+  "fix": "Verified movement age uses credible exact-SHA substantive commit timestamp, not late review/CI completion; reject future or missing code timestamp",
+  "source": {
+    "repository": "london4216-hue/Zoodo",
+    "branch": "fix/zoo-code-movement-clock-20261101-0818",
+    "source_blob_sha": "1d92d10e8da4a4cf9d6293cf52296c1f819abc88",
+    "test_blob_sha": "52a9653906c6e82b794c0de2cdfe51bf1a367e95",
+    "base_branch": "main",
+    "base_head_at_read": "f0a8ef3e97ac23590469054dfae8376b37cab76f",
+    "pr_url": "https://github.com/london4216-hue/Zoodo/pull/121"
+  },
+  "tests": {
+    "original_source_regressions_failed": 4,
+    "exact_github_readback_v8_tests_passed": 22,
+    "exact_source_files_executed": 4,
+    "github_ci": "no pull-request workflow runs returned for exact head at check",
+    "native_node_tests": "not executed",
+    "production_browser": "not verified"
+  },
+  "queue": {
+    "zoodo_open_prs": 74,
+    "zoodo_open_issues": 25,
+    "source": "authenticated GitHub search, not live dashboard display",
+    "completed_product_tasks": "not independently verified"
+  },
+  "historical_prs": {
+    "pr16": "merged into autonomous-engine-replacement-2026-10-29, not proof of production",
+    "pr71": "merged into fix/zoo-live-dashboard-accountability-20261030, not proof of production"
+  },
+  "scheduler": {
+    "source": "connected automations metadata",
+    "keeper": "enabled; recorded completion 2026-11-01T07:46:50.155094Z",
+    "builder": "enabled; recorded completion 2026-11-01T07:27:46.023690Z",
+    "pr_closure": "enabled; completion before scheduled_for; quarantined as scheduler chronology proof",
+    "dashboard": "enabled; in_progress at last read",
+    "hunter": "disabled; no qualified backup proved",
+    "productive_autonomous_handoffs": "unverified"
+  },
+  "hosting": {
+    "primary": "https://zoo-live-dashboard.netlify.app/",
+    "preview": "not verified",
+    "production_dns_probe": "failed from this runtime",
+    "production_sha": null,
+    "deploy_id": null,
+    "owner_authenticated_readback": false,
+    "rollback_mapping": null,
+    "deploy_latency_ms": null,
+    "test_to_deploy_latency_ms": null
+  },
+  "integration": {
+    "authority": "sole ZOO Keeper",
+    "host_probe": "qualified Hunter replacement or Keeper",
+    "independent_lanes": [
+      "PR closure",
+      "EZ Move",
+      "BeautyPath"
+    ],
+    "grades": "deferred until Wednesday"
+  },
+  "status": "SOURCE_REPAIR_TESTED_NOT_DEPLOYED"
+}
