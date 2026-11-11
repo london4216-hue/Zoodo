@@ -26,7 +26,10 @@ export function evaluateAutomationProof(feed, now=Date.now(), dueMs=75*60000){
  if(!last)return unknown('No completed automation execution receipts in published feed');
  // Publisher-side anomalies are separate evidence; never discard them merely
  // because an older completion for that worker remains valid.
- const anomalies=Array.isArray(feed.source_anomalies)?feed.source_anomalies:[];
+ // A malformed anomaly ledger must not disappear and produce a false all-clear.
+ if(feed.source_anomalies!==undefined&&!Array.isArray(feed.source_anomalies))
+  return unknown('Malformed source anomaly ledger in published feed');
+ const anomalies=feed.source_anomalies??[];
  // Keep historical invalid receipts visible for audit, but a later valid
  // completion by the SAME role resolves the active recovery condition.
  // An anomaly without a trustworthy scheduled_for stays unresolved.

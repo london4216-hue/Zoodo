@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-11-01T01:46:20.301Z",
+  "lane": "SOLE_DASHBOARD_LEAD",
+  "scope": "bounded_source_fix_not_production_release",
+  "repository": "london4216-hue/Zoodo",
+  "canonical_branch": "autonomous-engine-replacement-2026-10-29",
+  "pr": "https://github.com/london4216-hue/Zoodo/pull/115",
+  "defect": "source_anomalies present but not array silently discarded; false RECORDED RUNS CURRENT",
+  "source_file": "engine/dashboard/automation-proof.mjs",
+  "source_commit": "8ef888de542ad53e7f25b0cbe4403ca0a60cd8ea",
+  "source_blob": "45aacbf675263af09825192c533211e15aa4b638",
+  "test_commit": "8ccd0cdc085dfe82b40e290b47222143105941bd",
+  "test_file": "engine/dashboard/automation-proof-anomaly-ledger-shape.test.mjs",
+  "tests": {
+    "fail_first_original": {
+      "object": "RECORDED RUNS CURRENT",
+      "null": "RECORDED RUNS CURRENT"
+    },
+    "source_executed_v8": {
+      "passed": 8,
+      "total": 8,
+      "source_readback_sha": "45aacbf675263af09825192c533211e15aa4b638"
+    },
+    "node_tests_committed": 8,
+    "node_tests_ci_executed": false
+  },
+  "git_hub": {
+    "open_pr_count": 69,
+    "open_issue_count": 25,
+    "count_scope": "repo search at run time; not production dashboard readback",
+    "pr16": {
+      "state": "merged",
+      "base": "autonomous-engine-replacement-2026-10-29",
+      "open_to_merge": "21h21m50s"
+    },
+    "pr71": {
+      "state": "merged",
+      "base": "fix/zoo-live-dashboard-accountability-20261030",
+      "open_to_merge": "2h14m32s"
+    }
+  },
+  "worker_snapshot": {
+    "source": "connected_automations_peek",
+    "not_worker_heartbeat": true,
+    "roles": [
+      {
+        "role": "ZOO Keeper",
+        "enabled": true,
+        "recorded_status": "completed",
+        "scheduled_for": "2026-11-01T01:45:30Z",
+        "completed_at": "2026-11-01T01:43:39.077710Z",
+        "chronology": "completed_before_nominal_scheduled_for; not counted as validated proof"
+      },
+      {
+        "role": "ZOO Asset Restoration",
+        "enabled": true,
+        "recorded_status": "completed",
+        "scheduled_for": "2026-11-01T01:24:51Z",
+        "completed_at": "2026-11-01T01:25:08.790485Z"
+      },
+      {
+        "role": "ZOO Dashboard Worker",
+        "enabled": true,
+        "recorded_status": "in_progress",
+        "started_at": "2026-11-01T01:44:20.463075Z"
+      },
+      {
+        "role": "ZOO PR Closure",
+        "enabled": true,
+        "recorded_status": "in_progress",
+        "started_at": "2026-11-01T01:44:10.543392Z"
+      },
+      {
+        "role": "ZOO Agent Hunter",
+        "enabled": false,
+        "recorded_status": "completed_historical",
+        "completed_at": "2026-10-31T18:01:41.851473Z",
+        "chronology": "completed_before_nominal_scheduled_for"
+      }
+    ],
+    "productive_workers_independently_verified": false
+  },
+  "ci": {
+    "exact_head_workflow_runs": 0,
+    "prior_head": "1cca8cdcfa6885a46fb7cf8bb7691de76544914c",
+    "prior_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41258052010",
+    "prior_run_conclusion": "failure",
+    "prior_run_recorded_job_steps": 0
+  },
+  "hosting": {
+    "preview_provider_status": "pending_at_last_check",
+    "preview_target": "https://app.netlify.com/projects/zoo-live-dashboard/deploys/6ae699dc87deafae8ba894c4",
+    "independent_preview_browser_readback": "unavailable",
+    "independent_production_browser_readback": "unavailable",
+    "production_sha": null,
+    "production_deploy_id": null,
+    "owner_auth_readback": null,
+    "rollback_mapping": null,
+    "deploy_latency_ms": null,
+    "test_to_deploy_latency_ms": null
+  },
+  "preservation": {
+    "dashboard_html_changed": false,
+    "links_changed": false,
+    "owner_auth_changed": false,
+    "production_deployed": false
+  },
+  "handoff": {
+    "keeper": "safe integration after conflict review and exact host source/deploy/rollback mapping",
+    "hunter": "disabled; qualified backup to probe host",
+    "implementation_lead": "zero-step CI startup",
+    "product_lanes": "unblocked",
+    "grades": "deferred_until_Wednesday",
+    "ordinary_email": false
+  }
+}
