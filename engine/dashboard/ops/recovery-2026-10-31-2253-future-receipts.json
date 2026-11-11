@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "record_type": "dashboard_recovery_bounded_fix",
+  "observed_at": "2026-10-31T22:53:00.533Z",
+  "issue": "https://github.com/london4216-hue/Zoodo/issues/18",
+  "pull_request": "https://github.com/london4216-hue/Zoodo/pull/111",
+  "fix": {
+    "scope": "Future-dated CI, independent-review, deployment, heartbeat and source timestamps no longer count as current evidence",
+    "file": "engine/dashboard/evidence-clock.mjs",
+    "code_commit": "1ccd5984777c505b223c826fda747390ea6ae190",
+    "test_commit": "75e319a389ef8f1bb616cf17ce70e159d5d89418",
+    "source_blob_sha": "b8087dc27e57fac4770b69ee423f3e06a9d8a102",
+    "test_blob_sha": "64ed1260738de33bd5c236a675d872efb515c50a",
+    "v8_source_executed": {
+      "passed": 8,
+      "total": 8,
+      "fail_first_reproduced": true
+    },
+    "node_regression_committed": true,
+    "node_ci_executed": false
+  },
+  "source_and_deploy": {
+    "source_branch": "fix/zoo-evidence-future-receipts-20261031-2251",
+    "canonical_branch": "autonomous-engine-replacement-2026-10-29",
+    "production_deploy_sha": null,
+    "netlify_provider_status_at_check": "pending",
+    "netlify_provider_deploy_link": "https://app.netlify.com/projects/zoo-live-dashboard/deploys/6ae671302b59433f427210ad",
+    "independent_preview_readback": "DNS resolution failed",
+    "independent_production_readback": "DNS resolution failed",
+    "owner_auth_browser_readback": null,
+    "rollback_deploy_id": null,
+    "live_publication_performed": false
+  },
+  "ci": {
+    "exact_head_run": "https://github.com/london4216-hue/Zoodo/actions/runs/41250105364",
+    "conclusion": "failure",
+    "job_name": "dashboard-contract",
+    "job_steps_returned": 0,
+    "runner_startup_diagnosis": "not established; job logs unavailable",
+    "source_tests_not_run_in_ci": true
+  },
+  "repository": {
+    "open_pull_requests": 65,
+    "open_issues": 25,
+    "observed_via": "authenticated GitHub connector search",
+    "counts_live_display_verified": false,
+    "prs_url": "https://github.com/london4216-hue/Zoodo/pulls?q=is%3Apr+is%3Aopen",
+    "issues_url": "https://github.com/london4216-hue/Zoodo/issues?q=is%3Aissue+is%3Aopen"
+  },
+  "merged_prs": [
+    {
+      "number": 16,
+      "target": "autonomous-engine-replacement-2026-10-29",
+      "open_to_merge": "21h 21m 50s"
+    },
+    {
+      "number": 71,
+      "target": "fix/zoo-live-dashboard-accountability-20261030",
+      "open_to_merge": "2h 14m 32s"
+    }
+  ],
+  "scheduler": {
+    "feed_commit": "e0769ae50e991d26c6a49ae93b804c27fe3afa2f",
+    "feed_observed_at": "2026-10-31T22:52:39.936Z",
+    "recorded_completed_receipts": 5,
+    "enabled_roles": 4,
+    "disabled_roles": [
+      "ZOO Agent Hunter"
+    ],
+    "in_progress_runs_at_publication": 3,
+    "productive_workers_verified": null
+  },
+  "latencies": {
+    "merge_open_to_merge_for_pr16_seconds": 76910,
+    "merge_open_to_merge_for_pr71_seconds": 8072,
+    "source_to_production_deploy_seconds": null,
+    "test_to_deploy_seconds": null,
+    "host_readback_seconds": null
+  },
+  "release": {
+    "owner_links_modified": false,
+    "owner_auth_modified": false,
+    "production_published": false,
+    "ordinary_email_sent": false,
+    "grading": "deferred_until_wednesday"
+  },
+  "handoffs": [
+    "Sole Keeper: integrate PR #111 after safe nonoverlapping review and source/deploy mapping",
+    "Qualified Hunter replacement: obtain authenticated Netlify site/deploy and production readback",
+    "Implementation Lead: resolve zero-step GitHub Actions startup, do not claim tests executed",
+    "PR closure, EZ Move and BeautyPath remain independent"
+  ]
+}
