@@ -1,0 +1,63 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "date_utc": "2026-10-31",
+  "lane": "PR_INTEGRATE",
+  "repo": "london4216-hue/Zoodo",
+  "pr": 70,
+  "base": "autonomous-engine-replacement-2026-10-29",
+  "tested_head_sha": "c0cca930fc66e4265195d3a9933796ecf37f7de8",
+  "issue_handoff": 77,
+  "prior_receipt": "engine/evidence/2026-10-31-1243-keeper-outbox-fence-fleet.json",
+  "defect": "A schema-valid self-report could reuse a real native provider request receipt while asserting a forged task, agent or role, inflating qualified worker KPIs. Native readback alone cannot establish ZOO assignment.",
+  "repair": "Require caller-supplied trusted exact task ID, agent ID, role, and source SHA before qualification; preserve authenticated native readback and in-process WeakSet gating.",
+  "code_commits": [
+    "b20f48f2b1bc2c3e51e7277847fe27d846af2de1",
+    "4eacdf22c69c537f2e1051cb9c1f7093615f9534",
+    "897ec444a74ec6a5b56e74bae48ead622c78c4ce",
+    "c0cca930fc66e4265195d3a9933796ecf37f7de8"
+  ],
+  "files": {
+    "engine/ops/hunter/provider-receipt.mjs": "15011be191ab8dd73e6d8ed93a4a01da2b0e3840",
+    "engine/test/provider-receipt.test.mjs": "82d73533930c881984a5053aeeeb968a18933e5e",
+    "engine/test/provider-capacity-freshness.test.mjs": "d3c66a8318bf9497e16b8906d132cf3381bb9b5b",
+    "engine/test/provider-assignment-fence.test.mjs": "1d3ef2f645aaeb7c2f0610bd022d4d17572a12eb"
+  },
+  "test": {
+    "runtime": "Node.js 22.16.0",
+    "command": "node --test engine/test/*.test.mjs (in isolated fixture containing exactly these three suites)",
+    "fail_first": {
+      "passed": 1,
+      "failed": 2
+    },
+    "after_fix": {
+      "passed": 15,
+      "failed": 0
+    },
+    "source_integrity": "all four local git hash-object values match authenticated GitHub exact-head blob readback",
+    "scope": "local deterministic synthetic fixtures; no native provider calls"
+  },
+  "gates": {
+    "github_actions": "NO EXACT-HEAD RUN FOUND at check time; UNKNOWN",
+    "commit_statuses": "none",
+    "postgresql": "not required for this isolated provider-receipt change",
+    "native_provider_invocations": 0,
+    "hosted_next_handoffs": 0,
+    "merge": false,
+    "deploy": false,
+    "branch_protection": "not independently verified",
+    "private_queue_lease": "not accessible/verified"
+  },
+  "ownership": {
+    "touched": [
+      "engine/ops/hunter/provider-receipt.mjs",
+      "engine/test/provider-*.test.mjs",
+      "engine/evidence/2026-10-31-pr70-trusted-assignment-provider-receipt.json"
+    ],
+    "untouched": [
+      "engine/dashboard",
+      "TransendIQ product",
+      "engine/ops/relay SQL"
+    ]
+  },
+  "next": "Integration review of PR #70; verify downstream callers supply trusted assignment, required checks and branch protections before merge. Continue independent #92/#93 PostgreSQL migration tests."
+}

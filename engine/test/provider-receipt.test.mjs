@@ -1,0 +1,25 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {assessProviderReceipt, capabilityCounts} from '../ops/hunter/provider-receipt.mjs';
+const SHA='a'.repeat(40), ART='b'.repeat(40);
+const receipt=()=>({schema:'zoo.provider-invocation.v1',provider:'deepseek',provider_kind:'model',model_id:'deepseek-reasoner',provider_request_id:'native-123',agent_id:'hunter',task_id:'T-100',role:'builder',source_sha:SHA,artifact_sha:ART,status:'completed',started_at:'2026-10-31T10:00:00Z',finished_at:'2026-10-31T10:00:03Z',evidence_url:'https://provider.example/requests/native-123',cost_usd:null});
+const native=()=>({authenticated:true,provider:'deepseek',provider_kind:'model',model_id:'deepseek-reasoner',provider_request_id:'native-123',source_sha:SHA,artifact_sha:ART,status:'completed',evidence_url:'https://provider.example/requests/native-123'});
+const opts={now:'2026-10-31T10:01:00Z',expectedTaskId:'T-100',expectedAgentId:'hunter',expectedRole:'builder',expectedSourceSha:SHA};
+test('schema-valid self-report is never qualified without provider readback',async()=>{const r=await assessProviderReceipt(receipt(),opts);assert.equal(r.state,'UNVERIFIED');assert.equal(r.qualified,false)});
+test('matching authenticated native readback qualifies',async()=>{const r=await assessProviderReceipt(receipt(),{...opts,verifyProvider:async()=>native()});assert.equal(r.state,'QUALIFIED');assert.equal(r.qualified,true);assert.equal(r.latency_ms,3000)});
+test('native mismatch is not qualified',async()=>{const r=await assessProviderReceipt(receipt(),{...opts,verifyProvider:async()=>({...native(),artifact_sha:SHA})});assert.equal(r.state,'RECOVERING');assert.equal(r.qualified,false)});
+test('unauthenticated adapter is not qualified',async()=>{const r=await assessProviderReceipt(receipt(),{...opts,verifyProvider:async()=>({...native(),authenticated:false})});assert.equal(r.qualified,false)});
+test('adapter failure is recoverable',async()=>{const r=await assessProviderReceipt(receipt(),{...opts,verifyProvider:async()=>{throw Error('429 secret');}});assert.equal(r.state,'RECOVERING');assert.doesNotMatch(JSON.stringify(r),/secret/)});
+test('source and task must match exact assignment',async()=>{for(const patch of [{source_sha:ART},{task_id:'T-101'}]){const r=await assessProviderReceipt({...receipt(),...patch},{...opts,verifyProvider:async()=>native()});assert.equal(r.qualified,false)}});
+test('old, future and inverted clocks fail closed',async()=>{for(const patch of [{finished_at:'2026-10-31T08:00:00Z'},{finished_at:'2026-10-31T10:03:00Z'},{started_at:'2026-10-31T10:02:00Z'}]){const r=await assessProviderReceipt({...receipt(),...patch},{...opts,verifyProvider:async()=>native()});assert.equal(r.qualified,false)}});
+test('non-https evidence and invalid SHA fail closed',async()=>{for(const patch of [{evidence_url:'http://localhost/'},{artifact_sha:'not-a-sha'}]){const r=await assessProviderReceipt({...receipt(),...patch},{...opts,verifyProvider:async()=>native()});assert.equal(r.qualified,false)}});
+test('nonproductive scheduled heartbeat is not productive',async()=>{const r=await assessProviderReceipt({...receipt(),status:'scheduled'},{...opts,verifyProvider:async()=>native()});assert.equal(r.qualified,false)});
+test('counts only in-process verified unique invocations, not forged qualified flags',async()=>{const q=await assessProviderReceipt(receipt(),{...opts,verifyProvider:async()=>native()});const gr={...receipt(),provider:'gemini',model_id:'gemini-3',provider_request_id:'native-456'};const g=await assessProviderReceipt(gr,{...opts,verifyProvider:async()=>({...native(),provider:'gemini',model_id:'gemini-3',provider_request_id:'native-456'})});const fake={...q,provider:'claude',provider_request_id:'fake-1',qualified:true};const c=capabilityCounts([q,q,g,fake],{now:opts.now});assert.equal(c.productive_invocations,2);assert.equal(c.roles.builder,2);assert.equal(c.qualified_alternatives.builder,2)});
+
+test('verified attribution is immutable',async()=>{
+ const q=await assessProviderReceipt(receipt(),{...opts,verifyProvider:async()=>native()});
+ assert.equal(q.state,'QUALIFIED');
+ assert.equal(Object.isFrozen(q),true);
+ assert.equal(Object.getOwnPropertyDescriptor(q,'provider').writable,false);
+ assert.equal(capabilityCounts([q],{now:opts.now}).roles.builder,1);
+});

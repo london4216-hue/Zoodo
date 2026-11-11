@@ -1,0 +1,38 @@
+{
+  "schema": "zoo.execution-receipt.v1",
+  "recorded_at_utc": "2026-10-31T23:47:00Z",
+  "lane": "PR_INTEGRATE",
+  "repository": "london4216-hue/Zoodo",
+  "pr": 70,
+  "branch": "hunter/provider-native-receipt-gate-20261031",
+  "prior_head": "d6c486a326c357ac82feee949154d32d7ac9bd70",
+  "source_commit": "a3605b2f7f6ddcf866bd4cdf4f5bd498144852c0",
+  "test_commit": "e774fa1adb7bfc8d7ce81af6948770f8aa989531",
+  "source_path": "engine/ops/hunter/provider-receipt.mjs",
+  "source_blob_sha": "c09a6829f30d0dba776b2a48dcf593b2d40e7770",
+  "test_path": "engine/test/provider-future-completion-capacity.test.mjs",
+  "test_blob_sha": "c3aa1e03a02ac90db3c534f300f2db2e054e929a",
+  "baseline_source_blob_sha": "15011be191ab8dd73e6d8ed93a4a01da2b0e3840",
+  "defect": "capabilityCounts accepted authenticated receipts with finished_at up to 30 seconds in the future as already productive; this can inflate current capacity",
+  "repair": "Count only when finished_at <= current clock; retain existing 30-second tolerance for initial receipt assessment, but not for productive KPI counting",
+  "test_command": "node --test engine/test/provider-*.test.mjs",
+  "local_runtime": "Node.js v22.16.0",
+  "fail_first": {
+    "new_regression_passed": 0,
+    "new_regression_failed": 1
+  },
+  "after_fix": {
+    "tests_passed": 16,
+    "tests_failed": 0
+  },
+  "github_readback_matches_local_git_blobs": true,
+  "scope": "Exact-source local synthetic tests only; original 3 test blobs and source baseline hash matched authenticated GitHub readback",
+  "durable_queue_lease_verified": false,
+  "advisory_claim": "Zoodo#77 comment 6550761699",
+  "provider_native_invocations": 0,
+  "github_actions_required_checks": "NOT_VERIFIED",
+  "hosted_integration": "NOT_VERIFIED",
+  "merged": false,
+  "deployed": false,
+  "next": "Review Zoodo PR #92/#93 PostgreSQL migration ordering and concurrency; do not merge without disposable DB tests and permissions"
+}

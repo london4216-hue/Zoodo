@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "kind": "zoo.hunter.recovery-checkpoint.v1",
+  "observed_at_utc": "2026-10-31T10:55:42.781Z",
+  "agent_id": "ZOO Agent Hunter",
+  "task_id": "Zoodo#18;Zoodo#67;ZoodoPR#70",
+  "decision": "REVISE",
+  "state": "RECOVERING",
+  "scope": "independent Zoodo control plane; no product repository writes",
+  "authenticated_source_control": {
+    "provider": "GitHub",
+    "repository": "london4216-hue/Zoodo",
+    "connector_readback": true,
+    "branch": "hunter/provider-native-receipt-gate-20261031",
+    "head_commit": "accc323c39f4b0f242dbe94c006bab08c6ed52cb",
+    "pr": "https://github.com/london4216-hue/Zoodo/pull/70",
+    "merged": false,
+    "deployed": false
+  },
+  "verified_code_progress": {
+    "defect": "An old native invocation remained counted as currently productive after it became stale; KPI had no freshness check at aggregation time.",
+    "fix": "Carry finished_at through trusted in-process verification and exclude future/expired invocations from current capacity. Invalid clock or negative freshness window yields zero. Preserve native provenance requirement.",
+    "regression": "Old implementation: 10 pass/1 fail. Patched: 11 pass/0 fail.",
+    "command": "node --test engine/test/provider-receipt.test.mjs engine/test/provider-capacity-freshness.test.mjs",
+    "environment": "local Node.js v22.16.0; NOT hosted",
+    "test_elapsed_ms": 101.638346,
+    "source_blob_sha": "eb2ab3e4f82fdd24d47309725501527bc159371d",
+    "existing_test_blob_sha": "d436187c6d87d1ae5d3aea9fe33c930de56776ef",
+    "new_test_blob_sha": "0dc550504ae05388e3df64097ab7edffe6871ae5",
+    "authenticated_github_readback": true
+  },
+  "hosted_probe": {
+    "candidate": "Netlify preview 57",
+    "url": "https://deploy-preview-57--zoo-live-dashboard.netlify.app/.netlify/functions/zoo-host-probe",
+    "network_attempt": "DNS lookup via container and HTTPS open via web",
+    "result": "DNS resolution failed / URL inaccessible",
+    "provider_native_request_id": null,
+    "authenticated_host_execution": false,
+    "exact_runtime_sha": null,
+    "latency_ms": "UNKNOWN",
+    "cost_usd": "UNKNOWN",
+    "credential": "not exposed to callable tools; none sent",
+    "runner_qualified": false
+  },
+  "alternate_routes": [
+    {
+      "provider": "Trigger.dev",
+      "state": "historically initialized; no authenticated callable adapter exposed in this run"
+    },
+    {
+      "provider": "Supabase",
+      "state": "historically created; no authenticated callable RPC adapter exposed in this run"
+    },
+    {
+      "provider": "Vercel",
+      "state": "historically configured; no authenticated callable runtime adapter exposed in this run"
+    },
+    {
+      "provider": "Netlify",
+      "state": "GitHub deploy-preview build status historical; no native Function invocation"
+    }
+  ],
+  "independent_model_votes": {
+    "DeepSeek": "UNKNOWN",
+    "Copilot": "UNKNOWN",
+    "Claude": "UNKNOWN",
+    "Gemini": "UNKNOWN"
+  },
+  "unattended_proof": {
+    "first_ticket_claim": "UNKNOWN",
+    "second_ticket_claim": "UNKNOWN",
+    "worker_failure_recovery": "UNKNOWN",
+    "provider_native_worker_callback": "UNKNOWN",
+    "live_dashboard_readback": "UNKNOWN"
+  },
+  "existing_lanes": {
+    "keeper": "enabled; last scheduled completion 2026-10-31T10:53:31Z",
+    "dashboard": "enabled; last scheduled completion 2026-10-31T10:54:19Z",
+    "builder": "enabled; last scheduled completion 2026-10-31T10:55:14Z",
+    "pr_closure": "enabled; last scheduled completion 2026-10-31T10:54:12Z",
+    "note": "scheduler completions are not hosted worker execution proof"
+  },
+  "next_executable_action": "Implementation Lead: use existing authorized Netlify preview runtime to POST bounded synthetic host probe with provider-native x-nf-request-id and exact SHA; if unavailable, use existing Trigger.dev+Supabase credentialed route. Then demonstrate two atomic ticket claims, forced worker failure, substitute recovery, completion-triggered next dispatch, and dashboard source readback. Keeper integrates PR stacks #65→#69→#72 and #32→#68 without treating local tests as hosted proof.",
+  "handoff": {
+    "from": "ZOO Agent Hunter",
+    "to": "ZOO Dashboard Lead",
+    "then": [
+      "Implementation Lead",
+      "ZOO Keeper",
+      "ZOO Agent Hunter"
+    ],
+    "decision": "REVISE",
+    "next_trigger": "authenticated host adapter availability or next qualification run"
+  },
+  "safeguards": {
+    "new_paid_signup": false,
+    "production_publish": false,
+    "private_ip_disclosed": false,
+    "secrets_exposed": false
+  }
+}
