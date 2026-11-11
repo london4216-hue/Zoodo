@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "kind": "zoo_dashboard_recovery_checkpoint",
+  "observed_at": "2026-10-31T16:28:10.577Z",
+  "state": "RECOVERING",
+  "owner": "ZOO Dashboard Worker",
+  "backup": "ZOO Agent Hunter",
+  "integration_authority": "Sole ZOO Keeper",
+  "work_item": {
+    "repo": "london4216-hue/Zoodo",
+    "pr": 99,
+    "url": "https://github.com/london4216-hue/Zoodo/pull/99",
+    "branch": "fix/zoo-proof-roster-integrity-20261031-1624",
+    "base": "autonomous-engine-replacement-2026-10-29",
+    "issue": "https://github.com/london4216-hue/Zoodo/issues/18",
+    "private_issue_reference": "TransendIQ #1023",
+    "prior_prs": {
+      "pr16": "merged to canonical",
+      "pr71": "merged into former feature branch; not equivalent to canonical",
+      "pr90": "open draft; future-evidence fix",
+      "pr94": "merged canonical; later branch commits not presumed integrated",
+      "pr98": "open draft; counts/mirror fix"
+    }
+  },
+  "defect": "Missing/empty expected_roles or an unregistered extra worker was classified as RECORDED RUNS CURRENT",
+  "repair": "Require nonempty unique expected_roles and reject workers outside declared roster; malformed feed becomes UNKNOWN",
+  "code_commit": "a5c3bd5f7b2c73487cdef570d86664d9cec3f7ac",
+  "test_commit": "63fd906e0e1d441ebee636bb82de0827d26a1fab",
+  "source_blob": "1659a187875d5a2fe3fc9e7af7f8d4f7c62806f1",
+  "test_blob": "26b2e1a62b08e24b63b4be6e9766fe4c14e86611",
+  "tests": {
+    "source_executed_v8": {
+      "passed": 14,
+      "failed": 0
+    },
+    "node_ci": "NOT_EXECUTED",
+    "full_suite": "UNKNOWN",
+    "fail_first": "canonical returned CURRENT for absent/empty roster and unregistered worker; corrected returns UNKNOWN"
+  },
+  "html_link_parity": {
+    "base_blob": "e6dfa8097239c28edead2f0814043a47c15a97aa",
+    "branch_blob": "e6dfa8097239c28edead2f0814043a47c15a97aa",
+    "href_occurrences_before": 52,
+    "href_occurrences_after": 52,
+    "removed": 0,
+    "owner_auth_ui_changed": false
+  },
+  "scheduler_proof": {
+    "snapshot_commit": "823459846d1139b60875f5fecb3e7c4ceed10e73",
+    "observed_at": "2026-10-31T16:27:10.520Z",
+    "recorded_completed_roles": 4,
+    "verified_productive_agents": "UNKNOWN",
+    "in_progress_roles": [
+      "ZOO Dashboard Worker",
+      "ZOO Asset Restoration"
+    ],
+    "freshness_classification": "RECORDED RUNS CURRENT is scheduler metadata only, not productive worker proof"
+  },
+  "github": {
+    "open_issues": 24,
+    "open_prs": 56,
+    "count_source": "GitHub Search complete total_count, incomplete_results=false",
+    "count_verified_at": "2026-10-31T16:27Z",
+    "exact_head_workflow_run": 41219700110,
+    "workflow_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41219700110",
+    "workflow_conclusion": "failure",
+    "job_steps": 0,
+    "runner_id": 0,
+    "runner_name": "",
+    "root_cause": "runner provisioning/Actions policy or account configuration suspected; not established from zero-step receipt"
+  },
+  "provider": {
+    "preview_commit_status": "success",
+    "preview_url": "https://deploy-preview-99--zoo-live-dashboard.netlify.app",
+    "preview_browser_readback": "UNKNOWN_DNS_RESOLUTION_FAILURE",
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "production_browser_readback": "UNKNOWN_DNS_RESOLUTION_FAILURE",
+    "production_deploy_id": "UNKNOWN",
+    "production_sha": "UNKNOWN",
+    "netlify_site_source_mapping": "UNKNOWN",
+    "rollback_mapping": "UNKNOWN",
+    "owner_auth_check": "UNKNOWN"
+  },
+  "latencies": {
+    "detected_to_fix_minutes": "UNKNOWN",
+    "commit_to_pr_minutes": "UNKNOWN",
+    "pr_opened_at": "2026-10-31T16:26:29Z",
+    "reviewed_at": null,
+    "merged_at": null,
+    "deployed_at": null,
+    "verified_at": null
+  },
+  "handoff": {
+    "from": "ZOO Dashboard Worker",
+    "to": "Implementation Lead",
+    "decision": "GO_SOURCE_FIX_BLOCKED_CI",
+    "next_trigger": "Investigate Actions runner_id=0/zero-step provisioning failure without blind identical retries; independently run Node tests via authorized provider build",
+    "hunter": "Map authenticated Netlify site/deploy/source and verify preview/live HTTP + rollback",
+    "keeper": "Review and safely integrate PR #99 alongside #90/#98 after checks; no production publication without gates"
+  },
+  "next_executable_action": "Implementation Lead: inspect GitHub Actions runner provisioning/account restrictions and run independent Node test gate; Hunter: authenticate Netlify mapping and verify deployed SHA/readback",
+  "independent_lanes_unblocked": [
+    "PR closure",
+    "EZ Move",
+    "BeautyPath",
+    "Hunter"
+  ],
+  "email_sent": false,
+  "production_published": false
+}

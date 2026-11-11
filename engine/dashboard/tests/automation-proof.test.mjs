@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {evaluateAutomationProof} from '../automation-proof.mjs';
 const now=Date.parse('2026-10-30T16:30:00Z');
 const good={schema_version:1,source:'connected_automations_peek',observed_at:'2026-10-30T16:25:00Z',
+ expected_roles:['ZOO Keeper'],
  workers:[{role:'ZOO Keeper',run_id:'60a78be7-d2f8-832f-a788-25876c50adc2',
  recorded_status:'completed',scheduled_for:'2026-10-30T16:00:00Z',completed_at:'2026-10-30T16:05:00Z'}]};
 test('actual completed execution is not misrepresented as a live worker heartbeat',()=>{
@@ -83,4 +84,18 @@ test('newer unresolved anomaly still triggers recovery even with old valid compl
  const p=evaluateAutomationProof({...good,source_anomalies:[anomaly]},now);
  assert.equal(p.state,'RECOVERY REQUIRED');
  assert.deepEqual(p.overdue,['ZOO Keeper']);
+});
+
+test('missing or empty declared roster cannot claim healthy scheduler coverage',()=>{
+ for(const roster of [undefined,[]]){
+  const p=evaluateAutomationProof({...good,expected_roles:roster},now);
+  assert.equal(p.state,'UNKNOWN');
+  assert.equal(p.activeWorkersVerified,false);
+ }
+});
+test('unregistered extra worker cannot inflate recorded scheduler count',()=>{
+ const extra={...good.workers[0],role:'Unregistered agent',run_id:'44444444-aaaa-4bbb-8ccc-aaaaaaaaaaaa'};
+ const p=evaluateAutomationProof({...good,workers:[good.workers[0],extra]},now);
+ assert.equal(p.state,'UNKNOWN');
+ assert.equal(p.workerCount,0);
 });
