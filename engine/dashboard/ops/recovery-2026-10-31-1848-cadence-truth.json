@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-10-31T18:48:33.762Z",
+  "scope": "One bounded recovery-copy defect fixed in canonical Zoodo dashboard source on isolated draft PR; no production deploy.",
+  "pr": {
+    "number": 103,
+    "url": "https://github.com/london4216-hue/Zoodo/pull/103",
+    "draft": true,
+    "branch": "fix/zoo-accurate-retry-cadence-copy-20261031-1845",
+    "base_branch": "autonomous-engine-replacement-2026-10-29",
+    "base_sha_at_creation": "ef5cc18fdf0d2384be9ba4d20023137e729a1b1f",
+    "code_commit": "6da25842ad47d832ada73150ed80685f52940b8c",
+    "test_commit": "7c3776bc4e7d9a123c15083df570aea5b8a3e733",
+    "code_blob_sha": "26fa81e3d458db5d488215ad7b569e2d140016b4",
+    "test_blob_sha": "8296423baf206949af771b4d7aa1c5a3afd6b312"
+  },
+  "defect": {
+    "before": "Recovery text claimed automatic retry every 30 seconds for all evidence despite 10-minute GitHub source polling.",
+    "after": "Recovery text derives GitHub source minutes and scheduler-proof seconds from imported actual timer constants.",
+    "scope": "One HTML assignment; no source feed, API, authentication, navigation, timer or deployment change."
+  },
+  "tests": {
+    "fail_first_old_claim_reproduced": true,
+    "exact_github_readback_assertions": {
+      "passed": 11,
+      "failed": 0
+    },
+    "source_expression_executions": {
+      "passed": 2,
+      "failed": 0,
+      "fixtures": [
+        "10-minute source / 30-second scheduler",
+        "5-minute source / 45-second scheduler"
+      ]
+    },
+    "scheduler_source_execution": {
+      "passed": 8,
+      "failed": 0,
+      "result": "RECOVERY REQUIRED; no active workers verified"
+    },
+    "node_regression_tests": {
+      "added": 3,
+      "executed": false,
+      "reason": "GitHub Actions job failed before any steps"
+    },
+    "href_attributes_preserved": 45,
+    "html_lines_changed": 1
+  },
+  "github": {
+    "open_issues": {
+      "count": 24,
+      "incomplete_results": false,
+      "source": "https://github.com/london4216-hue/Zoodo/issues"
+    },
+    "open_prs": {
+      "count": 60,
+      "incomplete_results": false,
+      "source": "https://github.com/london4216-hue/Zoodo/pulls"
+    },
+    "ci": {
+      "run_id": 41231083967,
+      "url": "https://github.com/london4216-hue/Zoodo/actions/runs/41231083967",
+      "status": "completed",
+      "conclusion": "failure",
+      "recorded_job_steps": 0
+    },
+    "provider_commit_status": {
+      "context": "netlify/zoo-live-dashboard/deploy-preview",
+      "state": "success",
+      "target_url": "https://deploy-preview-103--zoo-live-dashboard.netlify.app",
+      "scope": "GitHub-reported preview status only; HTTP/browser readback unavailable"
+    }
+  },
+  "scheduler": {
+    "source_commit": "337995e253cda9ae648f6f187738f733c7bdc8bb",
+    "source_blob": "3c51d32378df6a8e0211e135b9b3dc03412cbd2a",
+    "observed_at": "2026-10-31T18:48:05.617Z",
+    "classifier": "RECOVERY REQUIRED",
+    "valid_latest_builder_completion_at": "2026-10-31T18:31:59.775486Z",
+    "dashboard_run": "in_progress",
+    "keeper_latest_completion": "quarantined_before_scheduled",
+    "hunter_automation_enabled": false,
+    "hunter_latest_completion": "quarantined_before_scheduled",
+    "verified_productive_agents": null
+  },
+  "production": {
+    "url": "https://zoo-live-dashboard.netlify.app/",
+    "netlify_site_id": null,
+    "netlify_deploy_id": null,
+    "production_source_sha": null,
+    "owner_authenticated_readback": null,
+    "rollback_mapping": null,
+    "browser_verification": null,
+    "host_probe": "DNS resolution unavailable from this runtime; cannot establish HTTP success or failure",
+    "published_this_cycle": false
+  },
+  "latencies": {
+    "merge_minutes": null,
+    "deploy_minutes": null,
+    "verified_live_minutes": null,
+    "reason": "No verified production merge/deploy/browser events to pair."
+  },
+  "integration": {
+    "pr16": "merged into canonical branch",
+    "pr71": "merged into former PR16 feature branch, not independently canonical",
+    "pr94": "merged canonical",
+    "open_dashboard_drafts": [
+      90,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103
+    ],
+    "keeper_required": true
+  },
+  "handoff": {
+    "keeper": "Safely reconcile isolated dashboard PR #103 and other pending drafts; coordinate Hunter-disabled host verification without blocking other lanes.",
+    "hunter": "Automation disabled; no host-probe execution claimed. Verify authorized Netlify site/deploy SHA, preview, owner auth and rollback when available.",
+    "implementation_lead": "Diagnose GitHub Actions zero-step runner startup.",
+    "nonblocking_lanes": [
+      "PR closure",
+      "EZ Move",
+      "BeautyPath"
+    ],
+    "email_sent": false,
+    "grades": "deferred until Wednesday"
+  }
+}
