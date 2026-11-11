@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-01T03:29:26.323Z",
+  "owner": "ZOO Dashboard Worker",
+  "issue": "https://github.com/london4216-hue/Zoodo/issues/18",
+  "pull_request": "https://github.com/london4216-hue/Zoodo/pull/117",
+  "change": "Replace first-page 30-item GitHub queue sampling with bounded 100-item pagination and truthful exact/incomplete/UNKNOWN totals.",
+  "source_commit": "3b9a594439e79c182566605939d38ec2c58af2ac",
+  "source_files": [
+    "engine/dashboard/index.html",
+    "engine/dashboard/queue-counts.mjs",
+    "engine/dashboard/queue-counts.test.mjs"
+  ],
+  "test": {
+    "environment": "local Node 22 compatible node:test",
+    "executed": 6,
+    "passed": 6,
+    "failed": 0,
+    "github_ci_executed": false,
+    "github_readback_blob_shas": {
+      "helper": "f69305b3d15c718fc255bbcc566d3dce05b6281a",
+      "tests": "b7b2393b05c7050ae84168ebaad7fb8e5415ffe6",
+      "html": "9acd699a98855ac8326f633f52ced1943959dc3f"
+    }
+  },
+  "source_safety": {
+    "html_href_attributes_before": 60,
+    "html_href_attributes_after": 60,
+    "owner_authentication_changed": false,
+    "netlify_configuration_changed": false,
+    "production_published": false
+  },
+  "reconciliation": {
+    "pr16": {
+      "merged": true,
+      "base": "autonomous-engine-replacement-2026-10-29",
+      "merge_seconds": 76910
+    },
+    "pr71": {
+      "merged": true,
+      "base": "fix/zoo-live-dashboard-accountability-20261030",
+      "merge_seconds": 8072
+    },
+    "open_zoodo_prs": 71,
+    "open_zoodo_issues": 25,
+    "counts_source": "GitHub authenticated search",
+    "production_counts_readback_verified": false
+  },
+  "scheduler": {
+    "last_canonical_published_feed": "2026-11-01T02:48:50.680Z",
+    "connected_automations_peek_at": "2026-11-01T03:29:26.323Z",
+    "worker_runs": [
+      {
+        "role": "ZOO PR Closure",
+        "status": "completed",
+        "completed_at": "2026-11-01T03:16:45.276238Z",
+        "enabled": true
+      },
+      {
+        "role": "ZOO Asset Restoration",
+        "status": "completed",
+        "completed_at": "2026-11-01T03:27:49.753487Z",
+        "enabled": true
+      },
+      {
+        "role": "ZOO Keeper",
+        "status": "completed",
+        "completed_at": "2026-11-01T02:46:14.675510Z",
+        "enabled": true
+      },
+      {
+        "role": "ZOO Dashboard Worker",
+        "status": "in_progress",
+        "started_at": "2026-11-01T03:27:12.015558Z",
+        "enabled": true
+      },
+      {
+        "role": "ZOO Agent Hunter",
+        "status": "completed_historical",
+        "completed_at": "2026-10-31T18:01:41.851473Z",
+        "enabled": false
+      }
+    ],
+    "productive_worker_heartbeat_verified": false,
+    "worker_status_note": "Automation scheduling receipts do not establish autonomous product work or worker heartbeats."
+  },
+  "ci": {
+    "run_url": "https://github.com/london4216-hue/Zoodo/actions/runs/41269360750",
+    "conclusion": "failure",
+    "job": "dashboard-contract",
+    "recorded_steps": null,
+    "zero_steps_confirmed": false,
+    "note": "GitHub job payload returned steps:null; no executable steps were evidenced."
+  },
+  "hosting": {
+    "production_url": "https://zoo-live-dashboard.netlify.app/",
+    "production_independent_readback": "UNVERIFIED_DNS_FAILURE",
+    "preview_url": "https://deploy-preview-117--zoo-live-dashboard.netlify.app",
+    "preview_provider_status": "UNKNOWN",
+    "preview_independent_readback": "UNVERIFIED_DNS_FAILURE",
+    "production_sha": null,
+    "deploy_id": null,
+    "rollback_mapping": null,
+    "owner_authenticated_browser_readback": null,
+    "host_probe_note": "Direct HTTPS requests to preview and production failed DNS resolution from execution environment; not proof site is down."
+  },
+  "latencies": {
+    "merge_seconds": {
+      "pr16": 76910,
+      "pr71": 8072
+    },
+    "test_to_deploy_seconds": null,
+    "source_to_deploy_seconds": null
+  },
+  "handoff": {
+    "integration": "ZOO Keeper",
+    "host_probe": "qualified Hunter backup or Keeper (Hunter disabled)",
+    "ci_recovery": "Implementation Lead",
+    "unblocked": [
+      "PR Closure",
+      "EZ Move",
+      "BeautyPath"
+    ],
+    "grades": "deferred until Wednesday",
+    "ordinary_email_sent": false
+  }
+}

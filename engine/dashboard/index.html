@@ -126,6 +126,7 @@ import {evaluateEvidence} from './evidence-clock.mjs';
 import {evaluateAutomationProof} from './automation-proof.mjs';
 import {selectSourceIdentity} from './source-identity.mjs';
 import {GITHUB_SOURCE_POLL_MS,AUTOMATION_PROOF_POLL_MS} from './refresh-policy.mjs';
+import {fetchOpenQueue} from './queue-counts.mjs';
 const owner='london4216-hue',repo='Zoodo',fallbackBranch='autonomous-engine-replacement-2026-10-29';
 let sourceIdentity=selectSourceIdentity(null,fallbackBranch),sourceIdentityError='build receipt not read';
 const root='https://api.github.com/repos/'+owner+'/'+repo;
@@ -350,15 +351,15 @@ async function checkYB3Lab(){
  }
 }
 async function loadQueue(){
- const [issues,prs]=await Promise.allSettled([api('/issues?state=open&per_page=30'),api('/pulls?state=open&per_page=30')]);
+ const [issues,prs]=await Promise.allSettled([fetchOpenQueue(api,'/issues'),fetchOpenQueue(api,'/pulls')]);
  if(issues.status==='fulfilled'){
-  const items=issues.value.filter(x=>!x.pull_request);
-  $('queue-issues').textContent=String(items.length)+(issues.value.length===30?' +':'');
+  const items=issues.value.items.filter(x=>!x.pull_request);
+  $('queue-issues').textContent=String(items.length)+(issues.value.complete?'':' +');
   $('queue-issue-list').innerHTML=items.slice(0,12).map(x=>'<div class="row"><a target="_blank" rel="noopener" href="'+escapeHtml(x.html_url)+'">#'+escapeHtml(x.number)+' '+escapeHtml(x.title)+'</a><div class="queue-state">OPEN · worker unverified</div></div>').join('')||'<div class="muted">No open issues returned</div>';
  }else{$('queue-issues').textContent='UNKNOWN';$('queue-issue-list').textContent='GitHub issue evidence unavailable'}
  if(prs.status==='fulfilled'){
-  const items=prs.value;
-  $('queue-prs').textContent=String(items.length)+(items.length===30?' +':'');
+  const items=prs.value.items;
+  $('queue-prs').textContent=String(items.length)+(prs.value.complete?'':' +');
   $('queue-pr-list').innerHTML=items.slice(0,12).map(x=>'<div class="row"><a target="_blank" rel="noopener" href="'+escapeHtml(x.html_url)+'">#'+escapeHtml(x.number)+' '+escapeHtml(x.title)+'</a><div class="queue-state">'+(x.draft?'DRAFT · independent review unverified':'OPEN · review evidence not checked')+'</div></div>').join('')||'<div class="muted">No open PRs returned</div>';
  }else{$('queue-prs').textContent='UNKNOWN';$('queue-pr-list').textContent='GitHub PR evidence unavailable'}
  // No connected durable worker heartbeat endpoint or provider cost receipts.
