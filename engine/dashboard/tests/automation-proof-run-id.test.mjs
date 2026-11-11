@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {evaluateAutomationProof} from '../automation-proof.mjs';
+const now=Date.parse('2026-10-31T21:00:00Z');
+const worker={role:'ZOO Keeper',run_id:'0d716ee1-3804-832a-a4e9-4acf3bb7459f',recorded_status:'completed',scheduled_for:'2026-10-31T20:45:30Z',completed_at:'2026-10-31T20:47:55Z'};
+const feed={schema_version:1,source:'connected_automations_peek',observed_at:'2026-10-31T20:54:11Z',expected_roles:['ZOO Keeper'],workers:[worker]};
+test('accepts canonical UUID receipt without claiming productive worker',()=>{const p=evaluateAutomationProof(feed,now);assert.equal(p.state,'RECORDED RUNS CURRENT');assert.equal(p.activeWorkersVerified,false);assert.equal(p.workerCount,1)});
+test('rejects legacy regex false positive: non-UUID with many hyphens',()=>{const p=evaluateAutomationProof({...feed,workers:[{...worker,run_id:'ffffffff----------------------------'}]},now);assert.equal(p.state,'UNKNOWN');assert.equal(p.workerCount,0)});
+test('rejects malformed group lengths',()=>{const p=evaluateAutomationProof({...feed,workers:[{...worker,run_id:'0d716ee1-3804-832a-a4e9-4acf3bb7459-'}]},now);assert.equal(p.state,'UNKNOWN')});
+test('rejects non-hex characters',()=>{const p=evaluateAutomationProof({...feed,workers:[{...worker,run_id:'0d716ee1-3804-832a-a4e9-4acf3bb7459z'}]},now);assert.equal(p.state,'UNKNOWN')});
