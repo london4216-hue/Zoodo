@@ -1,6 +1,15 @@
 // Public view of authenticated automation-run snapshots. The record is a
 // provenance claim from the ZOO publisher, NOT a signature or live worker ping.
-const DATE = s=>typeof s==='string'&&Number.isFinite(Date.parse(s));
+// Scheduler receipts require actual RFC3339 instants and real calendar dates.
+// Date.parse alone accepts strings like "0" and silently normalizes February 30.
+const DATE = s => {
+ if(typeof s!=='string')return false;
+ const m=/^(\d{4})-(\d{2})-(\d{2})T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,9})?(?:Z|[+-](?:(?:0\d|1[0-3]):[0-5]\d|14:00))$/.exec(s);
+ if(!m||!Number.isFinite(Date.parse(s)))return false;
+ const y=+m[1],mo=+m[2],day=+m[3];
+ const leap=y%4===0&&(y%100!==0||y%400===0);
+ return mo>=1&&mo<=12&&day>=1&&day<=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31][mo-1];
+};
 const RUN=/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i;
 export function evaluateAutomationProof(feed, now=Date.now(), dueMs=75*60000){
  const unknown=(reason)=>({state:'UNKNOWN',reason,lastRunAt:null,observedAt:null,workerCount:0,overdue:[],activeWorkersVerified:false});
