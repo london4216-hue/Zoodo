@@ -1,0 +1,330 @@
+{
+  "schema": 1,
+  "repository": "london4216-hue/Zoodo",
+  "collected_at": "2026-11-13T21:06:05.173292+00:00",
+  "verification": "GITHUB_OBSERVED",
+  "checks": {
+    "workflow_runs": {
+      "status": "OBSERVED",
+      "count": 30,
+      "latest": [
+        {
+          "id": 43507593090,
+          "name": "Zoo evidence heartbeat",
+          "status": "in_progress",
+          "conclusion": null,
+          "created_at": "2026-11-13T21:05:58Z",
+          "updated_at": "2026-11-13T21:06:02Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43507593090"
+        },
+        {
+          "id": 43496844878,
+          "name": "ZOO baseline - live backlog pulse",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-13T19:56:13Z",
+          "updated_at": "2026-11-13T19:56:16Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43496844878"
+        },
+        {
+          "id": 43468888076,
+          "name": "ZOO baseline - live backlog pulse",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-13T17:03:14Z",
+          "updated_at": "2026-11-13T17:03:18Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43468888076"
+        },
+        {
+          "id": 43447580512,
+          "name": "Zoo evidence heartbeat",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-13T14:56:38Z",
+          "updated_at": "2026-11-13T14:56:42Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43447580512"
+        },
+        {
+          "id": 43436790187,
+          "name": "Local Automation Loop",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-13T13:47:50Z",
+          "updated_at": "2026-11-13T13:47:53Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43436790187"
+        },
+        {
+          "id": 43425289085,
+          "name": "ZOO baseline - live backlog pulse",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-13T12:27:19Z",
+          "updated_at": "2026-11-13T12:27:23Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43425289085"
+        },
+        {
+          "id": 43395970267,
+          "name": "ZOO baseline - live backlog pulse",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-13T08:47:20Z",
+          "updated_at": "2026-11-13T08:47:23Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43395970267"
+        },
+        {
+          "id": 43381889479,
+          "name": "Zoo evidence heartbeat",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-13T06:53:58Z",
+          "updated_at": "2026-11-13T06:54:01Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43381889479"
+        },
+        {
+          "id": 43367019799,
+          "name": "Local Automation Loop",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-13T04:40:17Z",
+          "updated_at": "2026-11-13T04:40:21Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43367019799"
+        },
+        {
+          "id": 43365062156,
+          "name": "ZOO baseline - live backlog pulse",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-13T04:22:10Z",
+          "updated_at": "2026-11-13T04:22:14Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43365062156"
+        },
+        {
+          "id": 43345398832,
+          "name": "ZOO baseline - live backlog pulse",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-13T01:30:15Z",
+          "updated_at": "2026-11-13T01:30:19Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43345398832"
+        },
+        {
+          "id": 43336071949,
+          "name": "Zoo evidence heartbeat",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-13T00:18:55Z",
+          "updated_at": "2026-11-13T00:18:58Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43336071949"
+        },
+        {
+          "id": 43331695561,
+          "name": "ZOO baseline - live backlog pulse",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-12T23:46:46Z",
+          "updated_at": "2026-11-12T23:46:50Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43331695561"
+        },
+        {
+          "id": 43325885815,
+          "name": "Local Automation Loop",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-12T23:05:56Z",
+          "updated_at": "2026-11-12T23:06:00Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43325885815"
+        },
+        {
+          "id": 43303013798,
+          "name": "ZOO baseline - live backlog pulse",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-12T20:42:47Z",
+          "updated_at": "2026-11-12T20:42:51Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/43303013798"
+        }
+      ]
+    },
+    "pull_requests": {
+      "status": "OBSERVED",
+      "count": 30,
+      "latest": [
+        {
+          "number": 132,
+          "title": "ZOO Operating System 1.0 \u2014 First Publish",
+          "updated_at": "2026-11-03T11:12:29Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/132"
+        },
+        {
+          "number": 130,
+          "title": "fix(dashboard): include accountability iframe and handoff ledger in portable mirror",
+          "updated_at": "2026-11-01T13:47:30Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/130"
+        },
+        {
+          "number": 129,
+          "title": "fix(dashboard): require complete declared scheduler roster before current status",
+          "updated_at": "2026-11-01T13:32:55Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/129"
+        },
+        {
+          "number": 126,
+          "title": "fix(zoo dashboard): clear stale PR and Sara details after priority feed failure",
+          "updated_at": "2026-11-01T12:51:57Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/126"
+        },
+        {
+          "number": 125,
+          "title": "fix(dashboard): remove duplicate accountability DOM id without changing links",
+          "updated_at": "2026-11-01T12:17:46Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/125"
+        },
+        {
+          "number": 124,
+          "title": "fix(zoo dashboard): prevent false-verified Sara URL from stale source receipt",
+          "updated_at": "2026-11-01T10:48:46Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/124"
+        },
+        {
+          "number": 123,
+          "title": "fix(dashboard): keep demo links visible after repeated verification expiry",
+          "updated_at": "2026-11-01T10:45:11Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/123"
+        },
+        {
+          "number": 121,
+          "title": "fix(zoo dashboard): do not refresh code-movement clock from late CI/review",
+          "updated_at": "2026-11-01T09:21:24Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/121"
+        },
+        {
+          "number": 120,
+          "title": "fix(zoo dashboard): prevent historical accountability totals appearing live",
+          "updated_at": "2026-11-01T07:50:19Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/120"
+        },
+        {
+          "number": 119,
+          "title": "fix(zoo dashboard): refresh authentic five-role scheduler feed without false worker claims",
+          "updated_at": "2026-11-01T05:49:13Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/119"
+        },
+        {
+          "number": 118,
+          "title": "fix(zoo dashboard): reject replayed priority feed and overlapping refreshes",
+          "updated_at": "2026-11-01T04:34:17Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/118"
+        },
+        {
+          "number": 117,
+          "title": "fix(zoo dashboard): show complete GitHub PR and issue counts, not first-page samples",
+          "updated_at": "2026-11-01T03:30:06Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/117"
+        },
+        {
+          "number": 116,
+          "title": "fix(zoo dashboard): update API freshness when both GitHub endpoints fail",
+          "updated_at": "2026-11-01T02:49:41Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/116"
+        },
+        {
+          "number": 115,
+          "title": "fix(zoo dashboard): reject corrupted scheduler anomaly ledger",
+          "updated_at": "2026-11-01T01:47:02Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/115"
+        },
+        {
+          "number": 114,
+          "title": "fix(zoo dashboard): mark disabled scheduler workers as requiring recovery",
+          "updated_at": "2026-11-01T00:45:01Z",
+          "url": "https://github.com/london4216-hue/Zoodo/pull/114"
+        }
+      ]
+    },
+    "commits": {
+      "status": "OBSERVED",
+      "count": 20,
+      "latest": [
+        {
+          "sha": "ced82a490ec239685a74f39b2dc5ea843563ffab",
+          "date": "2026-11-03T19:32:49Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/ced82a490ec239685a74f39b2dc5ea843563ffab"
+        },
+        {
+          "sha": "4ec35b8efe6ea8524d6708f026e3fe20ad95b504",
+          "date": "2026-11-03T19:32:39Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/4ec35b8efe6ea8524d6708f026e3fe20ad95b504"
+        },
+        {
+          "sha": "ebd6b6e4d599d1f55fd7551780a4251819f1c19e",
+          "date": "2026-11-03T19:32:37Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/ebd6b6e4d599d1f55fd7551780a4251819f1c19e"
+        },
+        {
+          "sha": "0e3d20f16b07d2e11284ce65fdfabdf8df8f458f",
+          "date": "2026-11-03T19:32:32Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/0e3d20f16b07d2e11284ce65fdfabdf8df8f458f"
+        },
+        {
+          "sha": "0fc21fad9d32264db917a2dbfdee519ab5cecb85",
+          "date": "2026-11-03T19:32:28Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/0fc21fad9d32264db917a2dbfdee519ab5cecb85"
+        },
+        {
+          "sha": "bf6008f9c15df455ea27a11b99430992c983ecd0",
+          "date": "2026-11-03T19:32:21Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/bf6008f9c15df455ea27a11b99430992c983ecd0"
+        },
+        {
+          "sha": "7d4b33d4207bcff4d15ce14848233146f653a4f2",
+          "date": "2026-11-03T19:29:56Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/7d4b33d4207bcff4d15ce14848233146f653a4f2"
+        },
+        {
+          "sha": "a93ef2651c6868766f7995f695fe954cac41a533",
+          "date": "2026-11-03T16:37:37Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/a93ef2651c6868766f7995f695fe954cac41a533"
+        },
+        {
+          "sha": "1f698c79bbd4ae0c3d14bb89f219a15471194950",
+          "date": "2026-11-03T16:35:46Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/1f698c79bbd4ae0c3d14bb89f219a15471194950"
+        },
+        {
+          "sha": "c5ef09131253c09b16fd76c8a3ac759f7cd7e1f6",
+          "date": "2026-11-02T07:05:56Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/c5ef09131253c09b16fd76c8a3ac759f7cd7e1f6"
+        },
+        {
+          "sha": "9f1f50677a4f9dbc06cd56818153f90bd80e013a",
+          "date": "2026-11-02T07:05:10Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/9f1f50677a4f9dbc06cd56818153f90bd80e013a"
+        },
+        {
+          "sha": "1ff3e0d0d1e545ef57cd4b56a4d05e039e57792c",
+          "date": "2026-11-02T05:47:35Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/1ff3e0d0d1e545ef57cd4b56a4d05e039e57792c"
+        },
+        {
+          "sha": "8bc6f94feb9aa24fabdcf6c6b710789c306bc509",
+          "date": "2026-11-02T05:47:14Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/8bc6f94feb9aa24fabdcf6c6b710789c306bc509"
+        },
+        {
+          "sha": "0ee9f1b43b821801b94df90449202d77191a7de4",
+          "date": "2026-11-02T04:29:01Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/0ee9f1b43b821801b94df90449202d77191a7de4"
+        },
+        {
+          "sha": "2ef10d645b7dad37fcf6040e625f0287b9adcea3",
+          "date": "2026-11-02T04:28:49Z",
+          "url": "https://github.com/london4216-hue/Zoodo/commit/2ef10d645b7dad37fcf6040e625f0287b9adcea3"
+        }
+      ]
+    }
+  },
+  "failures": [],
+  "agent_fleet": "UNVERIFIED",
+  "dispatch_latency": "UNKNOWN",
+  "failure_reassignment_latency": "UNKNOWN"
+}
