@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "repository": "london4216-hue/Zoodo",
-  "collected_at": "2026-11-22T03:33:37.195140+00:00",
+  "collected_at": "2026-11-22T11:53:55.643170+00:00",
   "verification": "GITHUB_OBSERVED",
   "checks": {
     "workflow_runs": {
@@ -9,12 +9,48 @@
       "count": 30,
       "latest": [
         {
-          "id": 44981178228,
+          "id": 45019543244,
           "name": "Zoo evidence heartbeat",
           "status": "in_progress",
           "conclusion": null,
+          "created_at": "2026-11-22T11:53:50Z",
+          "updated_at": "2026-11-22T11:53:53Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/45019543244"
+        },
+        {
+          "id": 45009454618,
+          "name": "ZOO baseline - live backlog pulse",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-22T09:50:08Z",
+          "updated_at": "2026-11-22T09:50:20Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/45009454618"
+        },
+        {
+          "id": 45006069458,
+          "name": "ZOO baseline - live backlog pulse",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-22T09:08:23Z",
+          "updated_at": "2026-11-22T09:08:33Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/45006069458"
+        },
+        {
+          "id": 44986109692,
+          "name": "Local Automation Loop",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-22T04:40:48Z",
+          "updated_at": "2026-11-22T04:41:01Z",
+          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/44986109692"
+        },
+        {
+          "id": 44981178228,
+          "name": "Zoo evidence heartbeat",
+          "status": "completed",
+          "conclusion": "success",
           "created_at": "2026-11-22T03:33:24Z",
-          "updated_at": "2026-11-22T03:33:28Z",
+          "updated_at": "2026-11-22T03:33:42Z",
           "url": "https://github.com/london4216-hue/Zoodo/actions/runs/44981178228"
         },
         {
@@ -106,42 +142,6 @@
           "created_at": "2026-11-21T14:01:47Z",
           "updated_at": "2026-11-21T14:02:03Z",
           "url": "https://github.com/london4216-hue/Zoodo/actions/runs/44911795634"
-        },
-        {
-          "id": 44904039265,
-          "name": "Zoo evidence heartbeat",
-          "status": "completed",
-          "conclusion": "success",
-          "created_at": "2026-11-21T12:28:02Z",
-          "updated_at": "2026-11-21T12:28:12Z",
-          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/44904039265"
-        },
-        {
-          "id": 44887438868,
-          "name": "ZOO baseline - live backlog pulse",
-          "status": "completed",
-          "conclusion": "success",
-          "created_at": "2026-11-21T08:59:50Z",
-          "updated_at": "2026-11-21T08:59:59Z",
-          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/44887438868"
-        },
-        {
-          "id": 44886697329,
-          "name": "ZOO baseline - live backlog pulse",
-          "status": "completed",
-          "conclusion": "success",
-          "created_at": "2026-11-21T08:49:48Z",
-          "updated_at": "2026-11-21T08:49:59Z",
-          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/44886697329"
-        },
-        {
-          "id": 44869910287,
-          "name": "Local Automation Loop",
-          "status": "completed",
-          "conclusion": "success",
-          "created_at": "2026-11-21T05:14:05Z",
-          "updated_at": "2026-11-21T05:14:17Z",
-          "url": "https://github.com/london4216-hue/Zoodo/actions/runs/44869910287"
         }
       ]
     },
