@@ -35,7 +35,7 @@ export class DurableQueue {
     if(e.type==='release')t.releaseProof=e.evidence;
     if(e.type==='verify')t.status='verified';
     if(e.type==='done')t.status='done';
-    if(e.type==='requeue'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null}
+    if(e.type==='requeue'||e.type==='handoff'){t.status=e.dead?'blocked':'queued';t.worker=null;t.provider=null;t.leaseUntil=null;t.reviewer=null;t.reviewProvider=null;t.tests=null}
     t.history.push(e);
   }
   #record(type,id,fields={}){
@@ -52,9 +52,37 @@ export class DurableQueue {
     if(t){if(t.repo!==repo||t.description!==description||t.releaseRequired!==releaseRequired)fail('Idempotency collision');return t}
     return this.#record('create',id,{repo,description,releaseRequired:Boolean(releaseRequired)});
   }
+  // Single-writer lease fencing: caller-supplied availability is not authority.
+  #emptyHandoffs(worker){
+    let count=0;
+    for(const t of this.items.values()){
+      if(t.id.startsWith('seeker:'))continue;
+      let owner=null,submitted=false;
+      for(const e of t.history){
+        if(e.type==='claim'){owner=e.worker;submitted=false}
+        else if(e.type==='submit'&&owner===worker)submitted=true;
+        else if(e.type==='handoff'||e.type==='requeue'){
+          if(e.worker===worker&&!submitted)count++;
+          owner=null;submitted=false;
+        }
+      }
+    }
+    return count;
+  }
   claim(id,{worker,provider}){
     const t=this.get(id);if(!t||t.status!=='queued')fail('Ticket not queued');
     if(!valid(worker)||!valid(provider))fail('Real worker identity and provider required');
+    if([...this.items.values()].some(x=>x.worker===worker&&['assigned','running'].includes(x.status)))
+      fail('Worker already holds an active lease');
+    const seeker=id.startsWith('seeker:');
+    if(seeker){
+      // A seeker is owned by the twice-stalled worker, never another worker.
+      // One lease/attempt bounds research and prevents recursive seeker work.
+      if(id!==`seeker:${worker}`)fail('Replacement-seeker owner mismatch');
+      if(this.#emptyHandoffs(worker)<2)fail('Replacement-seeker requires two handoffs');
+      if(t.attempts>=1)fail('Replacement-seeker attempt budget exhausted');
+    }else if(this.#emptyHandoffs(worker)>=2)
+      fail('Worker restricted to bounded replacement-seeker after two handoffs');
     if(t.attempts>=this.maxAttempts)fail('Retry budget exhausted');
     return this.#record('claim',id,{worker,provider,leaseUntil:this.now()+this.leaseMs});
   }
@@ -72,6 +100,24 @@ export class DurableQueue {
   release(id,{authorized,evidence}){const t=this.get(id);if(!t||t.status!=='test'||!t.tests?.passed||!t.releaseRequired)fail('Release not eligible');if(authorized!==true||!valid(evidence))fail('Explicit release authorization and proof required');return this.#record('release',id,{evidence})}
   verify(id,{evidence}){const t=this.get(id);if(!t||t.status!=='test'||!t.tests?.passed||!valid(evidence)||t.releaseRequired&&!t.releaseProof)fail('Tests and authorized release evidence required');return this.#record('verify',id,{evidence})}
   done(id){const t=this.get(id);if(!t||t.status!=='verified')fail('Not verified');return this.#record('done',id)}
-  fail(id,{worker,reason}){const t=this.get(id);if(!t||!['assigned','running'].includes(t.status)||t.worker!==worker||!valid(reason))fail('Active worker failure evidence required');return this.#record('requeue',id,{reason,worker,provider:t.provider,dead:t.attempts>=this.maxAttempts})}
-  recover(){const recovered=[];for(const t of this.items.values())if(['assigned','running'].includes(t.status)&&t.leaseUntil<=this.now())recovered.push(this.#record('requeue',t.id,{reason:'Lease expired',worker:t.worker,provider:t.provider,dead:t.attempts>=this.maxAttempts}));return recovered}
+  // A single journal event both ends the lease and records the handoff receipt.
+  // Null means unmeasured, NEVER zero cost, zero latency, or verified code.
+  #handoffFields(t,reason,receipt,disposition){
+    const claim=[...t.history].reverse().find(e=>e.type==='claim'&&e.worker===t.worker);
+    const elapsedMs=claim&&Number.isFinite(Date.parse(claim.at))?Math.max(0,this.now()-Date.parse(claim.at)):null;
+    return {reason,worker:t.worker,provider:t.provider,attempt:t.attempts,
+      startedAt:claim?.at??null,endedAt:new Date(this.now()).toISOString(),elapsedMs,
+      costUsd:null,artifactReceipt:null,testReceipt:null,receipt:receipt??null,
+      disposition,dead:t.id.startsWith('seeker:')||t.attempts>=this.maxAttempts};
+  }
+  fail(id,{worker,reason,receipt=null}){const t=this.get(id);
+    if(!t||!['assigned','running'].includes(t.status)||t.worker!==worker||t.leaseUntil<=this.now()||!valid(reason)||receipt!==null&&!valid(receipt))
+      fail('Active worker failure evidence required');
+    return this.#record('handoff',id,this.#handoffFields(t,reason,receipt,'worker-failure'));
+  }
+  recover(){const recovered=[];
+    for(const t of this.items.values())if(['assigned','running'].includes(t.status)&&t.leaseUntil<=this.now())
+      recovered.push(this.#record('handoff',t.id,this.#handoffFields(t,'Lease expired',null,'lease-expired')));
+    return recovered;
+  }
 }
